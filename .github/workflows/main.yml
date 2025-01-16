@@ -28,7 +28,7 @@ jobs:
 
     - name: Push Docker image
       run: |
-        docker push yourusername/your-app-name:latest
+        docker push hoanganh23072/front-end-container:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
 
     - name: Deploy to VPS
       run: |
-        ssh -o StrictHostKeyChecking=no your-user@your-vps-ip << 'EOF'
+        ssh -o StrictHostKeyChecking=no anhnbh@103.167.89.225 << 'EOF'
           docker pull hoanganh23072/front-end-container:latest
           docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:latest
         EOF
