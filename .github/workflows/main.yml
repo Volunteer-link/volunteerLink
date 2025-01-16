@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -48,5 +45,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no anhnbh@103.167.89.225 << 'EOF'
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker pull hoanganh23072/front-end-container:${{ github.sha }}
+          docker stop frontend || true
+          docker rm frontend || true
           docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
         EOF
