@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Col,
   Row,
@@ -8,15 +8,15 @@ import {
   Button,
   ConfigProvider,
   Image,
-} from 'antd';
-import logo from '../../image/sign_banner.jpg';
+} from "antd";
+import logo from "../../image/sign_banner.jpg";
 const { Title } = Typography;
 
 const SignIn: React.FC = () => {
   return (
     <div>
       <Row className="w-full h-screen">
-        <Col span={16}>
+        <Col span={18}>
           <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">
             <h4 className="text-[#3BA769] text-[20px] text-center">
               Tham gia cộng đồng của chúng tôi
@@ -30,7 +30,7 @@ const SignIn: React.FC = () => {
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: '#3BA769',
+                    colorPrimary: "#3BA769",
                   },
                 }}
               >
@@ -42,13 +42,13 @@ const SignIn: React.FC = () => {
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: '#fff',
-                    colorPrimaryText: '#111',
-                    colorPrimaryTextHover: '#111',
+                    colorPrimary: "#fff",
+                    colorPrimaryText: "#111",
+                    colorPrimaryTextHover: "#111",
                   },
                   components: {
                     Button: {
-                      colorPrimaryHover: '#111',
+                      colorPrimaryHover: "#111",
                     },
                   },
                 }}
@@ -59,24 +59,24 @@ const SignIn: React.FC = () => {
               </ConfigProvider>
             </Flex>
             <p className="text-[14px]">
-              Bạn chưa có tài khoản?{' '}
+              Bạn chưa có tài khoản?{" "}
               <a className="text-[#3BA769]">Tạo tài khoản mới </a>
             </p>
           </div>
         </Col>
-        <Col span={8} >
+        <Col span={6}>
           <Image
-            className='w-full h-screen'
+            className="w-full h-screen"
             preview={false}
             placeholder={true}
             alt="logo"
             src={logo}
-            style={{ height: '100vh', width: '100%'}}
+            style={{ height: "100vh", width: "100%" }}
           />
         </Col>
       </Row>
     </div>
-  )
+  );
 };
 
 export default SignIn;
