@@ -2,6 +2,8 @@ import { AiOutlineUser } from "react-icons/ai";
 import { MdLogout } from "react-icons/md";
 import { Dropdown, Space, MenuProps, Menu } from "antd";
 import { useState } from "react";
+import { VscBell } from "react-icons/vsc";
+import { VscBellDot } from "react-icons/vsc";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -58,6 +60,12 @@ const Header: React.FC<{}> = () => {
           </div>
         </div> */}
         <div className="flex gap-10 items-center justify-center h-full">
+          {/* <div className="cursor-pointer hover:scale-110 transition-transform">
+            <VscBell className="text-2xl text-white" />
+          </div> */}
+          <div className="cursor-pointer hover:scale-110 transition-transform">
+            <VscBellDot className="text-2xl text-white" />
+          </div>
           <div className="cursor-pointer hover:scale-110 transition-transform">
             <Dropdown menu={{ items }} placement="topRight">
               <div className="">
