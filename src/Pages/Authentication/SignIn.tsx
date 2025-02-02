@@ -97,7 +97,7 @@ const SignIn: React.FC = () => {
   return (
     <div>
       <Row className="w-full h-screen">
-        <Col span={16}>
+        <Col span={18}>
           <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">
             <h4 className="text-[#3BA769] text-[20px] text-center">
               Tham gia cộng đồng của chúng tôi
@@ -180,7 +180,7 @@ const SignIn: React.FC = () => {
             </Form>
 
             <p className="text-[14px]">
-              Bạn chưa có tài khoản?{' '}
+              Bạn chưa có tài khoản?{" "}
               <a className="text-[#3BA769]">Tạo tài khoản mới </a>
             </p>
           </div>
@@ -188,6 +188,7 @@ const SignIn: React.FC = () => {
 
         <Col span={8}>
           <Image
+            className="w-full h-screen"
             className="w-full h-screen"
             preview={false}
             placeholder={true}
@@ -198,6 +199,7 @@ const SignIn: React.FC = () => {
         </Col>
       </Row>
     </div>
+  );
   );
 };
 
