@@ -1,44 +1,48 @@
-import React from "react";
-import RootLayout from "./Pages/RootLayout";
-import Test from "./Pages/Test";
+import React from 'react';
+import RootLayout from './Pages/RootLayout';
+import Test from './Pages/Test';
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./Pages/Home";
-import SignIn from "./Pages/Authentication/SignIn";
-import Signup from "./Pages/Authentication/Signup";
-import VerifyEmail from "./Pages/Authentication/VerifyEmail";
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Home from './Pages/Home';
+import SignIn from './Pages/Authentication/SignIn';
+import Signup from './Pages/Authentication/Signup';
+import VerifyEmail from './Pages/Authentication/VerifyEmail';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     children: [
       {
-        path: "home",
+        path: 'home',
         element: <Home />,
       },
       {
-        path: "test",
+        path: 'test',
         element: <Test />,
       },
     ],
   },
   {
-    path: "authentication/signin",
+    path: 'authentication/signin',
     element: <SignIn />,
   },
   {
-    path: "authentication/signup",
+    path: 'authentication/signup',
     element: <Signup />,
   },
   {
-    path: "authentication/verifyEmail",
+    path: 'authentication/verifyEmail',
     element: <VerifyEmail />,
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <GoogleOAuthProvider clientId="500915612685-ede76ee054sf42eoramo1ulv5ppvn8h4.apps.googleusercontent.com">
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
+  );
 }
 
 export default App;
