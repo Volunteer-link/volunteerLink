@@ -14,10 +14,10 @@ const Home: React.FC<{}> = () => {
         src="/materials/medium-shot-volunteers-working-together_23-2149181985.jpg"
         alt=""
       />
-      <div className="w-full px-[16rem] m-auto">
+      <div className="w-full lg:px-[16rem] m-auto">
         <LineSpacing />
         <div className="flex justify-evenly">
-          <div className=" bg-white w-80 rounded-xl border-2 border-primary-color shadow-md">
+          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md">
             <div className=" w-full h-44">
               <img
                 src="/materials/community.png"
@@ -33,7 +33,7 @@ const Home: React.FC<{}> = () => {
               và phát triển bền vững
             </div>
           </div>
-          <div className=" bg-white w-80 rounded-xl border-2 border-primary-color shadow-md">
+          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md">
             <div className=" w-full h-44">
               <img
                 src="/materials/vecteezy_hands-support-gesture_ 1.png"
@@ -49,7 +49,7 @@ const Home: React.FC<{}> = () => {
               năng và nâng cao hiệu quả làm việc
             </div>
           </div>
-          <div className=" bg-white w-80 rounded-xl border-2 border-primary-color shadow-md">
+          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md">
             <div className=" w-full h-44">
               <img
                 src="/materials/Screenshot 2025-01-17 082557 1.png"
@@ -72,13 +72,13 @@ const Home: React.FC<{}> = () => {
             <div className="text-2xl">Câu chuyện</div>
             <div className="text-2xl text-primary-color">chúng tôi</div>
           </div>
-          <div className="w-full mt-8 flex items-center text-end pr-8">
+          <div className="mt-8 lg:flex items-center text-end lg:pr-8">
             <img
               src="/materials/istockphoto-1426874794-612x612.jpg"
               alt=""
-              className="[clip-path:polygon(0_0,100%_0,70%_100%,0_100%)]"
+              className="lg:[clip-path:polygon(0_0,100%_0,70%_100%,0_100%)] lg:w-full w-5/6 m-auto lg:m-0 mb-2 lg:mb-0"
             />
-            <div>
+            <div className="lg:px-0 px-8">
               <div className="w-[90%] text-lg font-medium text-primary-color ml-auto">
                 “Điều kỳ diệu xảy đến với những người thực sự biết yêu thương”
               </div>
