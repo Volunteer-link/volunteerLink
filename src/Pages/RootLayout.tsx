@@ -7,7 +7,7 @@ import Footer from "./Layout/Footer";
 export default function RootLayout() {
   // const location = useLocation();
   return (
-    <div className="relative">
+    <div className="">
       <Header />
       <main className="pt-20">
         <Outlet />
