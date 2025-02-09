@@ -16,8 +16,8 @@ const Home: React.FC<{}> = () => {
       />
       <div className="w-full lg:px-[16rem] m-auto">
         <LineSpacing />
-        <div className="flex justify-evenly">
-          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md">
+        <div className="lg:flex lg:justify-evenly">
+          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md m-auto lg:m-0">
             <div className=" w-full h-44">
               <img
                 src="/materials/community.png"
@@ -33,7 +33,7 @@ const Home: React.FC<{}> = () => {
               và phát triển bền vững
             </div>
           </div>
-          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md">
+          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md m-auto lg:m-0">
             <div className=" w-full h-44">
               <img
                 src="/materials/vecteezy_hands-support-gesture_ 1.png"
@@ -49,7 +49,7 @@ const Home: React.FC<{}> = () => {
               năng và nâng cao hiệu quả làm việc
             </div>
           </div>
-          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md">
+          <div className=" bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md m-auto lg:m-0">
             <div className=" w-full h-44">
               <img
                 src="/materials/Screenshot 2025-01-17 082557 1.png"
