@@ -4,6 +4,7 @@ import Test from "./Pages/Test";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
+import AdminMain from "./Pages/Layout/AccountManagement/AdminMain";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "admin",
+        element: <AdminMain />,
       },
       {
         path: "test",

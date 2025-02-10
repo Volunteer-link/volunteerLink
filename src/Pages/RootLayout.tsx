@@ -5,14 +5,17 @@ import Header from "./Layout/Header";
 import Footer from "./Layout/Footer";
 
 export default function RootLayout() {
-  // const location = useLocation();
+  const location = useLocation();
+  const hideHeader = location.pathname.startsWith("/admin");
+  const hideFooter = location.pathname.startsWith("/admin");
+
   return (
     <div className="relative">
-      <Header />
-      <main className="pt-20">
+      {!hideHeader && <Header />}
+      <main className={hideFooter ? "" : `pt-20`}>
         <Outlet />
       </main>
-      <Footer />
+      {!hideHeader && <Footer />}
     </div>
   );
 }
