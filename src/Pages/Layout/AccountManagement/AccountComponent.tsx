@@ -158,9 +158,9 @@ const AccountComponent: React.FC<{}> = () => {
   console.log(modeAccount);
 
   return (
-    <div className="p-12 flex-1">
-      <div className="text-2xl">Quản lý tài khoản</div>
-      <div className="w-full flex justify-center">
+    <div className="p-12 lg:flex-1">
+      <div className="text-2xl mb-4 lg:mb-0">Quản lý tài khoản</div>
+      <div className="lg:flex lg:justify-center">
         <SearchComponent placeHolder="Tìm kiếm theo email..." className="" />
       </div>
       <div className="flex items-center gap-1 my-4">
@@ -197,6 +197,7 @@ const AccountComponent: React.FC<{}> = () => {
               dataSource={dataSourceOrg}
               columns={columnsOrg}
               pagination={false}
+              scroll={{ x: "max-content" }}
             />
           )}
           {modeAccount === "vol" && (
@@ -204,6 +205,7 @@ const AccountComponent: React.FC<{}> = () => {
               dataSource={dataSourceVol}
               columns={columnsVol}
               pagination={false}
+              scroll={{ x: "max-content" }}
             />
           )}
           <Pagination defaultCurrent={1} total={50} className="mt-4" />
