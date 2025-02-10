@@ -1,103 +1,64 @@
-import React from "react";
+import React from 'react';
+import { Col, Row, ConfigProvider, Image, Tabs } from 'antd';
+import type { TabsProps } from 'antd';
+import logo from '../../image/signup_banner.jpg';
+import SignupOrganization from './SignupOrganization';
+import SignupVolunter from './SignupVolunteer';
 import {
-  Col,
-  Row,
-  Typography,
-  Input,
-  Flex,
-  Button,
-  ConfigProvider,
-  Image,
-  Tabs,
-  DatePicker,
-} from "antd";
-import type { TabsProps } from "antd";
-import logo from "../../image/signup_banner.jpg";
-const { Title } = Typography;
-
-const SignupVolunter = () => {
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-  return (
-    <div className="flex w-full flex-col justify-center items-center gap-4 h-full">
-      <Input className={`max-w-[400px]`} placeholder="Họ và tên..." />
-      <Input.Password className={`max-w-[400px]`} placeholder="Mật khẩu..." />
-      <Input.Password
-        className={`max-w-[400px]`}
-        placeholder="Xác nhận mật khẩu..."
-      />
-      <DatePicker className={`max-w-[400px] w-full`} onChange={onChange} />
-      <Flex className="w-full" justify={`center`} gap="middle" vertical>
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: "#3BA769",
-            },
-          }}
-        >
-          <Button className="w-full" type="primary" block>
-            Đăng ký
-          </Button>
-        </ConfigProvider>
-      </Flex>
-      <p className="text-[14px]">
-        Bạn đã có tài khoản? <a className="text-[#3BA769]">Đăng nhập</a>
-      </p>
-    </div>
-  );
-};
-
-const SignupOrganization = () => {
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-  return (
-    <div className="flex w-full flex-col justify-center items-center gap-4 h-full">
-      <Input className={`max-w-[400px]`} placeholder="Tên tổ chức..." />
-      <Input.Password className={`max-w-[400px]`} placeholder="Mật khẩu..." />
-      <Input.Password
-        className={`max-w-[400px]`}
-        placeholder="Xác nhận mật khẩu..."
-      />
-
-      <Flex className="w-full" justify={`center`} gap="middle" vertical>
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: "#3BA769",
-            },
-          }}
-        >
-          <Button className="w-full" type="primary" block>
-            Đăng ký
-          </Button>
-        </ConfigProvider>
-      </Flex>
-      <p className="text-[14px]">
-        Bạn đã có tài khoản? <a className="text-[#3BA769]">Đăng nhập</a>
-      </p>
-    </div>
-  );
-};
-
-const items: TabsProps["items"] = [
-  {
-    key: "1",
-    label: "Tình nguyện viên ",
-    children: <SignupVolunter />,
-  },
-  {
-    key: "2",
-    label: "Tổ chức từ thiện",
-    children: <SignupOrganization />,
-  },
-];
+  nameRules,
+  passwordRules,
+  confirmPasswordRules,
+  dateRules,
+} from '../../ultils/validationRules';
 
 const Signup = () => {
   const onChange = (key: string) => {
     console.log(key);
   };
+  const onFinish = (values: any) => {
+    const trimmedValues = {
+      name: values.name.trim(),
+      password: values.password.trim(),
+      confirmPassword: values.confirmPassword.trim(),
+      date: values.date,
+    };
+    console.log('Submit thành công với dữ liệu:', trimmedValues);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Submit thất bại:', errorInfo);
+  };
+
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: 'Tình nguyện viên ',
+      children: (
+        <SignupVolunter
+          onFinish={onFinish}
+          dateRules={dateRules}
+          nameRules={nameRules}
+          passwordRules={passwordRules}
+          confirmPasswordRules={confirmPasswordRules}
+          onFinishFailed={onFinishFailed}
+        />
+      ),
+    },
+    {
+      key: '2',
+      label: 'Tổ chức từ thiện',
+      children: (
+        <SignupOrganization
+          onFinish={onFinish}
+          nameRules={nameRules}
+          passwordRules={passwordRules}
+          confirmPasswordRules={confirmPasswordRules}
+          onFinishFailed={onFinishFailed}
+        />
+      ),
+    },
+  ];
+
   return (
     <div>
       <Row className="w-full h-screen">
@@ -110,8 +71,8 @@ const Signup = () => {
               theme={{
                 components: {
                   Tabs: {
-                    inkBarColor: "#3BA769",
-                    itemSelectedColor: "#3BA769",
+                    inkBarColor: '#3BA769',
+                    itemSelectedColor: '#3BA769',
                   },
                 },
               }}
@@ -132,7 +93,7 @@ const Signup = () => {
             placeholder={true}
             alt="logo"
             src={logo}
-            style={{ height: "100vh", width: "100%" }}
+            style={{ height: '100vh', width: '100%' }}
           />
         </Col>
       </Row>

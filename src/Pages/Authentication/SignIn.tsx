@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import { useGoogleLogin } from '@react-oauth/google';
 import logo from '../../image/sign_banner.jpg';
-
+import { useNavigate } from 'react-router';
 // Import hàm login
 import api from '../../apiService/useFetch';
 
@@ -27,7 +27,7 @@ const SignIn: React.FC = () => {
   // State lưu gmail, password
   const [loading, setLoading] = useState(false);
   const { message } = AntdApp.useApp();
-
+  const navigate = useNavigate();
   const loginGG = useGoogleLogin({
     onSuccess: async (credentialResponse: any) => {
       const token = credentialResponse.access_token;
@@ -37,8 +37,10 @@ const SignIn: React.FC = () => {
         const response = await api.post('/login-using-email-only', {
           gmail: email,
         });
+        message.success('Login successful!');
         console.log(response);
       } catch (err) {
+        message.error('Login failed!');
         console.error(err);
       }
     },
@@ -97,7 +99,7 @@ const SignIn: React.FC = () => {
   return (
     <div>
       <Row className="w-full h-screen">
-        <Col span={18}>
+        <Col span={16}>
           <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">
             <h4 className="text-[#3BA769] text-[20px] text-center">
               Tham gia cộng đồng của chúng tôi
@@ -180,15 +182,21 @@ const SignIn: React.FC = () => {
             </Form>
 
             <p className="text-[14px]">
-              Bạn chưa có tài khoản?{" "}
-              <a className="text-[#3BA769]">Tạo tài khoản mới </a>
+              Bạn chưa có tài khoản?
+              <a
+                onClick={() => {
+                  navigate('/authentication/signup');
+                }}
+                className="text-[#3BA769]"
+              >
+                Tạo tài khoản mới{' '}
+              </a>
             </p>
           </div>
         </Col>
 
         <Col span={8}>
           <Image
-            className="w-full h-screen"
             className="w-full h-screen"
             preview={false}
             placeholder={true}
@@ -199,7 +207,6 @@ const SignIn: React.FC = () => {
         </Col>
       </Row>
     </div>
-  );
   );
 };
 
