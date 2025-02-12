@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchComponent from "../../../Common/SearchComponent";
 import { Table } from "antd";
 import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
+import axios from "axios";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
+  const [displayDataOrg, setDisplayDataOrg] = useState<
+    {
+      id: Number;
+      email: string;
+      name: string;
+      enabled: boolean;
+      description: string;
+      urlFb: string;
+      accountId: number;
+    }[]
+  >([]);
   const dataSourceOrg = [
     {
       key: "1",
@@ -149,6 +161,32 @@ const AccountComponent: React.FC<{}> = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await axios.post(
+          "https://dev.api.volunteer-link.site/get-all-organizations",
+          {
+            pageNumber: 1,
+            pageSize: 10,
+            searchKey: "",
+          },
+          {
+            headers: {
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpZXRuYW12b2x1bnRlZXJsaW5rQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbmlzcmF0b3IiLCJuYmYiOjE3MzkzNzAyNTYsImV4cCI6MTczOTM3NTY1NiwiaWF0IjoxNzM5MzcwMjU2LCJpc3MiOiJkZXYudm9sdW50ZWVyLWxpbmsuc2l0ZSIsImF1ZCI6IkNhcHN0b25lX0RldiJ9.0Hb4ZlY6k6rwbEOcCt5bJcnSXOvDYJZ_AhheoXYkyyw`,
+              "x-access-key": process.env.REACT_APP_ACCESS_KEY,
+            },
+          }
+        );
+        setDisplayDataOrg(data.data.data);
+      } catch (err: any) {}
+    };
+    fetchData();
+  }, []);
+
+  console.log(displayDataOrg);
+
   const handleClick = () => {
     console.log("cút vào knick");
   };

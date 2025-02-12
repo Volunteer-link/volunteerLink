@@ -24,9 +24,15 @@ const ChangeRequestComponent: React.FC<{
           </div>
           <div
             onClick={showModal}
-            className="px-6 py-2 text-white text-sm rounded-md bg-primary-color hover:scale-105 hover:opacity-95 transition-all"
+            className="px-6 py-2 text-white text-sm rounded-md bg-primary-color hover:scale-105 hover:opacity-95 transition-all hidden lg:block"
           >
             Xem chi tiết thay đổi
+          </div>
+          <div
+            onClick={showModal}
+            className="px-6 py-2 text-white text-sm rounded-md bg-primary-color hover:scale-105 hover:opacity-95 transition-all lg:hidden"
+          >
+            Xem chi tiết
           </div>
         </div>
         <div className="w-full border-2 border-primary-color rounded-md px-8 py-6 cursor-pointer flex select-none items-center justify-between my-4">
