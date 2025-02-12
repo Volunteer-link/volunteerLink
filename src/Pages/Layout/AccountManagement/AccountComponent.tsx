@@ -155,7 +155,6 @@ const AccountComponent: React.FC<{}> = () => {
   const handleFilterRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setModeAccount(event.target.value);
   };
-  console.log(modeAccount);
 
   return (
     <div className="p-12 lg:flex-1">
