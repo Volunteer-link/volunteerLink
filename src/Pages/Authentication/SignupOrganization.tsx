@@ -8,19 +8,19 @@ interface SignupOrganizationProps {
   nameRules?: Rule[];
   passwordRules?: Rule[];
   confirmPasswordRules?: (form: FormInstance) => Rule[];
+  loading?: boolean;
 }
 const SignupOrganization: React.FC<SignupOrganizationProps> = ({
   onFinish = (values: any) => {},
   onFinishFailed = (errorInfo: any) => {},
   nameRules = [],
   passwordRules = [],
+  loading = false,
   confirmPasswordRules = (form: FormInstance): Rule[] => [],
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const onChange = (key: string) => {
-    console.log(key);
-  };
+
   return (
     <div className="flex w-full flex-col justify-center items-center gap-4 h-full">
       <Form
@@ -59,7 +59,7 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
               },
             }}
           >
-            <Button className="w-full" type="primary" block>
+            <Button loading={loading} className="w-full" type="primary" block>
               Đăng ký
             </Button>
           </ConfigProvider>

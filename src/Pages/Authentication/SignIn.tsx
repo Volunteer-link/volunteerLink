@@ -191,6 +191,19 @@ const SignIn: React.FC = () => {
               >
                 Tạo tài khoản mới{' '}
               </a>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/authentication/verify-email',{
+                    state: 'FORGOT_PASSWORD'
+                  });
+                }}
+                className="block text-center text-[#3BA769] mt-2"
+                href=""
+              >
+                {' '}
+                Quên mật khẩu?
+              </a>
             </p>
           </div>
         </Col>

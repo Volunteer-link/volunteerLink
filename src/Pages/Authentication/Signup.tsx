@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, ConfigProvider, Image, Tabs } from 'antd';
+import { Col, Row, ConfigProvider, Image, Tabs,  App as AntdApp, } from 'antd';
 import type { TabsProps } from 'antd';
 import logo from '../../image/signup_banner.jpg';
 import SignupOrganization from './SignupOrganization';
@@ -9,20 +9,46 @@ import {
   passwordRules,
   confirmPasswordRules,
   dateRules,
+  emailRules
 } from '../../ultils/validationRules';
+import api from '../../apiService/useFetch';
 
 const Signup = () => {
   const onChange = (key: string) => {
-    console.log(key);
+    setOrganization(key == '1')
   };
-  const onFinish = (values: any) => {
+    const [loading, setLoading] = React.useState(false);
+    const { message } = AntdApp.useApp();
+  const [organization, setOrganization] = React.useState(false);
+  const onFinish = async (values: any) => {
     const trimmedValues = {
+      email: values.email.trim(),
       name: values.name.trim(),
       password: values.password.trim(),
       confirmPassword: values.confirmPassword.trim(),
-      date: values.date,
+      date: values.date.format('YYYY-MM-DD'),
     };
     console.log('Submit thành công với dữ liệu:', trimmedValues);
+    try {
+      setLoading(true);
+      const response = await api.post('/register-account', {
+        gmail: trimmedValues.email,
+        password: trimmedValues.password,
+        isOrganization: organization,
+        name: trimmedValues.name,
+        dateOfBirth: trimmedValues.date,
+      });
+      // Nếu gọi thành công => hiển thị thông báo
+      message.success('signup successful!');
+      console.log('Login Response:', response);
+
+      return response;
+    } catch (error) {
+      console.error(error);
+      message.error('signup failed!');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -36,11 +62,13 @@ const Signup = () => {
       children: (
         <SignupVolunter
           onFinish={onFinish}
+          emailRules={emailRules}
           dateRules={dateRules}
           nameRules={nameRules}
           passwordRules={passwordRules}
           confirmPasswordRules={confirmPasswordRules}
           onFinishFailed={onFinishFailed}
+          loading={loading}
         />
       ),
     },
@@ -54,6 +82,7 @@ const Signup = () => {
           passwordRules={passwordRules}
           confirmPasswordRules={confirmPasswordRules}
           onFinishFailed={onFinishFailed}
+          loading={loading}
         />
       ),
     },
