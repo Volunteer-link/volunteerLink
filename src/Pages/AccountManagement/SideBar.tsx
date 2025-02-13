@@ -8,12 +8,17 @@ import { FaHome } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 import { MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { TiMinus } from "react-icons/ti";
+
 const SideBar: React.FC<{
   mode: string;
   setMode: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ mode, setMode }) => {
   const [showSub, setShowSub] = useState(false);
+
   const navigate = useNavigate();
+
+
   const handleChangeMode = (mode: string) => {
     setMode(mode);
     if (mode === "create" || mode === "change") {
@@ -22,7 +27,7 @@ const SideBar: React.FC<{
       setShowSub(false);
     }
   };
-
+  
   const goHome = () => {
     navigate("/home");
   };

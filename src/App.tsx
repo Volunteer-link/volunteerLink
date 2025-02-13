@@ -9,14 +9,23 @@ import Signup from "./Pages/Authentication/Signup";
 import VerifyEmail from "./Pages/Authentication/VerifyEmail";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AdminMain from "./Pages/AccountManagement/AdminMain";
+import AboutUs from "./Pages/AboutUs";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
       {
+        path: "/",
+        element: <Home />,
+      },
+      {
         path: "home",
         element: <Home />,
+      },
+      {
+        path: "aboutus",
+        element: <AboutUs />,
       },
       {
         path: "admin",
@@ -24,7 +33,6 @@ const router = createBrowserRouter([
       },
       {
         path: "test",
-
         element: <Test />,
       },
     ],
