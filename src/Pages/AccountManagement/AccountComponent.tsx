@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import SearchComponent from "../../../Common/SearchComponent";
+
 import { Table } from "antd";
 import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
 import axios from "axios";
+import SearchComponent from "../../Common/SearchComponent";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
