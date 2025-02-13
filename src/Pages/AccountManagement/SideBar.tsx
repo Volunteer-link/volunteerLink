@@ -4,12 +4,16 @@ import { IoDocumentText } from "react-icons/io5";
 import { FaChevronRight } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { FaHome } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
+import { MdLogout } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 const SideBar: React.FC<{
   mode: string;
   setMode: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ mode, setMode }) => {
   const [showSub, setShowSub] = useState(false);
+  const navigate = useNavigate();
   const handleChangeMode = (mode: string) => {
     setMode(mode);
     if (mode === "create" || mode === "change") {
@@ -19,9 +23,20 @@ const SideBar: React.FC<{
     }
   };
 
+  const goHome = () => {
+    navigate("/home");
+  };
+
   return (
     <div className="bg-primary-color hidden lg:min-h-screen lg:block lg:p-10 lg:w-72 select-none">
       <div className="text-base text-white text-shadow-lg">
+        <div
+          onClick={() => goHome()}
+          className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
+        >
+          <FaHome />
+          Về trang chủ
+        </div>
         <div
           onClick={() => handleChangeMode("account")}
           className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
@@ -75,6 +90,10 @@ const SideBar: React.FC<{
             </div>
           </motion.div>
         )}
+        <div className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2">
+          <MdLogout />
+          Đăng xuất
+        </div>
       </div>
     </div>
   );
