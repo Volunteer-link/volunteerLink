@@ -28,14 +28,15 @@ const Header: React.FC<{}> = () => {
   const handleVisibleChange = (newVisible: boolean) => {
     setVisible(newVisible);
   };
+
   return (
-    <div className="bg-primary-color md:grid md:grid-cols-8 md:py-2 md:px-4 fixed md:w-full">
+    <div className="bg-primary-color md:grid md:grid-cols-8 md:py-2 md:px-4 fixed w-full z-10">
       <div></div>
-      <div className="bg-white w-16 h-16">Logo</div>
+      <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo</div>
       <div className="col-span-3 hidden md:block">
         <ul className="flex gap-8 text-white text-sm h-full items-center">
           <li className="hover:scale-110 transition-all cursor-pointer">
-            Trang chủ
+            <a href="#">Trang chủ</a>
           </li>
           <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
             Tổ chức
@@ -44,7 +45,7 @@ const Header: React.FC<{}> = () => {
             Sự kiện
           </li>
           <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
-            Giới thiệu
+            <a href="#aboutus">Giới thiệu</a>
           </li>
         </ul>
       </div>
