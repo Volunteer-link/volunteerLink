@@ -7,6 +7,7 @@ import { VscBellDot } from "react-icons/vsc";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { decodedCookie, deleteCookie, getCookie } from "../../ultils/cookie";
+import { useLogout } from "../../ultils/logout";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -14,6 +15,7 @@ const Header: React.FC<{}> = () => {
   const location = useLocation();
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
+  const logout = useLogout();
 
   const items: MenuProps["items"] = [
     {
@@ -38,8 +40,7 @@ const Header: React.FC<{}> = () => {
   };
 
   const handleLogout = () => {
-    deleteCookie("accessToken");
-    navigate("/");
+    logout();
   };
 
   return (
