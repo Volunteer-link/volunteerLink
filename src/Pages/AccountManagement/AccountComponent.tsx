@@ -5,13 +5,14 @@ import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
 import axios from "axios";
 import SearchComponent from "../../Common/SearchComponent";
+import api from "../../apiService/useFetch";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
   const [displayDataOrg, setDisplayDataOrg] = useState<
     {
       id: Number;
-      email: string;
+      gmail: string;
       name: string;
       enabled: boolean;
       description: string;
@@ -19,20 +20,16 @@ const AccountComponent: React.FC<{}> = () => {
       accountId: number;
     }[]
   >([]);
-  const dataSourceOrg = [
-    {
-      key: "1",
-      mail: "mike@example.com",
-      name: "Tổ chức A",
-      status: "Active",
-    },
-    {
-      key: "2",
-      mail: "john@example.com",
-      name: "Tổ chức B",
-      status: "Inactive",
-    },
-  ];
+  const dataSourceOrg = displayDataOrg?.map((item, index) => {
+    return {
+      key: index,
+      gmail: item.gmail,
+      name: item.name,
+      status: item.enabled,
+    };
+  });
+  console.log(dataSourceOrg);
+
   const columnsOrg = [
     {
       title: "Số thứ tự",
@@ -40,9 +37,9 @@ const AccountComponent: React.FC<{}> = () => {
       render: (_: any, __: any, index: number) => ++index,
     },
     {
-      title: "Email",
-      dataIndex: "mail",
-      key: "mail",
+      title: "Gmail",
+      dataIndex: "gmail",
+      key: "gmail",
     },
     {
       title: "Tên tổ chức",
@@ -55,10 +52,10 @@ const AccountComponent: React.FC<{}> = () => {
       render: (_: any, record: any) => (
         <div
           className={`font-medium ${
-            record.status === "Active" ? "text-primary-color" : "text-red-500"
+            record.status === true ? "text-primary-color" : "text-red-500"
           }`}
         >
-          {record.status}
+          {record.status ? "Đang hoạt động" : "Bị vô hiệu hóa"}
         </div>
       ),
     },
@@ -67,7 +64,7 @@ const AccountComponent: React.FC<{}> = () => {
       key: "address",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          {record.status === "Active" && (
+          {record.status === true && (
             <div
               onClick={handleClick}
               className="border-2 border-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-primary-color"
@@ -75,7 +72,7 @@ const AccountComponent: React.FC<{}> = () => {
               Vô hiệu hóa
             </div>
           )}
-          {record.status === "Inactive" && (
+          {record.status === false && (
             <div
               onClick={handleClick}
               className="bg-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-white"
@@ -166,21 +163,11 @@ const AccountComponent: React.FC<{}> = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await axios.post(
-          "https://dev.api.volunteer-link.site/get-all-organizations",
-          {
-            pageNumber: 1,
-            pageSize: 10,
-            searchKey: "",
-          },
-          {
-            headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpZXRuYW12b2x1bnRlZXJsaW5rQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbmlzcmF0b3IiLCJuYmYiOjE3MzkzNzAyNTYsImV4cCI6MTczOTM3NTY1NiwiaWF0IjoxNzM5MzcwMjU2LCJpc3MiOiJkZXYudm9sdW50ZWVyLWxpbmsuc2l0ZSIsImF1ZCI6IkNhcHN0b25lX0RldiJ9.0Hb4ZlY6k6rwbEOcCt5bJcnSXOvDYJZ_AhheoXYkyyw`,
-              "x-access-key": process.env.REACT_APP_ACCESS_KEY,
-            },
-          }
+        const data = await api.get(
+          "/get-all-organizations?PageNumber=1&PageSize=2"
         );
-        setDisplayDataOrg(data.data.data);
+        const listData = data.data.data.items;
+        setDisplayDataOrg(listData);
       } catch (err: any) {}
     };
     fetchData();
