@@ -32,16 +32,34 @@ api.interceptors.request.use(
 );
 
 // Thêm Interceptors cho response (nếu cần)
-api.interceptors.response.use(
-  (response) => {
-    // Bạn có thể xử lý dữ liệu trả về ở đây trước khi component nhận
-    return response;
-  },
-  (error) => {
-    console.log("lỗi iem nhíe");
+// api.interceptors.response.use(
+//   (response) => {
+//     // Bạn có thể xử lý dữ liệu trả về ở đây trước khi component nhận
+//     return response;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
-    return Promise.reject(error);
-  }
-);
+export const setupInterceptors = (
+  setError: (message: number) => void,
+  setPageNumber: (message: number) => void,
+  setTotalItems: (message: number) => void
+) => {
+  api.interceptors.response.use(
+    (response) => {
+      setPageNumber(response.data.data.pageNumber);
+      setTotalItems(response.data.data.totalItems);
+      return response;
+    },
+    (error) => {
+      setError(error.response?.status || 500);
+      setError(error.response?.status || 500);
+      setError(error.response?.status || 500);
+      return Promise.reject(error);
+    }
+  );
+};
 
 export default api;

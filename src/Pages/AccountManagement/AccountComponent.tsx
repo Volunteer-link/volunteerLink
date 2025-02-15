@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-import { Table } from "antd";
+import { Button, Flex, Result, Spin, Table } from "antd";
 import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
 import axios from "axios";
 import SearchComponent from "../../Common/SearchComponent";
-import api from "../../apiService/useFetch";
+import api, { setupInterceptors } from "../../apiService/useFetch";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
+  const [errCode, setErrCode] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [displayDataOrg, setDisplayDataOrg] = useState<
     {
       id: Number;
@@ -28,8 +34,8 @@ const AccountComponent: React.FC<{}> = () => {
       status: item.enabled,
     };
   });
-  console.log(dataSourceOrg);
-
+  const navigate = useNavigate();
+  const [sizePage, setSizePage] = useState<number>(1);
   const columnsOrg = [
     {
       title: "Số thứ tự",
@@ -161,25 +167,58 @@ const AccountComponent: React.FC<{}> = () => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
+    setupInterceptors(setErrCode, setPageNumber, setTotalItems);
+  }, []);
+  useEffect(() => {
+    const fetchDataOrg = async () => {
       try {
+        setIsLoading(true);
         const data = await api.get(
-          "/get-all-organizations?PageNumber=1&PageSize=2"
+          `/get-all-organizations?PageNumber=${pageNumber}&PageSize=${sizePage}`
         );
+
         const listData = data.data.data.items;
         setDisplayDataOrg(listData);
-      } catch (err: any) {}
+      } catch (err: any) {
+      } finally {
+        setIsLoading(false);
+      }
     };
-    fetchData();
-  }, []);
+    const fetchDataVol = async () => {
+      try {
+        setIsLoading(true);
+        const data = await api.get(
+          `/get-all-volunteers?PageNumber=${pageNumber}&PageSize=${sizePage}`
+        );
 
-  console.log(displayDataOrg);
+        const listData = data.data.data.items;
+        console.log(listData);
+
+        setDisplayDataOrg(listData);
+      } catch (err: any) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (modeAccount === "org") {
+      fetchDataOrg();
+    }
+    if (modeAccount === "vol") {
+      fetchDataVol();
+    }
+  }, [pageNumber]);
 
   const handleClick = () => {
     console.log("cút vào knick");
   };
+  const handleClickBackHome = () => {
+    navigate("/");
+  };
   const handleFilterRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setModeAccount(event.target.value);
+  };
+  const handlePaging = (page: number) => {
+    setPageNumber(page);
   };
 
   return (
@@ -233,7 +272,32 @@ const AccountComponent: React.FC<{}> = () => {
               scroll={{ x: "max-content" }}
             />
           )}
-          <Pagination defaultCurrent={1} total={50} className="mt-4" />
+          {errCode === 403 && (
+            <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-100">
+              <Result
+                status="403"
+                title="403"
+                subTitle="Sorry, you are not authorized to access this page."
+                extra={
+                  <Button onClick={handleClickBackHome} type="primary">
+                    Back Home
+                  </Button>
+                }
+              />
+            </div>
+          )}
+          <Pagination
+            defaultCurrent={pageNumber}
+            total={totalItems}
+            pageSize={sizePage}
+            onChange={handlePaging}
+            className="mt-4"
+          />
+          {isLoading && (
+            <Flex>
+              <Spin size="large" fullscreen />
+            </Flex>
+          )}
         </ConfigProvider>
       </div>
     </div>
