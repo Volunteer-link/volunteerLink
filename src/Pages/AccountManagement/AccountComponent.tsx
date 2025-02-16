@@ -39,6 +39,8 @@ const AccountComponent: React.FC<{}> = () => {
   >([]);
   const navigate = useNavigate();
   const [sizePage, setSizePage] = useState<number>(1);
+  const [valueSearch, setValueSearch] = useState<string>("");
+
   const dataSourceOrg = displayDataOrg?.map((item, index) => {
     return {
       key: index,
@@ -179,7 +181,7 @@ const AccountComponent: React.FC<{}> = () => {
       try {
         setIsLoading(true);
         const data = await api.get(
-          `/get-all-organizations?PageNumber=${pageNumber}&PageSize=${sizePage}`
+          `/get-all-organizations?PageNumber=${pageNumber}&PageSize=${sizePage}&SearchKey=${valueSearch}`
         );
 
         const listData = data.data.data.items;
@@ -194,7 +196,7 @@ const AccountComponent: React.FC<{}> = () => {
       try {
         setIsLoading(true);
         const data = await api.get(
-          `/get-all-volunteers?PageNumber=${pageNumber}&PageSize=${sizePage}`
+          `/get-all-volunteers?PageNumber=${pageNumber}&PageSize=${sizePage}&SearchKey=${valueSearch}`
         );
 
         const listData = data.data.data.items;
@@ -212,7 +214,7 @@ const AccountComponent: React.FC<{}> = () => {
     if (modeAccount === "vol") {
       fetchDataVol();
     }
-  }, [pageNumber, modeAccount]);
+  }, [pageNumber, modeAccount, valueSearch]);
 
   const handleClick = () => {
     console.log("cút vào knick");
@@ -227,14 +229,18 @@ const AccountComponent: React.FC<{}> = () => {
   const handlePaging = (page: number) => {
     setPageNumber(page);
   };
-
-  console.log(keyPaging);
+  console.log(pageNumber);
 
   return (
     <div className="p-12 lg:flex-1">
       <div className="text-2xl mb-4 lg:mb-0">Quản lý tài khoản</div>
       <div className="lg:flex lg:justify-center">
-        <SearchComponent placeHolder="Tìm kiếm theo email..." className="" />
+        <SearchComponent
+          placeHolder="Tìm kiếm theo email..."
+          className=""
+          setValueSearch={setValueSearch}
+          setPageNumber={setPageNumber}
+        />
       </div>
       <div className="flex items-center gap-1 my-4">
         <div className="text-sm">Loại tài khoản:</div>
@@ -298,6 +304,7 @@ const AccountComponent: React.FC<{}> = () => {
           <div key={modeAccount}>
             <Pagination
               defaultCurrent={1}
+              current={pageNumber}
               total={totalItems}
               pageSize={sizePage}
               onChange={handlePaging}
