@@ -1,6 +1,6 @@
-import React from 'react';
-import { Col, Row, ConfigProvider, Image, Tabs,  App as AntdApp, } from 'antd';
-import type { TabsProps } from 'antd';
+import React, { useState } from 'react';
+import { Col, Row, ConfigProvider, Image, Tabs, App as AntdApp } from 'antd';
+import type { TabsProps, UploadFile } from 'antd';
 import logo from '../../image/signup_banner.jpg';
 import SignupOrganization from './SignupOrganization';
 import SignupVolunter from './SignupVolunteer';
@@ -9,28 +9,35 @@ import {
   passwordRules,
   confirmPasswordRules,
   dateRules,
-  emailRules
+  emailRules,
 } from '../../ultils/validationRules';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import api from '../../apiService/useFetch';
-
+import { storage } from '../../ultils/firebase';
 const Signup = () => {
   const onChange = (key: string) => {
-    setOrganization(key == '1')
+    setOrganization(key == '2');
   };
-    const [loading, setLoading] = React.useState(false);
-    const { message } = AntdApp.useApp();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const [loading, setLoading] = React.useState(false);
+  const { message } = AntdApp.useApp();
   const [organization, setOrganization] = React.useState(false);
   const onFinish = async (values: any) => {
-    const trimmedValues = {
-      email: values.email.trim(),
-      name: values.name.trim(),
-      password: values.password.trim(),
-      confirmPassword: values.confirmPassword.trim(),
-      date: values.date.format('YYYY-MM-DD'),
-    };
-    console.log('Submit thành công với dữ liệu:', trimmedValues);
     try {
       setLoading(true);
+      console.log(organization)
+      if (organization) {
+        await handleUpload();
+        return;
+      }
+      const trimmedValues = {
+        email: values.email.trim(),
+        name: values.name.trim(),
+        password: values.password.trim(),
+        confirmPassword: values.confirmPassword.trim(),
+        date: values.date.format('YYYY-MM-DD'),
+      };
       const response = await api.post('/register-account', {
         gmail: trimmedValues.email,
         password: trimmedValues.password,
@@ -53,6 +60,43 @@ const Signup = () => {
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Submit thất bại:', errorInfo);
+  };
+
+  const handleUpload = async () => {
+    try {
+      const promises = fileList.map((item) => {
+        const file = item.originFileObj as File;
+
+        const storageRef = ref(storage, `images/${file.name}`);
+
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        return new Promise<string>((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log(`Upload is ${progress}% done`);
+            },
+            (error) => {
+              reject(error);
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(downloadURL);
+            }
+          );
+        });
+      });
+
+      const downloadURLs = await Promise.all(promises);
+      console.log('URLs:', downloadURLs);
+      setFileList([]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
   };
 
   const items: TabsProps['items'] = [
@@ -83,6 +127,8 @@ const Signup = () => {
           confirmPasswordRules={confirmPasswordRules}
           onFinishFailed={onFinishFailed}
           loading={loading}
+          fileList={fileList}
+          setFileList={setFileList}
         />
       ),
     },

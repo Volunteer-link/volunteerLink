@@ -62,7 +62,7 @@ export const nameRules: Rule[] = [
         // }
         // Kiểm tra cách ít nhất 18 năm
         const maxDate = today.subtract(18, "year");
-        if (value.isAfter(maxDate, "day")) {
+        if (value?.isAfter(maxDate, "day")) {
           return Promise.reject("Bạn phải trên 18 tuổi");
         }
         return Promise.resolve();

@@ -1,6 +1,8 @@
-import { Flex, Input, Button, ConfigProvider, Form } from 'antd';
+import { Flex, Input, Button, ConfigProvider, Form, Upload } from 'antd';
 import { useNavigate } from 'react-router';
 import type { Rule, FormInstance } from 'antd/es/form';
+import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { PlusOutlined } from '@ant-design/icons';
 
 interface SignupOrganizationProps {
   onFinish?: (values: any) => void;
@@ -9,7 +11,14 @@ interface SignupOrganizationProps {
   passwordRules?: Rule[];
   confirmPasswordRules?: (form: FormInstance) => Rule[];
   loading?: boolean;
+  fileList?: UploadFile[];
+  setFileList?: (fileList: UploadFile[]) => void;
 }
+
+type MultiImageUploadProps = {
+  onUploaded?: (urls: string[]) => void;
+};
+
 const SignupOrganization: React.FC<SignupOrganizationProps> = ({
   onFinish = (values: any) => {},
   onFinishFailed = (errorInfo: any) => {},
@@ -17,9 +26,14 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
   passwordRules = [],
   loading = false,
   confirmPasswordRules = (form: FormInstance): Rule[] => [],
+  fileList = [],
+  setFileList = (fileList: UploadFile[]) => {},
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
   return (
     <div className="flex w-full flex-col justify-center items-center gap-4 h-full">
@@ -51,6 +65,32 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
             placeholder="Xác nhận mật khẩu..."
           />
         </Form.Item>
+        <Form.Item
+          name="image"
+          rules={[
+            {
+              validator(_: any, value: string) {
+                if (!fileList.length) {
+                  return Promise.reject('Bạn cần upload ảnh');
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <Upload
+            multiple
+            listType="picture-card" // hiển thị dạng khung ảnh
+            fileList={fileList}
+            onChange={handleChange}
+            beforeUpload={() => false}
+          >
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Chọn ảnh</div>
+            </div>
+          </Upload>
+        </Form.Item>
         <Flex className="w-full" justify={`center`} gap="middle" vertical>
           <ConfigProvider
             theme={{
@@ -59,7 +99,13 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
               },
             }}
           >
-            <Button loading={loading} className="w-full" type="primary" block>
+            <Button
+              loading={loading}
+              htmlType="submit"
+              className="w-full"
+              type="primary"
+              block
+            >
               Đăng ký
             </Button>
           </ConfigProvider>
