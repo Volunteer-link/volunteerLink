@@ -49,6 +49,8 @@ export const setupInterceptors = (
 ) => {
   api.interceptors.response.use(
     (response) => {
+      // console.log(response);
+
       setPageNumber(response.data.data.pageNumber);
       setTotalItems(response.data.data.totalItems);
       return response;

@@ -14,6 +14,7 @@ const AccountComponent: React.FC<{}> = () => {
   const [errCode, setErrCode] = useState<number>(0);
   const [totalItems, setTotalItems] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
+  const [keyPaging, setKeyPaging] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [displayDataOrg, setDisplayDataOrg] = useState<
     {
@@ -26,6 +27,18 @@ const AccountComponent: React.FC<{}> = () => {
       accountId: number;
     }[]
   >([]);
+  const [displayDataVol, setDisplayDataVol] = useState<
+    {
+      id: Number;
+      gmail: string;
+      name: string;
+      sex: number;
+      isAvailable: boolean;
+      accountId: number;
+    }[]
+  >([]);
+  const navigate = useNavigate();
+  const [sizePage, setSizePage] = useState<number>(1);
   const dataSourceOrg = displayDataOrg?.map((item, index) => {
     return {
       key: index,
@@ -34,8 +47,6 @@ const AccountComponent: React.FC<{}> = () => {
       status: item.enabled,
     };
   });
-  const navigate = useNavigate();
-  const [sizePage, setSizePage] = useState<number>(1);
   const columnsOrg = [
     {
       title: "Số thứ tự",
@@ -43,7 +54,7 @@ const AccountComponent: React.FC<{}> = () => {
       render: (_: any, __: any, index: number) => ++index,
     },
     {
-      title: "Gmail",
+      title: "Email",
       dataIndex: "gmail",
       key: "gmail",
     },
@@ -90,22 +101,16 @@ const AccountComponent: React.FC<{}> = () => {
       ),
     },
   ];
-  const dataSourceVol = [
-    {
-      key: "1",
-      mail: "mike@example.com",
-      name: "Lê Anh Sơn",
-      gender: "Nam",
-      status: "Inactive",
-    },
-    {
-      key: "2",
-      mail: "john@example.com",
-      name: "Lê Thị Sơn",
-      gender: "Nữ",
-      status: "Active",
-    },
-  ];
+  const dataSourceVol = displayDataVol?.map((item, index) => {
+    return {
+      key: index,
+      mail: item.gmail,
+      name: item.name,
+      gender: item.sex === 1 ? "Nam" : item.sex === 2 ? "Nữ" : "Khác",
+      status: item.isAvailable,
+    };
+  });
+
   const columnsVol = [
     {
       title: "Số thứ tự",
@@ -133,10 +138,10 @@ const AccountComponent: React.FC<{}> = () => {
       render: (_: any, record: any) => (
         <div
           className={`font-medium ${
-            record.status === "Active" ? "text-primary-color" : "text-red-500"
+            record.status === true ? "text-primary-color" : "text-red-500"
           }`}
         >
-          {record.status}
+          {record.status ? "Đang hoạt động" : "Bị vô hiệu hóa"}
         </div>
       ),
     },
@@ -145,7 +150,7 @@ const AccountComponent: React.FC<{}> = () => {
       key: "address",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          {record.status === "Active" && (
+          {record.status === true && (
             <div
               onClick={handleClick}
               className="border-2 border-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-primary-color"
@@ -153,7 +158,7 @@ const AccountComponent: React.FC<{}> = () => {
               Vô hiệu hóa
             </div>
           )}
-          {record.status === "Inactive" && (
+          {record.status === false && (
             <div
               onClick={handleClick}
               className="bg-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-white"
@@ -178,6 +183,7 @@ const AccountComponent: React.FC<{}> = () => {
         );
 
         const listData = data.data.data.items;
+
         setDisplayDataOrg(listData);
       } catch (err: any) {
       } finally {
@@ -192,9 +198,9 @@ const AccountComponent: React.FC<{}> = () => {
         );
 
         const listData = data.data.data.items;
-        console.log(listData);
+        console.log(data);
 
-        setDisplayDataOrg(listData);
+        setDisplayDataVol(listData);
       } catch (err: any) {
       } finally {
         setIsLoading(false);
@@ -206,7 +212,7 @@ const AccountComponent: React.FC<{}> = () => {
     if (modeAccount === "vol") {
       fetchDataVol();
     }
-  }, [pageNumber]);
+  }, [pageNumber, modeAccount]);
 
   const handleClick = () => {
     console.log("cút vào knick");
@@ -216,10 +222,13 @@ const AccountComponent: React.FC<{}> = () => {
   };
   const handleFilterRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setModeAccount(event.target.value);
+    setPageNumber(1);
   };
   const handlePaging = (page: number) => {
     setPageNumber(page);
   };
+
+  console.log(keyPaging);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -286,13 +295,15 @@ const AccountComponent: React.FC<{}> = () => {
               />
             </div>
           )}
-          <Pagination
-            defaultCurrent={pageNumber}
-            total={totalItems}
-            pageSize={sizePage}
-            onChange={handlePaging}
-            className="mt-4"
-          />
+          <div key={modeAccount}>
+            <Pagination
+              defaultCurrent={1}
+              total={totalItems}
+              pageSize={sizePage}
+              onChange={handlePaging}
+              className="mt-4"
+            />
+          </div>
           {isLoading && (
             <Flex>
               <Spin size="large" fullscreen />
