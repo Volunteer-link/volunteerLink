@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
 
-import { Table } from "antd";
+import { Button, Flex, Result, Spin, Table } from "antd";
 import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
 import axios from "axios";
 import SearchComponent from "../../Common/SearchComponent";
+import api, { setupInterceptors } from "../../apiService/useFetch";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
+  const [errCode, setErrCode] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [keyPaging, setKeyPaging] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [displayDataOrg, setDisplayDataOrg] = useState<
     {
       id: Number;
-      email: string;
+      gmail: string;
       name: string;
       enabled: boolean;
       description: string;
@@ -19,20 +27,26 @@ const AccountComponent: React.FC<{}> = () => {
       accountId: number;
     }[]
   >([]);
-  const dataSourceOrg = [
+  const [displayDataVol, setDisplayDataVol] = useState<
     {
-      key: "1",
-      mail: "mike@example.com",
-      name: "Tổ chức A",
-      status: "Active",
-    },
-    {
-      key: "2",
-      mail: "john@example.com",
-      name: "Tổ chức B",
-      status: "Inactive",
-    },
-  ];
+      id: Number;
+      gmail: string;
+      name: string;
+      sex: number;
+      isAvailable: boolean;
+      accountId: number;
+    }[]
+  >([]);
+  const navigate = useNavigate();
+  const [sizePage, setSizePage] = useState<number>(1);
+  const dataSourceOrg = displayDataOrg?.map((item, index) => {
+    return {
+      key: index,
+      gmail: item.gmail,
+      name: item.name,
+      status: item.enabled,
+    };
+  });
   const columnsOrg = [
     {
       title: "Số thứ tự",
@@ -41,8 +55,8 @@ const AccountComponent: React.FC<{}> = () => {
     },
     {
       title: "Email",
-      dataIndex: "mail",
-      key: "mail",
+      dataIndex: "gmail",
+      key: "gmail",
     },
     {
       title: "Tên tổ chức",
@@ -55,10 +69,10 @@ const AccountComponent: React.FC<{}> = () => {
       render: (_: any, record: any) => (
         <div
           className={`font-medium ${
-            record.status === "Active" ? "text-primary-color" : "text-red-500"
+            record.status === true ? "text-primary-color" : "text-red-500"
           }`}
         >
-          {record.status}
+          {record.status ? "Đang hoạt động" : "Bị vô hiệu hóa"}
         </div>
       ),
     },
@@ -67,7 +81,7 @@ const AccountComponent: React.FC<{}> = () => {
       key: "address",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          {record.status === "Active" && (
+          {record.status === true && (
             <div
               onClick={handleClick}
               className="border-2 border-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-primary-color"
@@ -75,7 +89,7 @@ const AccountComponent: React.FC<{}> = () => {
               Vô hiệu hóa
             </div>
           )}
-          {record.status === "Inactive" && (
+          {record.status === false && (
             <div
               onClick={handleClick}
               className="bg-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-white"
@@ -87,22 +101,16 @@ const AccountComponent: React.FC<{}> = () => {
       ),
     },
   ];
-  const dataSourceVol = [
-    {
-      key: "1",
-      mail: "mike@example.com",
-      name: "Lê Anh Sơn",
-      gender: "Nam",
-      status: "Inactive",
-    },
-    {
-      key: "2",
-      mail: "john@example.com",
-      name: "Lê Thị Sơn",
-      gender: "Nữ",
-      status: "Active",
-    },
-  ];
+  const dataSourceVol = displayDataVol?.map((item, index) => {
+    return {
+      key: index,
+      mail: item.gmail,
+      name: item.name,
+      gender: item.sex === 1 ? "Nam" : item.sex === 2 ? "Nữ" : "Khác",
+      status: item.isAvailable,
+    };
+  });
+
   const columnsVol = [
     {
       title: "Số thứ tự",
@@ -130,10 +138,10 @@ const AccountComponent: React.FC<{}> = () => {
       render: (_: any, record: any) => (
         <div
           className={`font-medium ${
-            record.status === "Active" ? "text-primary-color" : "text-red-500"
+            record.status === true ? "text-primary-color" : "text-red-500"
           }`}
         >
-          {record.status}
+          {record.status ? "Đang hoạt động" : "Bị vô hiệu hóa"}
         </div>
       ),
     },
@@ -142,7 +150,7 @@ const AccountComponent: React.FC<{}> = () => {
       key: "address",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          {record.status === "Active" && (
+          {record.status === true && (
             <div
               onClick={handleClick}
               className="border-2 border-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-primary-color"
@@ -150,7 +158,7 @@ const AccountComponent: React.FC<{}> = () => {
               Vô hiệu hóa
             </div>
           )}
-          {record.status === "Inactive" && (
+          {record.status === false && (
             <div
               onClick={handleClick}
               className="bg-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-white"
@@ -164,36 +172,63 @@ const AccountComponent: React.FC<{}> = () => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await axios.post(
-          "https://dev.api.volunteer-link.site/get-all-organizations",
-          {
-            pageNumber: 1,
-            pageSize: 10,
-            searchKey: "",
-          },
-          {
-            headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpZXRuYW12b2x1bnRlZXJsaW5rQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbmlzcmF0b3IiLCJuYmYiOjE3MzkzNzAyNTYsImV4cCI6MTczOTM3NTY1NiwiaWF0IjoxNzM5MzcwMjU2LCJpc3MiOiJkZXYudm9sdW50ZWVyLWxpbmsuc2l0ZSIsImF1ZCI6IkNhcHN0b25lX0RldiJ9.0Hb4ZlY6k6rwbEOcCt5bJcnSXOvDYJZ_AhheoXYkyyw`,
-              "x-access-key": process.env.REACT_APP_ACCESS_KEY,
-            },
-          }
-        );
-        setDisplayDataOrg(data.data.data);
-      } catch (err: any) {}
-    };
-    fetchData();
+    setupInterceptors(setErrCode, setPageNumber, setTotalItems);
   }, []);
+  useEffect(() => {
+    const fetchDataOrg = async () => {
+      try {
+        setIsLoading(true);
+        const data = await api.get(
+          `/get-all-organizations?PageNumber=${pageNumber}&PageSize=${sizePage}`
+        );
 
-  console.log(displayDataOrg);
+        const listData = data.data.data.items;
+
+        setDisplayDataOrg(listData);
+      } catch (err: any) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    const fetchDataVol = async () => {
+      try {
+        setIsLoading(true);
+        const data = await api.get(
+          `/get-all-volunteers?PageNumber=${pageNumber}&PageSize=${sizePage}`
+        );
+
+        const listData = data.data.data.items;
+        console.log(data);
+
+        setDisplayDataVol(listData);
+      } catch (err: any) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (modeAccount === "org") {
+      fetchDataOrg();
+    }
+    if (modeAccount === "vol") {
+      fetchDataVol();
+    }
+  }, [pageNumber, modeAccount]);
 
   const handleClick = () => {
     console.log("cút vào knick");
   };
+  const handleClickBackHome = () => {
+    navigate("/");
+  };
   const handleFilterRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setModeAccount(event.target.value);
+    setPageNumber(1);
   };
+  const handlePaging = (page: number) => {
+    setPageNumber(page);
+  };
+
+  console.log(keyPaging);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -246,7 +281,34 @@ const AccountComponent: React.FC<{}> = () => {
               scroll={{ x: "max-content" }}
             />
           )}
-          <Pagination defaultCurrent={1} total={50} className="mt-4" />
+          {errCode === 403 && (
+            <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-100">
+              <Result
+                status="403"
+                title="403"
+                subTitle="Sorry, you are not authorized to access this page."
+                extra={
+                  <Button onClick={handleClickBackHome} type="primary">
+                    Back Home
+                  </Button>
+                }
+              />
+            </div>
+          )}
+          <div key={modeAccount}>
+            <Pagination
+              defaultCurrent={1}
+              total={totalItems}
+              pageSize={sizePage}
+              onChange={handlePaging}
+              className="mt-4"
+            />
+          </div>
+          {isLoading && (
+            <Flex>
+              <Spin size="large" fullscreen />
+            </Flex>
+          )}
         </ConfigProvider>
       </div>
     </div>

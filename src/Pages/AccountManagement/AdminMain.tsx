@@ -8,10 +8,9 @@ import ChangeRequestComponent from "./ChangeRequestComponent";
 
 const AdminMain = () => {
   const [mode, setMode] = useState<string>("account");
-  console.log(mode);
 
   return (
-    <div className="lg:flex">
+    <div className="lg:flex relative">
       <SideBar mode={mode} setMode={setMode} />
       {mode === "account" && <AccountComponent />}
       {mode === "finance" && <FinanceComponent />}
