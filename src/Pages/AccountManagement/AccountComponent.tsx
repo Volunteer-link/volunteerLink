@@ -45,6 +45,7 @@ const AccountComponent: React.FC<{}> = () => {
   const [idUpdate, setIdUpdate] = useState<number>(0);
   const [status, setStatus] = useState<boolean>(false);
   const [keyUpdate, setKeyUpdate] = useState<number>(0);
+  const [checkPagination, setCheckPagination] = useState<number>(0);
 
   const dataSourceOrg = displayDataOrg?.map((item, index) => {
     return {
@@ -188,7 +189,12 @@ const AccountComponent: React.FC<{}> = () => {
   ];
 
   useEffect(() => {
-    setupInterceptors(setErrCode, setPageNumber, setTotalItems);
+    setupInterceptors(
+      setErrCode,
+      setPageNumber,
+      setTotalItems,
+      setCheckPagination
+    );
   }, []);
   useEffect(() => {
     const fetchDataOrg = async () => {
@@ -199,6 +205,7 @@ const AccountComponent: React.FC<{}> = () => {
         );
 
         const listData = data.data.data.items;
+
         setDisplayDataOrg(listData);
       } catch (err: any) {
       } finally {
@@ -211,8 +218,6 @@ const AccountComponent: React.FC<{}> = () => {
         const data = await api.get(
           `/get-all-volunteers?PageNumber=${pageNumber}&PageSize=${sizePage}&SearchKey=${valueSearch}`
         );
-        console.log(data);
-
         const listData = data.data.data.items;
 
         setDisplayDataVol(listData);
@@ -246,6 +251,12 @@ const AccountComponent: React.FC<{}> = () => {
   };
   const handleFilterRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setModeAccount(event.target.value);
+    if (event.target.value === "vol") {
+      dataSourceOrg.length = 0;
+    }
+    if (event.target.value === "org") {
+      dataSourceVol.length = 0;
+    }
     setPageNumber(1);
   };
   const handlePaging = (page: number) => {
@@ -265,7 +276,6 @@ const AccountComponent: React.FC<{}> = () => {
       setKeyUpdate((prev) => ++prev);
     }
   };
-  // console.log(pageNumber);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -337,7 +347,7 @@ const AccountComponent: React.FC<{}> = () => {
               />
             </div>
           )}
-          <div key={modeAccount}>
+          {checkPagination !== 0 && (
             <Pagination
               defaultCurrent={1}
               current={pageNumber}
@@ -346,7 +356,7 @@ const AccountComponent: React.FC<{}> = () => {
               onChange={handlePaging}
               className="mt-4"
             />
-          </div>
+          )}
           {isLoading && (
             <Flex>
               <Spin size="large" fullscreen />

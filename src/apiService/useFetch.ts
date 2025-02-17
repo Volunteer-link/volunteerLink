@@ -45,15 +45,16 @@ api.interceptors.request.use(
 export const setupInterceptors = (
   setError: (message: number) => void,
   setPageNumber: (message: number) => void,
-  setTotalItems: (message: number) => void
+  setTotalItems: (message: number) => void,
+  setCheckPagination: (message: number) => void
 ) => {
   api.interceptors.response.use(
     (response) => {
-      // console.log(response);
       if (response.data.data.pageNumber && response.data.data.totalItems) {
         setPageNumber(response.data.data.pageNumber);
         setTotalItems(response.data.data.totalItems);
       }
+      setCheckPagination(response.data.data.totalItems);
       return response;
     },
     (error) => {
