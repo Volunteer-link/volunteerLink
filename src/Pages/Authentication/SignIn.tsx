@@ -196,21 +196,21 @@ const SignIn: React.FC = () => {
                 onClick={() => {
                   navigate("/authentication/signup");
                 }}
-                className="text-[#3BA769]"
+                className="text-[#3BA769] ml-1"
               >
                 Tạo tài khoản mới{" "}
               </a>
               <a
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate('/authentication/verify-email',{
-                    state: 'FORGOT_PASSWORD'
+                  navigate("/authentication/verify-email", {
+                    state: "FORGOT_PASSWORD",
                   });
                 }}
                 className="block text-center text-[#3BA769] mt-2"
                 href=""
               >
-                {' '}
+                {" "}
                 Quên mật khẩu?
               </a>
             </p>
