@@ -80,7 +80,7 @@ const SignIn: React.FC = () => {
       const response = await api.post("/login-using-password", dataToSend);
       // Nếu gọi thành công => hiển thị thông báo
       message.success("Login successful!");
-      console.log("Login Response:", response);
+      // console.log("Login Response:", response);
 
       const token = response.data.data.accessToken;
 
