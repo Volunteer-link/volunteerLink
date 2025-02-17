@@ -50,9 +50,10 @@ export const setupInterceptors = (
   api.interceptors.response.use(
     (response) => {
       // console.log(response);
-
-      setPageNumber(response.data.data.pageNumber);
-      setTotalItems(response.data.data.totalItems);
+      if (response.data.data.pageNumber && response.data.data.totalItems) {
+        setPageNumber(response.data.data.pageNumber);
+        setTotalItems(response.data.data.totalItems);
+      }
       return response;
     },
     (error) => {

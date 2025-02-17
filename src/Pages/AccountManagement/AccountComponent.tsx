@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Flex, Result, Spin, Table } from "antd";
+import { Button, Flex, Modal, Result, Spin, Table } from "antd";
 import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
 import axios from "axios";
@@ -33,13 +33,18 @@ const AccountComponent: React.FC<{}> = () => {
       gmail: string;
       name: string;
       sex: number;
-      isAvailable: boolean;
+      enabled: boolean;
       accountId: number;
     }[]
   >([]);
   const navigate = useNavigate();
   const [sizePage, setSizePage] = useState<number>(1);
   const [valueSearch, setValueSearch] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
+  const [stateModal, setStateModal] = useState<string>("");
+  const [idUpdate, setIdUpdate] = useState<number>(0);
+  const [status, setStatus] = useState<boolean>(false);
+  const [keyUpdate, setKeyUpdate] = useState<number>(0);
 
   const dataSourceOrg = displayDataOrg?.map((item, index) => {
     return {
@@ -47,6 +52,7 @@ const AccountComponent: React.FC<{}> = () => {
       gmail: item.gmail,
       name: item.name,
       status: item.enabled,
+      idUpdate: item.accountId,
     };
   });
   const columnsOrg = [
@@ -85,7 +91,9 @@ const AccountComponent: React.FC<{}> = () => {
         <div className="flex gap-2">
           {record.status === true && (
             <div
-              onClick={handleClick}
+              onClick={() =>
+                handleClick("disable", record.idUpdate, record.status)
+              }
               className="border-2 border-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-primary-color"
             >
               Vô hiệu hóa
@@ -93,7 +101,9 @@ const AccountComponent: React.FC<{}> = () => {
           )}
           {record.status === false && (
             <div
-              onClick={handleClick}
+              onClick={() =>
+                handleClick("enable", record.idUpdate, record.status)
+              }
               className="bg-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-white"
             >
               Khôi phục
@@ -109,10 +119,10 @@ const AccountComponent: React.FC<{}> = () => {
       mail: item.gmail,
       name: item.name,
       gender: item.sex === 1 ? "Nam" : item.sex === 2 ? "Nữ" : "Khác",
-      status: item.isAvailable,
+      status: item.enabled,
+      idUpdate: item.accountId,
     };
   });
-
   const columnsVol = [
     {
       title: "Số thứ tự",
@@ -154,7 +164,9 @@ const AccountComponent: React.FC<{}> = () => {
         <div className="flex gap-2">
           {record.status === true && (
             <div
-              onClick={handleClick}
+              onClick={() =>
+                handleClick("disable", record.idUpdate, record.status)
+              }
               className="border-2 border-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-primary-color"
             >
               Vô hiệu hóa
@@ -162,7 +174,9 @@ const AccountComponent: React.FC<{}> = () => {
           )}
           {record.status === false && (
             <div
-              onClick={handleClick}
+              onClick={() =>
+                handleClick("enable", record.idUpdate, record.status)
+              }
               className="bg-primary-color px-3 rounded-md cursor-pointer hover:scale-105 py-1 transition-all text-white"
             >
               Khôi phục
@@ -185,7 +199,6 @@ const AccountComponent: React.FC<{}> = () => {
         );
 
         const listData = data.data.data.items;
-
         setDisplayDataOrg(listData);
       } catch (err: any) {
       } finally {
@@ -198,9 +211,9 @@ const AccountComponent: React.FC<{}> = () => {
         const data = await api.get(
           `/get-all-volunteers?PageNumber=${pageNumber}&PageSize=${sizePage}&SearchKey=${valueSearch}`
         );
+        console.log(data);
 
         const listData = data.data.data.items;
-        console.log(data);
 
         setDisplayDataVol(listData);
       } catch (err: any) {
@@ -214,10 +227,19 @@ const AccountComponent: React.FC<{}> = () => {
     if (modeAccount === "vol") {
       fetchDataVol();
     }
-  }, [pageNumber, modeAccount, valueSearch]);
+  }, [pageNumber, modeAccount, valueSearch, keyUpdate]);
 
-  const handleClick = () => {
-    console.log("cút vào knick");
+  const handleClick = (type: string, idUpdate: number, status: boolean) => {
+    setOpenModal(true);
+    setStateModal(type);
+    setIdUpdate(idUpdate);
+    setStatus(status);
+  };
+  const closeModal = () => {
+    setOpenModal(false);
+    setStateModal("");
+    setIdUpdate(0);
+    setStatus(false);
   };
   const handleClickBackHome = () => {
     navigate("/");
@@ -229,7 +251,21 @@ const AccountComponent: React.FC<{}> = () => {
   const handlePaging = (page: number) => {
     setPageNumber(page);
   };
-  console.log(pageNumber);
+  const handleOk = async () => {
+    try {
+      setIsLoading(true);
+      const data = await api.put(`/edit-enable-status-of-acount`, {
+        accountId: idUpdate,
+        status: !status,
+      });
+      setOpenModal(false);
+    } catch (err: any) {
+    } finally {
+      setIsLoading(false);
+      setKeyUpdate((prev) => ++prev);
+    }
+  };
+  // console.log(pageNumber);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -316,6 +352,19 @@ const AccountComponent: React.FC<{}> = () => {
               <Spin size="large" fullscreen />
             </Flex>
           )}
+
+          <Modal
+            title="Xác nhận"
+            open={openModal}
+            onOk={handleOk}
+            onCancel={closeModal}
+          >
+            <p>
+              Hành động này đang cố gắng{" "}
+              {stateModal === "disable" ? "vô hiệu hóa" : "khôi phục"} tài
+              khoản. Bạn có chắc chắn muốn thực hiện không?
+            </p>
+          </Modal>
         </ConfigProvider>
       </div>
     </div>
