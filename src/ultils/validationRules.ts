@@ -57,13 +57,13 @@ export const nameRules: Rule[] = [
       validator(_: any, value: Dayjs) {
         const today = dayjs();
         // Kiểm tra lớn hơn hôm nay
-        if (!value.isAfter(today, "day")) {
-          return Promise.reject("Ngày phải lớn hơn thời điểm hiện tại");
-        }
+        // if (!value.isAfter(today, "day")) {
+        //   return Promise.reject("Ngày phải lớn hơn thời điểm hiện tại");
+        // }
         // Kiểm tra cách ít nhất 18 năm
-        const minDate = today.add(18, "year");
-        if (value.isBefore(minDate, "day")) {
-          return Promise.reject("Ngày phải cách hiện tại ít nhất 18 năm");
+        const maxDate = today.subtract(18, "year");
+        if (value?.isAfter(maxDate, "day")) {
+          return Promise.reject("Bạn phải trên 18 tuổi");
         }
         return Promise.resolve();
       },

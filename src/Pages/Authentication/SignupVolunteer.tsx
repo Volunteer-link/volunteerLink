@@ -9,6 +9,8 @@ interface SignupVolunterProps {
   passwordRules?: Rule[];
   confirmPasswordRules?: (form: FormInstance) => Rule[];
   dateRules?: Rule[];
+  emailRules?: Rule[];
+  loading?: boolean;
 }
 
 const SignupVolunter: React.FC<SignupVolunterProps> = ({
@@ -18,6 +20,8 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
   passwordRules = [],
   confirmPasswordRules = (form: FormInstance):  Rule[] => [],
   dateRules = [],
+  emailRules = [],
+  loading = false
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -33,6 +37,9 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
+       <Form.Item name="email" rules={emailRules}>
+          <Input placeholder="Nhập tên..." />
+        </Form.Item>
         <Form.Item name="name" rules={nameRules}>
           <Input placeholder="Nhập tên..." />
         </Form.Item>
@@ -61,7 +68,7 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
           }}
         >
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button loading={loading} type="primary" htmlType="submit" block>
               Đăng ký
             </Button>
           </Form.Item>
