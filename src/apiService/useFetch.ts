@@ -50,6 +50,8 @@ export const setupInterceptors = (
 ) => {
   api.interceptors.response.use(
     (response) => {
+      console.log(response);
+
       if (response.data.data.pageNumber && response.data.data.totalItems) {
         setPageNumber(response.data.data.pageNumber);
         setTotalItems(response.data.data.totalItems);
@@ -59,8 +61,8 @@ export const setupInterceptors = (
     },
     (error) => {
       setError(error.response?.status || 500);
-      setError(error.response?.status || 500);
-      setError(error.response?.status || 500);
+      setError(error.response?.status || 401);
+      setError(error.response?.status || 403);
       return Promise.reject(error);
     }
   );

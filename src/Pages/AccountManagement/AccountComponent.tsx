@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Flex, Modal, Result, Spin, Table } from "antd";
+import { Flex, Modal, Spin, Table } from "antd";
 import { ConfigProvider } from "antd";
 import { Pagination } from "antd";
-import axios from "axios";
 import SearchComponent from "../../Common/SearchComponent";
 import api, { setupInterceptors } from "../../apiService/useFetch";
-import { useNavigate } from "react-router-dom";
-import { AiOutlineLoading } from "react-icons/ai";
+import ErrorSolving from "../../Common/ErrorSolving";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
@@ -37,8 +35,7 @@ const AccountComponent: React.FC<{}> = () => {
       accountId: number;
     }[]
   >([]);
-  const navigate = useNavigate();
-  const [sizePage, setSizePage] = useState<number>(1);
+  const [sizePage, setSizePage] = useState<number>(5);
   const [valueSearch, setValueSearch] = useState<string>("");
   const [openModal, setOpenModal] = useState(false);
   const [stateModal, setStateModal] = useState<string>("");
@@ -203,6 +200,7 @@ const AccountComponent: React.FC<{}> = () => {
         const data = await api.get(
           `/get-all-organizations?PageNumber=${pageNumber}&PageSize=${sizePage}&SearchKey=${valueSearch}`
         );
+        console.log(data);
 
         const listData = data.data.data.items;
 
@@ -246,9 +244,7 @@ const AccountComponent: React.FC<{}> = () => {
     setIdUpdate(0);
     setStatus(false);
   };
-  const handleClickBackHome = () => {
-    navigate("/");
-  };
+
   const handleFilterRole = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setModeAccount(event.target.value);
     if (event.target.value === "vol") {
@@ -333,20 +329,7 @@ const AccountComponent: React.FC<{}> = () => {
               scroll={{ x: "max-content" }}
             />
           )}
-          {errCode === 403 && (
-            <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-100">
-              <Result
-                status="403"
-                title="403"
-                subTitle="Sorry, you are not authorized to access this page."
-                extra={
-                  <Button onClick={handleClickBackHome} type="primary">
-                    Back Home
-                  </Button>
-                }
-              />
-            </div>
-          )}
+
           {checkPagination !== 0 && (
             <Pagination
               defaultCurrent={1}
@@ -362,7 +345,7 @@ const AccountComponent: React.FC<{}> = () => {
               <Spin size="large" fullscreen />
             </Flex>
           )}
-
+          <ErrorSolving errCode={errCode} />
           <Modal
             title="Xác nhận"
             open={openModal}
