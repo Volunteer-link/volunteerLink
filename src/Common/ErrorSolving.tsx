@@ -16,7 +16,7 @@ const ErrorSolving: React.FC<{ errCode: number }> = ({ errCode }) => {
             subTitle="Xin lỗi, bạn không được phép truy cập trang này."
             extra={
               <Button onClick={handleClickBackHome} type="primary">
-                Back Home
+                Về trang chủ
               </Button>
             }
           />
@@ -30,7 +30,7 @@ const ErrorSolving: React.FC<{ errCode: number }> = ({ errCode }) => {
             subTitle="Xin lỗi, có điều gì đó không ổn..."
             extra={
               <Button onClick={handleClickBackHome} type="primary">
-                Back Home
+                Về trang chủ
               </Button>
             }
           />
@@ -44,7 +44,7 @@ const ErrorSolving: React.FC<{ errCode: number }> = ({ errCode }) => {
             subTitle="Xin lỗi, bạn chưa đăng nhập vào hệ thống của chúng tôi. Hãy đăng nhập để sử dụng chức năng này"
             extra={
               <Button onClick={handleClickBackHome} type="primary">
-                Back Home
+                Về trang chủ
               </Button>
             }
           />
