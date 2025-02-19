@@ -10,6 +10,7 @@ import VerifyEmail from "./Pages/Authentication/VerifyEmail";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AdminMain from "./Pages/AccountManagement/AdminMain";
 import AboutUs from "./Pages/AboutUs";
+import Organizations from "./Pages/Organizations";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,8 +33,8 @@ const router = createBrowserRouter([
         element: <AdminMain />,
       },
       {
-        path: "test",
-        element: <Test />,
+        path: "organizations",
+        element: <Organizations />,
       },
     ],
   },

@@ -1,13 +1,19 @@
 import { FaMagnifyingGlass } from "react-icons/fa6";
 const SearchComponent: React.FC<{
-  placeHolder: string;
-  className: string;
-  setValueSearch: React.Dispatch<React.SetStateAction<string>>;
-  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+  placeHolder?: string;
+  className?: string;
+  setValueSearch?: React.Dispatch<React.SetStateAction<string>>;
+  setPageNumber?: React.Dispatch<React.SetStateAction<number>>;
 }> = ({ placeHolder, className, setValueSearch, setPageNumber }) => {
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPageNumber(1);
-    setValueSearch(event.target.value);
+    if(setPageNumber){
+      setPageNumber(1);
+
+    }
+    if(setValueSearch){
+      setValueSearch(event.target.value);
+
+    }
   };
   return (
     <div className={`${className} flex`}>
