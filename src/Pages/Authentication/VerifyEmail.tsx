@@ -48,14 +48,19 @@ const VerifyEmail = () => {
         `${
           location.state == 'FORGOT_PASSWORD'
             ? 'send-otp-for-forgot-password'
-            : ' /send-otp-for-register'
+            : '/send-otp-for-register'
         } `,
         {
           gmail: email,
         }
       );
-      message.success('Send successful!');
-      setEmailStatus('VERIFY_OTP');
+      if(response.data.data.isExistEmail){
+        message.success('Đã có tài khoản sử dụng email này!');
+      }else{
+        message.success('Send successful!');
+        setEmailStatus('VERIFY_OTP');
+      }
+
     } catch (error) {
       console.error(error);
       message.error('Send failed!');
@@ -75,6 +80,7 @@ const VerifyEmail = () => {
         setEmailStatus('FORGOT_PASSWORD');
       } else {
         message.success('Verify successful!');
+        navigate('/authentication/signup', { state: email });
       }
     } catch (error) {
       console.error(error);

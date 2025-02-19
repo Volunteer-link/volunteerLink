@@ -3,7 +3,7 @@ import type { Rule, FormInstance } from 'antd/es/form';
 import { Form, Input, Button, ConfigProvider, App as AntdApp } from 'antd';
 import api from '../../apiService/useFetch';
 import Password from 'antd/es/input/Password';
-
+import { useNavigate } from 'react-router';
 interface ForgotPasswordProps {
   passwordRules?: Rule[];
   confirmPasswordRules?: (form: FormInstance) => Rule[];
@@ -17,6 +17,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
 }) => {
   const { message } = AntdApp.useApp();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
     const trimmedValues = {
@@ -33,7 +34,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
         gmail: email,
         password: trimmedValues.password,
       });
-      message.success('Reset password!');
+      message.success('Reset password successfully!');
+      navigate('/authentication/signin');
     } catch (error) {
       console.error(error);
       message.error('Something went wrong!');

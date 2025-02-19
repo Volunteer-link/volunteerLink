@@ -194,7 +194,7 @@ const SignIn: React.FC = () => {
               Bạn chưa có tài khoản?
               <a
                 onClick={() => {
-                  navigate("/authentication/signup");
+                  navigate('/authentication/verify-email');
                 }}
                 className="text-[#3BA769] ml-1"
               >
