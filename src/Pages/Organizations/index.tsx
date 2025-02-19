@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Col, Row, Select, Typography, Tooltip } from 'antd';
+import { Input, Col, Row, Select, Typography, Tooltip, Pagination } from 'antd';
 import OrganizationsItem from './OrganizationsItem';
 import type { SelectProps } from 'antd';
 const { Search } = Input;
@@ -32,7 +32,7 @@ const Organizations = () => {
             <Select
               className="max-w-[200px]"
               mode="multiple"
-              maxTagCount= 'responsive'
+              maxTagCount="responsive"
               size={'middle'}
               placeholder="Vui lòng chọn lĩnh vực"
               onChange={handleChange}
@@ -55,6 +55,7 @@ const Organizations = () => {
             <OrganizationsItem />
           </Col>
         </Row>
+        <Pagination align="center" defaultCurrent={1} total={50} />
       </div>
     </div>
   );
