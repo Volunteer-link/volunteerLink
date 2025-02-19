@@ -5,7 +5,7 @@
 export const nameRules: Rule[] = [
     { required: true, message: "Vui lòng nhập tên" },
     {
-      pattern: /^[A-Za-z0-9 ]+$/,
+      pattern: /^[A-Za-z0-9\s\u00C0-\u1EF9]+$/,
       message: "Tên không được chứa ký tự đặc biệt",
     },
   ];

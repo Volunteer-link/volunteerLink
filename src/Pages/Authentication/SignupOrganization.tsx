@@ -2,7 +2,7 @@ import { Flex, Input, Button, ConfigProvider, Form, Upload } from 'antd';
 import { useNavigate } from 'react-router';
 import type { Rule, FormInstance } from 'antd/es/form';
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 
 interface SignupOrganizationProps {
   onFinish?: (values: any) => void;
@@ -46,16 +46,17 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item name="name" rules={nameRules}>
+        <Form.Item name="name" className='mb-4' rules={nameRules}>
           <Input className={`max-w-[400px]`} placeholder="Tên tổ chức..." />
         </Form.Item>
-        <Form.Item name="password" rules={passwordRules}>
+        <Form.Item name="password" className='mb-4' rules={passwordRules}>
           <Input.Password
             className={`max-w-[400px]`}
             placeholder="Mật khẩu..."
           />
         </Form.Item>
         <Form.Item
+        className='mb-4'
           name="confirmPassword"
           dependencies={['password']}
           rules={confirmPasswordRules(form)}
@@ -66,6 +67,7 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
           />
         </Form.Item>
         <Form.Item
+        className='mb-4'
           name="image"
           rules={[
             {
@@ -79,16 +81,14 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
           ]}
         >
           <Upload
+            accept=".doc,.docx,.pdf"
             multiple
-            listType="picture-card" // hiển thị dạng khung ảnh
+            listType="text" // hiển thị dạng khung ảnh
             fileList={fileList}
             onChange={handleChange}
             beforeUpload={() => false}
           >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Chọn ảnh</div>
-            </div>
+             <Button icon={<UploadOutlined />}>Select File</Button>
           </Upload>
         </Form.Item>
         <Flex className="w-full" justify={`center`} gap="middle" vertical>

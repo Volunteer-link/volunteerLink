@@ -14,25 +14,30 @@ import {
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import api from '../../apiService/useFetch';
 import { storage } from '../../ultils/firebase';
+import { useNavigate, useLocation } from 'react-router-dom';
+import dayjs from "dayjs";
 const Signup = () => {
   const onChange = (key: string) => {
     setOrganization(key == '2');
   };
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
+  const navigate = useNavigate();
+  const [fileList, setFileList] = useState<UploadFile[] | any[]>([]);
+  const location = useLocation();
   const [loading, setLoading] = React.useState(false);
   const { message } = AntdApp.useApp();
   const [organization, setOrganization] = React.useState(false);
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
-      console.log(organization)
       if (organization) {
         await handleUpload();
-        return;
+      }
+      if(!values?.date){
+        const today = dayjs();
+        values.date = today
       }
       const trimmedValues = {
-        email: values.email.trim(),
+        email: location.state?.trim(),
         name: values.name.trim(),
         password: values.password.trim(),
         confirmPassword: values.confirmPassword.trim(),
@@ -44,12 +49,12 @@ const Signup = () => {
         isOrganization: organization,
         name: trimmedValues.name,
         dateOfBirth: trimmedValues.date,
+        listCertificates: fileList
       });
       // Nếu gọi thành công => hiển thị thông báo
       message.success('signup successful!');
       console.log('Login Response:', response);
-
-      return response;
+      navigate('/authentication/signin');
     } catch (error) {
       console.error(error);
       message.error('signup failed!');
@@ -67,7 +72,7 @@ const Signup = () => {
       const promises = fileList.map((item) => {
         const file = item.originFileObj as File;
 
-        const storageRef = ref(storage, `images/${file.name}`);
+        const storageRef = ref(storage, `file/${file.name}`);
 
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -91,8 +96,7 @@ const Signup = () => {
       });
 
       const downloadURLs = await Promise.all(promises);
-      console.log('URLs:', downloadURLs);
-      setFileList([]);
+      setFileList(downloadURLs)
     } catch (error) {
       console.error(error);
     } finally {
@@ -106,7 +110,6 @@ const Signup = () => {
       children: (
         <SignupVolunter
           onFinish={onFinish}
-          emailRules={emailRules}
           dateRules={dateRules}
           nameRules={nameRules}
           passwordRules={passwordRules}
@@ -142,23 +145,40 @@ const Signup = () => {
             <h4 className="text-[#3BA769] text-[20px] text-center">
               Xin chào! Rất vui được gặp bạn
             </h4>
-            <ConfigProvider
-              theme={{
-                components: {
-                  Tabs: {
-                    inkBarColor: '#3BA769',
-                    itemSelectedColor: '#3BA769',
+
+            {!location.state ? (
+              <div>
+                <p>
+                  Bạn cần xác thực Email trước khi đăng ký. {''}
+                  <a
+                    onClick={() => {
+                      navigate('/authentication/verify-email');
+                    }}
+                    className="text-[#3BA769]"
+                  >
+                    Xác thực Email
+                  </a>
+                </p>
+              </div>
+            ) : (
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Tabs: {
+                      inkBarColor: '#3BA769',
+                      itemSelectedColor: '#3BA769',
+                    },
                   },
-                },
-              }}
-            >
-              <Tabs
-                className="w-full"
-                defaultActiveKey="1"
-                items={items}
-                onChange={onChange}
-              />
-            </ConfigProvider>
+                }}
+              >
+                <Tabs
+                  className="w-full"
+                  defaultActiveKey="1"
+                  items={items}
+                  onChange={onChange}
+                />
+              </ConfigProvider>
+            )}
           </div>
         </Col>
         <Col span={6}>

@@ -20,7 +20,6 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
   passwordRules = [],
   confirmPasswordRules = (form: FormInstance):  Rule[] => [],
   dateRules = [],
-  emailRules = [],
   loading = false
 }) => {
   const navigate = useNavigate();
@@ -37,26 +36,24 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-       <Form.Item name="email" rules={emailRules}>
-          <Input placeholder="Nhập tên..." />
-        </Form.Item>
-        <Form.Item name="name" rules={nameRules}>
+        <Form.Item name="name" className='mb-4' rules={nameRules}>
           <Input placeholder="Nhập tên..." />
         </Form.Item>
 
-        <Form.Item name="password" rules={passwordRules}>
+        <Form.Item name="password" className='mb-4' rules={passwordRules}>
           <Input.Password placeholder="Mật khẩu..." />
         </Form.Item>
 
         <Form.Item
           name="confirmPassword"
+          className='mb-4'
           dependencies={['password']}
           rules={confirmPasswordRules(form)}
         >
           <Input.Password placeholder="Xác nhận mật khẩu..." />
         </Form.Item>
 
-        <Form.Item name="date" rules={dateRules}>
+        <Form.Item name="date" className='mb-4' rules={dateRules}>
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
 
@@ -74,7 +71,7 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
           </Form.Item>
         </ConfigProvider>
 
-        <p className="text-[14px]">
+        <p className="text-[14px] text-center">
           Bạn đã có tài khoản?{' '}
           <a
             onClick={() => {
