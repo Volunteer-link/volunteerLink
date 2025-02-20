@@ -26,3 +26,13 @@ code {
 .ant-image{
    width: 100% !important;
 }
+
+.slick-center img{
+  transform: scale(1.25);
+  transition: transform 0.5s;
+}
+
+.ant-carousel .slick-prev::after,
+.ant-carousel .slick-next::after {
+  color: black !important;   
+}

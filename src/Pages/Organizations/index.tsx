@@ -25,7 +25,7 @@ const Organizations = () => {
           size="large"
         />
       </div>
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4 py-8">
         <Row>
           <Col span={24}>
             <Typography.Text>Lĩnh vực:{'  '}</Typography.Text>
