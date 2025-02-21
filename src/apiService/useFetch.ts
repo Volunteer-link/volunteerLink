@@ -43,26 +43,24 @@ api.interceptors.request.use(
 // );
 
 export const setupInterceptors = (
-  setError: (message: number) => void,
-  setPageNumber: (message: number) => void,
-  setTotalItems: (message: number) => void,
-  setCheckPagination: (message: number) => void
+  setError?: (message: number) => void,
+  setPageNumber?: (message: number) => void,
+  setTotalItems?: (message: number) => void,
+  setCheckPagination?: (message: number) => void
 ) => {
   api.interceptors.response.use(
     (response) => {
-      console.log(response);
-
       if (response.data.data.pageNumber && response.data.data.totalItems) {
-        setPageNumber(response.data.data.pageNumber);
-        setTotalItems(response.data.data.totalItems);
+        setPageNumber?.(response.data.data.pageNumber);
+        setTotalItems?.(response.data.data.totalItems);
       }
-      setCheckPagination(response.data.data.totalItems);
+      setCheckPagination?.(response.data.data.totalItems);
       return response;
     },
     (error) => {
-      setError(error.response?.status || 500);
-      setError(error.response?.status || 401);
-      setError(error.response?.status || 403);
+      setError?.(error.response?.status || 500);
+      setError?.(error.response?.status || 401);
+      setError?.(error.response?.status || 403);
       return Promise.reject(error);
     }
   );
