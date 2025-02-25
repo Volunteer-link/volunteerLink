@@ -7,7 +7,7 @@ const Volunteer = () => {
         <img
           src="/materials/istockphoto-1426874794-612x612.jpg"
           alt=""
-          className=" w-44 h-44 rounded-full object-cover"
+          className=" w-32 h-32 rounded-full object-cover"
         />
         <div className="flex text-[#3BA769] leading-none  gap-6 flex-col">
           <span className='text-[24px]'>Lê Anh Sơn</span>
