@@ -13,7 +13,7 @@ const EventCard: React.FC<{
 }> = ({ eventObject }) => {
   return (
     <>
-      <div className="">
+      <div className="cursor-pointer hover:scale-[1.02] transition-all">
         <div className="py-4 bg-primary-color rounded-t-xl">
           <img
             src={eventObject.url}
