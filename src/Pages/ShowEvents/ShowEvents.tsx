@@ -1,6 +1,4 @@
 import { IoLocation } from "react-icons/io5";
-import { HiUsers } from "react-icons/hi2";
-import { FaCalendarAlt } from "react-icons/fa";
 import EventCard from "../Components/EventCard";
 import LineSpacing from "../Components/LineSpacing";
 const ShowEvent = () => {
@@ -40,6 +38,7 @@ const ShowEvent = () => {
         <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           <EventCard
             eventObject={{
+              id: 1,
               title: "Mặt trời của em",
               organization: "Tổ chức abc",
               date: "May, 20",
@@ -50,6 +49,7 @@ const ShowEvent = () => {
           />
           <EventCard
             eventObject={{
+              id: 2,
               title: "Đánh răng cho mòe",
               organization: "Tổ chức def",
               date: "May, 20",
@@ -71,6 +71,8 @@ const ShowEvent = () => {
         <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           <EventCard
             eventObject={{
+              id: 1,
+
               title: "Mặt trời của em",
               organization: "Tổ chức abc",
               date: "May, 20",
@@ -81,6 +83,8 @@ const ShowEvent = () => {
           />
           <EventCard
             eventObject={{
+              id: 2,
+
               title: "Đánh răng cho mòe",
               organization: "Tổ chức def",
               date: "May, 20",
@@ -98,11 +102,11 @@ const ShowEvent = () => {
         </div>
       </div>
       <LineSpacing />
-      <div className="items-center gap-1 justify-center text-2xl flex mb-8">
+      {/* <div className="items-center gap-1 justify-center text-2xl flex mb-8">
         <div>Sự kiện</div>
         <div className="text-primary-color">đang diễn ra</div>
-      </div>
-      <div className="w-full grid lg:grid-cols-8 grid-cols-1 px-4 my-6">
+      </div> */}
+      <div className="w-full grid lg:grid-cols-8 grid-cols-1 px-4 mb-6">
         <div></div>
         <div className="lg:col-span-6 flex items-center gap-1">
           <div className="text-primary-color font-medium">Lĩnh vực:</div>
@@ -121,6 +125,7 @@ const ShowEvent = () => {
         <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           <EventCard
             eventObject={{
+              id: 2,
               title: "Mặt trời của em",
               organization: "Tổ chức abc",
               date: "May, 20",
@@ -131,6 +136,7 @@ const ShowEvent = () => {
           />
           <EventCard
             eventObject={{
+              id: 2,
               title: "Đánh răng cho mòe",
               organization: "Tổ chức def",
               date: "May, 20",

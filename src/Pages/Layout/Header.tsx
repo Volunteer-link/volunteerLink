@@ -44,7 +44,7 @@ const Header: React.FC<{}> = () => {
   };
 
   return (
-    <div className="bg-primary-color md:grid md:grid-cols-8 md:py-2 md:px-4 fixed w-full z-10">
+    <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 fixed w-full z-10">
       <div></div>
       <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo</div>
       <div className="col-span-3 hidden md:block">

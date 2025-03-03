@@ -11,6 +11,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import AdminMain from "./Pages/AccountManagement/AdminMain";
 import AboutUs from "./Pages/AboutUs";
 import ShowEvent from "./Pages/ShowEvents/ShowEvents";
+import DetailEvent from "./Pages/ShowEvents/DetailEvent";
+import ScrollToTop from "./Common/ScrollToTop";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "events",
         element: <ShowEvent />,
+      },
+      {
+        path: "detail-event/:id",
+        element: <DetailEvent />,
       },
     ],
   },
