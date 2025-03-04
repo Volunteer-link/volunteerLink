@@ -87,8 +87,13 @@ const SignIn: React.FC = () => {
       setCookie("accessToken", token, 7);
 
       const currentUser = decodedCookie(getCookie("accessToken")!);
+      console.log(currentUser);
+
       if (currentUser.role === "Admin") {
         navigate("/admin");
+      }
+      if (currentUser.role === "Volunteer") {
+        navigate("/");
       }
 
       return response;
@@ -194,7 +199,7 @@ const SignIn: React.FC = () => {
               Bạn chưa có tài khoản?
               <a
                 onClick={() => {
-                  navigate('/authentication/verify-email');
+                  navigate("/authentication/verify-email");
                 }}
                 className="text-[#3BA769] ml-1"
               >

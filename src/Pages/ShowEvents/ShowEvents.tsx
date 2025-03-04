@@ -24,17 +24,15 @@ const ShowEvent = () => {
           </div>
         </div>
       </div>
-      <div className="w-full grid grid-cols-8 px-4">
-        <div className="hidden lg:block"></div>
-        <div className="lg:col-span-2 col-span-7 my-2 ">
+      <div className="container mx-auto px-4 py-2">
+        <div className="lg:col-span-2 col-span-7">
           <div className="inline-block mr-1 text-sm">Kết quả:</div>
           <div className="inline-block text-base font-medium text-primary-color">
             4 sự kiện
           </div>
         </div>
       </div>
-      <div className="w-full grid lg:grid-cols-8 grid-cols-1 px-4">
-        <div></div>
+      <div className="container mx-auto px-4">
         <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           <EventCard
             eventObject={{
@@ -46,6 +44,7 @@ const ShowEvent = () => {
               location: "Ha Noi",
               url: "/materials/image 7.png",
             }}
+            showOption={false}
           />
           <EventCard
             eventObject={{
@@ -57,17 +56,16 @@ const ShowEvent = () => {
               location: "Ha Noi",
               url: "/materials/đánh răng.png",
             }}
+            showOption={false}
           />
         </div>
-        <div></div>
       </div>
       <LineSpacing />
       <div className="items-center gap-1 justify-center text-2xl flex mb-8">
         <div>Sự kiện</div>
         <div className="text-primary-color">phù hợp</div>
       </div>
-      <div className="w-full grid lg:grid-cols-8 grid-cols-1 px-4">
-        <div></div>
+      <div className="container mx-auto px-4">
         <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           <EventCard
             eventObject={{
@@ -80,6 +78,7 @@ const ShowEvent = () => {
               location: "Ha Noi",
               url: "/materials/image 7.png",
             }}
+            showOption={false}
           />
           <EventCard
             eventObject={{
@@ -92,9 +91,9 @@ const ShowEvent = () => {
               location: "Ha Noi",
               url: "/materials/đánh răng.png",
             }}
+            showOption={false}
           />
         </div>
-        <div></div>
       </div>
       <div className="w-full text-center mt-4">
         <div className="bg-primary-color my-2 inline-block py-3 px-16 text-white rounded-full hover:scale-105 transition-all cursor-pointer hover:opacity-95">
@@ -106,9 +105,8 @@ const ShowEvent = () => {
         <div>Sự kiện</div>
         <div className="text-primary-color">đang diễn ra</div>
       </div> */}
-      <div className="w-full grid lg:grid-cols-8 grid-cols-1 px-4 mb-6">
-        <div></div>
-        <div className="lg:col-span-6 flex items-center gap-1">
+      <div className="container mx-auto px-4">
+        <div className="lg:col-span-6 flex items-center gap-1 py-2">
           <div className="text-primary-color font-medium">Lĩnh vực:</div>
           <div>
             <select className="outline-none" name="" id="">
@@ -118,10 +116,6 @@ const ShowEvent = () => {
             </select>
           </div>
         </div>
-        <div></div>
-      </div>
-      <div className="w-full grid lg:grid-cols-8 grid-cols-1 px-4">
-        <div></div>
         <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           <EventCard
             eventObject={{
@@ -133,6 +127,7 @@ const ShowEvent = () => {
               location: "Ha Noi",
               url: "/materials/image 7.png",
             }}
+            showOption={false}
           />
           <EventCard
             eventObject={{
@@ -144,9 +139,9 @@ const ShowEvent = () => {
               location: "Ha Noi",
               url: "/materials/đánh răng.png",
             }}
+            showOption={false}
           />
         </div>
-        <div></div>
       </div>
       <div className="w-full text-center mt-4">
         <div className="bg-primary-color my-2 inline-block py-3 px-16 text-white rounded-full hover:scale-105 transition-all cursor-pointer hover:opacity-95">

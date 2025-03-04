@@ -32,7 +32,7 @@ const Header: React.FC<{}> = () => {
     },
     {
       key: "3",
-      label: "Các sự kiện đã tham gia",
+      label: <NavLink to={"/joined-events"}>Các sự kiện đã tham gia</NavLink>,
     },
   ];
   const handleVisibleChange = (newVisible: boolean) => {
