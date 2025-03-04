@@ -13,6 +13,7 @@ import AboutUs from "./Pages/AboutUs";
 import ShowEvent from "./Pages/ShowEvents/ShowEvents";
 import DetailEvent from "./Pages/ShowEvents/DetailEvent";
 import ScrollToTop from "./Common/ScrollToTop";
+import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "detail-event/:id",
         element: <DetailEvent />,
+      },
+      {
+        path: "joined-events",
+        element: <MyJoinedEvents />,
       },
     ],
   },
