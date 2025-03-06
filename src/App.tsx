@@ -10,8 +10,12 @@ import VerifyEmail from "./Pages/Authentication/VerifyEmail";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AdminMain from "./Pages/AccountManagement/AdminMain";
 import AboutUs from "./Pages/AboutUs";
-import Organizations from "./Pages/Organizations";
+import ShowEvent from "./Pages/ShowEvents/ShowEvents";
+import DetailEvent from "./Pages/ShowEvents/DetailEvent";
+import ScrollToTop from "./Common/ScrollToTop";
+import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
+import Organizations from "./Pages/Organizations";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +44,18 @@ const router = createBrowserRouter([
       {
         path: "organizations/details/:id",
         element: <OrganizationsDetail />,
+      },
+      {
+        path: "events",
+        element: <ShowEvent />,
+      },
+      {
+        path: "detail-event/:id",
+        element: <DetailEvent />,
+      },
+      {
+        path: "joined-events",
+        element: <MyJoinedEvents />,
       },
     ],
   },
