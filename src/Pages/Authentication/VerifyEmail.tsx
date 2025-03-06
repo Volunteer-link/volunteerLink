@@ -46,21 +46,22 @@ const VerifyEmail = () => {
 
       const response = await api.post(
         `${
-          location.state == 'FORGOT_PASSWORD'
-            ? 'send-otp-for-forgot-password'
+          location.state === 'FORGOT_PASSWORD'
+            ? '/send-otp-for-forgot-password'
             : '/send-otp-for-register'
         } `,
         {
           gmail: email,
         }
       );
-      if(response.data.data.isExistEmail){
+      if(response.data.data.isExistEmail && location.state !== 'FORGOT_PASSWORD' ){
         message.success('Đã có tài khoản sử dụng email này!');
+      }else if (!response.data.data.isExistEmail && location.state === 'FORGOT_PASSWORD'){
+        message.error('Email không tồn tại!');
       }else{
         message.success('Send successful!');
         setEmailStatus('VERIFY_OTP');
       }
-
     } catch (error) {
       console.error(error);
       message.error('Send failed!');
