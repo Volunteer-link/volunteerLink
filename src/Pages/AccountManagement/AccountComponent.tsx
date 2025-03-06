@@ -12,7 +12,6 @@ const AccountComponent: React.FC<{}> = () => {
   const [errCode, setErrCode] = useState<number>(0);
   const [totalItems, setTotalItems] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-  const [keyPaging, setKeyPaging] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [displayDataOrg, setDisplayDataOrg] = useState<
     {
@@ -200,7 +199,6 @@ const AccountComponent: React.FC<{}> = () => {
         const data = await api.get(
           `/get-all-organizations?PageNumber=${pageNumber}&PageSize=${sizePage}&SearchKey=${valueSearch}`
         );
-        console.log(data);
 
         const listData = data.data.data.items;
 
