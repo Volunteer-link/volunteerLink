@@ -14,7 +14,7 @@ const Footer: React.FC<{}> = () => {
             <div className="bg-white w-16 h-16">Logo</div>
             <div className="text-base text-shadow-md mt-4">Volunteer Link</div>
           </div>
-          <div>
+          <div className="">
             <div className="text-sm pb-1 font-medium">LIÊN KẾT</div>
             <div className="text-xs hover:opacity-80 py-2">
               <NavLink className="text-shadow-sm" to={""}>

@@ -10,6 +10,10 @@ import VerifyEmail from "./Pages/Authentication/VerifyEmail";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AdminMain from "./Pages/AccountManagement/AdminMain";
 import AboutUs from "./Pages/AboutUs";
+import ShowEvent from "./Pages/ShowEvents/ShowEvents";
+import DetailEvent from "./Pages/ShowEvents/DetailEvent";
+import ScrollToTop from "./Common/ScrollToTop";
+import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
 import VolunteerSuggestions from "./Pages/VolunteerSuggestions";
 const router = createBrowserRouter([
   {
@@ -35,6 +39,18 @@ const router = createBrowserRouter([
       {
         path: "test",
         element: <Test />,
+      },
+      {
+        path: "events",
+        element: <ShowEvent />,
+      },
+      {
+        path: "detail-event/:id",
+        element: <DetailEvent />,
+      },
+      {
+        path: "joined-events",
+        element: <MyJoinedEvents />,
       },
       {
         path: "volunteer-suggestions",
