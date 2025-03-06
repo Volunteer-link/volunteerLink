@@ -1,7 +1,5 @@
 import React from "react";
 import RootLayout from "./Pages/RootLayout";
-import Test from "./Pages/Test";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import SignIn from "./Pages/Authentication/SignIn";
@@ -34,10 +32,6 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: <AdminMain />,
-      },
-      {
-        path: "test",
-        element: <Test />,
       },
       {
         path: "events",
