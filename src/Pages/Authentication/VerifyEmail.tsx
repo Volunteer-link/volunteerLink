@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Col,
   Row,
@@ -9,23 +9,23 @@ import {
   Image,
   Form,
   App as AntdApp,
-} from 'antd';
-import logo from '../../image/emai_banner.jpg';
-import { emailRules } from '../../ultils/validationRules';
-import api from '../../apiService/useFetch';
-import { useNavigate } from 'react-router';
-import { useLocation } from 'react-router-dom';
+} from "antd";
+import logo from "../../image/emai_banner.jpg";
+import { emailRules } from "../../ultils/validationRules";
+import api from "../../apiService/useFetch";
+import { useNavigate } from "react-router";
+import { useLocation } from "react-router-dom";
 import {
   passwordRules,
   confirmPasswordRules,
-} from '../../ultils/validationRules';
-import ForgotPassword from './ForgotPassword';
+} from "../../ultils/validationRules";
+import ForgotPassword from "./ForgotPassword";
 const VerifyEmail = () => {
   const [form] = Form.useForm();
   const location = useLocation();
-  const [emailStatus, setEmailStatus] = useState<string>('VERIFY_EMAIL');
+  const [emailStatus, setEmailStatus] = useState<string>("VERIFY_EMAIL");
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
   const onFinish = async (values: any) => {
@@ -64,7 +64,7 @@ const VerifyEmail = () => {
       }
     } catch (error) {
       console.error(error);
-      message.error('Send failed!');
+      message.error("Send failed!");
     } finally {
       setLoading(false);
     }
@@ -73,32 +73,32 @@ const VerifyEmail = () => {
   const VerifyOTP = async (email: string, otp: string) => {
     try {
       setLoading(true);
-      const response = await api.post('/verify-otp', {
+      const response = await api.post("/verify-otp", {
         gmail: email,
         otp: otp,
       });
-      if (location.state == 'FORGOT_PASSWORD') {
-        setEmailStatus('FORGOT_PASSWORD');
+      if (location.state == "FORGOT_PASSWORD") {
+        setEmailStatus("FORGOT_PASSWORD");
       } else {
-        message.success('Verify successful!');
-        navigate('/authentication/signup', { state: email });
+        message.success("Verify successful!");
+        navigate("/authentication/signup", { state: email });
       }
     } catch (error) {
       console.error(error);
-      message.error('Send failed!');
+      message.error("Send failed!");
     } finally {
       setLoading(false);
     }
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Submit thất bại:', errorInfo);
+    console.log("Submit thất bại:", errorInfo);
   };
   return (
     <div>
       <Row className="w-full h-screen">
         <Col span={18}>
-          {emailStatus == 'FORGOT_PASSWORD' ? (
+          {emailStatus == "FORGOT_PASSWORD" ? (
             <div className="w-full mx-auto lg:max-w-80 gap-6 h-full">
               <ForgotPassword
                 passwordRules={passwordRules}
@@ -125,7 +125,7 @@ const VerifyEmail = () => {
                 autoComplete="off"
               >
                 <Form.Item
-                  hidden={emailStatus !== 'VERIFY_EMAIL'}
+                  hidden={emailStatus !== "VERIFY_EMAIL"}
                   name="email"
                   rules={emailRules}
                 >
@@ -134,7 +134,7 @@ const VerifyEmail = () => {
                     placeholder="Email......."
                   />
                 </Form.Item>
-                <Form.Item hidden={emailStatus === 'VERIFY_EMAIL'} name="otp">
+                <Form.Item hidden={emailStatus === "VERIFY_EMAIL"} name="otp">
                   <Input className="max-w-[400px]" placeholder="Mã OTP" />
                 </Form.Item>
 
@@ -147,7 +147,7 @@ const VerifyEmail = () => {
                   <ConfigProvider
                     theme={{
                       token: {
-                        colorPrimary: '#3BA769',
+                        colorPrimary: "#3BA769",
                       },
                     }}
                   >
@@ -158,9 +158,9 @@ const VerifyEmail = () => {
                       loading={loading}
                       block
                     >
-                      {emailStatus === 'VERIFY_EMAIL'
-                        ? ' Gửi OTP'
-                        : 'Xác thực OTP'}
+                      {emailStatus === "VERIFY_EMAIL"
+                        ? " Gửi OTP"
+                        : "Xác thực OTP"}
                     </Button>
                   </ConfigProvider>
                 </Flex>
@@ -169,11 +169,11 @@ const VerifyEmail = () => {
                 Bạn đã có tài khoản?
                 <a
                   onClick={() => {
-                    navigate('/authentication/signin');
+                    navigate("/authentication/signin");
                   }}
                   className="text-[#3BA769]"
                 >
-                  Đăng nhập{' '}
+                  Đăng nhập{" "}
                 </a>
               </p>
             </div>
@@ -186,7 +186,7 @@ const VerifyEmail = () => {
             placeholder={true}
             alt="logo"
             src={logo}
-            style={{ height: '100vh', width: '100%' }}
+            style={{ height: "100vh", width: "100%" }}
           />
         </Col>
       </Row>
