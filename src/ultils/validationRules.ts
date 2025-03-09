@@ -69,4 +69,18 @@ export const nameRules: Rule[] = [
       },
     },
   ];
+
+
+  export const dateRulesEvent : Rule[] = [
+    { required: true, message: "Vui lòng chọn ngày" },
+    {
+      validator(_: any, value: Dayjs) {
+        const today = dayjs();
+        if (!value.isAfter(today, "day")) {
+          return Promise.reject("Ngày phải lớn hơn thời điểm hiện tại");
+        }
+        return Promise.resolve();
+      },
+    },
+  ];
   
