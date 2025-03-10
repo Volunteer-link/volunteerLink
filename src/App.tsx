@@ -50,6 +50,10 @@ const router = createBrowserRouter([
         path: "volunteer-suggestions",
         element: <VolunteerSuggestions />,
       },
+      {
+        path: "participate-event/:id",
+        element: <VolunteerSuggestions />,
+      },
     ],
   },
   {

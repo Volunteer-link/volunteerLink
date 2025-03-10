@@ -1,6 +1,6 @@
 import React from 'react';
 import { Breadcrumb, Pagination } from 'antd';
-import Volunteer from '../Components/Volunteer';
+import Volunteer from '../../Components/Volunteer';
 const VolunteerSuggestions = () => {
   return (
     <div className="container mx-auto px-4 py-8">
