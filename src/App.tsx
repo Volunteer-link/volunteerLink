@@ -1,7 +1,5 @@
 import React from "react";
 import RootLayout from "./Pages/RootLayout";
-import Test from "./Pages/Test";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import SignIn from "./Pages/Authentication/SignIn";
@@ -11,6 +9,10 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import AdminMain from "./Pages/AccountManagement/AdminMain";
 import AboutUs from "./Pages/AboutUs";
 import ShowEvent from "./Pages/ShowEvents/ShowEvents";
+import DetailEvent from "./Pages/ShowEvents/DetailEvent";
+import ScrollToTop from "./Common/ScrollToTop";
+import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
+import MyProfile from "./Pages/Profile/MyProfile";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,12 +35,20 @@ const router = createBrowserRouter([
         element: <AdminMain />,
       },
       {
-        path: "test",
-        element: <Test />,
-      },
-      {
         path: "events",
         element: <ShowEvent />,
+      },
+      {
+        path: "detail-event/:id",
+        element: <DetailEvent />,
+      },
+      {
+        path: "joined-events",
+        element: <MyJoinedEvents />,
+      },
+      {
+        path: "my-profile",
+        element: <MyProfile />,
       },
     ],
   },

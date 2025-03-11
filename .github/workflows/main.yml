@@ -46,5 +46,6 @@ jobs:
           docker pull hoanganh23072/front-end-container:${{ github.sha }}
           docker stop frontend || true
           docker rm frontend || true
-          docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
+          cd deploy/frontend/prod &&
+          docker run -d -p 3000:80 --env-file .env --name frontend hoanganh23072/front-end-container:${{ github.sha }}
         EOF

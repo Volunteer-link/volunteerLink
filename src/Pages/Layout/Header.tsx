@@ -8,6 +8,9 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { decodedCookie, deleteCookie, getCookie } from "../../ultils/cookie";
 import { useLogout } from "../../ultils/logout";
+import { CgProfile } from "react-icons/cg";
+import { FaCalendarAlt } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -28,11 +31,33 @@ const Header: React.FC<{}> = () => {
     },
     {
       key: "2",
-      label: "Hồ sơ của tôi",
+      label: (
+        <NavLink className="flex items-center gap-1" to={"/my-profile"}>
+          <CgProfile />
+          <span>Hồ sơ của tôi</span>
+        </NavLink>
+      ),
     },
     {
       key: "3",
-      label: "Các sự kiện đã tham gia",
+      label: (
+        <NavLink className="flex items-center gap-1" to={"/joined-events"}>
+          <FaCalendarAlt />
+          <span>Các sự kiện đã tham gia</span>
+        </NavLink>
+      ),
+    },
+    {
+      key: "4",
+      label: (
+        <NavLink
+          className="flex items-center gap-1"
+          to={"/account-information"}
+        >
+          <IoSettingsOutline />
+          <span>Thông tin tài khoản</span>
+        </NavLink>
+      ),
     },
   ];
   const handleVisibleChange = (newVisible: boolean) => {
@@ -44,7 +69,7 @@ const Header: React.FC<{}> = () => {
   };
 
   return (
-    <div className="bg-primary-color md:grid md:grid-cols-8 md:py-2 md:px-4 fixed w-full z-10">
+    <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 fixed w-full z-10">
       <div></div>
       <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo</div>
       <div className="col-span-3 hidden md:block">
