@@ -11,6 +11,7 @@ import {
   App as AntdApp,
 } from "antd";
 import logo from "../../image/emai_banner.jpg";
+import { FaHome } from "react-icons/fa";
 import { emailRules } from "../../ultils/validationRules";
 import api from "../../apiService/useFetch";
 import { useNavigate } from "react-router";
@@ -20,6 +21,7 @@ import {
   confirmPasswordRules,
 } from "../../ultils/validationRules";
 import ForgotPassword from "./ForgotPassword";
+import { NavLink } from "react-router-dom";
 const VerifyEmail = () => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -173,6 +175,9 @@ const VerifyEmail = () => {
                 >
                   Đăng nhập{" "}
                 </a>
+                <NavLink to={"/"}>
+                  <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
+                </NavLink>
               </p>
             </div>
           )}
