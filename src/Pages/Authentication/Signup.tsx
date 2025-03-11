@@ -23,7 +23,8 @@ const Signup = () => {
     setOrganization(key == "2");
   };
   const navigate = useNavigate();
-  const [fileList, setFileList] = useState<UploadFile[] | any[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [listCertificates, setListCertificates] = useState<string[]>([]);
   const location = useLocation();
   const [loading, setLoading] = React.useState(false);
   const { message } = AntdApp.useApp();
@@ -51,7 +52,7 @@ const Signup = () => {
         isOrganization: organization,
         name: trimmedValues.name,
         dateOfBirth: trimmedValues.date,
-        listCertificates: fileList,
+        listCertificates: listCertificates
       });
       // Nếu gọi thành công => hiển thị thông báo
       message.success("signup successful!");
@@ -84,7 +85,6 @@ const Signup = () => {
             (snapshot) => {
               const progress =
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log(`Upload is ${progress}% done`);
             },
             (error) => {
               reject(error);
@@ -98,7 +98,9 @@ const Signup = () => {
       });
 
       const downloadURLs = await Promise.all(promises);
-      setFileList(downloadURLs);
+      console.log(downloadURLs)
+      setListCertificates(() => [...downloadURLs])
+      console.log(listCertificates);
     } catch (error) {
       console.error(error);
     } finally {
