@@ -53,20 +53,22 @@ const CreateRequestComponent: React.FC<{
     <div className="p-12 lg:flex-1">
       <div className="text-2xl mb-4 lg:mb-0">Yêu cầu xác thực tài khoản</div>
       <div className="mt-8">
-        {dataDisplay.map((item, index) => (
-          <div
-            key={index}
-            className="w-full border-2 border-primary-color rounded-md px-8 py-6 cursor-pointer flex select-none items-center justify-between my-4"
-          >
-            <div className="text-sm w-80 truncate">{item.name}</div>
+        {dataDisplay.length > 0 &&
+          dataDisplay.map((item, index) => (
             <div
-              onClick={() => handleChangeMode(item.id)}
-              className="px-6 py-2 text-white text-sm rounded-md bg-primary-color hover:scale-105 hover:opacity-95 transition-all"
+              key={index}
+              className="w-full border-2 border-primary-color rounded-md px-8 py-6 cursor-pointer flex select-none items-center justify-between my-4"
             >
-              Xem chi tiết yêu cầu
+              <div className="text-sm w-80 truncate">{item.name}</div>
+              <div
+                onClick={() => handleChangeMode(item.id)}
+                className="px-6 py-2 text-white text-sm rounded-md bg-primary-color hover:scale-105 hover:opacity-95 transition-all"
+              >
+                Xem chi tiết yêu cầu
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        {dataDisplay.length === 0 && <div>Không có thông tin</div>}
       </div>
       <ConfigProvider
         theme={{
@@ -90,14 +92,16 @@ const CreateRequestComponent: React.FC<{
           </Flex>
         )}
         <ErrorSolving errCode={errCode} />
-        <Pagination
-          defaultCurrent={1}
-          current={pageNumber}
-          total={totalItems}
-          pageSize={sizePage}
-          onChange={handlePaging}
-          className="mt-4"
-        />
+        {dataDisplay.length > 0 && (
+          <Pagination
+            defaultCurrent={1}
+            current={pageNumber}
+            total={totalItems}
+            pageSize={sizePage}
+            onChange={handlePaging}
+            className="mt-4"
+          />
+        )}
       </ConfigProvider>
     </div>
   );

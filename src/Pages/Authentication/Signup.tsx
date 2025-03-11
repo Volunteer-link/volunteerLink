@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import { Col, Row, ConfigProvider, Image, Tabs, App as AntdApp } from 'antd';
-import type { TabsProps, UploadFile } from 'antd';
-import logo from '../../image/signup_banner.jpg';
-import SignupOrganization from './SignupOrganization';
-import SignupVolunter from './SignupVolunteer';
+import React, { useState } from "react";
+import { Col, Row, ConfigProvider, Image, Tabs, App as AntdApp } from "antd";
+import type { TabsProps, UploadFile } from "antd";
+import logo from "../../image/signup_banner.jpg";
+import SignupOrganization from "./SignupOrganization";
+import SignupVolunter from "./SignupVolunteer";
 import {
   nameRules,
   passwordRules,
   confirmPasswordRules,
   dateRules,
   emailRules,
-} from '../../ultils/validationRules';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import api from '../../apiService/useFetch';
-import { storage } from '../../ultils/firebase';
-import { useNavigate, useLocation } from 'react-router-dom';
+} from "../../ultils/validationRules";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import api from "../../apiService/useFetch";
+import { storage } from "../../ultils/firebase";
+import { useNavigate, useLocation } from "react-router-dom";
 import dayjs from "dayjs";
+import { NavLink } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
 const Signup = () => {
   const onChange = (key: string) => {
-    setOrganization(key == '2');
+    setOrganization(key == "2");
   };
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -33,18 +35,18 @@ const Signup = () => {
       if (organization) {
         await handleUpload();
       }
-      if(!values?.date){
+      if (!values?.date) {
         const today = dayjs();
-        values.date = today
+        values.date = today;
       }
       const trimmedValues = {
         email: location.state?.trim(),
         name: values.name.trim(),
         password: values.password.trim(),
         confirmPassword: values.confirmPassword.trim(),
-        date: values.date.format('YYYY-MM-DD'),
+        date: values.date.format("YYYY-MM-DD"),
       };
-      const response = await api.post('/register-account', {
+      const response = await api.post("/register-account", {
         gmail: trimmedValues.email,
         password: trimmedValues.password,
         isOrganization: organization,
@@ -53,19 +55,19 @@ const Signup = () => {
         listCertificates: listCertificates
       });
       // Nếu gọi thành công => hiển thị thông báo
-      message.success('signup successful!');
-      console.log('Login Response:', response);
-      navigate('/authentication/signin');
+      message.success("signup successful!");
+      console.log("Login Response:", response);
+      navigate("/authentication/signin");
     } catch (error) {
       console.error(error);
-      message.error('signup failed!');
+      message.error("signup failed!");
     } finally {
       setLoading(false);
     }
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Submit thất bại:', errorInfo);
+    console.log("Submit thất bại:", errorInfo);
   };
 
   const handleUpload = async () => {
@@ -79,7 +81,7 @@ const Signup = () => {
 
         return new Promise<string>((resolve, reject) => {
           uploadTask.on(
-            'state_changed',
+            "state_changed",
             (snapshot) => {
               const progress =
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -105,10 +107,10 @@ const Signup = () => {
     }
   };
 
-  const items: TabsProps['items'] = [
+  const items: TabsProps["items"] = [
     {
-      key: '1',
-      label: 'Tình nguyện viên ',
+      key: "1",
+      label: "Tình nguyện viên ",
       children: (
         <SignupVolunter
           onFinish={onFinish}
@@ -122,8 +124,8 @@ const Signup = () => {
       ),
     },
     {
-      key: '2',
-      label: 'Tổ chức từ thiện',
+      key: "2",
+      label: "Tổ chức từ thiện",
       children: (
         <SignupOrganization
           onFinish={onFinish}
@@ -151,15 +153,18 @@ const Signup = () => {
             {!location.state ? (
               <div>
                 <p>
-                  Bạn cần xác thực Email trước khi đăng ký. {''}
+                  Bạn cần xác thực Email trước khi đăng ký. {""}
                   <a
                     onClick={() => {
-                      navigate('/authentication/verify-email');
+                      navigate("/authentication/verify-email");
                     }}
                     className="text-[#3BA769]"
                   >
                     Xác thực Email
                   </a>
+                  <NavLink to={"/"}>
+                    <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
+                  </NavLink>
                 </p>
               </div>
             ) : (
@@ -167,8 +172,8 @@ const Signup = () => {
                 theme={{
                   components: {
                     Tabs: {
-                      inkBarColor: '#3BA769',
-                      itemSelectedColor: '#3BA769',
+                      inkBarColor: "#3BA769",
+                      itemSelectedColor: "#3BA769",
                     },
                   },
                 }}
@@ -190,7 +195,7 @@ const Signup = () => {
             placeholder={true}
             alt="logo"
             src={logo}
-            style={{ height: '100vh', width: '100%' }}
+            style={{ height: "100vh", width: "100%" }}
           />
         </Col>
       </Row>

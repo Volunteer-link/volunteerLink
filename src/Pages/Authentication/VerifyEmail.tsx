@@ -20,6 +20,7 @@ import {
   confirmPasswordRules,
 } from '../../ultils/validationRules';
 import ForgotPassword from './ForgotPassword';
+
 const VerifyEmail = () => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -192,6 +193,9 @@ const VerifyEmail = () => {
                 >
                   Đăng nhập{' '}
                 </a>
+                <NavLink to={"/"}>
+                  <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
+                </NavLink>
               </p>
             </div>
           )}
