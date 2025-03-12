@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Breadcrumb,
   Button,
@@ -10,10 +10,23 @@ import {
   Radio,
 } from 'antd';
 import { dateRulesEvent, nameRules } from '../../ultils/validationRules';
-import { UploadOutlined } from '@ant-design/icons';
 import type { RadioChangeEvent } from 'antd';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
+import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
+import Map, { Marker } from 'react-map-gl/mapbox';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import type {MapRef} from 'react-map-gl/mapbox';
+
+mapboxgl.accessToken =
+  'pk.eyJ1Ijoia2hpZW1waGFtIiwiYSI6ImNsam01eHhnaTAyNmczZmxzcnQ1MTVqN3gifQ.WVqIQlSk52FSN8W7G5gsnw';
+
 const { TextArea } = Input;
+interface MarkerPosition {
+  longitude: number;
+  latitude: number;
+}
 
 const style: React.CSSProperties = {
   display: 'flex',
@@ -21,17 +34,62 @@ const style: React.CSSProperties = {
   gap: 8,
 };
 const CreateEvent = () => {
+  const mapRef = useRef<MapRef>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [value, setValue] = useState(1);
+  const [viewport, setViewport] = useState({
+    latitude: 37.7577, // Vị trí mặc định Hà Nội
+    longitude: -122.4376,
+    zoom: 8,
+  });
+
+  const onMapLoad = useCallback(() => {
+    if (mapRef.current) {
+      const map = mapRef.current.getMap();
+      // Khởi tạo Mapbox Geocoder
+      const geocoder = new MapboxGeocoder({
+        accessToken: "pk.eyJ1Ijoia2hpZW1waGFtIiwiYSI6ImNsam01eHhnaTAyNmczZmxzcnQ1MTVqN3gifQ.WVqIQlSk52FSN8W7G5gsnw",
+        mapboxgl: require('mapbox-gl')
+      });
+      
+      map?.addControl(geocoder);
+      // Xử lý sự kiện khi tìm kiếm
+      geocoder.on('result', (e: any) => {
+        const { coordinates } = e.result.geometry;
+        setViewport({
+          ...viewport,
+          latitude: coordinates[1],
+          longitude: coordinates[0],
+          zoom: 12
+        });
+      });
+    }
+  
+  }, []);
+
+  const [marker, setMarker] = useState<MarkerPosition | null>(null);
+
+  const handleMapClick = (event: MapMouseEvent) => {
+    const { lngLat } = event;
+
+    // Lưu trữ tọa độ vào state marker
+    setMarker({
+      longitude: lngLat.lng,
+      latitude: lngLat.lat,
+    });
+  };
 
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
   };
+
   const onFinish = () => {};
 
   const onFinishFailed = () => {};
 
-  const handleChange = () => {};
+  const handleChange = (d: any) => {
+    setValue(d);
+  };
   return (
     <div className="container mx-auto px-4">
       <Breadcrumb
@@ -44,6 +102,36 @@ const CreateEvent = () => {
           },
         ]}
       />
+
+      <div>
+        <Map
+          mapboxAccessToken="pk.eyJ1Ijoia2hpZW1waGFtIiwiYSI6ImNsam01eHhnaTAyNmczZmxzcnQ1MTVqN3gifQ.WVqIQlSk52FSN8W7G5gsnw"
+          initialViewState={{
+            longitude: 105.804817,
+            latitude: 21.028511,
+            zoom: 14,
+          }}
+          onLoad={onMapLoad}
+          ref={mapRef}
+          dragRotate={false}
+          onMove={(evt) => setViewport(evt.viewState)}
+          onClick={handleMapClick}
+          style={{ width: 700, height: 400 }}
+          mapStyle="mapbox://styles/mapbox/streets-v9"
+        >
+          <div className="searchbar">
+            <div id="geocoder" />
+          </div>
+          {marker && (
+            <Marker
+              longitude={marker.longitude}
+              latitude={marker.latitude}
+              color="red"
+            />
+          )}
+        </Map>
+      </div>
+
       <div className="mt-10 inline-block">
         <h3 className="font-medium text-[24px] text-[#3BA769]">
           Tạo sự kiện mới
