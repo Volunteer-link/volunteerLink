@@ -1,18 +1,19 @@
-import React from 'react';
-import RootLayout from './Pages/RootLayout';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './Pages/Home';
-import SignIn from './Pages/Authentication/SignIn';
-import Signup from './Pages/Authentication/Signup';
-import VerifyEmail from './Pages/Authentication/VerifyEmail';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import AdminMain from './Pages/AccountManagement/AdminMain';
-import AboutUs from './Pages/AboutUs';
-import ShowEvent from './Pages/ShowEvents/ShowEvents';
-import DetailEvent from './Pages/ShowEvents/DetailEvent';
-import ScrollToTop from './Common/ScrollToTop';
-import MyJoinedEvents from './Pages/Volunteer/MyJoinedEvents';
-import CreateEvent from './Pages/Event/CreateEvent';
+import React from "react";
+import RootLayout from "./Pages/RootLayout";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./Pages/Home";
+import SignIn from "./Pages/Authentication/SignIn";
+import Signup from "./Pages/Authentication/Signup";
+import VerifyEmail from "./Pages/Authentication/VerifyEmail";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import AdminMain from "./Pages/AccountManagement/AdminMain";
+import AboutUs from "./Pages/AboutUs";
+import ShowEvent from "./Pages/ShowEvents/ShowEvents";
+import DetailEvent from "./Pages/ShowEvents/DetailEvent";
+import ScrollToTop from "./Common/ScrollToTop";
+import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
+import CreateEvent from "./Pages/Event/CreateEvent";
+import MyProfile from "./Pages/Profile/MyProfile";
 const router = createBrowserRouter([
   {
     path: '/',
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: 'create-event',
         element: <CreateEvent />,
+      },
+      {
+        path: "my-profile",
+        element: <MyProfile />,
       },
     ],
   },
