@@ -69,7 +69,7 @@ const MyJoinedEvents = () => {
           </div>
         </div>
         <div className="lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
-          <EventCard
+          {/* <EventCard
             eventObject={{
               id: 1,
               title: "Mặt trời của em",
@@ -92,7 +92,7 @@ const MyJoinedEvents = () => {
               url: "/materials/đánh răng.png",
             }}
             showOption={true}
-          />
+          /> */}
         </div>
       </div>
       <ConfigProvider

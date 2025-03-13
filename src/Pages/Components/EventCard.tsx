@@ -4,20 +4,15 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { SlOptions } from "react-icons/sl";
 import { Dropdown, MenuProps } from "antd";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { useState } from "react";
 
 const EventCard: React.FC<{
-  eventObject: {
-    id: number;
-    title: string;
-    organization: string;
-    date: string;
-    candidate: number;
-    location: string;
-    url: string;
-  };
+  eventObject: EventCardType;
   showOption: boolean;
 }> = ({ eventObject, showOption }) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const items: MenuProps["items"] = [
     {
@@ -28,8 +23,8 @@ const EventCard: React.FC<{
     },
   ];
 
-  const handleClickEventCart = () => {
-    navigate("/detail-event/6969");
+  const handleClickEventCard = (id: number) => {
+    navigate(`/detail-event/${id}`);
   };
 
   const handleClickOption = (e: React.MouseEvent) => {
@@ -42,7 +37,10 @@ const EventCard: React.FC<{
     console.log("rời");
   };
   return (
-    <div onClick={handleClickEventCart} className="select-none">
+    <div
+      onClick={() => handleClickEventCard(eventObject.id)}
+      className="select-none"
+    >
       <div className="cursor-pointer hover:scale-[1.02] transition-all relative">
         {showOption && (
           <Dropdown
@@ -58,34 +56,44 @@ const EventCard: React.FC<{
             </div>
           </Dropdown>
         )}
-        <div className="py-4 bg-primary-color rounded-t-xl">
+        <div className="py-4 bg-primary-color relative rounded-t-xl mt-4">
+          {!isLoading && (
+            <div className="absolute inset-0 z-10 bg-red-400">Đang tải...</div>
+          )}
           <img
-            src={eventObject.url}
+            src={eventObject.thumbnail}
             className="w-full h-[11.25rem] object-cover"
             alt=""
+            onLoad={() => setIsLoading(true)}
           />
         </div>
         <div className="border-2 border-primary-color bg-white rounded-b-xl py-2 px-4">
-          <div className="my-2 text-base font-medium">{eventObject.title}</div>
+          <div className="my-2 text-base font-medium">{eventObject.name}</div>
           <div className="text-xs">
             <div className="my-2 flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <HiUsers className="text-sm" />
-                <div>{eventObject.organization}</div>
+                <div className="truncate max-w-32">
+                  {eventObject.organizationName}
+                </div>
               </div>
               <div className="flex items-center gap-1">
                 <FaCalendarAlt className="text-sm" />
-                <div>{eventObject.date}</div>
+                <div className="truncate max-w-32">
+                  {new Date(eventObject.startTime).toISOString().split("T")[0]}
+                </div>
               </div>
             </div>
             <div className="my-2 flex items-center justify-between">
-              <div className="flex items-baseline gap-1">
-                <div className="text-sm">{eventObject.candidate}</div>
+              <div className="flex items-baseline gap-1 truncate max-w-32">
+                <div className="text-xs font-medium">
+                  {eventObject.numberVolunteer}
+                </div>
                 <div>thành viên</div>
               </div>
               <div className="flex items-center gap-1">
                 <IoLocation className="text-sm" />
-                <div>{eventObject.location}</div>
+                <div className="truncate max-w-32">{eventObject.address}</div>
               </div>
             </div>
           </div>
