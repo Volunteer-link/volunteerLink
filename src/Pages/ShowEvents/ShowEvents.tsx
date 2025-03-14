@@ -9,7 +9,7 @@ import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import { RiEmotionSadLine } from "react-icons/ri";
 import Loading from "../Components/Loading";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
-const pageSize: number = 3;
+const pageSize: number = 1;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
   const [currentField, setCurrentField] = useState<number>(0);
@@ -44,7 +44,6 @@ const ShowEvent = () => {
   useEffect(() => {
     const fetchCommonEvent = async () => {
       try {
-        setIsLoading(true);
         const { data } = await api.get(
           `/common/get-events?${
             currentField === 0 ? "" : `Fields=${currentField}&`
@@ -54,7 +53,6 @@ const ShowEvent = () => {
         setTotal(data.data.totalItems);
       } catch (e: any) {
       } finally {
-        setIsLoading(false);
       }
     };
     fetchCommonEvent();
@@ -73,7 +71,6 @@ const ShowEvent = () => {
     const pageNumber = page ?? 1;
 
     try {
-      setIsLoading(true);
       const { data } = await api.get(
         `/common/get-events?PageNumber=${pageNumber}&PageSize=${pageSize}&SearchKey=${
           value ? value : ""
@@ -83,7 +80,6 @@ const ShowEvent = () => {
       setListEventCardSearch(data.data.items);
     } catch (e: any) {
     } finally {
-      setIsLoading(false);
     }
   };
 
@@ -117,7 +113,7 @@ const ShowEvent = () => {
 
   return (
     <div className="">
-      {isLoading && <Loading />}
+      {/* {isLoading && <Loading />} */}
       <div className="w-full relative">
         <img
           src="/materials/image 4.png"
@@ -165,7 +161,7 @@ const ShowEvent = () => {
                 <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
                   {listEventCardSearch?.map((item, index) => (
                     <EventCard
-                      key={index}
+                      key={item.id}
                       eventObject={item}
                       showOption={false}
                     />
@@ -197,7 +193,7 @@ const ShowEvent = () => {
                   </div>
                 )}
               </ConfigProvider>
-              <LineSpacing />
+              {/* <LineSpacing /> */}
             </>
           )}
           <LineSpacing />
@@ -253,7 +249,7 @@ const ShowEvent = () => {
             <div>Không có dữ liệu</div>
           </div>
         )}
-        {isLoading ? (
+        {/* {isLoading ? (
           <Loading />
         ) : (
           <div className="w-full lg:col-span-6 col-span-1 gap-10 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
@@ -261,7 +257,12 @@ const ShowEvent = () => {
               <EventCard key={index} eventObject={item} showOption={false} />
             ))}
           </div>
-        )}
+        )} */}
+        <div className="w-full lg:col-span-6 col-span-1 gap-10 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
+          {listEventCard?.map((item, index) => (
+            <EventCard key={item.id} eventObject={item} showOption={false} />
+          ))}
+        </div>
       </div>
       <ConfigProvider
         theme={{

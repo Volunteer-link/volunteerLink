@@ -6,13 +6,15 @@ import { SlOptions } from "react-icons/sl";
 import { Dropdown, MenuProps } from "antd";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import { useState } from "react";
+import Loading from "./Loading";
+import SmallLoading from "./SmallLoading";
 
 const EventCard: React.FC<{
   eventObject: EventCardType;
   showOption: boolean;
 }> = ({ eventObject, showOption }) => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const items: MenuProps["items"] = [
     {
@@ -36,6 +38,8 @@ const EventCard: React.FC<{
     e.stopPropagation();
     console.log("rời");
   };
+  console.log(isLoading);
+
   return (
     <div
       onClick={() => handleClickEventCard(eventObject.id)}
@@ -56,15 +60,21 @@ const EventCard: React.FC<{
             </div>
           </Dropdown>
         )}
-        <div className="py-4 bg-primary-color relative rounded-t-xl mt-4">
-          {!isLoading && (
-            <div className="absolute inset-0 z-10 bg-red-400">Đang tải...</div>
-          )}
+        {/* <div
+          className={`py-4 ${
+            isLoading ? "opacity-50" : ""
+          } bg-primary-color relative rounded-t-xl mt-4`}
+        > */}
+        <div
+          className={`py-4 bg-primary-color relative rounded-t-xl mt-4 overflow-hidden`}
+        >
+          {isLoading && <SmallLoading />}
           <img
             src={eventObject.thumbnail}
-            className="w-full h-[11.25rem] object-cover"
+            className={`w-full h-[11.25rem] object-cover`}
             alt=""
-            onLoad={() => setIsLoading(true)}
+            loading="lazy"
+            onLoad={() => setIsLoading(false)}
           />
         </div>
         <div className="border-2 border-primary-color bg-white rounded-b-xl py-2 px-4">
