@@ -2,54 +2,108 @@ import { IoLocation } from "react-icons/io5";
 import { HiUsers } from "react-icons/hi2";
 import { FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { SlOptions } from "react-icons/sl";
+import { Dropdown, MenuProps } from "antd";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { useState } from "react";
+import Loading from "./Loading";
+import SmallLoading from "./SmallLoading";
 
 const EventCard: React.FC<{
-  eventObject: {
-    id: number;
-    title: string;
-    organization: string;
-    date: string;
-    candidate: number;
-    location: string;
-    url: string;
-  };
-}> = ({ eventObject }) => {
+  eventObject: EventCardType;
+  showOption: boolean;
+}> = ({ eventObject, showOption }) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const handleClickEventCart = () => {
-    navigate("/detail-event/6969");
+  const items: MenuProps["items"] = [
+    {
+      label: (
+        <div onClick={(e) => handleClickMenuItem(e)}>Yêu cầu rời sự kiện</div>
+      ),
+      key: "0",
+    },
+  ];
+
+  const handleClickEventCard = (id: number) => {
+    navigate(`/detail-event/${id}`);
   };
+
+  const handleClickOption = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("optionnnnnnnn");
+  };
+
+  const handleClickMenuItem = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("rời");
+  };
+  console.log(isLoading);
+
   return (
-    <div onClick={handleClickEventCart}>
-      <div className="cursor-pointer hover:scale-[1.02] transition-all">
-        <div className="py-4 bg-primary-color rounded-t-xl">
+    <div
+      onClick={() => handleClickEventCard(eventObject.id)}
+      className="select-none"
+    >
+      <div className="cursor-pointer hover:scale-[1.02] transition-all relative">
+        {showOption && (
+          <Dropdown
+            menu={{ items }}
+            trigger={["click"]}
+            placement="bottomRight"
+            getPopupContainer={(trigger) =>
+              trigger.parentElement || document.body
+            }
+          >
+            <div onClick={handleClickOption} className="absolute right-2 top-2">
+              <SlOptions className=" text-2xl text-white hover:cursor-pointer cursor-pointer scale-105" />
+            </div>
+          </Dropdown>
+        )}
+        {/* <div
+          className={`py-4 ${
+            isLoading ? "opacity-50" : ""
+          } bg-primary-color relative rounded-t-xl mt-4`}
+        > */}
+        <div
+          className={`py-4 bg-primary-color relative rounded-t-xl mt-4 overflow-hidden`}
+        >
+          {isLoading && <SmallLoading />}
           <img
-            src={eventObject.url}
-            className="w-full h-[11.25rem] object-cover"
+            src={eventObject.thumbnail}
+            className={`w-full h-[11.25rem] object-cover`}
             alt=""
+            loading="lazy"
+            onLoad={() => setIsLoading(false)}
           />
         </div>
         <div className="border-2 border-primary-color bg-white rounded-b-xl py-2 px-4">
-          <div className="my-2 text-base font-medium">{eventObject.title}</div>
+          <div className="my-2 text-base font-medium">{eventObject.name}</div>
           <div className="text-xs">
             <div className="my-2 flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <HiUsers className="text-sm" />
-                <div>{eventObject.organization}</div>
+                <div className="truncate max-w-32">
+                  {eventObject.organizationName}
+                </div>
               </div>
               <div className="flex items-center gap-1">
                 <FaCalendarAlt className="text-sm" />
-                <div>{eventObject.date}</div>
+                <div className="truncate max-w-32">
+                  {new Date(eventObject.startTime).toISOString().split("T")[0]}
+                </div>
               </div>
             </div>
             <div className="my-2 flex items-center justify-between">
-              <div className="flex items-baseline gap-1">
-                <div className="text-sm">{eventObject.candidate}</div>
+              <div className="flex items-baseline gap-1 truncate max-w-32">
+                <div className="text-xs font-medium">
+                  {eventObject.numberVolunteer}
+                </div>
                 <div>thành viên</div>
               </div>
               <div className="flex items-center gap-1">
                 <IoLocation className="text-sm" />
-                <div>{eventObject.location}</div>
+                <div className="truncate max-w-32">{eventObject.address}</div>
               </div>
             </div>
           </div>
