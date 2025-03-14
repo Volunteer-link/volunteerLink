@@ -247,60 +247,62 @@ const MyProfile = () => {
   };
 
   const handleSubmit = async (values: FormValuesVolunteer) => {
-    if (listSelectedField.length === 0) {
-      setErrorField(true);
-      messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
-    } else {
-      setErrorField(false);
-      if (listFile[0].uid === "s-20052003") {
-        messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
-      } else {
-        try {
-          setIsLoading(true);
-          const address = `${values.ward}, ${values.district}, ${values.province}`;
-          Object.assign(values, { address });
-          let location = await getCoordinates(address); // Gọi hàm lấy tọa độ
-          if (location) {
-            Object.assign(values, {
-              location: `${location.lat};${location.lon}`,
-            });
-          } else {
-            Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
-          }
-          const { province, district, ward, email, ...sendObject } = values;
-          sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
+    // if (listSelectedField.length === 0) {
+    //   setErrorField(true);
+    //   messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
+    // } else {
+    //   setErrorField(false);
+    //   if (listFile[0].uid === "s-20052003") {
+    //     messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
+    //   } else {
+    //     try {
+    //       setIsLoading(true);
+    const address = `${values.ward}, ${values.district}, ${values.province}`;
+    //       Object.assign(values, { address });
+    let location = await getCoordinates(address); // Gọi hàm lấy tọa độ
+    console.log(location);
 
-          Object.assign(sendObject, { fields: listSelectedField });
-          // console.log(listSelectedField);
-          let urlNewAvt: string[] | undefined;
-          if (listFile[0].uid !== "-1") {
-            urlNewAvt = await uploadFilesToFirebase(listFile);
-          }
-          Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
+    //       if (location) {
+    //         Object.assign(values, {
+    //           location: `${location.lat};${location.lon}`,
+    //         });
+    //       } else {
+    //         Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
+    //       }
+    //       const { province, district, ward, email, ...sendObject } = values;
+    //       sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
 
-          const { dob, phone, ...updatedData } = {
-            ...sendObject,
-            dateOfBirth: sendObject.dob,
-            phoneNumber: sendObject.phone,
-          };
+    //       Object.assign(sendObject, { fields: listSelectedField });
+    //       // console.log(listSelectedField);
+    //       let urlNewAvt: string[] | undefined;
+    //       if (listFile[0].uid !== "-1") {
+    //         urlNewAvt = await uploadFilesToFirebase(listFile);
+    //       }
+    //       Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
 
-          //UPDATE
-          try {
-            const { data } = await api.put(`/profile/volunteer`, updatedData);
-          } catch (e: any) {
-            console.log(e);
-          } finally {
-            messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+    //       const { dob, phone, ...updatedData } = {
+    //         ...sendObject,
+    //         dateOfBirth: sendObject.dob,
+    //         phoneNumber: sendObject.phone,
+    //       };
 
-            setUpdateState((prev) => ++prev);
-          }
-        } catch (e: any) {
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    }
+    //       //UPDATE
+    //       try {
+    //         const { data } = await api.put(`/profile/volunteer`, updatedData);
+    //       } catch (e: any) {
+    //         console.log(e);
+    //       } finally {
+    //         messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
+    //         window.scrollTo({ top: 0, behavior: "smooth" });
+
+    //         setUpdateState((prev) => ++prev);
+    //       }
+    //     } catch (e: any) {
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   }
+    // }
     // const check = listFile.find()
   };
 
