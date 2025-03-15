@@ -12,39 +12,44 @@ import ShowEvent from "./Pages/ShowEvents/ShowEvents";
 import DetailEvent from "./Pages/ShowEvents/DetailEvent";
 import ScrollToTop from "./Common/ScrollToTop";
 import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
+import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Home />,
       },
       {
-        path: "home",
+        path: 'home',
         element: <Home />,
       },
       {
-        path: "aboutus",
+        path: 'aboutus',
         element: <AboutUs />,
       },
       {
-        path: "admin",
+        path: 'admin',
         element: <AdminMain />,
       },
       {
-        path: "events",
+        path: 'events',
         element: <ShowEvent />,
       },
       {
-        path: "detail-event/:id",
+        path: 'detail-event/:id',
         element: <DetailEvent />,
       },
       {
-        path: "joined-events",
+        path: 'joined-events',
         element: <MyJoinedEvents />,
+      },
+      {
+        path: 'create-event',
+        element: <CreateEvent />,
       },
       {
         path: "my-profile",
@@ -53,15 +58,15 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "authentication/signin",
+    path: 'authentication/signin',
     element: <SignIn />,
   },
   {
-    path: "authentication/signup",
+    path: 'authentication/signup',
     element: <Signup />,
   },
   {
-    path: "authentication/verify-email",
+    path: 'authentication/verify-email',
     element: <VerifyEmail />,
   },
 ]);

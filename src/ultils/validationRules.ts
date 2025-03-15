@@ -2,6 +2,7 @@
  import type { Dayjs } from "dayjs";
  import dayjs from "dayjs";
  import type { Rule,FormInstance  } from 'antd/es/form';
+import moment, { Moment } from "moment";
 export const nameRules: Rule[] = [
     { required: true, message: "Vui lòng nhập tên" },
     {
@@ -56,11 +57,6 @@ export const nameRules: Rule[] = [
     {
       validator(_: any, value: Dayjs) {
         const today = dayjs();
-        // Kiểm tra lớn hơn hôm nay
-        // if (!value.isAfter(today, "day")) {
-        //   return Promise.reject("Ngày phải lớn hơn thời điểm hiện tại");
-        // }
-        // Kiểm tra cách ít nhất 18 năm
         const maxDate = today.subtract(18, "year");
         if (value?.isAfter(maxDate, "day")) {
           return Promise.reject("Bạn phải trên 18 tuổi");
@@ -68,5 +64,35 @@ export const nameRules: Rule[] = [
         return Promise.resolve();
       },
     },
+  ];
+
+
+  export const dateRulesEvent : Rule[] = [
+    {
+      required: true,
+      message: 'Bạn cần chọn khoảng thời gian!'
+    },
+    {
+      validator: async (_, value: [Moment, Moment]) => {
+        if (!value || value.length < 2) {
+          return Promise.reject('Hãy chọn cả ngày bắt đầu và ngày kết thúc!');
+        }
+
+        const [startDate, endDate] = value;
+
+        if (startDate.isBefore(moment(), 'day')) {
+          return Promise.reject('Ngày bắt đầu phải sau ngày hiện tại!');
+        }
+        if (endDate.isBefore(moment(), 'day')) {
+          return Promise.reject('Ngày kết thúc phải sau ngày hiện tại!');
+        }
+
+        if (endDate.isBefore(startDate)) {
+          return Promise.reject('Ngày kết thúc phải sau ngày bắt đầu!');
+        }
+
+        return Promise.resolve();
+      }
+    }
   ];
   
