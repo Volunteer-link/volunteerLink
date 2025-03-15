@@ -38,7 +38,6 @@ const EventCard: React.FC<{
     e.stopPropagation();
     console.log("rời");
   };
-  console.log(isLoading);
 
   return (
     <div
