@@ -31,7 +31,6 @@ import dayjs from "dayjs";
 import { storage } from "../../ultils/firebase";
 import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import utc from "dayjs/plugin/utc";
-import moment from "moment";
 import { data } from "react-router-dom";
 import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
 dayjs.extend(utc);

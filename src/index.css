@@ -37,3 +37,6 @@ code {
 .no-spinner {
   -moz-appearance: textfield;
 }
+.ant-form-item-control-input{
+  min-height: unset !important;
+}
