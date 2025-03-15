@@ -20,6 +20,9 @@ import {
   confirmPasswordRules,
 } from "../../ultils/validationRules";
 import ForgotPassword from "./ForgotPassword";
+import { NavLink } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
+
 const VerifyEmail = () => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -46,21 +49,27 @@ const VerifyEmail = () => {
 
       const response = await api.post(
         `${
-          location.state === 'FORGOT_PASSWORD'
-            ? '/send-otp-for-forgot-password'
-            : '/send-otp-for-register'
+          location.state === "FORGOT_PASSWORD"
+            ? "/send-otp-for-forgot-password"
+            : "/send-otp-for-register"
         } `,
         {
           gmail: email,
         }
       );
-      if(response.data.data.isExistEmail && location.state !== 'FORGOT_PASSWORD' ){
-        message.success('Đã có tài khoản sử dụng email này!');
-      }else if (!response.data.data.isExistEmail && location.state === 'FORGOT_PASSWORD'){
-        message.error('Email không tồn tại!');
-      }else{
-        message.success('Send successful!');
-        setEmailStatus('VERIFY_OTP');
+      if (
+        response.data.data.isExistEmail &&
+        location.state !== "FORGOT_PASSWORD"
+      ) {
+        message.success("Đã có tài khoản sử dụng email này!");
+      } else if (
+        !response.data.data.isExistEmail &&
+        location.state === "FORGOT_PASSWORD"
+      ) {
+        message.error("Email không tồn tại!");
+      } else {
+        message.success("Send successful!");
+        setEmailStatus("VERIFY_OTP");
       }
     } catch (error) {
       console.error(error);
@@ -135,7 +144,19 @@ const VerifyEmail = () => {
                   />
                 </Form.Item>
                 <Form.Item hidden={emailStatus === "VERIFY_EMAIL"} name="otp">
-                  <Input className="max-w-[400px]" placeholder="Mã OTP" />
+                  <Input.OTP
+                    onKeyDown={(e) => {
+                      if (
+                        !/^[0-9]$/.test(e.key) &&
+                        e.key !== "Backspace" &&
+                        e.key !== "Tab"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
+                    separator={<span>-</span>}
+                    className="max-w-[400px]"
+                  />
                 </Form.Item>
 
                 <Flex
@@ -175,6 +196,9 @@ const VerifyEmail = () => {
                 >
                   Đăng nhập{" "}
                 </a>
+                <NavLink to={"/"}>
+                  <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
+                </NavLink>
               </p>
             </div>
           )}
