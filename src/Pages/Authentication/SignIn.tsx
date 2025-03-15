@@ -18,6 +18,8 @@ import { useNavigate } from "react-router";
 // Import hàm login
 import api from "../../apiService/useFetch";
 import { decodedCookie, getCookie, setCookie } from "../../ultils/cookie";
+import { FaHome } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 interface AccountPayload {
   gmail: string;
   password: string;
@@ -84,10 +86,9 @@ const SignIn: React.FC = () => {
 
       const token = response.data.data.accessToken;
 
-      setCookie("accessToken", token, 7);
+      setCookie("accessToken", token);
 
       const currentUser = decodedCookie(getCookie("accessToken")!);
-      console.log(currentUser);
 
       if (currentUser.role === "Admin") {
         navigate("/admin");
@@ -218,10 +219,12 @@ const SignIn: React.FC = () => {
                 {" "}
                 Quên mật khẩu?
               </a>
+              <NavLink to={"/"}>
+                <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
+              </NavLink>
             </p>
           </div>
         </Col>
-
         <Col span={8}>
           <Image
             className="w-full h-screen"
