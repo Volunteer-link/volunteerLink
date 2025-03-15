@@ -11,9 +11,9 @@ export interface DetailEventType {
   name: string;
   numberVolunteer: number;
   orgAccountId: number;
+  organizationAvatar: string;
   organizationId: number;
   organizationName: string;
-  organizationAvatar: string;
   startTime: Date | string;
   status: number;
   thumbnail: string;
