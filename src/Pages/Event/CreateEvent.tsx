@@ -7,14 +7,18 @@ import {
   UploadFile,
   Radio,
   Button,
+  Modal,
 } from 'antd';
 import { dateRulesEvent, nameRules } from '../../ultils/validationRules';
 import type { RadioChangeEvent } from 'antd';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
-import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '../../ultils/firebase';
-
+import FormAddress from '../Components/FormAddress';
+import extendUploadFilesToFirebase from '../../ultils/extendUploadFilesToFirebase';
+import MapBox from '../Components/MapBox';
+import type { DatePickerProps, GetProps } from 'antd';
+import moment, { Moment } from 'moment';
+import { createEvent } from '../../model/Request/CreateEvent';
+type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
 const style: React.CSSProperties = {
@@ -23,16 +27,15 @@ const style: React.CSSProperties = {
   gap: 8,
 };
 
-interface FileUpLoadExtend {
-  url: string;
-  type: string;
-}
-
 interface UploadFileExtend {
   file: UploadFile[] | undefined;
   type: string;
 }
 
+interface MarkerPosition {
+  longitude: number;
+  latitude: number;
+}
 const CreateEvent = () => {
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
@@ -42,92 +45,106 @@ const CreateEvent = () => {
     file: [],
     type: 'image',
   });
-  const [listThumbnail, setListThumbnail] = useState<string[]>([]);
-  const [listImage, setListImage] = useState<string[]>([]);
-
+  const [form] = Form.useForm();
   const [value, setValue] = useState(1);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
   };
 
-  const onFinish = () => {};
+  const [marker, setMarker] = useState<MarkerPosition | null>(null);
 
-  const onFinishFailed = () => {};
+  const onFinish =  async (values: any) => {
+    setLoading(true);
+    const address = `${values.ward}, ${values.district}, ${values.province}`;
+    let coordinates = await getCoordinates(address);
+    let location: string | null = null;
+    if (coordinates) {
+      location = `${coordinates.lat};${coordinates.lon}`;
+    }
+    if (marker) {
+      location = marker.latitude + ';' + marker.longitude;
+    }
+    const [startMoment, endMoment] = values.date || [];
+    const { images, thumbnails } = await upLoadFileToCloud();
+    const data: createEvent = {
+      name: values.nameEvent,
+      location: location,
+      address: address,
+      startTime: startMoment.toISOString(),
+      endTime: endMoment.toISOString(),
+      description: values.description,
+      timePublish: values.timePublish?.toISOString() || null,
+      status: 0,
+      hasDonate: true,
+      imagesEvent: images,
+      thumbnail: thumbnails[0],
+    };
 
-  const extendUploadFilesToFirebase = (
-    listFile: UploadFile[] | undefined,
-    type: string
-  ) => {
-    if (!listFile || listFile.length === 0) return [];
+    setLoading(false);
+    console.log(data);
+  };
+
+  const getCoordinates = async (address: string) => {
+    const encodedAddress = encodeURIComponent(address);
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`;
 
     try {
-      const promises = listFile.map((item) => {
-        const file = item.originFileObj as File;
+      const res = await fetch(url);
+      const data = await res.json();
 
-        const storageRef = ref(storage, `images/${file.name}`);
-
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        return new Promise<FileUpLoadExtend>((resolve, reject) => {
-          uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-              const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            //  console.log(`Upload is ${progress}% done`);
-            },
-            (error) => {
-              reject(error);
-            },
-            async () => {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              resolve({ url: downloadURL, type });
-            }
-          );
-        });
-      });
-
-      return promises;
+      if (data.length > 0) {
+        const { lat, lon } = data[0];
+        return { lat, lon };
+      } else {
+        return null;
+      }
     } catch (error) {
-      // console.error(error);
-      return [];
-    } finally {
+      return null;
     }
   };
 
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Submit thất bại:', errorInfo);
+  };
+
   const upLoadFileToCloud = async () => {
-    const listImage = extendUploadFilesToFirebase(
+    const listImageFile = extendUploadFilesToFirebase(
       fileListImage?.file,
       fileListImage.type
     );
-    const listThumbnail = extendUploadFilesToFirebase(
+    const listThumbnailFile = extendUploadFilesToFirebase(
       fileListThumbnail?.file,
       fileListThumbnail.type
     );
 
-    const allPromises = [...listImage, ...listThumbnail];
+    const allPromises = [...listImageFile, ...listThumbnailFile];
 
     const listFileUrls = await Promise.all(allPromises);
 
-    console.log(listFileUrls)
+    const images = listFileUrls
+    .filter((item) => item.url && item.type === 'image')
+    .map((item) => item.url);
 
-    setListImage(
-      listFileUrls
-        .filter((item) => item.url && item.type === 'image')
-        .map((item) => item.url)
-    );
+  const thumbnails = listFileUrls
+    .filter((item) => item.url && item.type === 'thumbnail')
+    .map((item) => item.url);
 
-    setListThumbnail(
-      listFileUrls
-        .filter((item) => item.url && item.type === 'thumbnail')
-        .map((item) => item.url)
-    );
- 
+    return { images, thumbnails };
   };
-  console.log(listImage)
-  console.log(listThumbnail)
-  
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const onOk = (
+    value: DatePickerProps['value'] | RangePickerProps['value']
+  ) => {};
+
   return (
     <div className="container mx-auto px-4">
       <Breadcrumb
@@ -154,6 +171,7 @@ const CreateEvent = () => {
         layout="vertical"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
+        form={form}
       >
         <div className="mt-6 ">
           <div className="flex justify-start items-center gap-1">
@@ -175,15 +193,20 @@ const CreateEvent = () => {
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
-          <div className="px-3 cursor-pointer hover:opacity-80 py-2 mt-3 rounded-lg border inline-block border-[#515151]">
-            <Form.Item
-              name="location"
-              hidden
-              className="mb-4 mt-3"
-              rules={[{ required: true, message: 'Vui lòng nhập địa điểm!' }]}
-            >
-              <Input type="hidden" />
-            </Form.Item>
+          <Modal
+            maskClosable={true}
+            footer={null}
+            onCancel={handleClose}
+            title="Chọn địa điểm"
+            centered
+            open={isModalOpen}
+          >
+            <MapBox marker={marker} setMarker={setMarker} />
+          </Modal>
+          <div
+            onClick={showModal}
+            className="px-3 cursor-pointer hover:opacity-80 py-2 mt-3 rounded-lg border inline-block border-[#515151]"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -207,6 +230,7 @@ const CreateEvent = () => {
               />
             </svg>
           </div>
+          <FormAddress form={form} />
         </div>
 
         <div className="mt-6 ">
@@ -218,7 +242,12 @@ const CreateEvent = () => {
           </div>
 
           <Form.Item name="date" className="mb-4 mt-3 " rules={dateRulesEvent}>
-            <DatePicker placeholder="" style={{ width: '30%' }} />
+            <DatePicker.RangePicker
+              showTime={{ format: 'HH:mm' }}
+              format="YYYY-MM-DD HH:mm"
+              onChange={(value, dateString) => {}}
+              onOk={onOk}
+            />
           </Form.Item>
         </div>
 
@@ -230,7 +259,7 @@ const CreateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
           <Form.Item
-            name="date"
+            name="description"
             className="mb-4 mt-3 "
             rules={[{ required: true, message: 'Vui lòng nhập mo ta' }]}
           >
@@ -313,17 +342,35 @@ const CreateEvent = () => {
 
           {value === 2 && (
             <Form.Item
-              name="datePublish"
+              name="timePublish"
               className="mb-4 mt-3 "
-              rules={dateRulesEvent}
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng chọn ngày!',
+                },
+                {
+                  validator: (_, value: Moment) => {
+                    if (!value) {
+                      return Promise.resolve();
+                    }
+                    if (value.isSameOrBefore(moment(), 'day')) {
+                      return Promise.reject('Ngày phải lớn hơn ngày hiện tại!');
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             >
               <DatePicker placeholder="" style={{ width: '30%' }} />
             </Form.Item>
           )}
         </div>
 
-        <div className="mt-6">
-          <Button onClick={upLoadFileToCloud}>Send</Button>
+        <div className="my-6">
+          <Button loading={loading} htmlType="submit">
+            Tạo sự kiện
+          </Button>
         </div>
       </Form>
     </div>

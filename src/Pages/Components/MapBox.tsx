@@ -11,7 +11,13 @@ interface MarkerPosition {
   latitude: number;
 }
 
-const MapBox = () => {
+const MapBox = ({
+  marker,
+  setMarker,
+}: {
+  marker: MarkerPosition | null;
+  setMarker: (marker: MarkerPosition) => void;
+}) => {
   const [viewport, setViewport] = useState({
     latitude: 37.7577, // Vị trí mặc định Hà Nội
     longitude: -122.4376,
@@ -23,8 +29,7 @@ const MapBox = () => {
       const map = mapRef.current.getMap();
       // Khởi tạo Mapbox Geocoder
       const geocoder = new MapboxGeocoder({
-        accessToken:
-          'pk.eyJ1Ijoia2hpZW1waGFtIiwiYSI6ImNsam01eHhnaTAyNmczZmxzcnQ1MTVqN3gifQ.WVqIQlSk52FSN8W7G5gsnw',
+        accessToken: process.env.REACT_APP_MAPBOX_CLIENTID as string,
         mapboxgl: require('mapbox-gl'),
       });
 
@@ -41,7 +46,6 @@ const MapBox = () => {
       });
     }
   }, []);
-  const [marker, setMarker] = useState<MarkerPosition | null>(null);
 
   const handleMapClick = (event: MapMouseEvent) => {
     const { lngLat } = event;
@@ -53,34 +57,32 @@ const MapBox = () => {
     });
   };
   return (
-    <div>
-      <Map
-        mapboxAccessToken={process.env.REACT_MAPBOX_CLIENTID as string}
-        initialViewState={{
-          longitude: 105.804817,
-          latitude: 21.028511,
-          zoom: 14,
-        }}
-        onLoad={onMapLoad}
-        ref={mapRef}
-        dragRotate={false}
-        onMove={(evt) => setViewport(evt.viewState)}
-        onClick={handleMapClick}
-        style={{ width: 700, height: 400 }}
-        mapStyle="mapbox://styles/mapbox/streets-v9"
-      >
-        <div className="searchbar">
-          <div id="geocoder" />
-        </div>
-        {marker && (
-          <Marker
-            longitude={marker.longitude}
-            latitude={marker.latitude}
-            color="red"
-          />
-        )}
-      </Map>
-    </div>
+    <Map
+      mapboxAccessToken={process.env.REACT_APP_MAPBOX_CLIENTID as string}
+      initialViewState={{
+        longitude: 105.804817,
+        latitude: 21.028511,
+        zoom: 14,
+      }}
+      onLoad={onMapLoad}
+      ref={mapRef}
+      dragRotate={false}
+      onMove={(evt) => setViewport(evt.viewState)}
+      onClick={handleMapClick}
+      style={{ position: 'relative', width: '100%', height: '400px' }}
+      mapStyle="mapbox://styles/mapbox/streets-v9"
+    >
+      <div className="searchbar">
+        <div id="geocoder" />
+      </div>
+      {marker && (
+        <Marker
+          longitude={marker.longitude}
+          latitude={marker.latitude}
+          color="red"
+        />
+      )}
+    </Map>
   );
 };
 
