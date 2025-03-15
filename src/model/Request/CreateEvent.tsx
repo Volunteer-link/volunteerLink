@@ -5,9 +5,10 @@ export interface createEvent{
     startTime: string;
     endTime: string;
     description: string;
-    timePublish: Date | null;
-    status: 0,
+    timePublish: string | null;
+    status: number,
     hasDonate: true,
     imagesEvent: string[],
-    thumbnail: string
+    thumbnail: string,
+    fieldsEvent: number[]
 }

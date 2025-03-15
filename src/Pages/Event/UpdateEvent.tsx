@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   DatePicker,
@@ -10,24 +11,19 @@ import {
   Modal,
   Checkbox,
   App as AntdApp,
+  DatePickerProps,
+  RadioChangeEvent,
 } from 'antd';
-import { dateRulesEvent, nameRules } from '../../ultils/validationRules';
-import type { RadioChangeEvent } from 'antd';
-import PreviewImageUpload from '../Components/PreviewImageUpload';
-import FormAddress from '../Components/FormAddress';
-import extendUploadFilesToFirebase from '../../ultils/extendUploadFilesToFirebase';
-import MapBox from '../Components/MapBox';
-import type { DatePickerProps, GetProps } from 'antd';
-import { createEvent } from '../../model/Request/CreateEvent';
 import api from '../../apiService/useFetch';
-type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
-const { TextArea } = Input;
-
-const style: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-};
+import { createEvent } from '../../model/Request/CreateEvent';
+import { RangePickerProps } from 'antd/es/date-picker';
+import extendUploadFilesToFirebase from '../../ultils/extendUploadFilesToFirebase';
+import { dateRulesEvent, nameRules } from '../../ultils/validationRules';
+import MapBox from '../Components/MapBox';
+import FormAddress from '../Components/FormAddress';
+import TextArea from 'antd/es/input/TextArea';
+import PreviewImageUpload from '../Components/PreviewImageUpload';
+import dayjs from 'dayjs';
 
 interface UploadFileExtend {
   file: UploadFile[] | undefined;
@@ -38,7 +34,61 @@ interface MarkerPosition {
   longitude: number;
   latitude: number;
 }
-const CreateEvent = () => {
+
+const style: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+};
+const UpdateEvent = () => {
+  const { id } = useParams();
+  const { message } = AntdApp.useApp();
+  const [event, setEvent] = React.useState<any>();
+  const [marker, setMarker] = useState<MarkerPosition | null>(null);
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const { data } = await api.get(`/common/get-event-infomation`, {
+          params: { eventId: id },
+        });
+        const [latitude, longitude] = data.data.location
+          .split(';')
+          .map((part: string) => part.trim());
+        setMarker({
+          longitude: parseFloat(longitude),
+          latitude: parseFloat(latitude),
+        });
+        setFileListThumbnail((prev) => {
+          return {
+            ...prev,
+            file: [
+              {
+                uid: '-1',
+                name: 'imageThumbnail',
+                status: 'done',
+                url: `${data.data?.thumbnail}`,
+              },
+            ],
+          };
+        });
+        setFileListImage((prev) => {
+          return {
+            ...prev,
+            file: data.data.images.map((item: string, index: number) => ({
+              uid: index.toString(),
+              name: 'imageThumbnail',
+              status: 'done',
+              url: item,
+            })),
+          };
+        });
+        setEvent(data.data);
+      } catch (e: any) {
+        console.log(e);
+      }
+    };
+    fetchEvent();
+  }, []);
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
     type: 'thumbnail',
@@ -48,14 +98,13 @@ const CreateEvent = () => {
     type: 'image',
   });
   const [form] = Form.useForm();
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(2);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
   };
 
-  const [marker, setMarker] = useState<MarkerPosition | null>(null);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
     {
@@ -63,7 +112,9 @@ const CreateEvent = () => {
       name: string;
     }[]
   >([]);
-  const { message } = AntdApp.useApp();
+  const partsAddress = event?.address
+    .split(',')
+    .map((part: string) => part.trim());
   const onFinish = async (values: any) => {
     setLoading(true);
     const address = `${values.ward}, ${values.district}, ${values.province}`;
@@ -77,6 +128,7 @@ const CreateEvent = () => {
     }
     const [startMoment, endMoment] = values.date || [];
     const { images, thumbnails } = await upLoadFileToCloud();
+
     const dataEvent: createEvent = {
       name: values.nameEvent,
       location: location,
@@ -84,20 +136,19 @@ const CreateEvent = () => {
       startTime: startMoment.toISOString(),
       endTime: endMoment.toISOString(),
       description: values.description,
-      timePublish:
-        values.timePublish?.toISOString() || new Date().toISOString(),
-      status: value === 1 ? 0 : -1,
+      timePublish: values.timePublish?.toISOString() || null,
+      status: 0,
       hasDonate: true,
-      imagesEvent: images,
-      thumbnail: thumbnails[0],
+      imagesEvent: images.length > 0 ? images : event.images,
+      thumbnail:  thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
     };
     try {
-      const { data } = await api.post(`/event/create-an-event`, dataEvent);
+      const { data } = await api.put(`/event/update-an-event`, dataEvent);
       console.log(data);
-      message.success('Tạo sự kiện thành công!');
+      message.success('Cập nhật sự kiện thành công!');
     } catch (e: any) {
-      message.error('Tạo sự kiện thất bại!');
+      message.error('Cập nhật sự kiện thất bại!');
       console.log(e);
     } finally {
       setLoading(false);
@@ -175,6 +226,10 @@ const CreateEvent = () => {
     fetchField();
   }, []);
 
+  if (!event) {
+    return null;
+  }
+
   return (
     <div className="container mx-auto px-4">
       <Breadcrumb
@@ -183,14 +238,14 @@ const CreateEvent = () => {
             title: 'Quản lý sự kiện',
           },
           {
-            title: 'Tạo sự kiện mới',
+            title: 'Cập nhật sự kiện',
           },
         ]}
       />
 
       <div className="mt-10 inline-block">
         <h3 className="font-medium text-[24px] text-[#3BA769]">
-          Tạo sự kiện mới
+          Cập nhật sự kiện mới
         </h3>
         <div className="bg-[#3BA769] w-1/2 h-[1px]"></div>
       </div>
@@ -211,7 +266,12 @@ const CreateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
-          <Form.Item name="nameEvent" className="mb-4 mt-3" rules={nameRules}>
+          <Form.Item
+            name="nameEvent"
+            initialValue={event?.name}
+            className="mb-4 mt-3"
+            rules={nameRules}
+          >
             <Input />
           </Form.Item>
         </div>
@@ -231,7 +291,11 @@ const CreateEvent = () => {
             centered
             open={isModalOpen}
           >
-            <MapBox marker={marker} setMarker={setMarker} />
+            <MapBox
+              marker={marker}
+              initialViewport={marker}
+              setMarker={setMarker}
+            />
           </Modal>
           <div
             onClick={showModal}
@@ -260,7 +324,12 @@ const CreateEvent = () => {
               />
             </svg>
           </div>
-          <FormAddress form={form} />
+          <FormAddress
+            province={partsAddress[2]}
+            district={partsAddress[1]}
+            ward={partsAddress[0]}
+            form={form}
+          />
         </div>
 
         <div className="mt-6 ">
@@ -271,7 +340,12 @@ const CreateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
-          <Form.Item name="date" className="mb-4 mt-3 " rules={dateRulesEvent}>
+          <Form.Item
+            initialValue={[dayjs(event.startTime), dayjs(event.endTime)]}
+            name="date"
+            className="mb-4 mt-3 "
+            rules={dateRulesEvent}
+          >
             <DatePicker.RangePicker
               showTime={{ format: 'HH:mm' }}
               format="YYYY-MM-DD HH:mm"
@@ -290,6 +364,7 @@ const CreateEvent = () => {
           <Form.Item
             name="description"
             className="mb-4 mt-3 "
+            initialValue={event?.description}
             rules={[{ required: true, message: 'Vui lòng nhập mo ta' }]}
           >
             <TextArea className="mt-3 w-full" rows={5} />
@@ -415,16 +490,15 @@ const CreateEvent = () => {
             style={style}
             onChange={onChange}
             value={value}
-            options={[
-              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
-            ]}
+            defaultValue={value}
+            options={[{ value: 2, label: 'Xuất bản sự kiện theo lịch' }]}
           />
 
           {value === 2 && (
             <Form.Item
               name="timePublish"
               className="mb-4 mt-3"
+              initialValue={dayjs(event.timePublish)}
               rules={[
                 {
                   required: true,
@@ -466,7 +540,7 @@ const CreateEvent = () => {
 
         <div className="my-6">
           <Button loading={loading} htmlType="submit">
-            Tạo sự kiện
+            Cập nhật sự kiện
           </Button>
         </div>
       </Form>
@@ -474,4 +548,4 @@ const CreateEvent = () => {
   );
 };
 
-export default CreateEvent;
+export default UpdateEvent;

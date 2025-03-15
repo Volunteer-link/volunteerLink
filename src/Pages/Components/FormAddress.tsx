@@ -2,7 +2,17 @@ import { Form, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FormInstance } from 'antd';
-const FormAddress = ({ form }: { form: FormInstance }) => {
+const FormAddress = ({
+  form,
+  province = '',
+  district = '',
+  ward =''
+}: {
+  form: FormInstance;
+  province?: string;
+  district?: string;
+  ward?: string;
+}) => {
   const [listProvinces, setListProvinces] = useState<
     {
       id: number;
@@ -75,6 +85,7 @@ const FormAddress = ({ form }: { form: FormInstance }) => {
 
       <Form.Item
         name="province"
+        initialValue={province}
         rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
       >
         <Select
@@ -97,6 +108,7 @@ const FormAddress = ({ form }: { form: FormInstance }) => {
 
       <Form.Item
         name="district"
+        initialValue={district}
         rules={[{ required: true, message: 'Vui lòng chọn quận/huyện!' }]}
       >
         <Select
@@ -119,10 +131,11 @@ const FormAddress = ({ form }: { form: FormInstance }) => {
       </div>
       <Form.Item
         name="ward"
+        initialValue={ward}
         rules={[{ required: true, message: 'Vui lòng chọn phường/xã!' }]}
       >
         <Select
-          disabled={!form.getFieldValue('district')}
+          disabled={!checkLoadDistrict || !form.getFieldValue('district')}
           style={{ width: 300 }}
           options={[
             ...listWard.map((ward) => ({

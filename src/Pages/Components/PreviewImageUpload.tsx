@@ -18,10 +18,11 @@ const getBase64 = (file: FileType): Promise<string> =>
   interface PreviewImageUploadProps {
     fileList: UploadFile[] | undefined;
     setFileList: (fileList: UploadFile[]) => void;
+    maxCount? : number;
   }
 
 
-const PreviewImageUpload: React.FC<PreviewImageUploadProps> = ({ fileList = [],setFileList }) => {
+const PreviewImageUpload: React.FC<PreviewImageUploadProps> = ({ fileList = [],setFileList,maxCount = 1 }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const handlePreview = async (file: UploadFile) => {
@@ -49,6 +50,7 @@ const PreviewImageUpload: React.FC<PreviewImageUploadProps> = ({ fileList = [],s
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
+        maxCount={maxCount}
         beforeUpload={() => false}
       >
         {fileList.length >= 8 ? null : uploadButton}

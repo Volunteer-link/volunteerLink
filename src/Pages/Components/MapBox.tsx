@@ -14,13 +14,17 @@ interface MarkerPosition {
 const MapBox = ({
   marker,
   setMarker,
+  initialViewport = {
+    longitude: 105.804817,
+    latitude: 21.028511,
+  },
 }: {
   marker: MarkerPosition | null;
   setMarker: (marker: MarkerPosition) => void;
+  initialViewport?: MarkerPosition | null;
 }) => {
   const [viewport, setViewport] = useState({
-    latitude: 37.7577, // Vị trí mặc định Hà Nội
-    longitude: -122.4376,
+    ...initialViewport,
     zoom: 8,
   });
   const mapRef = useRef<MapRef>(null);
@@ -57,32 +61,33 @@ const MapBox = ({
     });
   };
   return (
-    <Map
-      mapboxAccessToken={process.env.REACT_APP_MAPBOX_CLIENTID as string}
-      initialViewState={{
-        longitude: 105.804817,
-        latitude: 21.028511,
-        zoom: 14,
-      }}
-      onLoad={onMapLoad}
-      ref={mapRef}
-      dragRotate={false}
-      onMove={(evt) => setViewport(evt.viewState)}
-      onClick={handleMapClick}
-      style={{ position: 'relative', width: '100%', height: '400px' }}
-      mapStyle="mapbox://styles/mapbox/streets-v9"
-    >
-      <div className="searchbar">
-        <div id="geocoder" />
-      </div>
-      {marker && (
-        <Marker
-          longitude={marker.longitude}
-          latitude={marker.latitude}
-          color="red"
-        />
-      )}
-    </Map>
+    <div>
+      <Map
+        mapboxAccessToken={process.env.REACT_APP_MAPBOX_CLIENTID as string}
+        initialViewState={{
+          ...initialViewport,
+          zoom: 14,
+        }}
+        onLoad={onMapLoad}
+        ref={mapRef}
+        dragRotate={false}
+        onMove={(evt) => setViewport(evt.viewState)}
+        onClick={handleMapClick}
+        style={{ position: 'relative', width: '100%', height: '400px' }}
+        mapStyle="mapbox://styles/mapbox/streets-v9"
+      >
+        <div className="searchbar">
+          <div id="geocoder" />
+        </div>
+        {marker && (
+          <Marker
+            longitude={marker.longitude}
+            latitude={marker.latitude}
+            color="red"
+          />
+        )}
+      </Map> 
+    </div>
   );
 };
 

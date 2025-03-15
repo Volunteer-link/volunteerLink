@@ -14,6 +14,7 @@ import ScrollToTop from "./Common/ScrollToTop";
 import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
 import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
+import UpdateEvent from "./Pages/Event/UpdateEvent";
 const router = createBrowserRouter([
   {
     path: '/',
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: 'create-event',
         element: <CreateEvent />,
+      },
+      {
+        path: 'update-event/:id',
+        element: <UpdateEvent />,
       },
       {
         path: "my-profile",
