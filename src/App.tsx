@@ -16,6 +16,7 @@ import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
 import VolunteerSuggestions from "./Pages/Volunteer/VolunteerSuggestions";
 import UpdateEvent from "./Pages/Event/UpdateEvent";
+import EventParticipated from "./Pages/Event/EventParticipated";
 const router = createBrowserRouter([
   {
     path: '/',
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
       },
       {
         path: "participate-event/:id",
-        element: <VolunteerSuggestions />,
+        element: <EventParticipated />,
       },
     ],
   },
