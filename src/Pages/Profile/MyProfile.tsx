@@ -345,7 +345,6 @@ const MyProfile = () => {
     let newArray = newFileList as Array<UploadFile>;
     setListFile([newArray[1]]);
   };
-  console.log(checkLoadDistrict);
 
   return (
     <div className="container mx-auto py-4 px-12 relative">

@@ -19,6 +19,7 @@ const Header: React.FC<{}> = () => {
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
   const logout = useLogout();
+  console.log(user);
 
   const items: MenuProps["items"] = [
     {
@@ -32,7 +33,10 @@ const Header: React.FC<{}> = () => {
     {
       key: "2",
       label: (
-        <NavLink className="flex items-center gap-1" to={"/my-profile"}>
+        <NavLink
+          className="flex items-center gap-1"
+          to={`${user.role === "Volunteer" ? "/my-profile" : ""}`}
+        >
           <CgProfile />
           <span>Hồ sơ của tôi</span>
         </NavLink>
