@@ -22,6 +22,7 @@ const DetailEvent = () => {
   const [valueRating, setValueRating] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [dataState, setDataState] = useState<DetailEventType>();
+
   const { id } = useParams();
 
   const token = getCookie("accessToken");
@@ -77,7 +78,7 @@ const DetailEvent = () => {
   };
 
   console.log(user?.AccId);
-  console.log(dataState?.currentInEvent);
+  console.log(dataState);
 
   return (
     <div>
@@ -148,32 +149,64 @@ const DetailEvent = () => {
                 </div>
               </div>
 
+              {/* {dataState?.startTime &&
+                new Date() <
+                  new Date(
+                    new Date(dataState.startTime).getTime() -
+                      24 * 60 * 60 * 1000
+                  ) && <>chưa xảy ra</>}
+
+              {dataState?.startTime &&
+                dataState?.endTime &&
+                new Date() >= new Date(dataState.startTime) &&
+                new Date() <= new Date(dataState.endTime) && <>đang diễn ra</>}
+
+              {dataState?.endTime &&
+                new Date() > new Date(dataState.endTime) && <>đã xảy ra</>} */}
+
               {/* Volunteer sight */}
-              {/* <div className="lg:col-span-3 col-span-8 flex lg:items-center justify-center lg:justify-end mb-6 lg:mb-0">
-              <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium lg:hover:opacity-95 lg:hover:scale-105 duration-300 cursor-pointer">
-                Tham gia sự kiện
-              </div>
-            </div> */}
+              {user?.role === "Volunteer" &&
+                !dataState?.currentInEvent.includes(Number(user?.AccId)) &&
+                dataState?.startTime &&
+                new Date() <
+                  new Date(
+                    new Date(dataState.startTime).setDate(
+                      new Date(dataState.startTime).getDate() - 1
+                    )
+                  ) && (
+                  <div className="lg:col-span-3 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                    <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium lg:hover:opacity-95 lg:hover:scale-105 duration-300 cursor-pointer">
+                      Tham gia sự kiện
+                    </div>
+                  </div>
+                )}
               {/* Volunteer sight */}
 
               {/* Volunteer already sign */}
-              {/* <div className="lg:col-span-3 col-span-8 flex lg:items-center lg:justify-end mb-6 lg:mb-0 gap-4">
-                <div
-                  onClick={handleOpenJoin}
-                  className="text-xs lg:text-sm flex items-center gap-1 border-2 px-6 py-2 rounded-full text-white font-medium hover:cursor-pointer hover:lg:bg-white hover:lg:scale-105 hover:lg:text-primary-color duration-300"
-                >
-                  <div>Đã tham gia</div>
-                  <FaCheck />
-                </div>
-                <div className="flex items-center gap-1 font-medium">
-                  <div
-                    onClick={handleOpenDonation}
-                    className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
-                  >
-                    Quyên góp
+              {user?.role === "Volunteer" &&
+                dataState?.currentInEvent.includes(Number(user?.AccId)) && (
+                  <div className="lg:col-span-3 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
+                    <div
+                      onClick={handleOpenJoin}
+                      className="text-xs lg:text-sm flex items-center gap-1 border-2 px-6 py-2 rounded-full text-white font-medium hover:cursor-pointer hover:lg:bg-white hover:lg:scale-105 hover:lg:text-primary-color duration-300"
+                    >
+                      <div>Đã tham gia</div>
+                      <FaCheck />
+                    </div>
+
+                    {dataState.hasDonate && (
+                      <div className="flex items-center gap-1 font-medium">
+                        <div
+                          onClick={handleOpenDonation}
+                          className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
+                        >
+                          Quyên góp
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </div> */}
+                )}
+
               {/* Volunteer already sign */}
 
               {/* Volunteer event end */}
