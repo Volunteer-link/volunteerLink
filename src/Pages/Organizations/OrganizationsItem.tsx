@@ -2,7 +2,14 @@ import React from 'react';
 import { Image, Typography } from 'antd';
 import { color } from 'framer-motion';
 const { Paragraph } = Typography;
-const OrganizationsItem = () => {
+
+interface OrganizationsItemProps {
+  image: string;
+  name: string;
+  field: string;
+}
+
+const OrganizationsItem = ({ name, image, field }: OrganizationsItemProps) => {
   return (
     <div className="flex mt-4 justify-center rounded-lg border border-[#3BA769] items-start p-4 gap-4">
       <div className="w-32 shrink-0">
@@ -23,14 +30,16 @@ const OrganizationsItem = () => {
           className="text-[#3BA769]"
           style={{ margin: 0, color: '#3BA769' }}
         >
-          Câu lạc bộ tình nguyện nắng hạ hạaajajjajaj
+          {name}
         </Typography.Title>
-        <Paragraph
-          className="text-[#3BA769]"
-          ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
-        >
-          Phát triển cộng đồng, Giáo dục
-        </Paragraph>
+        {field && (
+          <Paragraph
+            className="text-[#3BA769]"
+            ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+          >
+            {'>'} {field}
+          </Paragraph>
+        )}
       </div>
     </div>
   );
