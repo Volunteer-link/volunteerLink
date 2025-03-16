@@ -11,7 +11,11 @@ import {
   Checkbox,
   App as AntdApp,
 } from 'antd';
-import { dateRulesEvent, nameRules } from '../../ultils/validationRules';
+import {
+  dateRulesEvent,
+  nameRules,
+  timePublishedRulesEvent,
+} from '../../ultils/validationRules';
 import type { RadioChangeEvent } from 'antd';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
 import FormAddress from '../Components/FormAddress';
@@ -20,6 +24,8 @@ import MapBox from '../Components/MapBox';
 import type { DatePickerProps, GetProps } from 'antd';
 import { createEvent } from '../../model/Request/CreateEvent';
 import api from '../../apiService/useFetch';
+import dayjs from 'dayjs';
+import { toISOLocal } from '../../ultils/toISOLocal';
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
@@ -76,16 +82,26 @@ const CreateEvent = () => {
       location = marker.latitude + ';' + marker.longitude;
     }
     const [startMoment, endMoment] = values.date || [];
+    // console.log(toISOLocal(dayjs(endMoment).toDate()))
+    // console.log(toISOLocal(dayjs(endMoment).add(60,'second').toDate()))
+    // console.log("--------------------------------")
+    // console.log(toISOLocal(dayjs(startMoment).toDate()))
+    // console.log(toISOLocal(dayjs(startMoment).add(60,'second').toDate()))
+    // console.log("--------------------------------")
+    // console.log(toISOLocal(dayjs().toDate()))
+    // setLoading(false);
+    // return;
     const { images, thumbnails } = await upLoadFileToCloud();
     const dataEvent: createEvent = {
       name: values.nameEvent,
       location: location,
       address: address,
-      startTime: startMoment.toISOString(),
-      endTime: endMoment.toISOString(),
+      startTime:toISOLocal(dayjs(startMoment).add(60,'second').toDate()),
+      endTime: toISOLocal(dayjs(endMoment).add(60,'second').toDate()),
       description: values.description,
       timePublish:
-        values.timePublish?.toISOString() || new Date().toISOString(),
+        toISOLocal(dayjs(values.timePublish).add(60,'second').toDate())||
+        toISOLocal(dayjs().add(120,'second').toDate()),
       status: value === 1 ? 0 : -1,
       hasDonate: true,
       imagesEvent: images,
@@ -426,29 +442,24 @@ const CreateEvent = () => {
               name="timePublish"
               className="mb-4 mt-3"
               rules={[
+                { required: true, message: 'Vui lòng chọn ngày công bố!' },
                 {
-                  required: true,
-                  message: 'Vui lòng chọn ngày!',
-                },
-                {
-                  validator: (_, value) => {
-                    if (!value) {
-                      return Promise.resolve();
-                    }
-                    const selectedDateStr = value.format
-                      ? value.format('YYYY-MM-DD HH:mm:ss')
-                      : value;
-                    const selectedDate = new Date(selectedDateStr);
-                    const currentDate = new Date();
+                  validator: async (_, value) => {
+                    if (!value) return Promise.resolve();
+                    const { date } = form.getFieldsValue();
+                    const [startDate, endDate] = date || [];
 
-                    if (isNaN(selectedDate.getTime())) {
-                      return Promise.reject('Ngày không hợp lệ!');
+                    const selectedDate = dayjs(value);
+
+                    if (!startDate || !endDate) {
+                      return Promise.reject('Vui lòng chọn ngày bắt đầu và ngày kết thúc trước!');
                     }
 
-                    if (selectedDate.getTime() <= currentDate.getTime()) {
-                      return Promise.reject('Ngày phải lớn hơn ngày hiện tại!');
+                    if (!selectedDate.isBefore(startDate, 'minute')) {
+                      return Promise.reject(
+                        'Vui lòng chọn lại ngày công bố!. Ngày công bố cần phải trước ngày bắt đầu'
+                      );
                     }
-
                     return Promise.resolve();
                   },
                 },
@@ -457,8 +468,7 @@ const CreateEvent = () => {
               <DatePicker
                 showTime={{ format: 'HH:mm' }}
                 format="YYYY-MM-DD HH:mm"
-                placeholder=""
-                style={{ width: '30%' }}
+                placeholder="Chọn ngày công bố"
               />
             </Form.Item>
           )}
