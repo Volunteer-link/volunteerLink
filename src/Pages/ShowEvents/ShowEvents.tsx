@@ -9,7 +9,7 @@ import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import { RiEmotionSadLine } from "react-icons/ri";
 import Loading from "../Components/Loading";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
-const pageSize: number = 1;
+const pageSize: number = 3;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
   const [currentField, setCurrentField] = useState<number>(0);

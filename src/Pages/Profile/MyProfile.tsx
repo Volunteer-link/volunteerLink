@@ -349,7 +349,7 @@ const MyProfile = () => {
 
   return (
     <div className="container mx-auto py-4 px-12 relative">
-      {isLoading && <Loading />}
+      {isLoading && <Loading color="green" />}
       <ErrorCards errCode={errCode} />
       {contextHolder}
       {/* {!currentUser && <ErrorLoginRequired />} */}
