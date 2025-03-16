@@ -23,10 +23,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.ant-image{
-   width: 100% !important;
+
+.ant-image {
+  width: 100% !important;
 }
 
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield;
+}
+.ant-form-item-control-input{
+  min-height: unset !important;
+}
 .slick-center img{
   transform: scale(1.25);
   transition: transform 0.5s;

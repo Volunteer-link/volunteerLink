@@ -1,7 +1,5 @@
 import React from "react";
 import RootLayout from "./Pages/RootLayout";
-import Test from "./Pages/Test";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import SignIn from "./Pages/Authentication/SignIn";
@@ -14,27 +12,30 @@ import ShowEvent from "./Pages/ShowEvents/ShowEvents";
 import DetailEvent from "./Pages/ShowEvents/DetailEvent";
 import ScrollToTop from "./Common/ScrollToTop";
 import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
+import CreateEvent from "./Pages/Event/CreateEvent";
+import MyProfile from "./Pages/Profile/MyProfile";
+import UpdateEvent from "./Pages/Event/UpdateEvent";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import Organizations from "./Pages/Organizations";
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Home />,
       },
       {
-        path: "home",
+        path: 'home',
         element: <Home />,
       },
       {
-        path: "aboutus",
+        path: 'aboutus',
         element: <AboutUs />,
       },
       {
-        path: "admin",
+        path: 'admin',
         element: <AdminMain />,
       },
       {
@@ -44,31 +45,43 @@ const router = createBrowserRouter([
       {
         path: "organizations/details/:id",
         element: <OrganizationsDetail />,
-      },
+      }, 
       {
         path: "events",
         element: <ShowEvent />,
       },
       {
-        path: "detail-event/:id",
+        path: 'detail-event/:id',
         element: <DetailEvent />,
       },
       {
-        path: "joined-events",
+        path: 'joined-events',
         element: <MyJoinedEvents />,
+      },
+      {
+        path: 'create-event',
+        element: <CreateEvent />,
+      },
+      {
+        path: 'update-event/:id',
+        element: <UpdateEvent />,
+      },
+      {
+        path: "my-profile",
+        element: <MyProfile />,
       },
     ],
   },
   {
-    path: "authentication/signin",
+    path: 'authentication/signin',
     element: <SignIn />,
   },
   {
-    path: "authentication/signup",
+    path: 'authentication/signup',
     element: <Signup />,
   },
   {
-    path: "authentication/verify-email",
+    path: 'authentication/verify-email',
     element: <VerifyEmail />,
   },
 ]);

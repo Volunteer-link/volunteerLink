@@ -12,7 +12,7 @@ const MyJoinedEvents = () => {
   console.log(currentType);
 
   return (
-    <div className="container mx-auto lg:mt-8 mt-16 px-4 lg:ml-auto">
+    <div className="container mx-auto lg:mt-8 mt-16 px-12 lg:ml-auto">
       <div className="flex items-center gap-2">
         <div className="inline-block my-2 font-medium text-lg text-primary-color before:w-full before:h-[0.125rem] before:absolute relative before:-bottom-2 before:bg-primary-color">
           Sự kiện bạn đã tham gia
@@ -69,7 +69,7 @@ const MyJoinedEvents = () => {
           </div>
         </div>
         <div className="lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
-          <EventCard
+          {/* <EventCard
             eventObject={{
               id: 1,
               title: "Mặt trời của em",
@@ -92,7 +92,7 @@ const MyJoinedEvents = () => {
               url: "/materials/đánh răng.png",
             }}
             showOption={true}
-          />
+          /> */}
         </div>
       </div>
       <ConfigProvider
