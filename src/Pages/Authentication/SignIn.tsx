@@ -96,6 +96,9 @@ const SignIn: React.FC = () => {
       if (currentUser.role === "Volunteer") {
         navigate("/");
       }
+      if (currentUser.role === "Organization") {
+        navigate("/");
+      }
 
       return response;
     } catch (error) {

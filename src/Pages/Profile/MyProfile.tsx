@@ -31,7 +31,6 @@ import dayjs from "dayjs";
 import { storage } from "../../ultils/firebase";
 import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import utc from "dayjs/plugin/utc";
-import moment from "moment";
 import { data } from "react-router-dom";
 import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
 dayjs.extend(utc);
@@ -346,11 +345,10 @@ const MyProfile = () => {
     let newArray = newFileList as Array<UploadFile>;
     setListFile([newArray[1]]);
   };
-  console.log(checkLoadDistrict);
 
   return (
     <div className="container mx-auto py-4 px-12 relative">
-      {isLoading && <Loading />}
+      {isLoading && <Loading color="green" />}
       <ErrorCards errCode={errCode} />
       {contextHolder}
       {/* {!currentUser && <ErrorLoginRequired />} */}

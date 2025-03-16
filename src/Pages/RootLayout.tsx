@@ -14,7 +14,7 @@ export default function RootLayout() {
     <div className="relative">
       <ScrollToTop />
       {!hideHeader && <Header />}
-      <main className={hideFooter ? "" : `pt-20`}>
+      <main className={hideFooter ? "" : `pt-20 min-h-screen`}>
         <Outlet />
       </main>
       {!hideHeader && <Footer />}

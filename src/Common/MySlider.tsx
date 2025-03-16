@@ -2,7 +2,7 @@ import { Carousel } from "antd";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 const MySlider: React.FC<{
-  listItem: string[];
+  listItem?: string[];
   className: string;
   size: string;
 }> = ({ listItem, className, size }) => {
@@ -10,7 +10,7 @@ const MySlider: React.FC<{
     className: `center`,
     centerMode: true,
     centerPadding: "60px",
-    slidesToShow: size === "big" ? 3 : 1,
+    slidesToShow: 1,
     speed: 500,
     infinite: true,
   };
@@ -47,12 +47,10 @@ const MySlider: React.FC<{
         prevArrow={<CustomPrevArrow />}
         nextArrow={<CustomNextArrow />}
       >
-        {listItem.map((item, index) => (
+        {listItem?.map((item, index) => (
           <div
             key={index}
-            className={`w-full ${
-              size === "big" ? "h-52" : "h-20"
-            } bg-primary-color`}
+            className={`w-full ${size === "big" ? "h-80" : "h-32"}`}
           >
             <img className="object-cover h-full w-full" src={item} alt="" />
           </div>
