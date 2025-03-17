@@ -24,6 +24,8 @@ import FormAddress from '../Components/FormAddress';
 import TextArea from 'antd/es/input/TextArea';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
 import dayjs from 'dayjs';
+import { toISOLocal } from '../../ultils/toISOLocal';
+import ErrorSolving from '../../Common/ErrorSolving';
 
 interface UploadFileExtend {
   file: UploadFile[] | undefined;
@@ -133,14 +135,16 @@ const UpdateEvent = () => {
       name: values.nameEvent,
       location: location,
       address: address,
-      startTime: startMoment.toISOString(),
-      endTime: endMoment.toISOString(),
+      startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
+      endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
-      timePublish: values.timePublish?.toISOString() || null,
-      status: 0,
-      hasDonate: true,
+      timePublish:
+        toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
+        toISOLocal(dayjs().add(120, 'second').toDate()),
+      status: value === 1 ? 0 : -1,
+      hasDonate: false,
       imagesEvent: images.length > 0 ? images : event.images,
-      thumbnail:  thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
+      thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
     };
     try {
@@ -225,11 +229,15 @@ const UpdateEvent = () => {
     };
     fetchField();
   }, []);
+  const currentDateMinusOneDay = dayjs().subtract(1, 'day');
+  const isBeforeOneDay = dayjs(event?.startTime).isBefore(currentDateMinusOneDay, 'day');
 
-  if (!event) {
-    return null;
+  if (event  && !isBeforeOneDay  ) {
+    return <ErrorSolving errCode={300} />;
   }
-
+  if (!event) {
+    return <ErrorSolving errCode={404} />;
+  }
   return (
     <div className="container mx-auto px-4">
       <Breadcrumb
@@ -491,7 +499,10 @@ const UpdateEvent = () => {
             onChange={onChange}
             value={value}
             defaultValue={value}
-            options={[{ value: 2, label: 'Xuất bản sự kiện theo lịch' }]}
+            options={[
+              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
+              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
+            ]}
           />
 
           {value === 2 && (
@@ -500,29 +511,26 @@ const UpdateEvent = () => {
               className="mb-4 mt-3"
               initialValue={dayjs(event.timePublish)}
               rules={[
+                { required: true, message: 'Vui lòng chọn ngày công bố!' },
                 {
-                  required: true,
-                  message: 'Vui lòng chọn ngày!',
-                },
-                {
-                  validator: (_, value) => {
-                    if (!value) {
-                      return Promise.resolve();
-                    }
-                    const selectedDateStr = value.format
-                      ? value.format('YYYY-MM-DD HH:mm:ss')
-                      : value;
-                    const selectedDate = new Date(selectedDateStr);
-                    const currentDate = new Date();
+                  validator: async (_, value) => {
+                    if (!value) return Promise.resolve();
+                    const { date } = form.getFieldsValue();
+                    const [startDate, endDate] = date || [];
 
-                    if (isNaN(selectedDate.getTime())) {
-                      return Promise.reject('Ngày không hợp lệ!');
+                    const selectedDate = dayjs(value);
+
+                    if (!startDate || !endDate) {
+                      return Promise.reject(
+                        'Vui lòng chọn ngày bắt đầu và ngày kết thúc trước!'
+                      );
                     }
 
-                    if (selectedDate.getTime() <= currentDate.getTime()) {
-                      return Promise.reject('Ngày phải lớn hơn ngày hiện tại!');
+                    if (!selectedDate.isBefore(startDate, 'minute')) {
+                      return Promise.reject(
+                        'Vui lòng chọn lại ngày công bố!. Ngày công bố cần phải trước ngày bắt đầu'
+                      );
                     }
-
                     return Promise.resolve();
                   },
                 },
