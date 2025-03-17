@@ -1,7 +1,7 @@
 import { AiOutlineUser } from "react-icons/ai";
 import { MdLogout } from "react-icons/md";
-import { Dropdown, Space, MenuProps, Menu } from "antd";
-import { useState } from "react";
+import { Dropdown, Space, MenuProps, Menu, Badge, ConfigProvider } from "antd";
+import { useEffect, useState } from "react";
 import { VscBell } from "react-icons/vsc";
 import { VscBellDot } from "react-icons/vsc";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -11,15 +11,31 @@ import { useLogout } from "../../ultils/logout";
 import { CgProfile } from "react-icons/cg";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
+import api from "../../apiService/useFetch";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
+  const [checkProfile, setCheckProfile] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
   const logout = useLogout();
-  console.log(user);
+
+  useEffect(() => {
+    const fetchCheckStatus = async () => {
+      try {
+        const { data } = await api.get(`/profile/check-status-profile`);
+        setCheckProfile(data.data.success);
+      } catch (e: any) {
+      } finally {
+      }
+    };
+
+    if (user) {
+      fetchCheckStatus();
+    }
+  }, []);
 
   const items: MenuProps["items"] = [
     {
@@ -35,22 +51,34 @@ const Header: React.FC<{}> = () => {
       label: (
         <NavLink
           className="flex items-center gap-1"
-          to={`${user.role === "Volunteer" ? "/my-profile" : ""}`}
+          to={`${user?.role === "Volunteer" ? "/my-profile" : ""}`}
         >
           <CgProfile />
           <span>Hồ sơ của tôi</span>
+          <div
+            className={`w-1 h-1 rounded-full bg-red-500 ${
+              !checkProfile ? "" : "hidden"
+            }`}
+          ></div>
         </NavLink>
       ),
     },
-    {
-      key: "3",
-      label: (
-        <NavLink className="flex items-center gap-1" to={"/joined-events"}>
-          <FaCalendarAlt />
-          <span>Các sự kiện đã tham gia</span>
-        </NavLink>
-      ),
-    },
+    ...(user?.role === "Volunteer"
+      ? [
+          {
+            key: "3",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={"/joined-events"}
+              >
+                <FaCalendarAlt />
+                <span>Các sự kiện đã tham gia</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
     {
       key: "4",
       label: (
@@ -149,17 +177,21 @@ const Header: React.FC<{}> = () => {
         )}
         {user && (
           <div className="flex gap-10 items-center justify-center h-full">
+            <Badge dot={true}>
+              <div className="cursor-pointer hover:scale-110 transition-transform">
+                <VscBell className="text-2xl text-white" />
+              </div>
+            </Badge>
             {/* <div className="cursor-pointer hover:scale-110 transition-transform">
-            <VscBell className="text-2xl text-white" />
-          </div> */}
-            <div className="cursor-pointer hover:scale-110 transition-transform">
               <VscBellDot className="text-2xl text-white" />
-            </div>
+            </div> */}
 
-            <div className="cursor-pointer hover:scale-110 transition-transform">
+            <div className="cursor-pointer hover:scale-110 transition-transform mt-1">
               <Dropdown menu={{ items }} placement="topRight">
                 <div className="">
-                  <AiOutlineUser className="text-2xl text-white" />
+                  <Badge dot={!checkProfile}>
+                    <AiOutlineUser className="text-2xl text-white" />
+                  </Badge>
                 </div>
               </Dropdown>
             </div>

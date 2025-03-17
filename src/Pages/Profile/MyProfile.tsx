@@ -8,6 +8,7 @@ import {
   Image,
   Input,
   message,
+  Modal,
   Radio,
   Result,
   Select,
@@ -84,9 +85,13 @@ const MyProfile = () => {
   const [errorDob, setErrorDob] = useState<string>("");
   const [errorPhone, setErrorPhone] = useState<string>("");
   const [errorAddress, setErrorAddress] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [errorField, setErrorField] = useState<boolean>(false);
+  const [isPublish, setIsPublish] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<number>(0);
   const [addressState, setAddressState] = useState<string[]>([]);
+  const [checkProfile, setCheckProfile] = useState<boolean>(true);
+
   const [checkLoadDistrict, setCheckLoadDistrict] = useState<boolean>(false);
 
   const [listProvinces, setListProvinces] = useState<
@@ -115,23 +120,50 @@ const MyProfile = () => {
   >([]);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
 
-  const listField = [
-    "Email",
-    "Họ và tên",
-    "Ngày sinh",
-    "Giới tính",
-    "Địa chỉ",
-    "Vị trí",
-    "Số điện thoại",
-    "Kĩ năng",
-    "Lĩnh vực quan tâm",
-  ];
+  // const listField = [
+  //   "Email",
+  //   "Họ và tên",
+  //   "Ngày sinh",
+  //   "Giới tính",
+  //   "Địa chỉ",
+  //   "Vị trí",
+  //   "Số điện thoại",
+  //   "Kĩ năng",
+  //   "Lĩnh vực quan tâm",
+  // ];
 
   const [form] = Form.useForm();
 
   const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
     setupInterceptors(setErrCode);
+  }, []);
+
+  useEffect(() => {
+    const fetchCheckPublish = async () => {
+      try {
+        const { data } = await api.get("/profile/check-publish-profile");
+        setIsPublish(data.data.success);
+      } catch (e: any) {}
+    };
+    if (user) {
+      fetchCheckPublish();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchCheckStatus = async () => {
+      try {
+        const { data } = await api.get(`/profile/check-status-profile`);
+        setCheckProfile(data.data.success);
+      } catch (e: any) {
+      } finally {
+      }
+    };
+
+    if (user) {
+      fetchCheckStatus();
+    }
   }, []);
 
   useEffect(() => {
@@ -246,63 +278,62 @@ const MyProfile = () => {
   };
 
   const handleSubmit = async (values: FormValuesVolunteer) => {
-    // if (listSelectedField.length === 0) {
-    //   setErrorField(true);
-    //   messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
-    // } else {
-    //   setErrorField(false);
-    //   if (listFile[0].uid === "s-20052003") {
-    //     messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
-    //   } else {
-    //     try {
-    //       setIsLoading(true);
-    const address = `${values.ward}, ${values.district}, ${values.province}`;
-    //       Object.assign(values, { address });
-    let location = await getCoordinates(address); // Gọi hàm lấy tọa độ
-    console.log(location);
+    if (listSelectedField.length === 0) {
+      setErrorField(true);
+      messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
+    } else {
+      setErrorField(false);
+      if (listFile[0]?.uid === "s-20052003") {
+        messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
+      } else {
+        try {
+          setIsLoading(true);
+          const address = `${values.ward}, ${values.district}, ${values.province}`;
+          Object.assign(values, { address });
+          let location = await getCoordinates(address); // Gọi hàm lấy tọa độ
+          console.log(location);
 
-    //       if (location) {
-    //         Object.assign(values, {
-    //           location: `${location.lat};${location.lon}`,
-    //         });
-    //       } else {
-    //         Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
-    //       }
-    //       const { province, district, ward, email, ...sendObject } = values;
-    //       sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
+          if (location) {
+            Object.assign(values, {
+              location: `${location.lat};${location.lon}`,
+            });
+          } else {
+            Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
+          }
+          const { province, district, ward, email, ...sendObject } = values;
+          sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
 
-    //       Object.assign(sendObject, { fields: listSelectedField });
-    //       // console.log(listSelectedField);
-    //       let urlNewAvt: string[] | undefined;
-    //       if (listFile[0].uid !== "-1") {
-    //         urlNewAvt = await uploadFilesToFirebase(listFile);
-    //       }
-    //       Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
+          Object.assign(sendObject, { fields: listSelectedField });
+          // console.log(listSelectedField);
+          let urlNewAvt: string[] | undefined;
+          if (listFile[0]?.uid !== "-1") {
+            urlNewAvt = await uploadFilesToFirebase(listFile);
+          }
+          Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
 
-    //       const { dob, phone, ...updatedData } = {
-    //         ...sendObject,
-    //         dateOfBirth: sendObject.dob,
-    //         phoneNumber: sendObject.phone,
-    //       };
+          const { dob, phone, ...updatedData } = {
+            ...sendObject,
+            dateOfBirth: sendObject.dob,
+            phoneNumber: sendObject.phone,
+          };
 
-    //       //UPDATE
-    //       try {
-    //         const { data } = await api.put(`/profile/volunteer`, updatedData);
-    //       } catch (e: any) {
-    //         console.log(e);
-    //       } finally {
-    //         messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
-    //         window.scrollTo({ top: 0, behavior: "smooth" });
+          //UPDATE
+          try {
+            const { data } = await api.put(`/profile/volunteer`, updatedData);
+          } catch (e: any) {
+            console.log(e);
+          } finally {
+            messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
+            window.scrollTo({ top: 0, behavior: "smooth" });
 
-    //         setUpdateState((prev) => ++prev);
-    //       }
-    //     } catch (e: any) {
-    //     } finally {
-    //       setIsLoading(false);
-    //     }
-    //   }
-    // }
-    // const check = listFile.find()
+            setUpdateState((prev) => ++prev);
+          }
+        } catch (e: any) {
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
   };
 
   const finishFailed = () => {
@@ -346,6 +377,40 @@ const MyProfile = () => {
     setListFile([newArray[1]]);
   };
 
+  const publicProfile = async (value: boolean) => {
+    try {
+      const { data } = await api.put(`/profile/volunteer-publish`, {
+        status: value,
+      });
+      console.log(data);
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  const handleChangePublic = () => {
+    setOpenModal(true);
+  };
+
+  const handleOk = async () => {
+    console.log(isPublish);
+    await publicProfile(!isPublish);
+    console.log(isPublish);
+    messageApi.success(
+      isPublish
+        ? `Hồ sơ của bạn đã hủy xuất bản!`
+        : "Hồ sơ của bạn đã được xuất bản thành công"
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setOpenModal(false);
+    setIsPublish((prev) => !prev);
+    setUpdateState((prev) => ++prev);
+  };
+
+  const closeModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div className="container mx-auto py-4 px-12 relative">
       {isLoading && <Loading color="green" />}
@@ -359,7 +424,12 @@ const MyProfile = () => {
         </span>
       </div>
       <div className="lg:w-2/3 w-full mx-auto">
-        <div className="flex justify-between">
+        {!checkProfile && (
+          <div className=" mb-4 text-red-500">
+            *Lưu ý: Hồ sơ của bạn chưa được cập nhật đầy đủ thông tin
+          </div>
+        )}
+        <div className="lg:flex lg:justify-between">
           <ConfigProvider
             theme={{
               token: {
@@ -380,10 +450,13 @@ const MyProfile = () => {
               + Update
             </Upload>
           </ConfigProvider>
-          <div className="lg:flex items-end">
+          <div className="lg:flex items-end mt-4">
             <span className="mr-1">Trạng thái:</span>
             <span className="font-medium text-base text-primary-color">
-              {profileState?.isAvailable ? "Đã xuất bản" : "Chưa xuất bản"}
+              {profileState?.isAvailable && "Đã xuất bản"}
+            </span>
+            <span className="font-medium text-base text-red-500">
+              {!profileState?.isAvailable && "Chưa xuất bản"}
             </span>
           </div>
           <Image
@@ -682,10 +755,62 @@ const MyProfile = () => {
           >
             Lưu hồ sơ
           </div>
-          <div className="bg-primary-color text-white py-2 px-4 rounded-md cursor-pointer hover:scale-105 duration-300">
-            Xuất bản ngay
-          </div>
+          {checkProfile && (
+            <div
+              onClick={handleChangePublic}
+              className="bg-primary-color text-white py-2 px-4 rounded-md cursor-pointer hover:scale-105 duration-300"
+            >
+              {isPublish ? "Hủy xuất bản hồ sơ" : "Xuất bản hồ sơ"}
+            </div>
+          )}
         </div>
+        <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                headerBg: "#3BA769",
+                headerColor: "white",
+              },
+              Pagination: {
+                itemActiveBg: "#3BA769",
+                colorPrimary: "white",
+                colorPrimaryHover: "white",
+                colorPrimaryBorder: "white",
+              },
+            },
+          }}
+        >
+          {openModal && (
+            <Modal
+              title="Xác nhận"
+              open={true}
+              onOk={handleOk}
+              onCancel={closeModal}
+            >
+              {!isPublish && (
+                <>
+                  <p>Hành động này đang cố gắng xuất bản hồ sơ của bạn.</p>
+                  <p>
+                    Khi xuất bản, hồ sơ của bạn sẽ được hiển thị với các tổ chức
+                    khác, đồng thời bạn cũng có thể tương tác với các sự kiện.
+                  </p>
+                  <p> Bạn có chắc chắn muốn thực hiện không?</p>
+                </>
+              )}
+              {isPublish && (
+                <>
+                  <p>Hành động này đang cố gắng hủy xuất bản hồ sơ của bạn.</p>
+                  <p>
+                    Khi hủy xuất bản, hồ sơ của bạn sẽ không được hiển thị với
+                    các tổ chức khác, đồng thời bạn cũng không thể tương tác với
+                    các sự kiện.
+                  </p>
+                  <p> Bạn có chắc chắn muốn thực hiện không?</p>
+                </>
+              )}
+            </Modal>
+          )}
+        </ConfigProvider>
       </div>
     </div>
   );
