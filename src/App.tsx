@@ -19,6 +19,7 @@ import UpdateEvent from "./Pages/Event/UpdateEvent";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
+import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
 const router = createBrowserRouter([
   {
     path: '/',
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "organizations/profile/:id",
         element: <OrganizationsDetail />,
+      }, 
+      {
+        path: "organizations/events",
+        element: <OrganizationEvents />,
       }, 
       {
         path: "events",

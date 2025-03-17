@@ -4,6 +4,7 @@ import OrganizationsDetailInformation from './OrganizationsDetailInformation';
 import { useParams } from 'react-router-dom';
 import { Organization } from '../../model/OrganizationDetail/Organization';
 import api from '../../apiService/useFetch';
+import ListEventsOrganization from './ListEventsOrganization';
 
 const OrganizationsDetail = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const OrganizationsDetail = () => {
     {
       label: 'Sự kiện',
       key: 'events',
-      children: 'Nội dung tab Sự kiện',
+      children: <ListEventsOrganization organizationId={organization?.id} />,
     },
   ];
   return (
