@@ -16,8 +16,10 @@ import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
 import VolunteerSuggestions from "./Pages/Volunteer/VolunteerSuggestions";
 import UpdateEvent from "./Pages/Event/UpdateEvent";
+import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
+import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
 const router = createBrowserRouter([
   {
     path: '/',
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
         path: "organizations",
         element: <Organizations />,
       },
+      {
+        path: "organizations/profile/:id",
+        element: <OrganizationsDetail />,
+      }, 
+      {
+        path: "organizations/events",
+        element: <OrganizationEvents />,
+      }, 
       {
         path: "events",
         element: <ShowEvent />,
