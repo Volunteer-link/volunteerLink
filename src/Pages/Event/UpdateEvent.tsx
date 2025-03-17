@@ -47,6 +47,7 @@ const UpdateEvent = () => {
   const { message } = AntdApp.useApp();
   const [event, setEvent] = React.useState<any>();
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
+  const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -84,6 +85,7 @@ const UpdateEvent = () => {
             })),
           };
         });
+        console.log(data.data)
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -107,7 +109,6 @@ const UpdateEvent = () => {
     setValue(e.target.value);
   };
 
-  const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
     {
       id: number;
@@ -231,10 +232,10 @@ const UpdateEvent = () => {
   }, []);
   const currentDateMinusOneDay = dayjs().subtract(1, 'day');
   const isBeforeOneDay = dayjs(event?.startTime).isBefore(currentDateMinusOneDay, 'day');
+  // if (event  && isBeforeOneDay  ) {
+  //   return <ErrorSolving errCode={300} />;
+  // }
 
-  if (event  && !isBeforeOneDay  ) {
-    return <ErrorSolving errCode={300} />;
-  }
   if (!event) {
     return <ErrorSolving errCode={404} />;
   }
