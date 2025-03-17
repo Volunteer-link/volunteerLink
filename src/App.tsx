@@ -14,8 +14,10 @@ import ScrollToTop from "./Common/ScrollToTop";
 import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
 import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
+import VolunteerSuggestions from "./Pages/Volunteer/VolunteerSuggestions";
 import UpdateEvent from "./Pages/Event/UpdateEvent";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
+import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
 const router = createBrowserRouter([
   {
@@ -69,6 +71,14 @@ const router = createBrowserRouter([
       {
         path: "my-profile",
         element: <MyProfile />,
+      },
+      {
+        path: "volunteer-suggestions",
+        element: <VolunteerSuggestions />,
+      },
+      {
+        path: "participate-event/:id",
+        element: <EventParticipated />,
       },
     ],
   },
