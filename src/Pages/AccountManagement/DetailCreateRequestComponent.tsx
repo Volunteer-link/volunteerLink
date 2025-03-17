@@ -2,6 +2,7 @@ import { ConfigProvider, Flex, Modal, Spin } from "antd";
 import { useEffect, useState } from "react";
 import ErrorSolving from "../../Common/ErrorSolving";
 import api, { setupInterceptors } from "../../apiService/useFetch";
+import DownLoadFile from "../Components/DownloadFile";
 
 const DetailCreateRequestComponent: React.FC<{
   setMode: React.Dispatch<React.SetStateAction<string>>;
@@ -62,6 +63,7 @@ const DetailCreateRequestComponent: React.FC<{
       handleChangeMode();
     }
   };
+  console.log(dataDisplay);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -71,12 +73,12 @@ const DetailCreateRequestComponent: React.FC<{
       >
         Yêu cầu tạo tài khoản
       </div>
-      <div className="text-2xl mb-4 lg:mb-0">
-        {dataDisplay?.name} {dataDisplay?.organizationId}
+      <div className="text-2xl mb-4 lg:mb-0 max-w-96 truncate">
+        {dataDisplay?.name}
       </div>
       <div className="mt-4">Tài liệu liên quan:</div>
       {dataDisplay?.listCertificates.map((item, index) => (
-        <div key={index}>{item}</div>
+        <DownLoadFile key={index} fileUrl={item} />
       ))}
       <div className="lg:flex lg:gap-2 mt-4">
         <div

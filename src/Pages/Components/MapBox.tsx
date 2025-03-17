@@ -1,10 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
-import Map, { Marker } from 'react-map-gl/mapbox';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import type { MapRef } from 'react-map-gl/mapbox';
-import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
+import React, { useCallback, useRef, useState } from "react";
+import Map, { Marker } from "react-map-gl/mapbox";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import type { MapRef } from "react-map-gl/mapbox";
+import mapboxgl, { MapMouseEvent } from "mapbox-gl";
 
 interface MarkerPosition {
   longitude: number;
@@ -34,12 +34,12 @@ const MapBox = ({
       // Khởi tạo Mapbox Geocoder
       const geocoder = new MapboxGeocoder({
         accessToken: process.env.REACT_APP_MAPBOX_CLIENTID as string,
-        mapboxgl: require('mapbox-gl'),
+        mapboxgl: require("mapbox-gl"),
       });
 
       map?.addControl(geocoder);
       // Xử lý sự kiện khi tìm kiếm
-      geocoder.on('result', (e: any) => {
+      geocoder.on("result", (e: any) => {
         const { coordinates } = e.result.geometry;
         setViewport({
           ...viewport,
@@ -73,7 +73,7 @@ const MapBox = ({
         dragRotate={false}
         onMove={(evt) => setViewport(evt.viewState)}
         onClick={handleMapClick}
-        style={{ position: 'relative', width: '100%', height: '400px' }}
+        style={{ position: "relative", width: "100%", height: "400px" }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
       >
         <div className="searchbar">
@@ -86,7 +86,7 @@ const MapBox = ({
             color="red"
           />
         )}
-      </Map> 
+      </Map>
     </div>
   );
 };

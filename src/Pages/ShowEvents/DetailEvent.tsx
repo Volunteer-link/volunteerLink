@@ -118,6 +118,9 @@ const DetailEvent = () => {
               alt=""
               className="w-full lg:h-60 h-20 object-cover bg-primary-color"
               onLoad={() => setIsLoading(false)}
+              onError={(e) =>
+                (e.currentTarget.src = "/materials/placeholder-image.jpg")
+              }
             />
             <div className="w-full lg:grid lg:grid-cols-10 bg-primary-color">
               <div className=""></div>

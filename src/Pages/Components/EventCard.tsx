@@ -26,7 +26,8 @@ const EventCard: React.FC<{
   ];
 
   const handleClickEventCard = (id: number) => {
-    navigate(`/detail-event/${id}`);
+    // navigate(`/detail-event/${id}`);
+    window.open(`/detail-event/${id}`, "_blank");
   };
 
   const handleClickOption = (e: React.MouseEvent) => {
@@ -74,10 +75,15 @@ const EventCard: React.FC<{
             alt=""
             loading="lazy"
             onLoad={() => setIsLoading(false)}
+            onError={(e) =>
+              (e.currentTarget.src = "/materials/placeholder-image.jpg")
+            }
           />
         </div>
         <div className="border-2 border-primary-color bg-white rounded-b-xl py-2 px-4">
-          <div className="my-2 text-base font-medium">{eventObject.name}</div>
+          <div className="my-2 text-base font-medium max-w-full truncate">
+            {eventObject.name}
+          </div>
           <div className="text-xs">
             <div className="my-2 flex items-center justify-between">
               <div className="flex items-center gap-1">
