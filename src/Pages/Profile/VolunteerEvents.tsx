@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import api from '../../apiService/useFetch';
 import { Col, Empty, Pagination, Row, Spin } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { EventCardType } from '../../model/ShowEventModel/EventCardType';
 import EventCard from '../Components/EventCard';
+import api from '../../apiService/useFetch';
 
-const ListEventsOrganization = ({organizationId} : {organizationId: number | undefined }) => {
-  const { id } = useParams();
+const VolunteerEvents = ({id} : { id: number | undefined}) => {
   const [PageNumber, setPageNumber] = React.useState<number>(1);
   const [eventList, setEventList] = useState<EventCardType[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalPage, setTotalPage] = React.useState<number>();
+  const handlePageChange = (page: number) => {
+    setPageNumber(page);
+  };
   useEffect(() => {
     const fetchField = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get(`/common/get-events-of-organization`, {
+        const { data } = await api.get(`/event/volunteer-joined-event`, {
           params: {
-            OrganizationId: organizationId,
+            id: id,
             PageNumber: PageNumber,
             PageSize: 8,
           },
@@ -31,11 +32,8 @@ const ListEventsOrganization = ({organizationId} : {organizationId: number | und
     };
     fetchField();
   }, [PageNumber]);
-  const handlePageChange = (page: number) => {
-    setPageNumber(page);
-  };
   return (
-    <div className="container relative mx-auto px-4 py-8">
+    <div>
       {loading && (
         <div className="flex absolute z-10 inset-0 justify-center items-center min-h-[300px]">
           <Spin size="large" />
@@ -70,4 +68,4 @@ const ListEventsOrganization = ({organizationId} : {organizationId: number | und
   );
 };
 
-export default ListEventsOrganization;
+export default VolunteerEvents;

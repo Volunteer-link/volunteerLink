@@ -6,8 +6,11 @@ import VolunteerInformation from './VolunteerInformation';
 import api from '../../apiService/useFetch';
 import { VolunteerProfilePage } from '../../model/Request/VolunteerProfile';
 import dayjs from 'dayjs';
+import VolunteerEvents from './VolunteerEvents';
+import { useParams } from 'react-router-dom';
 
 const VolunteerProfile = () => {
+  const {id} = useParams();
   const [volunteer, setVolunteer] = useState<VolunteerProfilePage>();
 
   useEffect(() => {
@@ -28,7 +31,7 @@ const VolunteerProfile = () => {
     {
       key: '2',
       label: 'Sự kiện tham gia',
-      children: 'Content of Tab Pane 2',
+      children: <VolunteerEvents id={parseInt(id || "")} />,
     },
   ];
 
@@ -65,7 +68,7 @@ const VolunteerProfile = () => {
         </div>
 
         {/* Tabs */}
-        <div className="mt-6 flex space-x-4 ">
+        <div className="mt-6 space-x-4 ">
           <Tabs defaultActiveKey="1" items={items} />
         </div>
 
