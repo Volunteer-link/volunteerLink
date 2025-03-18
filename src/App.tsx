@@ -15,6 +15,7 @@ import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
 import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
 import UpdateEvent from "./Pages/Event/UpdateEvent";
+import VolunteerProfile from "./Pages/Profile/VolunteerProfile";
 const router = createBrowserRouter([
   {
     path: '/',
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "my-profile",
         element: <MyProfile />,
+      },
+      {
+        path: "volunteerProfile/:id",
+        element: <VolunteerProfile />,
       },
     ],
   },
