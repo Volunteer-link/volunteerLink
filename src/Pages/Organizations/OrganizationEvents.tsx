@@ -70,7 +70,6 @@ const OrganizationEvents = () => {
           type="text"
           placeholder="Tên sự kiện..."
           className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
-          onKeyDown={handleClickSearch}
           onChange={(e) => setSearchName(e.target.value)}
         />
         <div className="flex pr-2 items-center gap-4 select-none">
