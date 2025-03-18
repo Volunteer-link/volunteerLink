@@ -7,7 +7,7 @@ export interface createEvent{
     description: string;
     timePublish: string | null;
     status: number,
-    hasDonate: true,
+    hasDonate: boolean,
     imagesEvent: string[],
     thumbnail: string,
     fieldsEvent: number[]

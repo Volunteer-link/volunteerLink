@@ -50,6 +50,19 @@ const ErrorSolving: React.FC<{ errCode: number }> = ({ errCode }) => {
           />
         </div>
       )}
+      {errCode === 300 && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-100">
+          <Result
+            status="error"
+            subTitle="Xin lỗi,thời hạn cập nhật sự kiện đã kết thúc "
+            extra={
+              <Button onClick={handleClickBackHome} type="primary">
+                Về trang chủ
+              </Button>
+            }
+          />
+        </div>
+      )}
     </>
   );
 };
