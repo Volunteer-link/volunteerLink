@@ -86,6 +86,7 @@ const UpdateEvent = () => {
           };
         });
         console.log(data.data)
+        setListSelectedField(data.data.fields)
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
