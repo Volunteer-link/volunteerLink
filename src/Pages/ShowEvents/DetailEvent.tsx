@@ -1,5 +1,5 @@
-import { Breadcrumb, ConfigProvider, Modal, Rate } from "antd";
-import { NavLink } from "react-router-dom";
+import { Breadcrumb, ConfigProvider, message, Modal, Rate } from "antd";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
 import { FiUsers } from "react-icons/fi";
@@ -14,14 +14,19 @@ import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import Loading from "../Components/Loading";
 import { DetailEventType } from "../../model/ShowEventModel/DetailEventType";
 import { TbTilde } from "react-icons/tb";
+import useWebSocket from "../../Hook/useWebSocket";
 
 const DetailEvent = () => {
+  const navigate = useNavigate();
   const [stateModalJoin, setStateModalJoin] = useState<boolean>(false);
   const [stateModalDonation, setStateModalDonation] = useState<boolean>(false);
   const [stateModalRate, setStateModalRate] = useState<boolean>(false);
   const [valueRating, setValueRating] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [statusEvent, setStatusEvent] = useState<number>(-1);
   const [dataState, setDataState] = useState<DetailEventType>();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [isPublish, setIsPublish] = useState<boolean>(false);
 
   const { id } = useParams();
 
@@ -52,6 +57,18 @@ const DetailEvent = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const { data } = await api.get(`/event/volunteer-status?eventId=${id}`);
+        setStatusEvent(data.data.status);
+      } catch (e: any) {}
+    };
+    if (user?.role === "Volunteer") {
+      fetchStatus();
+    }
+  }, []);
+
   const handleOpenJoin = () => {
     setStateModalJoin(true);
   };
@@ -77,11 +94,37 @@ const DetailEvent = () => {
     console.log(value);
   };
 
-  console.log(user?.AccId);
-  console.log(dataState);
+  const handleJoinRequest = async () => {
+    try {
+      const { data } = await api.post(`/event/request-volunteer`, {
+        eventId: id,
+      });
+    } catch (e: any) {
+    } finally {
+      messageApi.success("Yêu cầu tham gia của bạn đã được gửi!");
+      setStatusEvent(3);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCheckPublish = async () => {
+      try {
+        const { data } = await api.get("/profile/check-publish-profile");
+        setIsPublish(data.data.success);
+      } catch (e: any) {}
+    };
+    if (user) {
+      fetchCheckPublish();
+    }
+  }, [user]);
+
+  const handleViewParticipationRequest = () => {
+    navigate(`participation-request`);
+  };
 
   return (
     <div>
+      {contextHolder}
       {isLoading && <Loading color="white" />}
       <div className="grid grid-cols-8">
         <div></div>
@@ -102,7 +145,10 @@ const DetailEvent = () => {
             {user?.role === "Organization" &&
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
-                  <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 inline-block border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1">
+                  <div
+                    onClick={handleViewParticipationRequest}
+                    className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 inline-block border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1"
+                  >
                     Yêu cầu tham gia
                   </div>
                   <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center">
@@ -169,15 +215,19 @@ const DetailEvent = () => {
 
               {/* Volunteer sight */}
               {user?.role === "Volunteer" &&
-                !dataState?.currentInEvent.includes(Number(user?.AccId)) &&
+                statusEvent === 0 &&
                 dataState?.startTime &&
                 new Date() <
                   new Date(
                     new Date(dataState.startTime).setDate(
                       new Date(dataState.startTime).getDate() - 1
                     )
-                  ) && (
-                  <div className="lg:col-span-3 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  ) &&
+                isPublish && (
+                  <div
+                    className="lg:col-span-3 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
+                    onClick={handleJoinRequest}
+                  >
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium lg:hover:opacity-95 lg:hover:scale-105 duration-300 cursor-pointer">
                       Tham gia sự kiện
                     </div>
@@ -185,30 +235,48 @@ const DetailEvent = () => {
                 )}
               {/* Volunteer sight */}
 
-              {/* Volunteer already sign */}
-              {user?.role === "Volunteer" &&
-                dataState?.currentInEvent.includes(Number(user?.AccId)) && (
-                  <div className="lg:col-span-3 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
-                    <div
-                      onClick={handleOpenJoin}
-                      className="text-xs lg:text-sm flex items-center gap-1 border-2 px-6 py-2 rounded-full text-white font-medium hover:cursor-pointer hover:lg:bg-white hover:lg:scale-105 hover:lg:text-primary-color duration-300"
-                    >
-                      <div>Đã tham gia</div>
-                      <FaCheck />
-                    </div>
+              {statusEvent === 3 && (
+                <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
+                    Đã gửi yêu cầu...
+                  </div>
+                </div>
+              )}
 
-                    {dataState.hasDonate && (
-                      <div className="flex items-center gap-1 font-medium">
-                        <div
-                          onClick={handleOpenDonation}
-                          className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
-                        >
-                          Quyên góp
-                        </div>
-                      </div>
-                    )}
+              {dataState?.startTime &&
+                dataState?.endTime &&
+                new Date() >= new Date(dataState?.startTime) &&
+                new Date() <= new Date(dataState?.endTime) && (
+                  <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                    <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
+                      Sự kiện đang diễn ra
+                    </div>
                   </div>
                 )}
+
+              {/* Volunteer already sign */}
+              {user?.role === "Volunteer" && statusEvent === 1 && (
+                <div className="lg:col-span-3 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
+                  <div
+                    onClick={handleOpenJoin}
+                    className="text-xs lg:text-sm flex items-center gap-1 border-2 px-6 py-2 rounded-full text-white font-medium hover:cursor-pointer hover:lg:bg-white hover:lg:scale-105 hover:lg:text-primary-color duration-300"
+                  >
+                    <div>Đã tham gia</div>
+                    <FaCheck />
+                  </div>
+
+                  {dataState?.hasDonate && (
+                    <div className="flex items-center gap-1 font-medium">
+                      <div
+                        onClick={handleOpenDonation}
+                        className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
+                      >
+                        Quyên góp
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Volunteer already sign */}
 
@@ -241,7 +309,7 @@ const DetailEvent = () => {
                           key={index}
                           className="italic text-primary-color mr-3"
                         >
-                          #{item}
+                          #{item.name}
                         </span>
                       ))}
                     </div>

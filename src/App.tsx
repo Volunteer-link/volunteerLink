@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useEffect } from "react";
 import RootLayout from "./Pages/RootLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
@@ -20,26 +20,32 @@ import VolunteerProfile from "./Pages/Profile/VolunteerProfile";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
+import Chat from "./Pages/ShowEvents/Chat";
+import ParticipationRequest from "./Pages/ParticipationRequest/ParticipationRequest";
+import useWebSocket from "./Hook/useWebSocket";
+import { WebsocketProvider } from "./ultils/WebsocketContext";
+import NotificationPage from "./Pages/Notification/NotificationPage";
 import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
+
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <RootLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Home />,
       },
       {
-        path: 'home',
+        path: "home",
         element: <Home />,
       },
       {
-        path: 'aboutus',
+        path: "aboutus",
         element: <AboutUs />,
       },
       {
-        path: 'admin',
+        path: "admin",
         element: <AdminMain />,
       },
       {
@@ -59,19 +65,19 @@ const router = createBrowserRouter([
         element: <ShowEvent />,
       },
       {
-        path: 'detail-event/:id',
+        path: "detail-event/:id",
         element: <DetailEvent />,
       },
       {
-        path: 'joined-events',
+        path: "joined-events",
         element: <MyJoinedEvents />,
       },
       {
-        path: 'create-event',
+        path: "create-event",
         element: <CreateEvent />,
       },
       {
-        path: 'update-event/:id',
+        path: "update-event/:id",
         element: <UpdateEvent />,
       },
       {
@@ -90,29 +96,43 @@ const router = createBrowserRouter([
         path: "participate-event/:id",
         element: <EventParticipated />,
       },
+      {
+        path: "detail-event/:id/participation-request",
+        element: <ParticipationRequest />,
+      },
+      {
+        path: "notification",
+        element: <NotificationPage />,
+      },
     ],
   },
   {
-    path: 'authentication/signin',
+    path: "authentication/signin",
     element: <SignIn />,
   },
   {
-    path: 'authentication/signup',
+    path: "authentication/signup",
     element: <Signup />,
   },
   {
-    path: 'authentication/verify-email',
+    path: "authentication/verify-email",
     element: <VerifyEmail />,
+  },
+  {
+    path: "/test-chat",
+    element: <Chat />,
   },
 ]);
 
 function App() {
   return (
-    <GoogleOAuthProvider
-      clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE as string}
-    >
-      <RouterProvider router={router} />
-    </GoogleOAuthProvider>
+    <WebsocketProvider>
+      <GoogleOAuthProvider
+        clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE as string}
+      >
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
+    </WebsocketProvider>
   );
 }
 
