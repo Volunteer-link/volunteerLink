@@ -16,6 +16,8 @@ import CreateEvent from "./Pages/Event/CreateEvent";
 import MyProfile from "./Pages/Profile/MyProfile";
 import VolunteerSuggestions from "./Pages/Volunteer/VolunteerSuggestions";
 import UpdateEvent from "./Pages/Event/UpdateEvent";
+import VolunteerProfile from "./Pages/Profile/VolunteerProfile";
+import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
 import Chat from "./Pages/ShowEvents/Chat";
@@ -23,6 +25,8 @@ import ParticipationRequest from "./Pages/ParticipationRequest/ParticipationRequ
 import useWebSocket from "./Hook/useWebSocket";
 import { WebsocketProvider } from "./ultils/WebsocketContext";
 import NotificationPage from "./Pages/Notification/NotificationPage";
+import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +53,14 @@ const router = createBrowserRouter([
         element: <Organizations />,
       },
       {
+        path: "organizations/profile/:id",
+        element: <OrganizationsDetail />,
+      }, 
+      {
+        path: "organizations/events",
+        element: <OrganizationEvents />,
+      }, 
+      {
         path: "events",
         element: <ShowEvent />,
       },
@@ -71,6 +83,10 @@ const router = createBrowserRouter([
       {
         path: "my-profile",
         element: <MyProfile />,
+      },
+      {
+        path: "volunteerProfile/:id",
+        element: <VolunteerProfile />,
       },
       {
         path: "volunteer-suggestions",
