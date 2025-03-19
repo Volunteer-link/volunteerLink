@@ -1,9 +1,9 @@
-import { Breadcrumb, Empty, Input, Pagination } from 'antd';
-import React, { useEffect } from 'react';
-import Volunteer from '../../Components/Volunteer';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import api from '../../apiService/useFetch';
-import { SearchProps } from 'antd/es/input';
+import { Breadcrumb, Empty, Input, Pagination } from "antd";
+import React, { useEffect } from "react";
+import Volunteer from "../../Components/Volunteer";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import api from "../../apiService/useFetch";
+import { SearchProps } from "antd/es/input";
 
 const { Search } = Input;
 
@@ -11,12 +11,12 @@ const EventParticipated = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const pageFromUrl = searchParams.get('page');
+  const pageFromUrl = searchParams.get("page");
   const initialPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
 
   const [event, setEvent] = React.useState<any>();
   const [listVolunteer, setListVolunteer] = React.useState<any[]>();
-  const [searchName, setSearchName] = React.useState<string>('');
+  const [searchName, setSearchName] = React.useState<string>("");
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [totalVolunteers, setTotalVolunteers] = React.useState<number>(0);
 
@@ -54,7 +54,7 @@ const EventParticipated = () => {
     navigate(`/participate-event/${id}?page=${page}`, { replace: true });
   };
 
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) =>
+  const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
     console.log(info?.source, value);
 
   return (
@@ -66,13 +66,13 @@ const EventParticipated = () => {
           <Breadcrumb
             items={[
               {
-                title: 'Trang chủ',
+                title: "Trang chủ",
               },
               {
-                title: `${event?.name || 'Sự kiện'}`,
+                title: `${event?.name || "Sự kiện"}`,
               },
               {
-                title: 'Tình nguyện viên tham gia',
+                title: "Tình nguyện viên tham gia",
               },
             ]}
           />
@@ -93,13 +93,13 @@ const EventParticipated = () => {
           </div>
 
           <div>
-            {listVolunteer &&
+            {/* {listVolunteer &&
               listVolunteer.map((volunteer, index) => (
                 <Volunteer
                   key={volunteer.id || index}
                   volunteerDisplayType="REQUEST"
                 />
-              ))}
+              ))} */}
           </div>
           <Pagination
             className="mt-4"

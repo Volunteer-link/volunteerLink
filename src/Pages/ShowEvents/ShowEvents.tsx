@@ -11,6 +11,7 @@ import Loading from "../Components/Loading";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
 import MapBox from "../Components/MapBox";
 import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
+import useWebSocket from "../../Hook/useWebSocket";
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -41,7 +42,9 @@ const ShowEvent = () => {
   const refSearch = useRef<HTMLInputElement>(null);
 
   const user = decodedCookie(getCookie("accessToken"));
-
+  const { messages, sendMessage, isConnected } = useWebSocket({
+    url: "wss://dev.api.volunteer-link.site/ws/",
+  });
   useEffect(() => {
     const fetchField = async () => {
       try {
