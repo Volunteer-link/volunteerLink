@@ -21,7 +21,13 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t hoanganh23072/front-end-container:${{ github.sha }} .
+        docker build --build-arg REACT_APP_WS_URL=${{ secrets.REACT_APP_WS_URL }} \
+                     --build-arg REACT_APP_CLIENT_ID_GOOGLE=${{ secrets.REACT_APP_CLIENT_ID_GOOGLE }} \
+                     --build-arg REACT_APP_ENVIRONMENT=${{ secrets.REACT_APP_ENVIRONMENT }} \
+                     --build-arg REACT_APP_URL_PRO=${{ secrets.REACT_APP_URL_PRO }} \
+                     --build-arg REACT_APP_ACCESS_KEY=${{ secrets.REACT_APP_ACCESS_KEY }} \
+                     --build-arg REACT_APP_URL_DEV=${{ secrets.REACT_APP_URL_DEV }} \
+                     -t hoanganh23072/front-end-container:${{ github.sha }} .
 
     - name: Push Docker image
       run: |
@@ -47,5 +53,5 @@ jobs:
           docker stop frontend || true
           docker rm frontend || true
           cd deploy/frontend/prod &&
-          docker run -d -p 3000:80 --env-file .env --name frontend hoanganh23072/front-end-container:${{ github.sha }}
+          docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
         EOF
