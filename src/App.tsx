@@ -1,29 +1,119 @@
 import React from "react";
 import RootLayout from "./Pages/RootLayout";
-import Test from "./Pages/Test";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
-
+import SignIn from "./Pages/Authentication/SignIn";
+import Signup from "./Pages/Authentication/Signup";
+import VerifyEmail from "./Pages/Authentication/VerifyEmail";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import AdminMain from "./Pages/AccountManagement/AdminMain";
+import AboutUs from "./Pages/AboutUs";
+import ShowEvent from "./Pages/ShowEvents/ShowEvents";
+import DetailEvent from "./Pages/ShowEvents/DetailEvent";
+import ScrollToTop from "./Common/ScrollToTop";
+import MyJoinedEvents from "./Pages/Volunteer/MyJoinedEvents";
+import CreateEvent from "./Pages/Event/CreateEvent";
+import MyProfile from "./Pages/Profile/MyProfile";
+import VolunteerSuggestions from "./Pages/Volunteer/VolunteerSuggestions";
+import UpdateEvent from "./Pages/Event/UpdateEvent";
+import VolunteerProfile from "./Pages/Profile/VolunteerProfile";
+import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
+import EventParticipated from "./Pages/Event/EventParticipated";
+import Organizations from "./Pages/Organizations";
+import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     children: [
       {
-        path: "home",
+        path: '/',
         element: <Home />,
       },
       {
-        path: "test",
-        element: <Test />,
+        path: 'home',
+        element: <Home />,
+      },
+      {
+        path: 'aboutus',
+        element: <AboutUs />,
+      },
+      {
+        path: 'admin',
+        element: <AdminMain />,
+      },
+      {
+        path: "organizations",
+        element: <Organizations />,
+      },
+      {
+        path: "organizations/profile/:id",
+        element: <OrganizationsDetail />,
+      }, 
+      {
+        path: "organizations/events",
+        element: <OrganizationEvents />,
+      }, 
+      {
+        path: "events",
+        element: <ShowEvent />,
+      },
+      {
+        path: 'detail-event/:id',
+        element: <DetailEvent />,
+      },
+      {
+        path: 'joined-events',
+        element: <MyJoinedEvents />,
+      },
+      {
+        path: 'create-event',
+        element: <CreateEvent />,
+      },
+      {
+        path: 'update-event/:id',
+        element: <UpdateEvent />,
+      },
+      {
+        path: "my-profile",
+        element: <MyProfile />,
+      },
+      {
+        path: "volunteerProfile/:id",
+        element: <VolunteerProfile />,
+      },
+      {
+        path: "volunteer-suggestions",
+        element: <VolunteerSuggestions />,
+      },
+      {
+        path: "participate-event/:id",
+        element: <EventParticipated />,
       },
     ],
+  },
+  {
+    path: 'authentication/signin',
+    element: <SignIn />,
+  },
+  {
+    path: 'authentication/signup',
+    element: <Signup />,
+  },
+  {
+    path: 'authentication/verify-email',
+    element: <VerifyEmail />,
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <GoogleOAuthProvider
+      clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE as string}
+    >
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
+  );
 }
 
 export default App;
