@@ -3,7 +3,7 @@ export interface DetailEventType {
   currentInEvent: number[];
   description: string;
   endTime: Date | string;
-  fields: string[];
+  fields: { id: number; name: string }[];
   hasDonate: boolean;
   id: number;
   images: string[];

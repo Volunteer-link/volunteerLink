@@ -1,7 +1,7 @@
 import { AiOutlineUser } from "react-icons/ai";
 import { MdLogout } from "react-icons/md";
 import { Dropdown, Space, MenuProps, Menu, Badge, ConfigProvider } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { VscBell } from "react-icons/vsc";
 import { VscBellDot } from "react-icons/vsc";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -12,12 +12,15 @@ import { CgProfile } from "react-icons/cg";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import api from "../../apiService/useFetch";
+import useWebSocket from "../../Hook/useWebSocket";
+import WebsocketContext from "../../ultils/WebsocketContext";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
   const [checkProfile, setCheckProfile] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const [notiStatus, setNotiStatus] = useState<boolean>(false);
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
   const logout = useLogout();
@@ -100,6 +103,27 @@ const Header: React.FC<{}> = () => {
     logout();
   };
 
+  const socket = useContext(WebsocketContext);
+  useEffect(() => {
+    if (socket) {
+      socket.addEventListener("message", (event) => {
+        const parsedData = JSON.parse(event.data);
+        if (
+          parsedData.Message === "New Notification" &&
+          parsedData.message !== "Connected" &&
+          socket.readyState === WebSocket.OPEN
+        ) {
+          setNotiStatus(true);
+        }
+        console.log(JSON.parse(event.data));
+      });
+    }
+  }, [socket]);
+
+  const handleNotification = () => {
+    navigate("notification");
+  };
+
   return (
     <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 fixed w-full z-10">
       <div></div>
@@ -177,8 +201,11 @@ const Header: React.FC<{}> = () => {
         )}
         {user && (
           <div className="flex gap-10 items-center justify-center h-full">
-            <Badge dot={true}>
-              <div className="cursor-pointer hover:scale-110 transition-transform">
+            <Badge dot={notiStatus}>
+              <div
+                onClick={handleNotification}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              >
                 <VscBell className="text-2xl text-white" />
               </div>
             </Badge>
