@@ -3,6 +3,7 @@ export interface volunteerProps {
   requestId: number;
   name?: string;
   image?: string;
+  pictureProfile?: string;
   dob?: Date;
   address?: string;
   volunteerDisplayType: "SUGGESTION" | "PARTICIPATED" | "REQUEST";

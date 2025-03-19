@@ -26,6 +26,8 @@ const EventParticipated = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
+        console.log(data);
+
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -40,14 +42,18 @@ const EventParticipated = () => {
         const { data } = await api.get(`/event/participated-volunteers`, {
           params: { EventId: id, PageNumber: PageNumber, PageSize: 6 },
         });
-        setListVolunteer(data.data.items || data.data);
-        setTotalVolunteers(data.data.totalItems || data.data.length || 0);
+        console.log(data);
+
+        setListVolunteer(data.data.items);
+        setTotalVolunteers(data.data.totalItems);
       } catch (e: any) {
         console.log(e);
       }
     };
     fetchVolunteer();
   }, [PageNumber]);
+
+  console.log(listVolunteer);
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
@@ -93,13 +99,16 @@ const EventParticipated = () => {
           </div>
 
           <div>
-            {/* {listVolunteer &&
+            {listVolunteer &&
               listVolunteer.map((volunteer, index) => (
                 <Volunteer
                   key={volunteer.id || index}
-                  volunteerDisplayType="REQUEST"
+                  objectVolunteer={{
+                    ...volunteer,
+                    volunteerDisplayType: "PARTICIPATED",
+                  }}
                 />
-              ))} */}
+              ))}
           </div>
           <Pagination
             className="mt-4"

@@ -48,7 +48,7 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
         <div className="relative rounded-full overflow-hidden">
           {isLoading && <SmallLoading />}
           <img
-            src={objectVolunteer.image}
+            src={objectVolunteer.image || objectVolunteer.pictureProfile}
             alt=""
             className=" w-32 h-32 rounded-full object-cover bg-primary-color"
             onLoad={() => setIsLoading(false)}
@@ -62,10 +62,7 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
             {objectVolunteer.name}
           </span>
           <span className="text-[14px] font-medium text-stone-700">
-            {objectVolunteer.dob
-              ? calculateAge(objectVolunteer.dob)
-              : "Không rõ"}{" "}
-            tuổi
+            {objectVolunteer.dob ? calculateAge(objectVolunteer.dob) : ""}
           </span>
           <span className="text-[14px] font-medium text-stone-700">
             {objectVolunteer.address}

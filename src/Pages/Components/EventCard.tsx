@@ -55,8 +55,11 @@ const EventCard: React.FC<{
               trigger.parentElement || document.body
             }
           >
-            <div onClick={handleClickOption} className="absolute right-2 top-2">
-              <SlOptions className=" text-2xl text-white hover:cursor-pointer cursor-pointer scale-105" />
+            <div
+              onClick={handleClickOption}
+              className="absolute right-2 top-2 z-10 bg-primary-color rounded-full p-1"
+            >
+              <SlOptions className="text-lg text-white hover:cursor-pointer cursor-pointer scale-105" />
             </div>
           </Dropdown>
         )}
