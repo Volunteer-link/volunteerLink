@@ -54,7 +54,7 @@ const Header: React.FC<{}> = () => {
       label: (
         <NavLink
           className="flex items-center gap-1"
-          to={`${user?.role === "Volunteer" ? "/my-profile" : ""}`}
+          to={`${user?.role === "Volunteer" ? "/volunteerProfile" : ""}`}
         >
           <CgProfile />
           <span>Hồ sơ của tôi</span>
