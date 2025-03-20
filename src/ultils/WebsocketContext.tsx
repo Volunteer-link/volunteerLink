@@ -1,5 +1,7 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import useWebSocket from "../Hook/useWebSocket";
+import { decodedCookie, getCookie } from "./cookie";
+import { useLocation } from "react-router-dom";
 interface WebsocketContextProps {
   children: ReactNode;
 }
@@ -11,6 +13,7 @@ export const WebsocketProvider: React.FC<WebsocketContextProps> = ({
   const { messages, sendMessage, isConnected, socket } = useWebSocket({
     url: process.env.REACT_APP_WS_URL ?? "abc",
   });
+
   return (
     <WebsocketContext.Provider value={socket.current}>
       {children}

@@ -115,7 +115,7 @@ const Header: React.FC<{}> = () => {
         ) {
           setNotiStatus(true);
         }
-        console.log(JSON.parse(event.data));
+        // console.log(JSON.parse(event.data));
       });
     }
   }, [socket]);

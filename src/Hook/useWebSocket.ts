@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getCookie } from "../ultils/cookie";
+import { decodedCookie, getCookie } from "../ultils/cookie";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const useWebSocket = ({
   url,
@@ -12,7 +15,14 @@ const useWebSocket = ({
   const [messages, setMessages] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 
+  const user = useSelector((state: RootState) => state.user.user);
+  // console.log(user);
+
   useEffect(() => {
+    if (!user) {
+      console.warn("⚠️ Người dùng chưa đăng nhập! Đã huỷ kết nối WebSocket.");
+      return;
+    }
     socket.current = new WebSocket(`${url}${getCookie("accessToken")}`);
 
     socket.current.addEventListener("open", () => {
@@ -37,7 +47,7 @@ const useWebSocket = ({
     return () => {
       socket.current?.close();
     };
-  }, [url]);
+  }, [user]);
 
   const sendMessage = (message: string) => {
     if (socket.current && socket.current.readyState === WebSocket.OPEN) {
