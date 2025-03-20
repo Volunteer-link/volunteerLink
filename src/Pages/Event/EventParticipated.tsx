@@ -1,5 +1,5 @@
 import { Breadcrumb, Empty, Input, Pagination, Spin } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Volunteer from '../../Components/Volunteer';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../../apiService/useFetch';
@@ -38,27 +38,28 @@ const EventParticipated = () => {
     fetchEvent();
   }, [id]);
 
-  useEffect(() => {
-    const fetchVolunteer = async () => {
-      setLoading(true);
-      try {
-        const { data } = await api.get(`/event/participated-volunteers`, {
-          params: {
-            EventId: id,
-            SearchName: searchDebounce,
-            PageNumber: PageNumber,
-            PageSize: 6,
-          },
-        });
-        setListVolunteer(data.data.items);
-        setTotalVolunteers(data.data.totalItems);
-        setLoading(false);
-      } catch (e: any) {
-        setLoading(false);
+  const fetchVolunteer = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get(`/event/participated-volunteers`, {
+        params: {
+          EventId: id,
+          SearchName: searchDebounce,
+          PageNumber: PageNumber,
+          PageSize: 6,
+        },
+      });
+      setListVolunteer(data.data.items);
+      setTotalVolunteers(data.data.totalItems);
+      setLoading(false);
+    } catch (e: any) {
+      setLoading(false);
 
-        console.log(e);
-      }
-    };
+      console.log(e);
+    }
+  }, [PageNumber, searchDebounce]);
+
+  useEffect(() => {
     fetchVolunteer();
   }, [PageNumber, searchDebounce]);
 
@@ -67,7 +68,9 @@ const EventParticipated = () => {
     navigate(`/participate-event/${id}?page=${page}`, { replace: true });
   };
 
-  const handleClickSearch = () => {};
+  const handleClickSearch = () => {
+    fetchVolunteer();
+  };
 
   return (
     <div className="container relative mx-auto px-4 py-8">
@@ -100,7 +103,6 @@ const EventParticipated = () => {
             type="text"
             placeholder="Tên tình nguyện viên..."
             className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
-            onKeyDown={handleClickSearch}
             onChange={(e) => setSearchName(e.target.value)}
           />
           <div className="flex pr-2 items-center gap-4 select-none">
