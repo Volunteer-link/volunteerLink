@@ -8,13 +8,14 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaDotCircle } from "react-icons/fa";
 import MySlider from "../../Common/MySlider";
 import { FaCheck } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../../apiService/useFetch";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import Loading from "../Components/Loading";
 import { DetailEventType } from "../../model/ShowEventModel/DetailEventType";
 import { TbTilde } from "react-icons/tb";
 import useWebSocket from "../../Hook/useWebSocket";
+import WebsocketContext from "../../ultils/WebsocketContext";
 
 const DetailEvent = () => {
   const location = useLocation();
@@ -64,7 +65,6 @@ const DetailEvent = () => {
   const fetchStatus = async () => {
     try {
       const { data } = await api.get(`/event/volunteer-status?eventId=${id}`);
-      console.log(data);
       setIdRequest(data.data.id);
       setStatusEvent(data.data.status);
     } catch (e: any) {}
@@ -94,8 +94,8 @@ const DetailEvent = () => {
   const handleCloseRate = () => {
     setStateModalRate(false);
   };
-  const handleViewOrganization = () => {
-    console.log("annyeonghaseyo");
+  const handleViewOrganization = (id: number) => {
+    window.open(`/organizations/profile/${id}`, "_blank");
   };
   const handleRating = (value: number) => {
     console.log(value);
@@ -125,6 +125,23 @@ const DetailEvent = () => {
     }
   };
 
+  const socket = useContext(WebsocketContext);
+  useEffect(() => {
+    if (socket) {
+      socket.addEventListener("message", (event) => {
+        const parsedData = JSON.parse(event.data);
+        // if (
+        //   parsedData.Message === "New Notification" &&
+        //   parsedData.message !== "Connected" &&
+        //   socket.readyState === WebSocket.OPEN
+        // ) {
+        //   fetchStatus();
+        // }
+        console.log(parsedData);
+      });
+    }
+  }, [socket]);
+
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
@@ -139,6 +156,10 @@ const DetailEvent = () => {
 
   const handleViewParticipationRequest = () => {
     navigate(`participation-request`);
+  };
+
+  const handleShowParticipated = () => {
+    navigate(`/participate-event/${id}`);
   };
 
   return (
@@ -166,6 +187,7 @@ const DetailEvent = () => {
             />
             {/* Organization sight */}
             {user?.role === "Organization" &&
+              new Date() < new Date(dataState?.startTime || 0) &&
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
                   <div
@@ -196,7 +218,9 @@ const DetailEvent = () => {
               <div className="text-white lg:col-span-5 lg:py-8 py-4 lg:px-0 px-4">
                 <div className="lg:flex items-center justify-between mb-4">
                   <div
-                    onClick={handleViewOrganization}
+                    onClick={() =>
+                      handleViewOrganization(dataState?.orgAccountId || 0)
+                    }
                     className="flex items-center gap-2 hover:lg:cursor-pointer hover:lg:scale-105 duration-300 hover:lg:opacity-95 mb-4 lg:mb-0"
                   >
                     <FiUsers />
@@ -215,7 +239,10 @@ const DetailEvent = () => {
                   </div>
                 </div>
                 <div className="lg:flex items-center justify-between ">
-                  <div className="lg:mb-0 mb-4">
+                  <div
+                    onClick={handleShowParticipated}
+                    className="lg:mb-0 mb-4 cursor-pointer hover:scale-105 transition-all"
+                  >
                     {dataState?.numberVolunteer} người tham gia
                   </div>
                 </div>

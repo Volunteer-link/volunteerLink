@@ -9,7 +9,7 @@ import Loading from "../Components/Loading";
 import ErrorSolving from "../../Common/ErrorSolving";
 import ErrorCards from "../Components/ErrorCards";
 
-const pageSize = 1;
+const pageSize = 4;
 const ParticipationRequest = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,6 +17,7 @@ const ParticipationRequest = () => {
   const [errCode, setErrCode] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [nameEvent, setNameEvent] = useState<string>("");
+  const [resetState, setResetState] = useState<number>(0);
 
   const { id } = useParams<{ id: string }>();
   useEffect(() => {
@@ -48,7 +49,7 @@ const ParticipationRequest = () => {
       }
     };
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, resetState]);
 
   const handleChangePageSearch = (page: number) => {
     setCurrentPage(page);
@@ -78,7 +79,11 @@ const ParticipationRequest = () => {
       />
 
       {dataRequest.map((item, index) => (
-        <Volunteer key={item.requestId} objectVolunteer={item} />
+        <Volunteer
+          key={item.requestId}
+          objectVolunteer={item}
+          setResetState={setResetState}
+        />
       ))}
       {dataRequest.length === 0 && (
         <div className="text-center text-primary-color">

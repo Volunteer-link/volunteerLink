@@ -1,6 +1,8 @@
 import { ConfigProvider, Flex, Spin } from "antd";
 
-const SmallLoading = () => {
+const SmallLoading: React.FC<{
+  size: "small" | "large" | "default";
+}> = ({ size }) => {
   return (
     <div className="absolute inset-0 flex items-center justify-center z-20 bg-primary-color">
       <ConfigProvider
@@ -11,7 +13,7 @@ const SmallLoading = () => {
         }}
       >
         <Flex align="center" gap="middle">
-          <Spin size="large" />
+          <Spin size={size} />
         </Flex>
       </ConfigProvider>
     </div>

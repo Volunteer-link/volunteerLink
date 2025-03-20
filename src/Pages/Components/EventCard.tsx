@@ -71,7 +71,7 @@ const EventCard: React.FC<{
         <div
           className={`py-4 bg-primary-color relative rounded-t-xl mt-4 overflow-hidden`}
         >
-          {isLoading && <SmallLoading />}
+          {isLoading && <SmallLoading size="large" />}
           <img
             src={eventObject.thumbnail}
             className={`w-full h-[11.25rem] object-cover`}

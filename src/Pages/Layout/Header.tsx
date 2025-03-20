@@ -121,6 +121,7 @@ const Header: React.FC<{}> = () => {
   }, [socket]);
 
   const handleNotification = () => {
+    setNotiStatus(false);
     navigate("notification");
   };
 
@@ -146,7 +147,7 @@ const Header: React.FC<{}> = () => {
           </li>
           <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
             <NavLink
-              to="/"
+              to="/organizations"
               className={({ isActive }) =>
                 `text-white hover:text-white ${
                   isActive ? "font-bold border-b-2 pb-1 border-white" : ""

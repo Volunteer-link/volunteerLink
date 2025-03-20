@@ -6,9 +6,10 @@ import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
 import SmallLoading from "../Pages/Components/SmallLoading";
 import api from "../apiService/useFetch";
 
-const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
-  objectVolunteer,
-}) => {
+const Volunteer: React.FC<{
+  objectVolunteer: volunteerProps;
+  setResetState?: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ objectVolunteer, setResetState }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const calculateAge = (birthDate: Date | string): number => {
     const currentDate = new Date();
@@ -39,6 +40,9 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
       });
     } catch (e: any) {
     } finally {
+      if (setResetState) {
+        setResetState((prev) => ++prev);
+      }
     }
   };
 
@@ -46,7 +50,7 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
       <div className="flex gap-8 items-center">
         <div className="relative rounded-full overflow-hidden">
-          {isLoading && <SmallLoading />}
+          {isLoading && <SmallLoading size="large" />}
           <img
             src={objectVolunteer.image || objectVolunteer.pictureProfile}
             alt=""
