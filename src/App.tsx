@@ -26,6 +26,10 @@ import useWebSocket from "./Hook/useWebSocket";
 import { WebsocketProvider } from "./ultils/WebsocketContext";
 import NotificationPage from "./Pages/Notification/NotificationPage";
 import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "./redux/store";
+import { decodedCookie, getCookie } from "./ultils/cookie";
+import { setUser } from "./redux/slice";
 
 const router = createBrowserRouter([
   {
@@ -55,11 +59,11 @@ const router = createBrowserRouter([
       {
         path: "organizations/profile/:id",
         element: <OrganizationsDetail />,
-      }, 
+      },
       {
         path: "organizations/events",
         element: <OrganizationEvents />,
-      }, 
+      },
       {
         path: "events",
         element: <ShowEvent />,
@@ -125,6 +129,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch<typeof store.dispatch>();
+
+  const currentUser = decodedCookie(getCookie("accessToken")!);
+
+  if (currentUser) {
+    dispatch(setUser(currentUser));
+  }
   return (
     <WebsocketProvider>
       <GoogleOAuthProvider

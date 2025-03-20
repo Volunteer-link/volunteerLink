@@ -20,6 +20,9 @@ import api from "../../apiService/useFetch";
 import { decodedCookie, getCookie, setCookie } from "../../ultils/cookie";
 import { FaHome } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "../../redux/store";
+import { setUser } from "../../redux/slice";
 interface AccountPayload {
   gmail: string;
   password: string;
@@ -30,6 +33,10 @@ const SignIn: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
+
+  const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch<typeof store.dispatch>();
+
   const loginGG = useGoogleLogin({
     onSuccess: async (credentialResponse: any) => {
       const token = credentialResponse.access_token;
@@ -89,6 +96,8 @@ const SignIn: React.FC = () => {
       setCookie("accessToken", token);
 
       const currentUser = decodedCookie(getCookie("accessToken")!);
+
+      dispatch(setUser(currentUser));
 
       if (currentUser.role === "Admin") {
         navigate("/admin");

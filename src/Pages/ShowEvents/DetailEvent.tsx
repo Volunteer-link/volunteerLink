@@ -1,5 +1,5 @@
 import { Breadcrumb, ConfigProvider, message, Modal, Rate } from "antd";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
 import { FiUsers } from "react-icons/fi";
@@ -17,11 +17,15 @@ import { TbTilde } from "react-icons/tb";
 import useWebSocket from "../../Hook/useWebSocket";
 
 const DetailEvent = () => {
+  const location = useLocation();
+  const dataStateNoti = location.state;
+
   const navigate = useNavigate();
   const [stateModalJoin, setStateModalJoin] = useState<boolean>(false);
   const [stateModalDonation, setStateModalDonation] = useState<boolean>(false);
   const [stateModalRate, setStateModalRate] = useState<boolean>(false);
   const [valueRating, setValueRating] = useState<number>(0);
+  const [idRequest, setIdRequest] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [statusEvent, setStatusEvent] = useState<number>(-1);
   const [dataState, setDataState] = useState<DetailEventType>();
@@ -57,13 +61,16 @@ const DetailEvent = () => {
     fetchData();
   }, []);
 
+  const fetchStatus = async () => {
+    try {
+      const { data } = await api.get(`/event/volunteer-status?eventId=${id}`);
+      console.log(data);
+      setIdRequest(data.data.id);
+      setStatusEvent(data.data.status);
+    } catch (e: any) {}
+  };
+
   useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const { data } = await api.get(`/event/volunteer-status?eventId=${id}`);
-        setStatusEvent(data.data.status);
-      } catch (e: any) {}
-    };
     if (user?.role === "Volunteer") {
       fetchStatus();
     }
@@ -102,7 +109,19 @@ const DetailEvent = () => {
     } catch (e: any) {
     } finally {
       messageApi.success("Yêu cầu tham gia của bạn đã được gửi!");
-      setStatusEvent(3);
+      fetchStatus();
+    }
+  };
+
+  const handleCancelRequest = async () => {
+    try {
+      const { data } = await api.post(`/event/cancle-request`, {
+        requestId: idRequest,
+      });
+    } catch (e: any) {
+    } finally {
+      messageApi.success("Bạn đã hủy yêu cầu tham gia sự kiện này!");
+      fetchStatus();
     }
   };
 
@@ -134,7 +153,11 @@ const DetailEvent = () => {
               className=""
               items={[
                 {
-                  title: <NavLink to={"/events"}>Sự kiện</NavLink>,
+                  title: dataStateNoti ? (
+                    <NavLink to={"/notification"}>Thông báo</NavLink>
+                  ) : (
+                    <NavLink to={"/events"}>Sự kiện</NavLink>
+                  ),
                 },
                 {
                   title: `${dataState?.name}`,
@@ -236,8 +259,11 @@ const DetailEvent = () => {
               {/* Volunteer sight */}
 
               {statusEvent === 3 && (
-                <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
-                  <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
+                <div
+                  onClick={handleCancelRequest}
+                  className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
+                >
+                  <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium cursor-pointer">
                     Đã gửi yêu cầu...
                   </div>
                 </div>
