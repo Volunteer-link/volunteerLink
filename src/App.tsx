@@ -26,6 +26,8 @@ import useWebSocket from "./Hook/useWebSocket";
 import { WebsocketProvider } from "./ultils/WebsocketContext";
 import NotificationPage from "./Pages/Notification/NotificationPage";
 import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
+import OrganizationProfile from "./Pages/Profile/OrganizationProfile";
+import Profile from "./Pages/Profile";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "./redux/store";
 import { decodedCookie, getCookie } from "./ultils/cookie";
@@ -59,7 +61,11 @@ const router = createBrowserRouter([
       {
         path: "organizations/profile/:id",
         element: <OrganizationsDetail />,
-      },
+      }, 
+      {
+        path: "organizations/edit-profile",
+        element: <OrganizationProfile />,
+      }, 
       {
         path: "organizations/events",
         element: <OrganizationEvents />,
@@ -85,8 +91,12 @@ const router = createBrowserRouter([
         element: <UpdateEvent />,
       },
       {
-        path: "my-profile",
+        path: "volunteerProfile",
         element: <MyProfile />,
+      },
+      {
+        path: "my-profile",
+        element: <Profile />,
       },
       {
         path: "volunteerProfile/:id",
