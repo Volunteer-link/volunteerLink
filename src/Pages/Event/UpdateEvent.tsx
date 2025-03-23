@@ -136,21 +136,22 @@ const UpdateEvent = () => {
     const { images, thumbnails } = await upLoadFileToCloud();
 
     const dataEvent: createEvent = {
+      eventId: parseInt(id!),
       name: values.nameEvent,
       location: location,
-      address: address,
+      address: address, 
       startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
       timePublish:
         toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
         toISOLocal(dayjs().add(120, 'second').toDate()),
-      status: value === 1 ? 0 : -1,
       hasDonate: false,
       imagesEvent: images.length > 0 ? images : event.images,
       thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
     };
+    console.log(event)
     try {
       const { data } = await api.put(`/event/update-an-event`, dataEvent);
       console.log(data);

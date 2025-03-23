@@ -102,7 +102,6 @@ const CreateEvent = () => {
       timePublish:
         toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
         toISOLocal(dayjs().add(120, 'second').toDate()),
-      status: value === 1 ? 0 : -1,
       hasDonate: true,
       imagesEvent: images,
       thumbnail: thumbnails[0],
