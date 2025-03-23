@@ -6,6 +6,8 @@ const Home: React.FC<{}> = () => {
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
   }, []);
+   
+
   return (
     <div className="mb-20">
       <div className="">
