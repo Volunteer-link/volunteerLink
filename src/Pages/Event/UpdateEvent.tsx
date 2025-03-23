@@ -54,6 +54,7 @@ const UpdateEvent = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
+        console.log(data.data);
         const [latitude, longitude] = data.data.location
           .split(';')
           .map((part: string) => part.trim());
@@ -85,7 +86,9 @@ const UpdateEvent = () => {
             })),
           };
         });
-        setListSelectedField(data.data.fields)
+        setListSelectedField(
+          data.data.fields?.map((field: any, index: number) => field.id)
+        );
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -231,7 +234,10 @@ const UpdateEvent = () => {
     fetchField();
   }, []);
   const currentDateMinusOneDay = dayjs().subtract(1, 'day');
-  const isBeforeOneDay = dayjs(event?.startTime).isBefore(currentDateMinusOneDay, 'day');
+  const isBeforeOneDay = dayjs(event?.startTime).isBefore(
+    currentDateMinusOneDay,
+    'day'
+  );
   // if (event  && isBeforeOneDay  ) {
   //   return <ErrorSolving errCode={300} />;
   // }
@@ -279,7 +285,7 @@ const UpdateEvent = () => {
             name="nameEvent"
             initialValue={event?.name}
             className="mb-4 mt-3"
-            rules={nameRules}
+            rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
           >
             <Input />
           </Form.Item>

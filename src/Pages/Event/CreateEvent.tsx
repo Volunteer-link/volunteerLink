@@ -96,12 +96,12 @@ const CreateEvent = () => {
       name: values.nameEvent,
       location: location,
       address: address,
-      startTime:toISOLocal(dayjs(startMoment).add(60,'second').toDate()),
-      endTime: toISOLocal(dayjs(endMoment).add(60,'second').toDate()),
+      startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
+      endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
       timePublish:
-        toISOLocal(dayjs(values.timePublish).add(60,'second').toDate())||
-        toISOLocal(dayjs().add(120,'second').toDate()),
+        toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
+        toISOLocal(dayjs().add(120, 'second').toDate()),
       status: value === 1 ? 0 : -1,
       hasDonate: true,
       imagesEvent: images,
@@ -227,7 +227,11 @@ const CreateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
-          <Form.Item name="nameEvent" className="mb-4 mt-3" rules={nameRules}>
+          <Form.Item
+            name="nameEvent"
+            className="mb-4 mt-3"
+            rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
+          >
             <Input />
           </Form.Item>
         </div>
@@ -452,7 +456,9 @@ const CreateEvent = () => {
                     const selectedDate = dayjs(value);
 
                     if (!startDate || !endDate) {
-                      return Promise.reject('Vui lòng chọn ngày bắt đầu và ngày kết thúc trước!');
+                      return Promise.reject(
+                        'Vui lòng chọn ngày bắt đầu và ngày kết thúc trước!'
+                      );
                     }
 
                     if (!selectedDate.isBefore(startDate, 'minute')) {
