@@ -32,15 +32,15 @@ api.interceptors.request.use(
 );
 
 // Thêm Interceptors cho response (nếu cần)
-// api.interceptors.response.use(
-//   (response) => {
-//     // Bạn có thể xử lý dữ liệu trả về ở đây trước khi component nhận
-//     return response;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+api.interceptors.response.use(
+  (response) => {
+    // Bạn có thể xử lý dữ liệu trả về ở đây trước khi component nhận
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export const setupInterceptors = (
   setError?: (message: number) => void,
