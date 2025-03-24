@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { NotiType } from "../../model/Noti/NotiType";
 import api, { setupInterceptors } from "../../apiService/useFetch";
-import { ConfigProvider, Pagination } from "antd";
+import { ConfigProvider, Empty, Pagination } from "antd";
 import { RiEmotionSadLine } from "react-icons/ri";
 import Loading from "../Components/Loading";
 import { useNavigate } from "react-router-dom";
@@ -75,10 +75,20 @@ const NotificationPage = () => {
     if (item.type === 0) {
       item.urlId = item.urlId.split(",")[0];
     }
-    if (item.type === 0 || item.type === 5) {
+    if (
+      item.type === 0 ||
+      item.type === 5 ||
+      item.type === 1 ||
+      item.type === 4
+    ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
+    if (item.type === 2 || item.type === 6 || item.type === 3) {
+      navigate(`/volunteerProfile/${item.urlId}`);
+    }
   };
+  console.log(notiList);
+
   return (
     <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
       <ErrorCards errCode={errCode} />
@@ -102,7 +112,11 @@ const NotificationPage = () => {
             <div className="">{item.content}</div>
             <div>Thời gian: {new Date(item.time).toLocaleString("sv-SE")}</div>
           </div>
-          {(item.type === 0 || item.type === 8) && (
+          {(item.type === 0 ||
+            item.type === 8 ||
+            item.type === 2 ||
+            item.type === 6 ||
+            item.type === 3) && (
             <div className="bg-primary-color w-16 h-16 rounded-full overflow-hidden relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
 
@@ -117,7 +131,7 @@ const NotificationPage = () => {
               />
             </div>
           )}
-          {(item.type === 4 || item.type === 5) && (
+          {(item.type === 4 || item.type === 5 || item.type === 1) && (
             <div className="bg-primary-color w-32 h-16 relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
               <img
@@ -135,10 +149,7 @@ const NotificationPage = () => {
       ))}
 
       {notiList.length === 0 && (
-        <div className="text-primary-color flex items-center justify-center gap-1">
-          <span>Bạn chưa có thông báo nào</span>{" "}
-          <RiEmotionSadLine className="text-xl" />
-        </div>
+        <Empty className="mt-10" description="Không có dữ liệu" />
       )}
       <ConfigProvider
         theme={{

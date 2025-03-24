@@ -4,7 +4,7 @@ import api, { setupInterceptors } from "../../apiService/useFetch";
 import { useLocation, useParams } from "react-router-dom";
 import { volunteerProps } from "../../model/ShowEventModel/volunteerProps";
 import { NavLink } from "react-router-dom";
-import { Breadcrumb, ConfigProvider, Pagination } from "antd";
+import { Breadcrumb, ConfigProvider, Empty, Pagination } from "antd";
 import Loading from "../Components/Loading";
 import ErrorSolving from "../../Common/ErrorSolving";
 import ErrorCards from "../Components/ErrorCards";
@@ -18,6 +18,9 @@ const ParticipationRequest = () => {
   const [total, setTotal] = useState<number>(0);
   const [nameEvent, setNameEvent] = useState<string>("");
   const [resetState, setResetState] = useState<number>(0);
+
+  const location = useLocation();
+  const { nameEventState } = location.state || { nameEventState: "" };
 
   const { id } = useParams<{ id: string }>();
   useEffect(() => {
@@ -56,12 +59,15 @@ const ParticipationRequest = () => {
   };
 
   return (
-    <div className="container mx-auto px-12">
+    <div className="container mx-auto px-32 py-8">
       {isLoading && <Loading color="green" />}
       <ErrorCards errCode={errCode} />
       <Breadcrumb
-        className="my-10"
+        className=""
         items={[
+          {
+            title: <NavLink to={"/"}>Trang chủ</NavLink>,
+          },
           {
             title: (
               <NavLink to={`/detail-event/${id}`}>Thông tin sự kiện</NavLink>
@@ -71,7 +77,9 @@ const ParticipationRequest = () => {
             title: (
               <div className="">
                 <span>Yêu cầu tham gia của </span>
-                <span className="text-primary-color">{nameEvent}</span>
+                <span className="text-primary-color">
+                  {location.state?.nameEvent}
+                </span>
               </div>
             ),
           },
@@ -85,11 +93,7 @@ const ParticipationRequest = () => {
           setResetState={setResetState}
         />
       ))}
-      {dataRequest.length === 0 && (
-        <div className="text-center text-primary-color">
-          Sự kiện này chưa có yêu cầu tham gia
-        </div>
-      )}
+      {dataRequest.length === 0 && <Empty description="Không có dữ liệu" />}
       <ConfigProvider
         theme={{
           components: {

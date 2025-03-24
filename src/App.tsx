@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "./redux/store";
 import { decodedCookie, getCookie } from "./ultils/cookie";
 import { setUser } from "./redux/slice";
+import MyInvitation from "./Pages/Profile/MyInvitation";
 
 const router = createBrowserRouter([
   {
@@ -105,8 +106,16 @@ const router = createBrowserRouter([
         element: <ParticipationRequest />,
       },
       {
+        path: "detail-event/:id/volunteer-suggestion",
+        element: <VolunteerSuggestions />,
+      },
+      {
         path: "notification",
         element: <NotificationPage />,
+      },
+      {
+        path: "/my-invitation",
+        element: <MyInvitation />,
       },
     ],
   },

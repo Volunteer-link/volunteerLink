@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { Button, Flex } from "antd";
+import { Button, Flex, message } from "antd";
 import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
 import Loading from "../Pages/Components/Loading";
 import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
 import SmallLoading from "../Pages/Components/SmallLoading";
 import api from "../apiService/useFetch";
+import { useNavigate } from "react-router-dom";
 
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
   setResetState?: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ objectVolunteer, setResetState }) => {
+  eventId?: number;
+}> = ({ objectVolunteer, setResetState, eventId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const navigate = useNavigate();
   const calculateAge = (birthDate: Date | string): number => {
     const currentDate = new Date();
     const birth = new Date(birthDate);
@@ -29,11 +34,13 @@ const Volunteer: React.FC<{
   };
 
   const handleClickName = () => {
-    console.log(objectVolunteer.accId);
+    window.open(`/volunteerProfile/${objectVolunteer.accountId}`);
   };
 
   const handleClickBtn = async (type: string) => {
     try {
+      setIsLoading(true);
+
       const { data } = await api.post(`/event/handle-request`, {
         requestId: objectVolunteer.requestId,
         accept: type === "yes" ? true : false,
@@ -41,32 +48,60 @@ const Volunteer: React.FC<{
     } catch (e: any) {
     } finally {
       if (setResetState) {
+        setIsLoading(false);
         setResetState((prev) => ++prev);
       }
     }
   };
 
+  const handleClickInvite = async () => {
+    try {
+      setIsLoading(true);
+      console.log(eventId);
+      console.log(objectVolunteer.accountId);
+      const { data } = await api.post(`/event/invite-volunteer`, {
+        eventId: eventId,
+        volunteerId: objectVolunteer.id,
+      });
+      console.log(data);
+    } catch (e: any) {
+    } finally {
+      messageApi.success("Lời mời của bạn đã được gửi!");
+      if (setResetState) {
+        setResetState((prev) => ++prev);
+      }
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
+      {contextHolder}
       <div className="flex gap-8 items-center">
         <div className="relative rounded-full overflow-hidden">
-          {isLoading && <SmallLoading size="large" />}
+          {isLoading && <SmallLoading size="small" />}
           <img
             src={objectVolunteer.image || objectVolunteer.pictureProfile}
             alt=""
-            className=" w-32 h-32 rounded-full object-cover bg-primary-color"
+            className=" w-20 h-20 rounded-full object-cover bg-primary-color"
             onLoad={() => setIsLoading(false)}
+            onError={(e) =>
+              (e.currentTarget.src =
+                "/materials/blank-profile-picture-973460_1280.png")
+            }
           />
         </div>
-        <div className="flex text-[#3BA769] leading-none  gap-6 flex-col">
+        <div className="flex text-[#3BA769] leading-none gap-2 flex-col">
           <span
             onClick={handleClickName}
-            className="text-[24px] cursor-pointer transition-all"
+            className="text-[20px] cursor-pointer transition-all"
           >
             {objectVolunteer.name}
           </span>
           <span className="text-[14px] font-medium text-stone-700">
-            {objectVolunteer.dob ? calculateAge(objectVolunteer.dob) : ""}
+            {objectVolunteer.dob
+              ? `${calculateAge(objectVolunteer.dob)} tuổi`
+              : ""}
           </span>
           <span className="text-[14px] font-medium text-stone-700">
             {objectVolunteer.address}
@@ -75,7 +110,7 @@ const Volunteer: React.FC<{
       </div>
 
       {objectVolunteer.volunteerDisplayType === "SUGGESTION" && (
-        <Button size="large" type="primary">
+        <Button onClick={handleClickInvite} size="large" type="primary">
           Mời tham gia
         </Button>
       )}
