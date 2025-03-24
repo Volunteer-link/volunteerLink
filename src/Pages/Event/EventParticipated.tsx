@@ -1,10 +1,11 @@
-import { Breadcrumb, Empty, Input, Pagination, Spin } from 'antd';
-import React, { useCallback, useEffect } from 'react';
-import Volunteer from '../../Components/Volunteer';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import api from '../../apiService/useFetch';
-import { SearchProps } from 'antd/es/input';
-import { useDebounce } from '../../ultils/useDebounce';
+import { Breadcrumb, Empty, Input, Pagination, Spin } from "antd";
+import React, { useCallback, useEffect } from "react";
+import Volunteer from "../../Components/Volunteer";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import api from "../../apiService/useFetch";
+import { SearchProps } from "antd/es/input";
+import { useDebounce } from "../../ultils/useDebounce";
+import { NavLink } from "react-router-dom";
 
 const { Search } = Input;
 
@@ -12,12 +13,12 @@ const EventParticipated = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const pageFromUrl = searchParams.get('page');
+  const pageFromUrl = searchParams.get("page");
   const initialPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
 
   const [event, setEvent] = React.useState<any>();
   const [listVolunteer, setListVolunteer] = React.useState<any[]>();
-  const [searchName, setSearchName] = React.useState<string>('');
+  const [searchName, setSearchName] = React.useState<string>("");
   const searchDebounce = useDebounce<string>(searchName, 500);
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [totalVolunteers, setTotalVolunteers] = React.useState<number>(0);
@@ -82,13 +83,21 @@ const EventParticipated = () => {
       <Breadcrumb
         items={[
           {
-            title: 'Trang chủ',
+            title: (
+              <NavLink to={"/"}>
+                <span>Trang chủ</span>
+              </NavLink>
+            ),
           },
           {
-            title: `${event?.name || 'Sự kiện'}`,
+            title: (
+              <NavLink to={`/detail-event/${id}`}>
+                <span>{event?.name || "Sự kiện"}</span>
+              </NavLink>
+            ),
           },
           {
-            title: 'Tình nguyện viên tham gia',
+            title: "Tình nguyện viên tham gia",
           },
         ]}
       />
@@ -125,7 +134,7 @@ const EventParticipated = () => {
               key={volunteer.id || index}
               objectVolunteer={{
                 ...volunteer,
-                volunteerDisplayType: 'PARTICIPATED',
+                volunteerDisplayType: "PARTICIPATED",
               }}
             />
           ))

@@ -14,6 +14,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import api from "../../apiService/useFetch";
 import useWebSocket from "../../Hook/useWebSocket";
 import WebsocketContext from "../../ultils/WebsocketContext";
+import { SlEnvolopeLetter } from "react-icons/sl";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -82,8 +83,24 @@ const Header: React.FC<{}> = () => {
           },
         ]
       : []),
+    ...(user?.role === "Volunteer"
+      ? [
+          {
+            key: "4",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={"/my-invitation"}
+              >
+                <SlEnvolopeLetter />
+                <span>Lời mời tham gia</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
     {
-      key: "4",
+      key: "5",
       label: (
         <NavLink
           className="flex items-center gap-1"
@@ -121,11 +138,12 @@ const Header: React.FC<{}> = () => {
   }, [socket]);
 
   const handleNotification = () => {
+    setNotiStatus(false);
     navigate("notification");
   };
 
   return (
-    <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 fixed w-full z-10">
+    <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 fixed w-full z-50">
       <div></div>
       <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo</div>
       <div className="col-span-3 hidden md:block">
@@ -146,7 +164,7 @@ const Header: React.FC<{}> = () => {
           </li>
           <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
             <NavLink
-              to="/"
+              to="/organizations"
               className={({ isActive }) =>
                 `text-white hover:text-white ${
                   isActive ? "font-bold border-b-2 pb-1 border-white" : ""

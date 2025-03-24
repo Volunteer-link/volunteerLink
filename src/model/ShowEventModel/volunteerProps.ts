@@ -1,5 +1,6 @@
 export interface volunteerProps {
-  accId: number;
+  accountId: number;
+  id?: number;
   requestId: number;
   name?: string;
   image?: string;

@@ -1,17 +1,19 @@
 import { useContext, useEffect, useState } from "react";
 import { NotiType } from "../../model/Noti/NotiType";
 import api, { setupInterceptors } from "../../apiService/useFetch";
-import { ConfigProvider, Pagination } from "antd";
+import { ConfigProvider, Empty, Pagination } from "antd";
 import { RiEmotionSadLine } from "react-icons/ri";
 import Loading from "../Components/Loading";
 import { useNavigate } from "react-router-dom";
 import ErrorCards from "../Components/ErrorCards";
 import WebsocketContext from "../../ultils/WebsocketContext";
+import SmallLoading from "../Components/SmallLoading";
 
 const pageSize = 10;
 const NotificationPage = () => {
   const [notiList, setNotiList] = useState<NotiType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingImage, setIsLoadingImage] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [errCode, setErrCode] = useState<number>(0);
   const navigate = useNavigate();
@@ -27,28 +29,23 @@ const NotificationPage = () => {
           parsedData.message !== "Connected" &&
           socket.readyState === WebSocket.OPEN
         ) {
-          const object = JSON.parse(event.data);
-          console.log(object);
+          const dataArr = JSON.parse(event.data).LatestNotifications;
 
-          const newNoti = {
-            accountId: object.LatestNotification.AccountId,
-            content: object.LatestNotification.Content,
-            id: object.LatestNotification.Id,
-            time: object.LatestNotification.Time,
-            type: object.LatestNotification.Type,
-            urlId: object.LatestNotification.UrlId,
-            urlImage: object.UrlImage,
-          };
-          console.log(newNoti);
-          const newArr = [newNoti, ...notiList];
+          const newArr = dataArr.map((item: any) => ({
+            accountId: item.AccountId,
+            content: item.Content,
+            id: item.Id,
+            time: item.Time,
+            type: item.Type,
+            urlId: item.UrlId,
+            urlImage: item.UrlImage,
+          }));
+
           setNotiList(newArr);
         }
-        // console.log(JSON.parse(event.data));
       });
     }
   }, [socket]);
-
-  console.log(notiList);
 
   useEffect(() => {
     setupInterceptors(setErrCode);
@@ -60,7 +57,6 @@ const NotificationPage = () => {
         const { data } = await api.get(
           `/common/get-notifications?PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-        console.log(data);
 
         setNotiList(data.data.items);
         setTotal(data.data.totalItems);
@@ -79,10 +75,20 @@ const NotificationPage = () => {
     if (item.type === 0) {
       item.urlId = item.urlId.split(",")[0];
     }
-    if (item.type === 0 || item.type === 5) {
+    if (
+      item.type === 0 ||
+      item.type === 5 ||
+      item.type === 1 ||
+      item.type === 4
+    ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
+    if (item.type === 2 || item.type === 6 || item.type === 3) {
+      navigate(`/volunteerProfile/${item.urlId}`);
+    }
   };
+  console.log(notiList);
+
   return (
     <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
       <ErrorCards errCode={errCode} />
@@ -96,45 +102,54 @@ const NotificationPage = () => {
           <div>Thời gian: {new Date(item.time).toLocaleString("sv-SE")}</div>
         </div>
       ))} */}
-      {[...notiList]
-        .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-        .map((item, index) => (
-          <div
-            key={item.id}
-            onClick={() => handleClickNoti(item)}
-            className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
-          >
-            <div className="lg:max-w-96 max-w-52">
-              <div className="">{item.content}</div>
-              <div>
-                Thời gian: {new Date(item.time).toLocaleString("sv-SE")}
-              </div>
-            </div>
-            {(item.type === 0 || item.type === 8) && (
-              <div className="bg-primary-color w-16 h-16 rounded-full overflow-hidden">
-                <img src={item.urlImage} alt="" />
-              </div>
-            )}
-            {(item.type === 4 || item.type === 5) && (
-              <div className="bg-primary-color w-32 h-16">
-                <img
-                  className="w-full h-full object-contain"
-                  src={item.urlImage}
-                  alt=""
-                  onError={(e) =>
-                    (e.currentTarget.src = "/materials/placeholder-image.jpg")
-                  }
-                />
-              </div>
-            )}
+      {notiList.map((item, index) => (
+        <div
+          key={item.id + new Date().toString()}
+          onClick={() => handleClickNoti(item)}
+          className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
+        >
+          <div className="lg:max-w-96 max-w-52">
+            <div className="">{item.content}</div>
+            <div>Thời gian: {new Date(item.time).toLocaleString("sv-SE")}</div>
           </div>
-        ))}
+          {(item.type === 0 ||
+            item.type === 8 ||
+            item.type === 2 ||
+            item.type === 6 ||
+            item.type === 3) && (
+            <div className="bg-primary-color w-16 h-16 rounded-full overflow-hidden relative">
+              {isLoadingImage && <SmallLoading size={"small"} />}
+
+              <img
+                src={item.urlImage}
+                alt=""
+                onLoad={() => setIsLoadingImage(false)}
+                onError={(e) =>
+                  (e.currentTarget.src =
+                    "/materials/blank-profile-picture-973460_1280.png")
+                }
+              />
+            </div>
+          )}
+          {(item.type === 4 || item.type === 5 || item.type === 1) && (
+            <div className="bg-primary-color w-32 h-16 relative">
+              {isLoadingImage && <SmallLoading size={"small"} />}
+              <img
+                className="w-full h-full object-contain"
+                src={item.urlImage}
+                alt=""
+                onLoad={() => setIsLoadingImage(false)}
+                onError={(e) =>
+                  (e.currentTarget.src = "/materials/placeholder-image.jpg")
+                }
+              />
+            </div>
+          )}
+        </div>
+      ))}
 
       {notiList.length === 0 && (
-        <div className="text-primary-color flex items-center justify-center gap-1">
-          <span>Bạn chưa có thông báo nào</span>{" "}
-          <RiEmotionSadLine className="text-xl" />
-        </div>
+        <Empty className="mt-10" description="Không có dữ liệu" />
       )}
       <ConfigProvider
         theme={{
