@@ -316,6 +316,15 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
+            {dataState?.startTime &&
+              new Date() < new Date(dataState?.startTime) &&
+              user?.role === "Volunteer" && (
+                <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  <div className="text-primary-color inline-block py-2 px-12 rounded-full font-medium">
+                    Sự kiện chưa diễn ra...
+                  </div>
+                </div>
+              )}
             {/* Organization sight */}
           </div>
           <div className="w-full mb-10">
@@ -353,7 +362,7 @@ const DetailEvent = () => {
                     />
                   </div>
                 </div>
-                <div className="lg:flex items-center justify-between ">
+                <div className="lg:flex items-center justify-between">
                   <div
                     onClick={handleShowParticipated}
                     className="lg:mb-0 mb-4 cursor-pointer hover:scale-105 transition-all"
@@ -410,6 +419,16 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
+
+              {dataState?.startTime &&
+                new Date() < new Date(dataState?.startTime) &&
+                user?.role === "Organization" && (
+                  <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                    <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
+                      Sự kiện chưa diễn ra
+                    </div>
+                  </div>
+                )}
 
               {dataState?.startTime &&
                 dataState?.endTime &&
