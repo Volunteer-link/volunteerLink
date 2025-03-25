@@ -19,7 +19,7 @@ const OrganizationsItem = ({ name, image, field }: OrganizationsItemProps) => {
           height={80}
           preview={false}
           alt="example"
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          src={image || "/materials/placeholder-image.jpg"}
         />
       </div>
 

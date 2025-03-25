@@ -43,7 +43,7 @@ const Organizations = () => {
     searchNameFromUrl || ''
   );
   const searchDebounce = useDebounce<string>(searchName, 500);
-  const [fields, setFields] = React.useState<number>();
+  const [fields, setFields] = React.useState<string>('');
   const [totalPage, setTotalPage] = React.useState<number>();
   useEffect(() => {
     const fetchField = async () => {
@@ -88,9 +88,9 @@ const Organizations = () => {
     fetchField();
   }, [PageNumber, fields, searchDebounce]);
 
-  const handleChange = (value: string | string[]) => {
+  const handleChange = (value: string[]) => {
     setPageNumber(1);
-    setFields(Number(value));
+    setFields(value.join(', '));
   };
 
   const handlePageChange = (page: number) => {
@@ -107,14 +107,13 @@ const Organizations = () => {
       replace: true,
     });
   };
-
   return (
-    <div className="my-12 flex flex-col">
+    <div className="my-12 px-4 container mx-auto  flex flex-col">
       <div className="flex justify-center mb-6 items-center w-full">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
           <input
             type="text"
-            placeholder="Tên sự kiện..."
+            placeholder="Tên tổ chức..."
             className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
             onChange={(e) => setSearchName(e.target.value)}
           />
@@ -138,8 +137,9 @@ const Organizations = () => {
           <Col span={24}>
             <Typography.Text>Lĩnh vực:{'  '}</Typography.Text>
             <Select
-              className="max-w-[200px] mb-4"
+              className="max-w-[200px] mb-4 cursor-pointer"
               maxTagCount="responsive"
+              mode='multiple'
               size={'middle'}
               placeholder="Vui lòng chọn lĩnh vực"
               onChange={handleChange}
@@ -165,7 +165,7 @@ const Organizations = () => {
                 return (
                   <Col key={item.id} span={8}>
                     <OrganizationsItem
-                      image={item.image}
+                      image={item.urlImage}
                       name={item.name}
                       field={item.fields
                         .map((field: any) => field.name)

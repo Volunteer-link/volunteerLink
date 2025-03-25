@@ -82,15 +82,6 @@ const CreateEvent = () => {
       location = marker.latitude + ';' + marker.longitude;
     }
     const [startMoment, endMoment] = values.date || [];
-    // console.log(toISOLocal(dayjs(endMoment).toDate()))
-    // console.log(toISOLocal(dayjs(endMoment).add(60,'second').toDate()))
-    // console.log("--------------------------------")
-    // console.log(toISOLocal(dayjs(startMoment).toDate()))
-    // console.log(toISOLocal(dayjs(startMoment).add(60,'second').toDate()))
-    // console.log("--------------------------------")
-    // console.log(toISOLocal(dayjs().toDate()))
-    // setLoading(false);
-    // return;
     const { images, thumbnails } = await upLoadFileToCloud();
     const dataEvent: createEvent = {
       name: values.nameEvent,
