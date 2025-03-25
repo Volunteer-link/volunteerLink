@@ -1,5 +1,5 @@
 import { Breadcrumb, Empty, Input, Pagination, Spin } from "antd";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Volunteer from "../../Components/Volunteer";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import api from "../../apiService/useFetch";
@@ -23,6 +23,8 @@ const EventParticipated = () => {
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [totalVolunteers, setTotalVolunteers] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [resetState, setResetState] = useState<number>(0);
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -62,7 +64,7 @@ const EventParticipated = () => {
 
   useEffect(() => {
     fetchVolunteer();
-  }, [PageNumber, searchDebounce]);
+  }, [PageNumber, searchDebounce, resetState]);
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
@@ -138,6 +140,7 @@ const EventParticipated = () => {
                 ...volunteer,
                 volunteerDisplayType: "PARTICIPATED",
               }}
+              setResetState={setResetState}
             />
           ))
         )}

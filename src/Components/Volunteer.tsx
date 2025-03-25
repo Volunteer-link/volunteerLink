@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Flex, message } from "antd";
+import { Button, Flex, message, Modal } from "antd";
 import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
 import Loading from "../Pages/Components/Loading";
 import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -16,6 +16,8 @@ const Volunteer: React.FC<{
   const [messageApi, contextHolder] = message.useMessage();
 
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
   const calculateAge = (birthDate: Date | string): number => {
     const currentDate = new Date();
     const birth = new Date(birthDate);
@@ -70,7 +72,6 @@ const Volunteer: React.FC<{
         eventId: eventId,
         volunteerId: objectVolunteer.id,
       });
-      console.log(data);
     } catch (e: any) {
     } finally {
       messageApi.success("Lời mời của bạn đã được gửi!");
@@ -81,6 +82,34 @@ const Volunteer: React.FC<{
         setIsLoading(false);
       }, 1000);
     }
+  };
+
+  const handleRemoveVolunteer = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await api.delete(`/event/remove-volunteer`, {
+        data: {
+          idRecord: objectVolunteer.id,
+        },
+      });
+      console.log(data);
+    } catch (e: any) {
+    } finally {
+      messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
+      setTimeout(() => {
+        if (setResetState) {
+          setResetState((prev) => ++prev);
+        }
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -142,6 +171,22 @@ const Volunteer: React.FC<{
           </Button>
         </div>
       )}
+      {objectVolunteer.volunteerDisplayType === "PARTICIPATED" && (
+        <Button onClick={handleOpenModal} size="large" type="primary">
+          Xóa tình nguyện viên
+        </Button>
+      )}
+      <Modal
+        title="Thông báo"
+        open={openModal}
+        onOk={handleRemoveVolunteer}
+        onCancel={handleCloseModal}
+      >
+        <p>Bạn có chắc muốn xóa tình nguyện viên này không?</p>
+        <p>
+          Nếu muốn họ tham gia sự kiện, bạn sẽ phải gửi lại lời mời tham gia
+        </p>
+      </Modal>
     </div>
   );
 };
