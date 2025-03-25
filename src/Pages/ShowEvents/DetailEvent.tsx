@@ -14,7 +14,6 @@ import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import Loading from "../Components/Loading";
 import { DetailEventType } from "../../model/ShowEventModel/DetailEventType";
 import { TbTilde } from "react-icons/tb";
-import useWebSocket from "../../Hook/useWebSocket";
 import WebsocketContext from "../../ultils/WebsocketContext";
 import { IoIosSend } from "react-icons/io";
 import { AiFillLike } from "react-icons/ai";
@@ -49,16 +48,10 @@ const DetailEvent = () => {
     "/materials/pixelcut-expdort.jpeg",
   ];
   useEffect(() => {
-    if (!dataStateNoti) {
-      console.log("abc");
-
-      setFrom("/events");
-      setFromTitle("Sự kiện");
-    }
-    if (dataStateNoti?.from === "invi") {
-      setFrom("/my-invitation");
-      setFromTitle("Lời mời của tôi");
-    }
+    // if (!dataStateNoti) {
+    //   setFrom("/events");
+    //   setFromTitle("Sự kiện");
+    // }
     if (dataStateNoti?.from === "noti") {
       setFrom("/notification");
       setFromTitle("Thông báo");
@@ -123,15 +116,36 @@ const DetailEvent = () => {
     console.log(value);
   };
 
+  const socket = useContext(WebsocketContext);
+  useEffect(() => {
+    if (socket) {
+      socket.addEventListener("message", (event) => {
+        const parsedData = JSON.parse(event.data);
+        if (
+          parsedData.Message === "New Notification" &&
+          parsedData.message !== "Connected" &&
+          socket.readyState === WebSocket.OPEN
+        ) {
+          if (user?.role === "Volunteer") {
+            fetchStatus();
+          }
+        }
+      });
+    }
+  }, [socket]);
+
   const handleJoinRequest = async () => {
     try {
       const { data } = await api.post(`/event/request-volunteer`, {
         eventId: id,
       });
     } catch (e: any) {
+      // console.log(e);
     } finally {
       messageApi.success("Yêu cầu tham gia của bạn đã được gửi!");
-      fetchStatus();
+      if (user?.role === "Volunteer") {
+        fetchStatus();
+      }
     }
   };
 
@@ -141,28 +155,14 @@ const DetailEvent = () => {
         requestId: idRequest,
       });
     } catch (e: any) {
+      // console.log(e);
     } finally {
       messageApi.success("Bạn đã hủy yêu cầu tham gia sự kiện này!");
-      fetchStatus();
+      if (user?.role === "Volunteer") {
+        fetchStatus();
+      }
     }
   };
-
-  const socket = useContext(WebsocketContext);
-  useEffect(() => {
-    if (socket) {
-      socket.addEventListener("message", (event) => {
-        const parsedData = JSON.parse(event.data);
-        // if (
-        //   parsedData.Message === "New Notification" &&
-        //   parsedData.message !== "Connected" &&
-        //   socket.readyState === WebSocket.OPEN
-        // ) {
-        //   fetchStatus();
-        // }
-        console.log(parsedData);
-      });
-    }
-  }, [socket]);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
@@ -187,7 +187,9 @@ const DetailEvent = () => {
   };
 
   const handleViewSentRequest = () => {
-    navigate(`volunteer-suggestion`);
+    navigate(`sent-invitation`, {
+      state: { nameEvent: dataState?.name },
+    });
   };
 
   const handleShowParticipated = () => {
@@ -202,7 +204,9 @@ const DetailEvent = () => {
       });
     } catch (e: any) {
     } finally {
-      fetchStatus();
+      if (user?.role === "Volunteer") {
+        fetchStatus();
+      }
     }
   };
 
@@ -215,7 +219,9 @@ const DetailEvent = () => {
     } catch (e: any) {
     } finally {
       setStateModalJoin(false);
-      fetchStatus();
+      if (user?.role === "Volunteer") {
+        fetchStatus();
+      }
     }
   };
 
@@ -227,17 +233,32 @@ const DetailEvent = () => {
         <div></div>
         <div className="col-span-6 ">
           <div className="lg:flex lg:items-center lg:justify-between lg:my-6 mt-20 mb-6">
-            <Breadcrumb
-              className=""
-              items={[
-                {
-                  title: <NavLink to={from}>{fromTitle}</NavLink>,
-                },
-                {
-                  title: `${dataState?.name || "Tên sự kiện"}`,
-                },
-              ]}
-            />
+            {fromTitle && (
+              <Breadcrumb
+                className=""
+                items={[
+                  {
+                    title: <NavLink to={from}>{fromTitle}</NavLink>,
+                  },
+                  {
+                    title: (
+                      <span className="text-primary-color font-medium">
+                        {dataState?.name || "Tên sự kiện"}
+                      </span>
+                    ),
+                  },
+                ]}
+              />
+            )}
+            {!fromTitle && (
+              <div>
+                Sự kiện:{" "}
+                <span className="text-primary-color font-medium">
+                  {dataState?.name || "Tên sự kiện"}
+                </span>
+              </div>
+            )}
+
             {/* Organization sight */}
             {user?.role === "Organization" &&
               new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
@@ -255,14 +276,14 @@ const DetailEvent = () => {
                     className="flex cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 items-center justify-center gap-1 border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1"
                   >
                     <FaHandshake />
-                    Yêu cầu tham gia
+                    Danh sách yêu cầu tham gia
                   </div>
                   <div
                     onClick={handleViewSuggestedVolunteers}
                     className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center gap-1 justify-center"
                   >
                     <AiFillLike />
-                    Tình nguyện viên phù hợp
+                    Gợi ý tình nguyện viên
                   </div>
                 </div>
               )}
@@ -288,7 +309,7 @@ const DetailEvent = () => {
                   </div>
                   <div
                     onClick={() => handleInvitation("no")}
-                    className="flex items-center gap-2 cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1"
+                    className="flex items-center justify-center gap-2 cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1"
                   >
                     <span>Từ chối lời mời</span>
                     <FaXmark />

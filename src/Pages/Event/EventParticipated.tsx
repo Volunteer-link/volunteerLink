@@ -73,6 +73,8 @@ const EventParticipated = () => {
     fetchVolunteer();
   };
 
+  console.log(listVolunteer);
+
   return (
     <div className="container relative mx-auto px-4 py-8">
       {loading && (
@@ -140,14 +142,15 @@ const EventParticipated = () => {
           ))
         )}
       </div>
-
-      <Pagination
-        className="mt-4"
-        current={PageNumber}
-        total={totalVolunteers}
-        pageSize={6}
-        onChange={handlePageChange}
-      />
+      {listVolunteer?.length !== 0 && (
+        <Pagination
+          className="mt-4"
+          current={PageNumber}
+          total={totalVolunteers}
+          pageSize={6}
+          onChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

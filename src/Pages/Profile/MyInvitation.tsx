@@ -1,118 +1,39 @@
-import { useEffect, useState } from "react";
-import api from "../../apiService/useFetch";
-import Loading from "../Components/Loading";
-import { Invitation } from "../../model/MyInvitation/Invitation";
-import { ConfigProvider, Empty, Pagination } from "antd";
-import SmallLoading from "../Components/SmallLoading";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { TabsProps } from "antd/lib";
+import { Tabs } from "antd";
+import InvitationComponent from "../Components/InvitationComponent";
+import RequestComponent from "../Components/RequestComponent";
 
 const MyInvitation = () => {
-  const pageSize = 10;
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [total, setTotal] = useState<number>(0);
-  const [listInvitation, setListInvitation] = useState<Invitation[]>([]);
-  const [isLoadingImage, setIsLoadingImage] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const [currentTab, setCurrentTab] = useState<string>("1");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const { data } = await api.get(
-          `/event/invitation-of-volunteer?PageNumber=${currentPage}&PageSize=${pageSize}`
-        );
-        console.log(data);
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: "Lời mời tham gia",
+      children: "Các lời mời được gửi đến bạn:",
+    },
+    {
+      key: "2",
+      label: "Yêu cầu đã gửi",
+      children: "Các yêu cầu bạn đã gửi đi:",
+    },
+  ];
 
-        setListInvitation(data.data.items);
-        setTotal(data.data.totalItems);
-      } catch (e: any) {
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [currentPage]);
-
-  const handleChangePageSearch = (page: number) => {
-    setCurrentPage(page);
+  const onChangeTabs = (key: string) => {
+    setCurrentTab(key);
   };
-
-  const handleClickInvitation = (id: number) => {
-    navigate(`/detail-event/${id}`, { state: { from: "invi" } });
-  };
+  console.log(currentTab);
 
   return (
     <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
-      {isLoading && <Loading color="green" />}
-      <div></div>
-      {listInvitation?.length === 0 && (
-        <Empty className="mt-10" description="Bạn chưa có lời mời nào" />
-      )}
-      {listInvitation.map((item, index) => (
-        <div key={index} className="container mx-auto">
-          <div
-            onClick={() => handleClickInvitation(item.eventId)}
-            className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
-          >
-            <div className="lg:max-w-96 max-w-52">
-              <div className="">
-                <span>
-                  Tổ chức{" "}
-                  <span className="text-primary-color font-medium">
-                    {item.organizationName}
-                  </span>{" "}
-                  <span>đã gửi cho bạn 1 lời mời tham dự sự kiện</span>{" "}
-                  <span className="text-primary-color font-medium">
-                    {item.eventName}
-                  </span>
-                </span>
-              </div>
-              <div>
-                Thời gian: {new Date(item.time).toLocaleString("sv-SE")}
-              </div>
-            </div>
-            <div className="bg-primary-color w-32 h-16 relative">
-              {isLoadingImage && <SmallLoading size={"small"} />}
-              <img
-                className="w-full h-full object-contain"
-                src={item.pictureProfile}
-                alt=""
-                onLoad={() => setIsLoadingImage(false)}
-                onError={(e) =>
-                  (e.currentTarget.src = "/materials/placeholder-image.jpg")
-                }
-              />
-            </div>
-          </div>
-        </div>
-      ))}
-      <ConfigProvider
-        theme={{
-          components: {
-            Pagination: {
-              itemActiveBg: "#3BA769",
-              colorPrimary: "white",
-              colorPrimaryHover: "white",
-              colorPrimaryBorder: "white",
-            },
-          },
-        }}
-      >
-        {listInvitation?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
-            <Pagination
-              defaultCurrent={1}
-              current={currentPage}
-              total={total}
-              pageSize={pageSize}
-              className="mt-4"
-              onChange={handleChangePageSearch}
-              showSizeChanger={false}
-            />
-          </div>
-        )}
-      </ConfigProvider>
+      <Tabs
+        defaultActiveKey={currentTab}
+        items={items}
+        onChange={onChangeTabs}
+      />
+      {currentTab === "1" && <InvitationComponent />}
+      {currentTab === "2" && <RequestComponent />}
     </div>
   );
 };

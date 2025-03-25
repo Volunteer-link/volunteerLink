@@ -33,6 +33,7 @@ import { RootState, store } from "./redux/store";
 import { decodedCookie, getCookie } from "./ultils/cookie";
 import { setUser } from "./redux/slice";
 import MyInvitation from "./Pages/Profile/MyInvitation";
+import ListSentRequest from "./Pages/Organizations/ListSentRequest";
 
 const router = createBrowserRouter([
   {
@@ -62,11 +63,11 @@ const router = createBrowserRouter([
       {
         path: "organizations/profile/:id",
         element: <OrganizationsDetail />,
-      }, 
+      },
       {
         path: "organizations/edit-profile",
         element: <OrganizationProfile />,
-      }, 
+      },
       {
         path: "organizations/events",
         element: <OrganizationEvents />,
@@ -126,6 +127,10 @@ const router = createBrowserRouter([
       {
         path: "/my-invitation",
         element: <MyInvitation />,
+      },
+      {
+        path: "detail-event/:id/sent-invitation",
+        element: <ListSentRequest />,
       },
     ],
   },
