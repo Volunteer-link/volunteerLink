@@ -72,8 +72,6 @@ const VolunteerSuggestions = () => {
     fetchVolunteer();
   }, [PageNumber, resetState]);
 
-  console.log(PageNumber);
-
   const handlePageChange = (page: number) => {
     setPageNumber(page);
   };

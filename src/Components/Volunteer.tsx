@@ -47,10 +47,17 @@ const Volunteer: React.FC<{
       });
     } catch (e: any) {
     } finally {
-      if (setResetState) {
-        setIsLoading(false);
-        setResetState((prev) => ++prev);
-      }
+      messageApi.success(
+        type === "yes"
+          ? "Yêu cầu của tình nguyện viên đã được chấp nhận!"
+          : "Yêu cầu của tình nguyện viên đã bị từ chối!"
+      );
+      setTimeout(() => {
+        if (setResetState) {
+          setIsLoading(false);
+          setResetState((prev) => ++prev);
+        }
+      }, 1000);
     }
   };
 
@@ -67,10 +74,12 @@ const Volunteer: React.FC<{
     } catch (e: any) {
     } finally {
       messageApi.success("Lời mời của bạn đã được gửi!");
-      if (setResetState) {
-        setResetState((prev) => ++prev);
-      }
-      setIsLoading(false);
+      setTimeout(() => {
+        if (setResetState) {
+          setResetState((prev) => ++prev);
+        }
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -81,9 +90,10 @@ const Volunteer: React.FC<{
         <div className="relative rounded-full overflow-hidden">
           {isLoading && <SmallLoading size="small" />}
           <img
-            src={objectVolunteer.image || objectVolunteer.pictureProfile}
+            src={objectVolunteer.pictureProfile}
+            // src={objectVolunteer.image || objectVolunteer.pictureProfile}
             alt=""
-            className=" w-20 h-20 rounded-full object-cover bg-primary-color"
+            className="w-20 h-20 rounded-full object-cover bg-primary-color"
             onLoad={() => setIsLoading(false)}
             onError={(e) =>
               (e.currentTarget.src =

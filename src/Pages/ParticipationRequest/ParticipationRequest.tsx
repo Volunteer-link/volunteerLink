@@ -38,7 +38,7 @@ const ParticipationRequest = () => {
           accId: item.accountId,
           requestId: item.requestId,
           name: item.volunteerName,
-          image: item.pictureProfile,
+          pictureProfile: item.pictureProfile,
           dob: item.dateOfBirth ? new Date(item.dateOfBirth) : undefined,
           address: item.address,
           volunteerDisplayType: "REQUEST",
@@ -57,6 +57,7 @@ const ParticipationRequest = () => {
   const handleChangePageSearch = (page: number) => {
     setCurrentPage(page);
   };
+  console.log(dataRequest);
 
   return (
     <div className="container mx-auto px-32 py-8">
@@ -70,16 +71,16 @@ const ParticipationRequest = () => {
           },
           {
             title: (
-              <NavLink to={`/detail-event/${id}`}>Thông tin sự kiện</NavLink>
+              <NavLink to={`/detail-event/${id}`}>
+                {location.state?.nameEvent}
+              </NavLink>
             ),
           },
           {
             title: (
               <div className="">
-                <span>Yêu cầu tham gia của </span>
-                <span className="text-primary-color">
-                  {location.state?.nameEvent}
-                </span>
+                <span>Danh sách yêu cầu tham gia sự kiện </span>
+                <span className="text-primary-color"></span>
               </div>
             ),
           },

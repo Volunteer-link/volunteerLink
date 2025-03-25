@@ -79,11 +79,17 @@ const NotificationPage = () => {
       item.type === 0 ||
       item.type === 5 ||
       item.type === 1 ||
-      item.type === 4
+      item.type === 4 ||
+      item.type === 9
     ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
-    if (item.type === 2 || item.type === 6 || item.type === 3) {
+    if (
+      item.type === 2 ||
+      item.type === 6 ||
+      item.type === 3 ||
+      item.type === 8
+    ) {
       navigate(`/volunteerProfile/${item.urlId}`);
     }
   };
@@ -131,7 +137,10 @@ const NotificationPage = () => {
               />
             </div>
           )}
-          {(item.type === 4 || item.type === 5 || item.type === 1) && (
+          {(item.type === 4 ||
+            item.type === 5 ||
+            item.type === 1 ||
+            item.type === 9) && (
             <div className="bg-primary-color w-32 h-16 relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
               <img
