@@ -32,6 +32,10 @@ const OrganizationEvents = () => {
     },
     {
       key: '-1',
+      label: 'Chưa bắt đầu',
+    },
+    {
+      key: '2',
       label: 'Chưa xuất bản',
     },
   ];
