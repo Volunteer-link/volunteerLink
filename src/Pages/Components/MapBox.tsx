@@ -4,8 +4,8 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import type { MapRef } from 'react-map-gl/mapbox';
-import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
-import { Button, Modal, Popconfirm } from 'antd';
+import { MapMouseEvent } from 'mapbox-gl';
+import { Modal } from 'antd';
 
 interface MarkerPosition {
   longitude: number;
@@ -55,6 +55,7 @@ const MapBox = ({
 
   const handleMapClick = (event: MapMouseEvent) => {
     const { lngLat } = event;
+    console.log(event)
     showModal();
     
     setMapMarker({

@@ -1,11 +1,11 @@
-import { Breadcrumb, Empty, Input, Pagination, Spin } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import Volunteer from "../../Components/Volunteer";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import api from "../../apiService/useFetch";
-import { SearchProps } from "antd/es/input";
-import { useDebounce } from "../../ultils/useDebounce";
-import { NavLink } from "react-router-dom";
+import { Breadcrumb, Empty, Input, Pagination, Spin } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import Volunteer from '../../Components/Volunteer';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import api from '../../apiService/useFetch';
+import { SearchProps } from 'antd/es/input';
+import { useDebounce } from '../../ultils/useDebounce';
+import { NavLink } from 'react-router-dom';
 
 const { Search } = Input;
 
@@ -13,12 +13,12 @@ const EventParticipated = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const pageFromUrl = searchParams.get("page");
+  const pageFromUrl = searchParams.get('page');
   const initialPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
 
   const [event, setEvent] = React.useState<any>();
   const [listVolunteer, setListVolunteer] = React.useState<any[]>();
-  const [searchName, setSearchName] = React.useState<string>("");
+  const [searchName, setSearchName] = React.useState<string>('');
   const searchDebounce = useDebounce<string>(searchName, 500);
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [totalVolunteers, setTotalVolunteers] = React.useState<number>(0);
@@ -78,17 +78,12 @@ const EventParticipated = () => {
   console.log(listVolunteer);
 
   return (
-    <div className="container relative mx-auto px-4 py-8">
-      {loading && (
-        <div className="flex absolute z-10 inset-0 justify-center items-center min-h-[300px]">
-          <Spin size="large" />
-        </div>
-      )}
+    <div className="container  mx-auto px-4 py-8">
       <Breadcrumb
         items={[
           {
             title: (
-              <NavLink to={"/"}>
+              <NavLink to={'/'}>
                 <span>Trang chủ</span>
               </NavLink>
             ),
@@ -96,12 +91,12 @@ const EventParticipated = () => {
           {
             title: (
               <NavLink to={`/detail-event/${id}`}>
-                <span>{event?.name || "Sự kiện"}</span>
+                <span>{event?.name || 'Sự kiện'}</span>
               </NavLink>
             ),
           },
           {
-            title: "Tình nguyện viên tham gia",
+            title: 'Tình nguyện viên tham gia',
           },
         ]}
       />
@@ -129,20 +124,28 @@ const EventParticipated = () => {
         </div>
       </div>
 
-      <div>
-        {!listVolunteer || listVolunteer.length === 0 ? (
-          <Empty description="Không có dữ liệu" />
+      <div className={`relative ${loading && 'min-h-[200px]'}`} >
+        {loading ? (
+          <div className="flex absolute z-10 inset-0 justify-center items-center">
+            <Spin size="large" />
+          </div>
         ) : (
-          listVolunteer.map((volunteer, index) => (
-            <Volunteer
-              key={volunteer.id || index}
-              objectVolunteer={{
-                ...volunteer,
-                volunteerDisplayType: "PARTICIPATED",
-              }}
-              setResetState={setResetState}
-            />
-          ))
+          <>
+            {!listVolunteer || listVolunteer.length === 0 ? (
+              <Empty description="Không có dữ liệu" />
+            ) : (
+              listVolunteer.map((volunteer, index) => (
+                <Volunteer
+                  key={volunteer.id || index}
+                  objectVolunteer={{
+                    ...volunteer,
+                    volunteerDisplayType: 'PARTICIPATED',
+                  }}
+                  setResetState={setResetState}
+                />
+              ))
+            )}
+          </>
         )}
       </div>
       {listVolunteer?.length !== 0 && (
