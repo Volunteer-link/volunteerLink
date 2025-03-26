@@ -39,7 +39,7 @@ jobs:
 
     - name: Push Docker image
       run: |
-        docker push ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }} .
+        docker push ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
 
   deploy:
     runs-on: self-hosted
