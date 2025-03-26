@@ -39,9 +39,8 @@ jobs:
 
     steps:
     - name: Deploy to VPS
-      run:
+      run: |
           docker pull hoanganh23072/front-end-container:${{ github.sha }}
           docker stop frontend || true
           docker rm frontend || true
-          cd deploy/frontend/prod &&
           docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
