@@ -33,11 +33,11 @@ jobs:
                     --build-arg REACT_APP_URL_PRO=${{ secrets.REACT_APP_URL_PRO }} \
                     --build-arg REACT_APP_ACCESS_KEY=${{ secrets.REACT_APP_ACCESS_KEY }} \
                     --build-arg REACT_APP_URL_DEV=${{ secrets.REACT_APP_URL_DEV }} \
-                    -t ghcr.io/${{ github.repository }}/frontend:${{ github.sha }} .
+                    -t ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]'}/frontend:${{ github.sha }} .
 
     - name: Push Docker image
       run: |
-        docker push ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
+        docker push ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]'}/frontend:${{ github.sha }}
 
   deploy:
     runs-on: self-hosted
@@ -50,10 +50,10 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Deploy to VPS
       run: |
           docker pull ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
           docker stop frontend || true
           docker rm frontend || true
-          docker run -d -p 3000:80 --name frontend ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
+          docker run -d -p 3000:80 --name frontend ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]'}/frontend:${{ github.sha }}
