@@ -53,5 +53,5 @@ jobs:
           docker stop frontend || true
           docker rm frontend || true
           cd deploy/frontend/prod &&
-          docker run -d -p 80:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
+          docker run -d -p 443:443 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
         EOF
