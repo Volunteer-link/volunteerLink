@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EventCardType } from '../../model/ShowEventModel/EventCardType';
 import api from '../../apiService/useFetch';
@@ -32,36 +32,45 @@ const OrganizationEvents = () => {
     },
     {
       key: '-1',
+      label: 'Chưa bắt đầu',
+    },
+    {
+      key: '2',
       label: 'Chưa xuất bản',
     },
   ];
+
+  const fetchField = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/common/get-events-of-organization`, {
+        params: {
+          SearchName: searchDebounce,
+          OrganizationId: 1,
+          EventStatus: status,
+          PageNumber: PageNumber,
+          PageSize: 8,
+        },
+      });
+      setTotalPage(data.data.totalItems);
+      setEventList(data.data.items);
+      setLoading(false);
+    } catch (e: any) {
+    } finally {
+    }
+  }, [PageNumber, status, searchDebounce]);
+
   useEffect(() => {
-    const fetchField = async () => {
-      try {
-        setLoading(true);
-        const { data } = await api.get(`/common/get-events-of-organization`, {
-          params: {
-            SearchName: searchDebounce,
-            OrganizationId: 1,
-            EventStatus: status,
-            PageNumber: PageNumber,
-            PageSize: 8,
-          },
-        });
-        setTotalPage(data.data.totalItems);
-        setEventList(data.data.items);
-        setLoading(false);
-      } catch (e: any) {
-      } finally {
-      }
-    };
     fetchField();
   }, [PageNumber, status, searchDebounce]);
   const handlePageChange = (page: number) => {
     setPageNumber(page);
   };
 
-  const handleClickSearch = () => {};
+  const handleClickSearch = () => {
+    setPageNumber(1);
+    fetchField();
+  };
 
   return (
     <div className="container relative mx-auto px-4 py-8">
@@ -70,7 +79,6 @@ const OrganizationEvents = () => {
           type="text"
           placeholder="Tên sự kiện..."
           className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
-          onKeyDown={handleClickSearch}
           onChange={(e) => setSearchName(e.target.value)}
         />
         <div className="flex pr-2 items-center gap-4 select-none">
@@ -84,10 +92,13 @@ const OrganizationEvents = () => {
       </div>
       <div className="flex justify-between items-start">
         <Tabs defaultActiveKey="0" items={items} onChange={onChange} />
-        <Button onClick={() => {
+        <Button
+          onClick={() => {
             navigate('/create-event');
-          
-        }} type="primary" size="large">
+          }}
+          type="primary"
+          size="large"
+        >
           {' '}
           Tạo sự kiện mới
         </Button>

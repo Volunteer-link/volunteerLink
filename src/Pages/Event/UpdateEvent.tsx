@@ -54,6 +54,7 @@ const UpdateEvent = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
+        console.log(data.data);
         const [latitude, longitude] = data.data.location
           .split(';')
           .map((part: string) => part.trim());
@@ -85,8 +86,9 @@ const UpdateEvent = () => {
             })),
           };
         });
-        console.log(data.data)
-        setListSelectedField(data.data.fields)
+        setListSelectedField(
+          data.data.fields?.map((field: any, index: number) => field.id)
+        );
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -134,21 +136,22 @@ const UpdateEvent = () => {
     const { images, thumbnails } = await upLoadFileToCloud();
 
     const dataEvent: createEvent = {
+      eventId: parseInt(id!),
       name: values.nameEvent,
       location: location,
-      address: address,
+      address: address, 
       startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
       timePublish:
         toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
         toISOLocal(dayjs().add(120, 'second').toDate()),
-      status: value === 1 ? 0 : -1,
       hasDonate: false,
       imagesEvent: images.length > 0 ? images : event.images,
       thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
     };
+    console.log(event)
     try {
       const { data } = await api.put(`/event/update-an-event`, dataEvent);
       console.log(data);
@@ -232,7 +235,10 @@ const UpdateEvent = () => {
     fetchField();
   }, []);
   const currentDateMinusOneDay = dayjs().subtract(1, 'day');
-  const isBeforeOneDay = dayjs(event?.startTime).isBefore(currentDateMinusOneDay, 'day');
+  const isBeforeOneDay = dayjs(event?.startTime).isBefore(
+    currentDateMinusOneDay,
+    'day'
+  );
   // if (event  && isBeforeOneDay  ) {
   //   return <ErrorSolving errCode={300} />;
   // }
@@ -280,7 +286,7 @@ const UpdateEvent = () => {
             name="nameEvent"
             initialValue={event?.name}
             className="mb-4 mt-3"
-            rules={nameRules}
+            rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
           >
             <Input />
           </Form.Item>

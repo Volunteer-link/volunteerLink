@@ -40,7 +40,7 @@ const PreviewImageUpload: React.FC<PreviewImageUploadProps> = ({ fileList = [],s
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Tai anh</div>
+      <div style={{ marginTop: 8 }}>Thêm hình ảnh</div>
     </button>
   );
   return (

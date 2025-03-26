@@ -16,7 +16,7 @@ const VolunteerEvents = ({id} : { id: number | undefined}) => {
     const fetchField = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get(`/event/volunteer-joined-event`, {
+        const { data } = await api.get(`/profile/volunteer-joined-event`, {
           params: {
             id: id,
             PageNumber: PageNumber,

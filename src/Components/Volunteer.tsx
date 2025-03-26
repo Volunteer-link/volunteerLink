@@ -1,15 +1,23 @@
 import React, { useState } from "react";
-import { Button, Flex } from "antd";
+import { Button, Flex, message, Modal } from "antd";
 import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
 import Loading from "../Pages/Components/Loading";
 import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
 import SmallLoading from "../Pages/Components/SmallLoading";
 import api from "../apiService/useFetch";
+import { useNavigate } from "react-router-dom";
 
-const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
-  objectVolunteer,
-}) => {
+const Volunteer: React.FC<{
+  objectVolunteer: volunteerProps;
+  setResetState?: React.Dispatch<React.SetStateAction<number>>;
+  eventId?: number;
+}> = ({ objectVolunteer, setResetState, eventId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
   const calculateAge = (birthDate: Date | string): number => {
     const currentDate = new Date();
     const birth = new Date(birthDate);
@@ -28,44 +36,111 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
   };
 
   const handleClickName = () => {
-    console.log(objectVolunteer.accId);
+    window.open(`/volunteerProfile/${objectVolunteer.accountId}`);
   };
 
   const handleClickBtn = async (type: string) => {
     try {
+      setIsLoading(true);
+
       const { data } = await api.post(`/event/handle-request`, {
         requestId: objectVolunteer.requestId,
         accept: type === "yes" ? true : false,
       });
     } catch (e: any) {
     } finally {
+      messageApi.success(
+        type === "yes"
+          ? "Yêu cầu của tình nguyện viên đã được chấp nhận!"
+          : "Yêu cầu của tình nguyện viên đã bị từ chối!"
+      );
+      setTimeout(() => {
+        if (setResetState) {
+          setIsLoading(false);
+          setResetState((prev) => ++prev);
+        }
+      }, 1000);
     }
+  };
+
+  const handleClickInvite = async () => {
+    try {
+      setIsLoading(true);
+      console.log(eventId);
+      console.log(objectVolunteer.accountId);
+      const { data } = await api.post(`/event/invite-volunteer`, {
+        eventId: eventId,
+        volunteerId: objectVolunteer.id,
+      });
+    } catch (e: any) {
+    } finally {
+      messageApi.success("Lời mời của bạn đã được gửi!");
+      setTimeout(() => {
+        if (setResetState) {
+          setResetState((prev) => ++prev);
+        }
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
+  const handleRemoveVolunteer = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await api.delete(`/event/remove-volunteer`, {
+        data: {
+          idRecord: objectVolunteer.id,
+        },
+      });
+      console.log(data);
+    } catch (e: any) {
+    } finally {
+      messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
+      setTimeout(() => {
+        if (setResetState) {
+          setResetState((prev) => ++prev);
+        }
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
+      {contextHolder}
       <div className="flex gap-8 items-center">
         <div className="relative rounded-full overflow-hidden">
-          {isLoading && <SmallLoading />}
+          {isLoading && <SmallLoading size="small" />}
           <img
-            src={objectVolunteer.image}
+            src={objectVolunteer.pictureProfile}
+            // src={objectVolunteer.image || objectVolunteer.pictureProfile}
             alt=""
-            className=" w-32 h-32 rounded-full object-cover bg-primary-color"
+            className="w-20 h-20 rounded-full object-cover bg-primary-color"
             onLoad={() => setIsLoading(false)}
+            onError={(e) =>
+              (e.currentTarget.src =
+                "/materials/blank-profile-picture-973460_1280.png")
+            }
           />
         </div>
-        <div className="flex text-[#3BA769] leading-none  gap-6 flex-col">
+        <div className="flex text-[#3BA769] leading-none gap-2 flex-col">
           <span
             onClick={handleClickName}
-            className="text-[24px] cursor-pointer transition-all"
+            className="text-[20px] cursor-pointer transition-all"
           >
             {objectVolunteer.name}
           </span>
           <span className="text-[14px] font-medium text-stone-700">
             {objectVolunteer.dob
-              ? calculateAge(objectVolunteer.dob)
-              : "Không rõ"}{" "}
-            tuổi
+              ? `${calculateAge(objectVolunteer.dob)} tuổi`
+              : ""}
           </span>
           <span className="text-[14px] font-medium text-stone-700">
             {objectVolunteer.address}
@@ -74,7 +149,7 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
       </div>
 
       {objectVolunteer.volunteerDisplayType === "SUGGESTION" && (
-        <Button size="large" type="primary">
+        <Button onClick={handleClickInvite} size="large" type="primary">
           Mời tham gia
         </Button>
       )}
@@ -96,6 +171,22 @@ const Volunteer: React.FC<{ objectVolunteer: volunteerProps }> = ({
           </Button>
         </div>
       )}
+      {objectVolunteer.volunteerDisplayType === "PARTICIPATED" && (
+        <Button onClick={handleOpenModal} size="large" type="primary">
+          Xóa tình nguyện viên
+        </Button>
+      )}
+      <Modal
+        title="Thông báo"
+        open={openModal}
+        onOk={handleRemoveVolunteer}
+        onCancel={handleCloseModal}
+      >
+        <p>Bạn có chắc muốn xóa tình nguyện viên này không?</p>
+        <p>
+          Nếu muốn họ tham gia sự kiện, bạn sẽ phải gửi lại lời mời tham gia
+        </p>
+      </Modal>
     </div>
   );
 };

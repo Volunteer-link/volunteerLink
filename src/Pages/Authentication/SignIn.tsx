@@ -1,5 +1,5 @@
 // src/pages/SignIn.tsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Col,
   Row,
@@ -11,15 +11,20 @@ import {
   Image,
   Form,
   App as AntdApp,
-} from "antd";
-import { useGoogleLogin } from "@react-oauth/google";
-import logo from "../../image/sign_banner.jpg";
-import { useNavigate } from "react-router";
+} from 'antd';
+import { useGoogleLogin } from '@react-oauth/google';
+import logo from '../../image/sign_banner.jpg';
+import { useNavigate } from 'react-router';
 // Import hàm login
-import api from "../../apiService/useFetch";
-import { decodedCookie, getCookie, setCookie } from "../../ultils/cookie";
-import { FaHome } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import api from '../../apiService/useFetch';
+import { decodedCookie, getCookie, setCookie } from '../../ultils/cookie';
+import { FaHome } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, store } from '../../redux/store';
+import { setUser } from '../../redux/slice';
+
+import { useTranslation } from 'react-i18next';
 interface AccountPayload {
   gmail: string;
   password: string;
@@ -30,31 +35,38 @@ const SignIn: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { message } = AntdApp.useApp();
   const navigate = useNavigate();
+
+  const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch<typeof store.dispatch>();
+
   const loginGG = useGoogleLogin({
     onSuccess: async (credentialResponse: any) => {
       const token = credentialResponse.access_token;
-      const { email } = await fetchUserInfo(token);
+      const { email, name } = await fetchUserInfo(token);
       if (!email) return;
       try {
-        const response = await api.post("/login-using-email-only", {
+        const response = await api.post('/login-using-email-only', {
           gmail: email,
+          name: name,
         });
-        message.success("Login successful!");
-        console.log(response);
+        message.success('Login successful!');
+        const token = response.data.data.accessToken;
+
+        handleAfterLogin(token);
       } catch (err) {
-        message.error("Login failed!");
+        message.error('Login failed!');
         console.error(err);
       }
     },
     onError: () => {
-      console.log("Error khi đăng nhập");
+      console.log('Error khi đăng nhập');
     },
   });
 
   const fetchUserInfo = async (accessToken: any) => {
     try {
       const response = await fetch(
-        "https://www.googleapis.com/oauth2/v3/userinfo",
+        'https://www.googleapis.com/oauth2/v3/userinfo',
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -62,7 +74,7 @@ const SignIn: React.FC = () => {
         }
       );
       if (!response.ok) {
-        message.error("Login failed!");
+        message.error('Login failed!');
       }
       const data = await response.json();
       return data;
@@ -79,31 +91,17 @@ const SignIn: React.FC = () => {
         gmail,
         password,
       };
-      const response = await api.post("/login-using-password", dataToSend);
-      // Nếu gọi thành công => hiển thị thông báo
-      message.success("Login successful!");
-      // console.log("Login Response:", response);
+      const response = await api.post('/login-using-password', dataToSend);
+      message.success('Login successful!');
 
       const token = response.data.data.accessToken;
 
-      setCookie("accessToken", token);
-
-      const currentUser = decodedCookie(getCookie("accessToken")!);
-
-      if (currentUser.role === "Admin") {
-        navigate("/admin");
-      }
-      if (currentUser.role === "Volunteer") {
-        navigate("/");
-      }
-      if (currentUser.role === "Organization") {
-        navigate("/");
-      }
+      handleAfterLogin(token);
 
       return response;
     } catch (error) {
       console.error(error);
-      message.error("Login failed!");
+      message.error('Login failed!');
     } finally {
       setLoading(false);
     }
@@ -111,8 +109,27 @@ const SignIn: React.FC = () => {
 
   // Hàm xử lý khi có lỗi
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Lỗi:", errorInfo);
+    console.log('Lỗi:', errorInfo);
   };
+
+  const handleAfterLogin = (token: string) => {
+    setCookie('accessToken', token);
+
+    const currentUser = decodedCookie(getCookie('accessToken')!);
+
+    dispatch(setUser(currentUser));
+
+    if (currentUser.role === 'Admin') {
+      navigate('/admin');
+    }
+    if (currentUser.role === 'Volunteer') {
+      navigate('/');
+    }
+    if (currentUser.role === 'Organization') {
+      navigate('/');
+    }
+  };
+
 
   return (
     <div>
@@ -133,8 +150,8 @@ const SignIn: React.FC = () => {
               <Form.Item
                 name="gmail"
                 rules={[
-                  { required: true, message: "Vui lòng nhập gmail!" },
-                  { type: "email", message: "Email không đúng định dạng!" },
+                  { required: true, message: 'Vui lòng nhập gmail!' },
+                  { type: 'email', message: 'Email không đúng định dạng!' },
                 ]}
               >
                 <Input className="max-w-[400px]" placeholder="Email......." />
@@ -142,7 +159,7 @@ const SignIn: React.FC = () => {
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: "Vui lòng nhập password!" }]}
+                rules={[{ required: true, message: 'Vui lòng nhập password!' }]}
               >
                 <Input.Password
                   className="max-w-[400px]"
@@ -154,7 +171,7 @@ const SignIn: React.FC = () => {
                   <ConfigProvider
                     theme={{
                       token: {
-                        colorPrimary: "#3BA769",
+                        colorPrimary: '#3BA769',
                       },
                     }}
                   >
@@ -174,13 +191,13 @@ const SignIn: React.FC = () => {
                 <ConfigProvider
                   theme={{
                     token: {
-                      colorPrimary: "#fff",
-                      colorPrimaryText: "#111",
-                      colorPrimaryTextHover: "#111",
+                      colorPrimary: '#fff',
+                      colorPrimaryText: '#111',
+                      colorPrimaryTextHover: '#111',
                     },
                     components: {
                       Button: {
-                        colorPrimaryHover: "#111",
+                        colorPrimaryHover: '#111',
                       },
                     },
                   }}
@@ -193,7 +210,7 @@ const SignIn: React.FC = () => {
                     type="default"
                     block
                   >
-                    Sign in With Google
+                    Đăng nhập với Google
                   </Button>
                 </ConfigProvider>
               </Flex>
@@ -203,26 +220,26 @@ const SignIn: React.FC = () => {
               Bạn chưa có tài khoản?
               <a
                 onClick={() => {
-                  navigate("/authentication/verify-email");
+                  navigate('/authentication/verify-email');
                 }}
                 className="text-[#3BA769] ml-1"
               >
-                Tạo tài khoản mới{" "}
+                Tạo tài khoản mới{' '}
               </a>
               <a
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/authentication/verify-email", {
-                    state: "FORGOT_PASSWORD",
+                  navigate('/authentication/verify-email', {
+                    state: 'FORGOT_PASSWORD',
                   });
                 }}
                 className="block text-center text-[#3BA769] mt-2"
                 href=""
               >
-                {" "}
+                {' '}
                 Quên mật khẩu?
               </a>
-              <NavLink to={"/"}>
+              <NavLink to={'/'}>
                 <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
               </NavLink>
             </p>
@@ -235,7 +252,7 @@ const SignIn: React.FC = () => {
             placeholder={true}
             alt="logo"
             src={logo}
-            style={{ height: "100vh", width: "100%" }}
+            style={{ height: '100vh', width: '100%' }}
           />
         </Col>
       </Row>

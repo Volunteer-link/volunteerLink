@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import api from '../../apiService/useFetch';
-import { Col, Empty, Pagination, Row, Spin } from 'antd';
-import EventCard from '../Components/EventCard';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import api from "../../apiService/useFetch";
+import { Col, Empty, Pagination, Row, Spin } from "antd";
+import EventCard from "../Components/EventCard";
 
-const ListEventsOrganization = ({organizationId} : {organizationId: number | undefined }) => {
+const ListEventsOrganization = ({
+  organizationId,
+}: {
+  organizationId: number | undefined;
+}) => {
   const { id } = useParams();
   const [PageNumber, setPageNumber] = React.useState<number>(1);
   const [eventList, setEventList] = useState<EventCardType[]>([]);
@@ -46,7 +50,7 @@ const ListEventsOrganization = ({organizationId} : {organizationId: number | und
         <Empty />
       ) : (
         <div>
-          <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
+          <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
             {eventList.map((item: EventCardType) => {
               return (
                 <Col key={item.id} span={6}>

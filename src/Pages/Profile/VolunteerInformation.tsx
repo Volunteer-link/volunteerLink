@@ -43,7 +43,7 @@ const VolunteerInformation = ({
         <h3 className="text-lg mb-2 text-[#3BA769]  font-semibold">
           Lĩnh vực quan tâm
         </h3>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           {volunteer?.fields?.map((field) => (
             <Tag key={field.id} color={getRandomColor()}>
               {field.name}

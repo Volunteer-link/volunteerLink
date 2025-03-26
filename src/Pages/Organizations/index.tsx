@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Input,
   Col,
@@ -14,7 +14,7 @@ import { Empty, SelectProps } from 'antd';
 import api from '../../apiService/useFetch';
 import { SearchProps } from 'antd/es/input';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import Loading from '../Components/Loading';
+import { useDebounce } from '../../ultils/useDebounce';
 const { Search } = Input;
 const options: SelectProps['options'] = [];
 
@@ -31,7 +31,6 @@ const Organizations = () => {
       label: string;
     }[]
   >([]);
-  const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const pageFromUrl = searchParams.get('page');
@@ -43,7 +42,8 @@ const Organizations = () => {
   const [searchName, setSearchName] = React.useState<string>(
     searchNameFromUrl || ''
   );
-  const [fields, setFields] = React.useState<number>();
+  const searchDebounce = useDebounce<string>(searchName, 500);
+  const [fields, setFields] = React.useState<string>('');
   const [totalPage, setTotalPage] = React.useState<number>();
   useEffect(() => {
     const fetchField = async () => {
@@ -64,60 +64,68 @@ const Organizations = () => {
     fetchField();
   }, []);
 
+  const fetchField = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/common/organization-list`, {
+        params: {
+          SearchKey: searchDebounce,
+          Fields: fields,
+          PageNumber: PageNumber,
+          PageSize: 9,
+        },
+      });
+      setTotalPage(data.totalItems);
+      setOrganizationsList(data.data.items);
+      setLoading(false);
+    } catch (e: any) {
+      setLoading(false);
+    } finally {
+    }
+  }, [PageNumber, fields, searchDebounce]);
+
   useEffect(() => {
-    const fetchField = async () => {
-      try {
-        setLoading(true);
-        const { data } = await api.get(`/common/organization-list`, {
-          params: {
-            SearchKey: searchName,
-            Fields: fields,
-            PageNumber: PageNumber,
-            PageSize: 9,
-          },
-        });
-        setTotalPage(data.totalItems);
-        setOrganizationsList(data.data.items);
-        setLoading(false);
-      } catch (e: any) {
-      } finally {
-      }
-    };
     fetchField();
-  }, [PageNumber, fields, searchName]);
+  }, [PageNumber, fields, searchDebounce]);
 
-  const handleChange = (value: string | string[]) => {
+  const handleChange = (value: string[]) => {
     setPageNumber(1);
-    setFields(Number(value));
-  };
-
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-    setPageNumber(1);
-    setSearchName(value);
-    navigate(`/organizations?page=${PageNumber}&name=${value}`, {
-      replace: true,
-    });
+    setFields(value.join(', '));
   };
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
-    navigate(`/organizations?page=${page}&name=${searchName}`, {
+    navigate(`/organizations?page=${page}&name=${searchDebounce}`, {
       replace: true,
     });
   };
 
+  const handleClickSearch = () => {
+    fetchField();
+    setPageNumber(1);
+    navigate(`/organizations?page=${PageNumber}&name=${searchDebounce}`, {
+      replace: true,
+    });
+  };
   return (
-    <div className="my-12 flex flex-col">
+    <div className="my-12 px-4 container mx-auto  flex flex-col">
       <div className="flex justify-center mb-6 items-center w-full">
-        <Search
-          placeholder="Tên tổ chức....."
-          className="w-1/3"
-          enterButton="Tìm kiếm"
-          size="large"
-          allowClear
-          loading={loading}
-          onSearch={onSearch}
-        />
+        <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
+          <input
+            type="text"
+            placeholder="Tên tổ chức..."
+            className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
+            onChange={(e) => setSearchName(e.target.value)}
+          />
+          <div className="flex pr-2 items-center gap-4 select-none">
+            <div
+              onClick={handleClickSearch}
+              className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+            >
+              Tìm kiếm
+            </div>
+          </div>
+        </div>
       </div>
       <div className="container relative mx-auto">
         {loading && (
@@ -129,8 +137,9 @@ const Organizations = () => {
           <Col span={24}>
             <Typography.Text>Lĩnh vực:{'  '}</Typography.Text>
             <Select
-              className="max-w-[200px] mb-4"
+              className="max-w-[200px] mb-4 cursor-pointer"
               maxTagCount="responsive"
+              mode='multiple'
               size={'middle'}
               placeholder="Vui lòng chọn lĩnh vực"
               onChange={handleChange}
@@ -156,7 +165,7 @@ const Organizations = () => {
                 return (
                   <Col key={item.id} span={8}>
                     <OrganizationsItem
-                      image={item.image}
+                      image={item.urlImage}
                       name={item.name}
                       field={item.fields
                         .map((field: any) => field.name)

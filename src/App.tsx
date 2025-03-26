@@ -26,6 +26,14 @@ import useWebSocket from "./Hook/useWebSocket";
 import { WebsocketProvider } from "./ultils/WebsocketContext";
 import NotificationPage from "./Pages/Notification/NotificationPage";
 import OrganizationEvents from "./Pages/Organizations/OrganizationEvents";
+import OrganizationProfile from "./Pages/Profile/OrganizationProfile";
+import Profile from "./Pages/Profile";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "./redux/store";
+import { decodedCookie, getCookie } from "./ultils/cookie";
+import { setUser } from "./redux/slice";
+import MyInvitation from "./Pages/Profile/MyInvitation";
+import ListSentRequest from "./Pages/Organizations/ListSentRequest";
 
 const router = createBrowserRouter([
   {
@@ -55,11 +63,15 @@ const router = createBrowserRouter([
       {
         path: "organizations/profile/:id",
         element: <OrganizationsDetail />,
-      }, 
+      },
+      {
+        path: "organizations/edit-profile",
+        element: <OrganizationProfile />,
+      },
       {
         path: "organizations/events",
         element: <OrganizationEvents />,
-      }, 
+      },
       {
         path: "events",
         element: <ShowEvent />,
@@ -81,8 +93,12 @@ const router = createBrowserRouter([
         element: <UpdateEvent />,
       },
       {
-        path: "my-profile",
+        path: "volunteerProfile",
         element: <MyProfile />,
+      },
+      {
+        path: "my-profile",
+        element: <Profile />,
       },
       {
         path: "volunteerProfile/:id",
@@ -101,8 +117,20 @@ const router = createBrowserRouter([
         element: <ParticipationRequest />,
       },
       {
+        path: "detail-event/:id/volunteer-suggestion",
+        element: <VolunteerSuggestions />,
+      },
+      {
         path: "notification",
         element: <NotificationPage />,
+      },
+      {
+        path: "/my-invitation",
+        element: <MyInvitation />,
+      },
+      {
+        path: "detail-event/:id/sent-invitation",
+        element: <ListSentRequest />,
       },
     ],
   },
@@ -125,6 +153,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch<typeof store.dispatch>();
+
+  const currentUser = decodedCookie(getCookie("accessToken")!);
+
+  if (currentUser) {
+    dispatch(setUser(currentUser));
+  }
   return (
     <WebsocketProvider>
       <GoogleOAuthProvider

@@ -151,6 +151,8 @@ const MyProfile = () => {
     }
   }, [user]);
 
+  console.log(isPublish);
+
   useEffect(() => {
     const fetchCheckStatus = async () => {
       try {

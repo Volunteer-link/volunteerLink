@@ -1,10 +1,11 @@
-import React, { useCallback, useRef, useState } from "react";
-import Map, { Marker } from "react-map-gl/mapbox";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import "mapbox-gl/dist/mapbox-gl.css";
-import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import type { MapRef } from "react-map-gl/mapbox";
-import mapboxgl, { MapMouseEvent } from "mapbox-gl";
+import React, { useCallback, useRef, useState } from 'react';
+import Map, { Marker } from 'react-map-gl/mapbox';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import type { MapRef } from 'react-map-gl/mapbox';
+import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
+import { Button, Modal, Popconfirm } from 'antd';
 
 interface MarkerPosition {
   longitude: number;
@@ -20,9 +21,10 @@ const MapBox = ({
   },
 }: {
   marker: MarkerPosition | null;
-  setMarker: (marker: MarkerPosition) => void;
+  setMarker: (marker: MarkerPosition | null) => void;
   initialViewport?: MarkerPosition | null;
 }) => {
+  const [mapMarker, setMapMarker] = useState<MarkerPosition | null>(null);
   const [viewport, setViewport] = useState({
     ...initialViewport,
     zoom: 8,
@@ -34,12 +36,12 @@ const MapBox = ({
       // Khởi tạo Mapbox Geocoder
       const geocoder = new MapboxGeocoder({
         accessToken: process.env.REACT_APP_MAPBOX_CLIENTID as string,
-        mapboxgl: require("mapbox-gl"),
+        mapboxgl: require('mapbox-gl'),
       });
 
       map?.addControl(geocoder);
       // Xử lý sự kiện khi tìm kiếm
-      geocoder.on("result", (e: any) => {
+      geocoder.on('result', (e: any) => {
         const { coordinates } = e.result.geometry;
         setViewport({
           ...viewport,
@@ -53,15 +55,43 @@ const MapBox = ({
 
   const handleMapClick = (event: MapMouseEvent) => {
     const { lngLat } = event;
+    showModal();
+    
+    setMapMarker({
+       longitude: lngLat.lng,
+       latitude: lngLat.lat,
+    })
+  };
 
-    // Lưu trữ tọa độ vào state marker
-    setMarker({
-      longitude: lngLat.lng,
-      latitude: lngLat.lat,
-    });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+     setMarker({
+        longitude: mapMarker?.longitude!,
+        latitude: mapMarker?.latitude!,
+     });
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setMarker(null);
+    setMapMarker(null);
   };
   return (
     <div>
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        centered
+      >
+        <p>Bạn có muốn chọn vị trí này không</p>
+      </Modal>
       <Map
         mapboxAccessToken={process.env.REACT_APP_MAPBOX_CLIENTID as string}
         initialViewState={{
@@ -73,7 +103,7 @@ const MapBox = ({
         dragRotate={false}
         onMove={(evt) => setViewport(evt.viewState)}
         onClick={handleMapClick}
-        style={{ position: "relative", width: "100%", height: "400px" }}
+        style={{ position: 'relative', width: '100%', height: '400px' }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
       >
         <div className="searchbar">

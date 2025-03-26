@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -22,36 +22,26 @@ jobs:
     - name: Build Docker image
       run: |
         docker build --build-arg REACT_APP_WS_URL=${{ secrets.REACT_APP_WS_URL }} \
-                     --build-arg REACT_APP_CLIENT_ID_GOOGLE=${{ secrets.REACT_APP_CLIENT_ID_GOOGLE }} \
-                     --build-arg REACT_APP_ENVIRONMENT=${{ secrets.REACT_APP_ENVIRONMENT }} \
-                     --build-arg REACT_APP_URL_PRO=${{ secrets.REACT_APP_URL_PRO }} \
-                     --build-arg REACT_APP_ACCESS_KEY=${{ secrets.REACT_APP_ACCESS_KEY }} \
-                     --build-arg REACT_APP_URL_DEV=${{ secrets.REACT_APP_URL_DEV }} \
-                     -t hoanganh23072/front-end-container:${{ github.sha }} .
+                    --build-arg REACT_APP_CLIENT_ID_GOOGLE=${{ secrets.REACT_APP_CLIENT_ID_GOOGLE }} \
+                    --build-arg REACT_APP_ENVIRONMENT=${{ secrets.REACT_APP_ENVIRONMENT }} \
+                    --build-arg REACT_APP_URL_PRO=${{ secrets.REACT_APP_URL_PRO }} \
+                    --build-arg REACT_APP_ACCESS_KEY=${{ secrets.REACT_APP_ACCESS_KEY }} \
+                    --build-arg REACT_APP_URL_DEV=${{ secrets.REACT_APP_URL_DEV }} \
+                    -t hoanganh23072/front-end-container:${{ github.sha }} .
 
     - name: Push Docker image
       run: |
         docker push hoanganh23072/front-end-container:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
-
     - name: Deploy to VPS
-      run: |
-        ssh -o StrictHostKeyChecking=no anhnbh@103.167.89.225 << 'EOF'
+      run:
           docker pull hoanganh23072/front-end-container:${{ github.sha }}
           docker stop frontend || true
           docker rm frontend || true
           cd deploy/frontend/prod &&
-          docker run -d -p 80:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
-        EOF
+          docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}

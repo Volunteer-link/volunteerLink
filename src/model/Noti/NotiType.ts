@@ -3,6 +3,7 @@ export interface NotiType {
   content: string;
   type: number;
   time: Date | string;
-  urlId: number;
+  urlId: string;
   accountId: string;
+  urlImage: string;
 }

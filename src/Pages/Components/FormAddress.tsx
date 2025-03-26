@@ -6,13 +6,14 @@ const FormAddress = ({
   form,
   province = '',
   district = '',
-  ward =''
+  ward = '',
 }: {
   form: FormInstance;
   province?: string;
   district?: string;
   ward?: string;
 }) => {
+
   const [listProvinces, setListProvinces] = useState<
     {
       id: number;
@@ -77,6 +78,16 @@ const FormAddress = ({
     fetchProvince();
   }, []);
 
+
+  useEffect(() => {
+    if (province) {
+      form.setFieldsValue({ province: province.trim() });
+    }
+    form.setFieldsValue({ ward: ward.trim() });
+    form.setFieldsValue({ district: district.trim() });
+  }, [province,ward,district]);
+
+
   return (
     <div>
       <div className="text-base font-medium text-primary-color my-4">
@@ -85,17 +96,16 @@ const FormAddress = ({
 
       <Form.Item
         name="province"
-        initialValue={province}
         rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
       >
         <Select
           style={{ width: 300 }}
           onChange={(value, option) => handleSelectProvinces(value, option)}
           options={[
-            ...listProvinces.map((province) => ({
-              value: province.name,
-              label: province.name,
-              id: province.id,
+            ...listProvinces.map((item) => ({
+              value: item.name,
+              label: item.name,
+              id: item.id,
             })),
           ]}
           placeholder="Chọn tỉnh/thành phố"
@@ -108,7 +118,6 @@ const FormAddress = ({
 
       <Form.Item
         name="district"
-        initialValue={district}
         rules={[{ required: true, message: 'Vui lòng chọn quận/huyện!' }]}
       >
         <Select
@@ -116,10 +125,10 @@ const FormAddress = ({
           style={{ width: 300 }}
           onChange={handleSelectDistricts}
           options={[
-            ...listDistrict.map((district) => ({
-              value: district.name,
-              label: district.name,
-              id: district.id,
+            ...listDistrict.map((item) => ({
+              value: item.name,
+              label: item.name,
+              id: item.id,
             })),
           ]}
           placeholder="Chọn quận/huyện"
@@ -131,17 +140,16 @@ const FormAddress = ({
       </div>
       <Form.Item
         name="ward"
-        initialValue={ward}
         rules={[{ required: true, message: 'Vui lòng chọn phường/xã!' }]}
       >
         <Select
           disabled={!checkLoadDistrict || !form.getFieldValue('district')}
           style={{ width: 300 }}
           options={[
-            ...listWard.map((ward) => ({
-              value: ward.name,
-              label: ward.name,
-              id: ward.id,
+            ...listWard.map((item) => ({
+              value: item.name,
+              label: item.name,
+              id: item.id,
             })),
           ]}
           placeholder="Chọn phường/xã"
