@@ -59,7 +59,7 @@ jobs:
 
     - name: Deploy to VPS
       run: |
-          docker pull ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
+          docker pull ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
           docker stop frontend || true
           docker rm frontend || true
           docker run -d -p 3000:80 --name frontend ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
