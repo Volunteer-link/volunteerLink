@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Flex, message, Modal, Rate } from "antd";
 import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
 import Loading from "../Pages/Components/Loading";
@@ -7,6 +7,8 @@ import SmallLoading from "../Pages/Components/SmallLoading";
 import api from "../apiService/useFetch";
 import { useNavigate } from "react-router-dom";
 import { DataRateType } from "../model/Volunteer/DataRateType";
+import { decodedCookie, getCookie } from "../ultils/cookie";
+import TextArea from "antd/es/input/TextArea";
 
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
@@ -17,11 +19,16 @@ const Volunteer: React.FC<{
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
 
+  const user = decodedCookie(getCookie("accessToken"));
+
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalRating, setOpenModalRating] = useState<boolean>(false);
   const [openModalViewRated, setOpenModalViewRated] = useState<boolean>(false);
   const [ratingValue, setRatingValue] = useState<number>(0);
+  const [displayName, setDisplayName] = useState<string>("");
+  const textAreaRef = useRef<any>(null);
+  const textAreaRefUpdate = useRef<any>(null);
 
   const calculateAge = (birthDate: Date | string): number => {
     const currentDate = new Date();
@@ -118,8 +125,11 @@ const Volunteer: React.FC<{
     setOpenModal(false);
   };
 
-  const handleOpenRating = () => {
+  const handleOpenRating = (name?: string) => {
     setOpenModalRating(true);
+    if (name) {
+      setDisplayName(name);
+    }
   };
 
   const handleCloseRating = () => {
@@ -146,7 +156,8 @@ const Volunteer: React.FC<{
           volunteerId: objectVolunteer.volunteerId,
           eventId: eventId,
           star: ratingValue,
-          feedback: "ok",
+          feedback:
+            textAreaRef.current?.resizableTextArea?.textArea.value || "",
         }
       );
     } catch (e: any) {
@@ -168,7 +179,8 @@ const Volunteer: React.FC<{
       const { data } = await api.put(`/feedback/update-feedback-volunteer`, {
         feedbackId: objectVolunteer.feedback?.id,
         star: ratingValue,
-        feedback: "ok",
+        feedback:
+          textAreaRefUpdate.current?.resizableTextArea?.textArea.value || "",
       });
       console.log(data);
     } catch (e: any) {
@@ -182,7 +194,7 @@ const Volunteer: React.FC<{
     }
   };
 
-  // console.log(objectVolunteer);
+  console.log(objectVolunteer);
   // console.log(eventId);
 
   return (
@@ -244,22 +256,31 @@ const Volunteer: React.FC<{
           </Button>
         </div>
       )}
-      {objectVolunteer.volunteerDisplayType === "PARTICIPATED" &&
+      {user?.role === "Organization" &&
+        objectVolunteer.volunteerDisplayType === "PARTICIPATED" &&
         !checkDate && (
           <Button onClick={handleOpenModal} size="large" type="primary">
             Xóa tình nguyện viên
           </Button>
         )}
-      {checkDate && !objectVolunteer.feedback && (
-        <Button onClick={handleOpenRating} size="large" type="primary">
-          Đánh giá tình nguyện viên
-        </Button>
-      )}
-      {checkDate && objectVolunteer.feedback && (
-        <Button onClick={handleOpenViewRated} size="large" type="primary">
-          Xem đánh giá
-        </Button>
-      )}
+      {user?.role === "Organization" &&
+        checkDate &&
+        !objectVolunteer.feedback && (
+          <Button
+            onClick={() => handleOpenRating(objectVolunteer?.name)}
+            size="large"
+            type="primary"
+          >
+            Đánh giá tình nguyện viên
+          </Button>
+        )}
+      {user?.role === "Organization" &&
+        checkDate &&
+        objectVolunteer.feedback && (
+          <Button onClick={handleOpenViewRated} size="large" type="primary">
+            Xem đánh giá
+          </Button>
+        )}
       <Modal
         title="Thông báo"
         open={openModal}
@@ -272,12 +293,20 @@ const Volunteer: React.FC<{
         </p>
       </Modal>
       <Modal
-        title="Đánh giá tình nguyện viên"
+        title={`Đánh giá tình nguyện viên ${displayName}`}
         open={openModalRating}
         onOk={handleRatingVolunteer}
         onCancel={handleCloseRating}
       >
         <Rate onChange={handleRating} />
+        <TextArea
+          className="w-96 my-4"
+          size="small"
+          maxLength={1000}
+          placeholder="Bình luận tối đa 1000 kí tự"
+          showCount
+          ref={textAreaRef}
+        />
       </Modal>
       <Modal
         title="Xem đánh giá"
@@ -289,6 +318,15 @@ const Volunteer: React.FC<{
         <Rate
           defaultValue={objectVolunteer.feedback?.star}
           onChange={handleRating}
+        />
+        <TextArea
+          className="w-96 my-4"
+          size="small"
+          maxLength={1000}
+          placeholder="Bình luận tối đa 1000 kí tự"
+          showCount
+          defaultValue={objectVolunteer.feedback?.feedback}
+          ref={textAreaRefUpdate}
         />
       </Modal>
     </div>

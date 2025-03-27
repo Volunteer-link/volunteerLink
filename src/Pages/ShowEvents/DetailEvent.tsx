@@ -1,6 +1,7 @@
 import {
   Breadcrumb,
   ConfigProvider,
+  Empty,
   message,
   Modal,
   Pagination,
@@ -27,6 +28,7 @@ import { AiFillLike } from "react-icons/ai";
 import { Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { CiStar } from "react-icons/ci";
+import { RatingType } from "../../model/ShowEventModel/RatingType";
 // const { TextArea } = Input;
 const DetailEvent = () => {
   const location = useLocation();
@@ -46,11 +48,12 @@ const DetailEvent = () => {
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [from, setFrom] = useState<string>("");
   const [fromTitle, setFromTitle] = useState<string>("");
-  const [listRating, setListRating] = useState<any[]>([]);
+  const [listRating, setListRating] = useState<RatingType[]>([]);
 
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalRating, setTotalRating] = useState<number>(0);
-  const pageSize = 1;
+  const [resetKey, setResetKey] = useState<number>(0);
+  const pageSize = 2;
 
   const textAreaRef = useRef<any>(null);
 
@@ -85,7 +88,6 @@ const DetailEvent = () => {
   const fetchStatus = async () => {
     try {
       const { data } = await api.get(`/event/volunteer-status?eventId=${id}`);
-      console.log(data);
 
       setIdRequest(data.data.id);
       setStatusEvent(data.data.status);
@@ -253,6 +255,7 @@ const DetailEvent = () => {
         messageApi.success("Bạn đã đánh giá sự kiện thành công!");
         setIsLoading(false);
         setStateModalRate(false);
+        setResetKey((prev) => ++prev);
       }
     }
   };
@@ -263,24 +266,28 @@ const DetailEvent = () => {
         const { data } = await api.get(
           `/feedback/get-feedback-of-event?EventId=${id}&PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-        console.log(data);
 
         setTotalRating(data.data.totalItems);
-        setListRating(data.data.itéms);
+        setListRating(data.data.items);
       } catch (error: any) {
       } finally {
       }
     };
-    console.log(dataState);
 
     if (dataState?.endTime && new Date() > new Date(dataState?.endTime)) {
       fetchRating();
     }
-  }, [dataState]);
+  }, [dataState, resetKey]);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
   };
+
+  const handleShowProfile = (accountId: number) => {
+    window.open(`/volunteerProfile/${accountId}`);
+  };
+  console.log(listRating);
+
   return (
     <div>
       {contextHolder}
@@ -703,13 +710,70 @@ const DetailEvent = () => {
           <div className="grid grid-cols-8">
             <div></div>
             <div className="col-span-6">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mb-4">
                 <span className="text-xl text-primary-color font-medium">
                   Đánh giá sự kiện
                 </span>
                 <FaStar className="text-2xl text-primary-color" />
               </div>
-              <div>abc</div>
+              {listRating.length !== 0 && (
+                <div className="rounded-md border-2 border-primary-color p-4 mb-4">
+                  {listRating.map((item, index) => (
+                    <div
+                      key={index}
+                      className={`p-2 flex items-start gap-4 select-none ${
+                        index !== listRating.length - 1 ? "mb-6" : ""
+                      } `}
+                    >
+                      <div className="w-10 h-10 rounded-full overflow-hidden">
+                        <img
+                          src={item.pictureImage}
+                          className="w-full h-full object-contain"
+                          alt=""
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div
+                          onClick={() => handleShowProfile(item.accountId)}
+                          className="font-medium cursor-pointer hover:opacity-80"
+                        >
+                          {item.volunteerName}
+                        </div>
+                        <div>
+                          <ConfigProvider
+                            theme={{
+                              components: {
+                                Rate: {
+                                  starSize: 14,
+                                },
+                              },
+                            }}
+                          >
+                            <Rate disabled value={item.star} />
+                          </ConfigProvider>
+                        </div>
+                        <div className="mb-2">{item.feedback}</div>
+                        <div className="text-stone-500">
+                          {new Date(item.time).toLocaleString("en-US", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: false,
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {listRating.length === 0 && (
+                <div className="mb-8">
+                  <Empty description="Sự kiện này chưa có bình luận" />
+                </div>
+              )}
             </div>
             <div></div>
           </div>
@@ -754,12 +818,15 @@ const DetailEvent = () => {
         <div className="grid grid-cols-8">
           <div></div>
           <div className="col-span-6">
-            <Pagination
-              current={currentPage}
-              total={totalRating}
-              pageSize={pageSize}
-              onChange={handleChangePage}
-            />
+            {listRating.length !== 0 && (
+              <Pagination
+                current={currentPage}
+                total={totalRating}
+                pageSize={pageSize}
+                onChange={handleChangePage}
+                className="mb-4"
+              />
+            )}
           </div>
           <div></div>
         </div>
