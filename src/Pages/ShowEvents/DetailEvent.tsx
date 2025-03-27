@@ -1,14 +1,21 @@
-import { Breadcrumb, ConfigProvider, message, Modal, Rate } from "antd";
+import {
+  Breadcrumb,
+  ConfigProvider,
+  message,
+  Modal,
+  Pagination,
+  Rate,
+} from "antd";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
 import { FiUsers } from "react-icons/fi";
-import { FaCalendarAlt, FaHandshake } from "react-icons/fa";
+import { FaCalendarAlt, FaHandshake, FaStar } from "react-icons/fa";
 import { FaLocationDot, FaXmark } from "react-icons/fa6";
 import { FaDotCircle } from "react-icons/fa";
 import MySlider from "../../Common/MySlider";
 import { FaCheck } from "react-icons/fa6";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import api from "../../apiService/useFetch";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import Loading from "../Components/Loading";
@@ -17,7 +24,10 @@ import { TbTilde } from "react-icons/tb";
 import WebsocketContext from "../../ultils/WebsocketContext";
 import { IoIosSend } from "react-icons/io";
 import { AiFillLike } from "react-icons/ai";
-
+import { Input } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { CiStar } from "react-icons/ci";
+// const { TextArea } = Input;
 const DetailEvent = () => {
   const location = useLocation();
   const dataStateNoti = location.state;
@@ -28,6 +38,7 @@ const DetailEvent = () => {
   const [stateModalRate, setStateModalRate] = useState<boolean>(false);
   const [valueRating, setValueRating] = useState<number>(0);
   const [idRequest, setIdRequest] = useState<number>(0);
+  const [ratingValue, setRatingValue] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [statusEvent, setStatusEvent] = useState<number>(-1);
   const [dataState, setDataState] = useState<DetailEventType>();
@@ -35,23 +46,20 @@ const DetailEvent = () => {
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [from, setFrom] = useState<string>("");
   const [fromTitle, setFromTitle] = useState<string>("");
+  const [listRating, setListRating] = useState<any[]>([]);
+
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalRating, setTotalRating] = useState<number>(0);
+  const pageSize = 1;
+
+  const textAreaRef = useRef<any>(null);
 
   const { id } = useParams();
 
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
 
-  const listItem = [
-    "/materials/image 13d.png",
-    "/materials/istockphodto-1426874794-612x612.jpg",
-    "/materials/medium-shdot-volunteers-working-together_23-2149181985.jpg",
-    "/materials/pixelcut-expdort.jpeg",
-  ];
   useEffect(() => {
-    // if (!dataStateNoti) {
-    //   setFrom("/events");
-    //   setFromTitle("Sự kiện");
-    // }
     if (dataStateNoti?.from === "noti") {
       setFrom("/notification");
       setFromTitle("Thông báo");
@@ -83,7 +91,6 @@ const DetailEvent = () => {
       setStatusEvent(data.data.status);
     } catch (e: any) {}
   };
-  console.log(statusEvent);
 
   useEffect(() => {
     if (user?.role === "Volunteer") {
@@ -113,7 +120,7 @@ const DetailEvent = () => {
     window.open(`/organizations/profile/${id}`, "_blank");
   };
   const handleRating = (value: number) => {
-    console.log(value);
+    setRatingValue(value);
   };
 
   const socket = useContext(WebsocketContext);
@@ -225,6 +232,55 @@ const DetailEvent = () => {
     }
   };
 
+  const handleVolRateEvent = async () => {
+    if (ratingValue === 0) {
+      messageApi.error("Vui lòng đánh giá số sao trước khi gửi nhận xét!");
+    } else {
+      try {
+        setIsLoading(true);
+        const comment =
+          textAreaRef.current?.resizableTextArea?.textArea.value || "";
+        const { data } = await api.post(
+          `/feedback/feedback-event-of-volunteer`,
+          {
+            eventId: id,
+            star: ratingValue,
+            feedback: comment,
+          }
+        );
+      } catch (e: any) {
+      } finally {
+        messageApi.success("Bạn đã đánh giá sự kiện thành công!");
+        setIsLoading(false);
+        setStateModalRate(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const { data } = await api.get(
+          `/feedback/get-feedback-of-event?EventId=${id}&PageNumber=${currentPage}&PageSize=${pageSize}`
+        );
+        console.log(data);
+
+        setTotalRating(data.data.totalItems);
+        setListRating(data.data.itéms);
+      } catch (error: any) {
+      } finally {
+      }
+    };
+    console.log(dataState);
+
+    if (dataState?.endTime && new Date() > new Date(dataState?.endTime)) {
+      fetchRating();
+    }
+  }, [dataState]);
+
+  const handleChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
   return (
     <div>
       {contextHolder}
@@ -261,6 +317,7 @@ const DetailEvent = () => {
 
             {/* Organization sight */}
             {user?.role === "Organization" &&
+              new Date() > new Date(dataState?.timePublish || 0) &&
               new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
@@ -285,6 +342,35 @@ const DetailEvent = () => {
                     <AiFillLike />
                     Gợi ý tình nguyện viên
                   </div>
+                </div>
+              )}
+            {user?.role === "Organization" &&
+              new Date() < new Date(dataState?.timePublish || 0) &&
+              new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
+              Number(user?.AccId) === dataState?.orgAccountId && (
+                <div className="lg:flex lg:gap-2">
+                  Thời gian xuất bản:{" "}
+                  <span className="text-primary-color">
+                    {dataState?.timePublish
+                      ? `${new Date(dataState.timePublish).getFullYear()}-${(
+                          new Date(dataState.timePublish).getMonth() + 1
+                        )
+                          .toString()
+                          .padStart(2, "0")}-${new Date(dataState.timePublish)
+                          .getDate()
+                          .toString()
+                          .padStart(2, "0")} ${new Date(dataState.timePublish)
+                          .getHours()
+                          .toString()
+                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .getMinutes()
+                          .toString()
+                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .getSeconds()
+                          .toString()
+                          .padStart(2, "0")}`
+                      : ""}
+                  </span>
                 </div>
               )}
             {user?.role === "Organization" &&
@@ -318,7 +404,8 @@ const DetailEvent = () => {
               )}
             {dataState?.startTime &&
               new Date() < new Date(dataState?.startTime) &&
-              user?.role === "Volunteer" && (
+              user?.role === "Volunteer" &&
+              statusEvent !== 2 && (
                 <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                   <div className="text-primary-color inline-block py-2 px-12 rounded-full font-medium">
                     Sự kiện chưa diễn ra...
@@ -326,6 +413,22 @@ const DetailEvent = () => {
                 </div>
               )}
             {/* Organization sight */}
+            {/* Volunteer event end */}
+            {user?.role === "Volunteer" &&
+              statusEvent === 1 && //có join
+              dataState?.endTime && //hết sự kiện
+              new Date() > new Date(dataState?.endTime) && (
+                <div className="lg:col-span-3 lg:flex lg:items-center lg:justify-end lg:mb-0 px-4">
+                  <div className="flex items-center gap-1 font-medium lg:pb-0 pb-4">
+                    <div
+                      onClick={handleOpenRate}
+                      className="text-xs lg:text-sm bg-primary-color px-6 py-2 rounded-full text-white hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
+                    >
+                      Đánh giá sự kiện
+                    </div>
+                  </div>
+                </div>
+              )}
           </div>
           <div className="w-full mb-10">
             <img
@@ -420,6 +523,16 @@ const DetailEvent = () => {
                 </div>
               )}
 
+              {/* {dataState?.startTime &&
+                new Date() < new Date(dataState?.startTime) &&
+                user?.role === "Organization" &&
+                user?.role === "Volunteer" && (
+                  <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                    <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
+                      Sự kiện chưa diễn ra
+                    </div>
+                  </div>
+                )} */}
               {dataState?.startTime &&
                 new Date() < new Date(dataState?.startTime) &&
                 user?.role === "Organization" && (
@@ -478,22 +591,6 @@ const DetailEvent = () => {
                 )}
 
               {/* Volunteer already sign */}
-
-              {/* Volunteer event end */}
-              {user?.role === "Volunteer" &&
-                dataState?.endTime &&
-                new Date() > new Date(dataState?.endTime) && (
-                  <div className="lg:col-span-3 lg:flex lg:items-center lg:justify-end lg:mb-0 px-4">
-                    <div className="flex items-center gap-1 font-medium lg:pb-0 pb-4">
-                      <div
-                        onClick={handleOpenRate}
-                        className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
-                      >
-                        Đánh giá sự kiện
-                      </div>
-                    </div>
-                  </div>
-                )}
 
               {/* Volunteer event end */}
               <div className=""></div>
@@ -601,7 +698,71 @@ const DetailEvent = () => {
         </div>
         <div></div>
       </div>
-      <ConfigProvider>
+      {dataState?.endTime && //hết sự kiện
+        new Date() > new Date(dataState?.endTime) && (
+          <div className="grid grid-cols-8">
+            <div></div>
+            <div className="col-span-6">
+              <div className="flex items-center gap-1">
+                <span className="text-xl text-primary-color font-medium">
+                  Đánh giá sự kiện
+                </span>
+                <FaStar className="text-2xl text-primary-color" />
+              </div>
+              <div>abc</div>
+            </div>
+            <div></div>
+          </div>
+        )}
+      {/* <ConfigProvider
+        theme={{
+          components: {
+            Pagination: {
+              itemActiveBg: "#3BA769",
+              colorPrimary: "white",
+              colorPrimaryHover: "white",
+              colorPrimaryBorder: "white",
+            },
+          },
+        }}
+      >
+        {listEventCard?.length !== 0 && (
+          <div className="container mx-auto px-12 mb-8">
+            <Pagination
+              defaultCurrent={1}
+              current={currentPageRelevant}
+              total={totalRelevant}
+              pageSize={pageSize}
+              className=""
+              onChange={handleChangePageRelevant}
+            />
+          </div>
+        )}
+      </ConfigProvider> */}
+      <ConfigProvider
+        theme={{
+          components: {
+            Pagination: {
+              itemActiveBg: "#3BA769",
+              colorPrimary: "white",
+              colorPrimaryHover: "white",
+              colorPrimaryBorder: "white",
+            },
+          },
+        }}
+      >
+        <div className="grid grid-cols-8">
+          <div></div>
+          <div className="col-span-6">
+            <Pagination
+              current={currentPage}
+              total={totalRating}
+              pageSize={pageSize}
+              onChange={handleChangePage}
+            />
+          </div>
+          <div></div>
+        </div>
         <Modal
           title="Thông báo"
           open={stateModalJoin}
@@ -624,10 +785,25 @@ const DetailEvent = () => {
         <Modal
           title="Đánh giá sự kiện"
           open={stateModalRate}
-          // onOk={handleOk}
+          onOk={handleVolRateEvent}
           onCancel={handleCloseRate}
+          okText="Đánh giá sự kiện"
         >
-          <Rate onChange={handleRating} />
+          <div className="flex items-center gap-2 my-4">
+            <span>Đánh giá: </span>
+            <Rate onChange={handleRating} />
+          </div>
+          <div className="flex items-start gap-2 mb-8">
+            <span>Nhận xét: </span>
+            <TextArea
+              className="w-96"
+              size="small"
+              maxLength={1000}
+              placeholder="Bình luận tối đa 1000 kí tự"
+              showCount
+              ref={textAreaRef}
+            />
+          </div>
         </Modal>
       </ConfigProvider>
     </div>

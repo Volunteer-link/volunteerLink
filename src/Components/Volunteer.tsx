@@ -1,22 +1,27 @@
 import React, { useState } from "react";
-import { Button, Flex, message, Modal } from "antd";
+import { Button, Flex, message, Modal, Rate } from "antd";
 import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
 import Loading from "../Pages/Components/Loading";
 import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
 import SmallLoading from "../Pages/Components/SmallLoading";
 import api from "../apiService/useFetch";
 import { useNavigate } from "react-router-dom";
+import { DataRateType } from "../model/Volunteer/DataRateType";
 
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
   setResetState?: React.Dispatch<React.SetStateAction<number>>;
   eventId?: number;
-}> = ({ objectVolunteer, setResetState, eventId }) => {
+  checkDate?: boolean;
+}> = ({ objectVolunteer, setResetState, eventId, checkDate }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
 
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openModalRating, setOpenModalRating] = useState<boolean>(false);
+  const [openModalViewRated, setOpenModalViewRated] = useState<boolean>(false);
+  const [ratingValue, setRatingValue] = useState<number>(0);
 
   const calculateAge = (birthDate: Date | string): number => {
     const currentDate = new Date();
@@ -66,8 +71,8 @@ const Volunteer: React.FC<{
   const handleClickInvite = async () => {
     try {
       setIsLoading(true);
-      console.log(eventId);
-      console.log(objectVolunteer.accountId);
+      // console.log(eventId);
+      // console.log(objectVolunteer.accountId);
       const { data } = await api.post(`/event/invite-volunteer`, {
         eventId: eventId,
         volunteerId: objectVolunteer.id,
@@ -92,7 +97,7 @@ const Volunteer: React.FC<{
           idRecord: objectVolunteer.id,
         },
       });
-      console.log(data);
+      // console.log(data);
     } catch (e: any) {
     } finally {
       messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
@@ -108,9 +113,77 @@ const Volunteer: React.FC<{
   const handleOpenModal = () => {
     setOpenModal(true);
   };
+
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const handleOpenRating = () => {
+    setOpenModalRating(true);
+  };
+
+  const handleCloseRating = () => {
+    setOpenModalRating(false);
+  };
+
+  const handleOpenViewRated = () => {
+    setOpenModalViewRated(true);
+  };
+
+  const handleCloseViewRated = () => {
+    setOpenModalViewRated(false);
+  };
+
+  const handleRating = (value: number) => {
+    setRatingValue(value);
+  };
+
+  const handleRatingVolunteer = async () => {
+    try {
+      const { data } = await api.post(
+        `/feedback/feedback-volunteer-of-organization`,
+        {
+          volunteerId: objectVolunteer.volunteerId,
+          eventId: eventId,
+          star: ratingValue,
+          feedback: "ok",
+        }
+      );
+    } catch (e: any) {
+      console.log(e);
+    } finally {
+      messageApi.success("Đánh giá tình nguyện viên thành công!");
+      setTimeout(() => {
+        if (setResetState) {
+          setResetState((prev) => ++prev);
+        }
+        setIsLoading(false);
+        setOpenModalRating(false);
+      }, 1000);
+    }
+  };
+
+  const handleUpdateRating = async () => {
+    try {
+      const { data } = await api.put(`/feedback/update-feedback-volunteer`, {
+        feedbackId: objectVolunteer.feedback?.id,
+        star: ratingValue,
+        feedback: "ok",
+      });
+      console.log(data);
+    } catch (e: any) {
+      console.log(e);
+    } finally {
+      messageApi.success("Cập nhật đánh giá tình nguyện viên thành công!");
+      setTimeout(() => {
+        setIsLoading(false);
+        setOpenModalViewRated(false);
+      }, 1000);
+    }
+  };
+
+  // console.log(objectVolunteer);
+  // console.log(eventId);
 
   return (
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
@@ -171,9 +244,20 @@ const Volunteer: React.FC<{
           </Button>
         </div>
       )}
-      {objectVolunteer.volunteerDisplayType === "PARTICIPATED" && (
-        <Button onClick={handleOpenModal} size="large" type="primary">
-          Xóa tình nguyện viên
+      {objectVolunteer.volunteerDisplayType === "PARTICIPATED" &&
+        !checkDate && (
+          <Button onClick={handleOpenModal} size="large" type="primary">
+            Xóa tình nguyện viên
+          </Button>
+        )}
+      {checkDate && !objectVolunteer.feedback && (
+        <Button onClick={handleOpenRating} size="large" type="primary">
+          Đánh giá tình nguyện viên
+        </Button>
+      )}
+      {checkDate && objectVolunteer.feedback && (
+        <Button onClick={handleOpenViewRated} size="large" type="primary">
+          Xem đánh giá
         </Button>
       )}
       <Modal
@@ -186,6 +270,26 @@ const Volunteer: React.FC<{
         <p>
           Nếu muốn họ tham gia sự kiện, bạn sẽ phải gửi lại lời mời tham gia
         </p>
+      </Modal>
+      <Modal
+        title="Đánh giá tình nguyện viên"
+        open={openModalRating}
+        onOk={handleRatingVolunteer}
+        onCancel={handleCloseRating}
+      >
+        <Rate onChange={handleRating} />
+      </Modal>
+      <Modal
+        title="Xem đánh giá"
+        open={openModalViewRated}
+        onOk={handleUpdateRating}
+        onCancel={handleCloseViewRated}
+        okText="Cập nhật"
+      >
+        <Rate
+          defaultValue={objectVolunteer.feedback?.star}
+          onChange={handleRating}
+        />
       </Modal>
     </div>
   );

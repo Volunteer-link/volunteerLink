@@ -6,6 +6,7 @@ import api from "../../apiService/useFetch";
 import { SearchProps } from "antd/es/input";
 import { useDebounce } from "../../ultils/useDebounce";
 import { NavLink } from "react-router-dom";
+import { DataRateType } from "../../model/Volunteer/DataRateType";
 
 const { Search } = Input;
 
@@ -23,6 +24,7 @@ const EventParticipated = () => {
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [totalVolunteers, setTotalVolunteers] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [checkDate, setCheckDate] = React.useState<boolean>(false);
   const [resetState, setResetState] = useState<number>(0);
 
   useEffect(() => {
@@ -31,8 +33,9 @@ const EventParticipated = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
-        console.log(data);
-
+        if (new Date(data.data.endTime) <= new Date()) {
+          setCheckDate(true);
+        }
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -52,12 +55,12 @@ const EventParticipated = () => {
           PageSize: 6,
         },
       });
+
       setListVolunteer(data.data.items);
       setTotalVolunteers(data.data.totalItems);
       setLoading(false);
     } catch (e: any) {
       setLoading(false);
-
       console.log(e);
     }
   }, [PageNumber, searchDebounce]);
@@ -74,7 +77,6 @@ const EventParticipated = () => {
   const handleClickSearch = () => {
     fetchVolunteer();
   };
-
   console.log(listVolunteer);
 
   return (
@@ -141,6 +143,8 @@ const EventParticipated = () => {
                 volunteerDisplayType: "PARTICIPATED",
               }}
               setResetState={setResetState}
+              checkDate={checkDate}
+              eventId={Number(id)}
             />
           ))
         )}

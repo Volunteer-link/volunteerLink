@@ -1,5 +1,5 @@
 import { AiOutlineUser } from "react-icons/ai";
-import { MdLogout } from "react-icons/md";
+import { MdEvent, MdLogout } from "react-icons/md";
 import { Dropdown, Space, MenuProps, Menu, Badge, ConfigProvider } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { VscBell } from "react-icons/vsc";
@@ -25,6 +25,8 @@ const Header: React.FC<{}> = () => {
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
   const logout = useLogout();
+
+  const isExactMatch = location.pathname === "/organizations";
 
   useEffect(() => {
     const fetchCheckStatus = async () => {
@@ -98,6 +100,22 @@ const Header: React.FC<{}> = () => {
               >
                 <SlEnvolopeLetter />
                 <span>Quản lý lời mời</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
+    ...(user?.role === "Organization"
+      ? [
+          {
+            key: "6",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={"/organizations/events"}
+              >
+                <MdEvent />
+                <span>Quản lý sự kiện</span>
               </NavLink>
             ),
           },

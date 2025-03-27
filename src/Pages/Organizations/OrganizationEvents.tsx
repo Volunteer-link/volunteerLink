@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import api from '../../apiService/useFetch';
-import { Button, Col, Empty, Pagination, Row, Spin, Tabs } from 'antd';
-import EventCard from '../Components/EventCard';
-import { TabsProps } from 'antd/lib';
-import { useDebounce } from '../../ultils/useDebounce';
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import api from "../../apiService/useFetch";
+import { Button, Col, Empty, Pagination, Row, Spin, Tabs } from "antd";
+import EventCard from "../Components/EventCard";
+import { TabsProps } from "antd/lib";
+import { useDebounce } from "../../ultils/useDebounce";
 
 const OrganizationEvents = () => {
   const { id } = useParams();
@@ -13,7 +13,7 @@ const OrganizationEvents = () => {
   const [eventList, setEventList] = useState<EventCardType[]>([]);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<number>(0);
-  const [searchName, setSearchName] = useState<string>('');
+  const [searchName, setSearchName] = useState<string>("");
   const searchDebounce = useDebounce<string>(searchName, 500);
   const [totalPage, setTotalPage] = React.useState<number>();
   const navigate = useNavigate();
@@ -21,22 +21,22 @@ const OrganizationEvents = () => {
     setStatus(parseInt(key));
   };
 
-  const items: TabsProps['items'] = [
+  const items: TabsProps["items"] = [
     {
-      key: '0',
-      label: 'Đang diễn ra',
+      key: "0",
+      label: "Đang diễn ra",
     },
     {
-      key: '1',
-      label: 'Đã diễn ra',
+      key: "1",
+      label: "Đã diễn ra",
     },
     {
-      key: '-1',
-      label: 'Chưa bắt đầu',
+      key: "-1",
+      label: "Chưa bắt đầu",
     },
     {
-      key: '2',
-      label: 'Chưa xuất bản',
+      key: "2",
+      label: "Chưa xuất bản",
     },
   ];
 
@@ -52,6 +52,8 @@ const OrganizationEvents = () => {
           PageSize: 8,
         },
       });
+      console.log(data);
+
       setTotalPage(data.data.totalItems);
       setEventList(data.data.items);
       setLoading(false);
@@ -94,12 +96,12 @@ const OrganizationEvents = () => {
         <Tabs defaultActiveKey="0" items={items} onChange={onChange} />
         <Button
           onClick={() => {
-            navigate('/create-event');
+            navigate("/create-event");
           }}
           type="primary"
           size="large"
         >
-          {' '}
+          {" "}
           Tạo sự kiện mới
         </Button>
       </div>
@@ -114,7 +116,7 @@ const OrganizationEvents = () => {
             <Empty />
           ) : (
             <div>
-              <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
+              <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
                 {eventList.map((item: EventCardType) => {
                   return (
                     <Col key={item.id} span={6}>

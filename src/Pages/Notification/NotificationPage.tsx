@@ -81,7 +81,9 @@ const NotificationPage = () => {
       item.type === 1 ||
       item.type === 4 ||
       item.type === 7 ||
-      item.type === 9
+      item.type === 9 ||
+      item.type === 10 ||
+      item.type === 13
     ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
@@ -142,7 +144,9 @@ const NotificationPage = () => {
             item.type === 5 ||
             item.type === 1 ||
             item.type === 7 ||
-            item.type === 9) && (
+            item.type === 9 ||
+            item.type === 10 ||
+            item.type === 13) && (
             <div className="bg-primary-color w-32 h-16 relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
               <img
