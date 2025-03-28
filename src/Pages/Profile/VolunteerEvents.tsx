@@ -47,7 +47,7 @@ const VolunteerEvents = ({id} : { id: number | undefined}) => {
           <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
             {eventList.map((item: EventCardType) => {
               return (
-                <Col key={item.id} span={6}>
+                <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
                   <EventCard eventObject={item} showOption={false} />
                 </Col>
               );

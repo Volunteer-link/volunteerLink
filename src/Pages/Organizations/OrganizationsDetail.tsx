@@ -36,13 +36,14 @@ const OrganizationsDetail = () => {
   ];
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex mt-4 justify-center items-start p-4 gap-4">
-        <div className="w-[300px] shrink-0">
+      <div className="flex mt-4 justify-center flex-col md:flex-row items-start p-4 gap-4">
+        <div className="w-[200px] h-[200px]  md:h-[200px]   md:w-[300px] shrink-0">
           <Image
-            style={{ objectFit: 'cover' }}
-            width={300}
-            height={300}
+            style={{ objectFit: 'cover', height: '100%' }}
             preview={false}
+            className='h-full'
+            width={200}
+            height={200}
             alt="example"
             src={
               organization?.urlImage
@@ -55,10 +56,10 @@ const OrganizationsDetail = () => {
         <div className="flex-1 self-end">
           <Typography.Title level={3}>{organization?.name}</Typography.Title>
           <Typography.Paragraph
-            className="px-2  rounded-lg inline-block py-2 leading-none text-white bg-[#3BA769]"
+            className="px-2  rounded-lg inline-block py-2 max-w-lg leading-4 text-white bg-[#3BA769]"
             style={{ margin: 0 }}
           >
-           {organization?.fields.map((field) => field.name).join(', ')}
+            {organization?.fields.map((field) => field.name).join(', ')}
           </Typography.Paragraph>
         </div>
       </div>

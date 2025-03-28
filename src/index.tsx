@@ -26,7 +26,8 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 dayjs.locale('vi');
-const currentLang = i18n.language;
+let currentLang = localStorage.getItem('language') || 'vi';
+i18n.changeLanguage(currentLang);
 const antdLocale = currentLang === 'vi' ? viVN : enUS;
 
 root.render(

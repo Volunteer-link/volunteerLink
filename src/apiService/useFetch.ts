@@ -9,6 +9,8 @@ const environment = process.env.REACT_APP_ENVIRONMENT;
 // Lựa chọn baseURL dựa trên ENVIRONMENT
 const baseURL = environment === "development" ? devURL : prodURL;
 
+const language = localStorage.getItem("language") || "vi";
+
 const api: AxiosInstance = axios.create({
   baseURL: baseURL, // Thay URL này thành endpoint gốc (baseURL) của bạn
   timeout: 10000, // Thời gian chờ (timeout) cho mỗi request (ms)
@@ -16,6 +18,7 @@ const api: AxiosInstance = axios.create({
     accept: "application/json",
     "Content-Type": "application/json",
     "X-Access-Key": accessKey,
+    "Accept-Language": language,
   },
 });
 
