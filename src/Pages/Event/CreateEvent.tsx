@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Breadcrumb,
   DatePicker,
@@ -62,6 +62,19 @@ const CreateEvent = () => {
   };
 
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
+  const [address, setAddress] = useState<string>('');
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const data = await api.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${marker?.latitude}&lon=${marker?.longitude}&format=json`
+      );
+      setAddress(data.data.display_name);
+    };
+  
+    if (marker?.latitude && marker?.longitude) {
+      fetchAddress();
+    }
+  }, [marker]); 
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
     {
@@ -71,13 +84,8 @@ const CreateEvent = () => {
   >([]);
   const { message } = AntdApp.useApp();
   const onFinish = async (values: any) => {
-    setLoading(true);
-    const address = `${values.ward}, ${values.district}, ${values.province}`;
-    let coordinates = await getCoordinates(address);
+    setLoading(true);;
     let location: string | null = null;
-    if (coordinates) {
-      location = `${coordinates.lat};${coordinates.lon}`;
-    }
     if (marker) {
       location = marker.latitude + ';' + marker.longitude;
     }
@@ -86,7 +94,7 @@ const CreateEvent = () => {
     const dataEvent: createEvent = {
       name: values.nameEvent,
       location: location,
-      address: address,
+      address: address ?? "",
       startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
@@ -270,7 +278,6 @@ const CreateEvent = () => {
               />
             </svg>
           </div>
-          <FormAddress form={form} />
         </div>
 
         <div className="mt-6 ">

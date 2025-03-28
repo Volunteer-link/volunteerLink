@@ -47,6 +47,19 @@ const UpdateEvent = () => {
   const { message } = AntdApp.useApp();
   const [event, setEvent] = React.useState<any>();
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
+  const [address, setAddress] = useState<string>('');
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const data = await api.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${marker?.latitude}&lon=${marker?.longitude}&format=json`
+      );
+      setAddress(data.data.display_name);
+    };
+
+    if (marker?.latitude && marker?.longitude) {
+      fetchAddress();
+    }
+  }, [marker]);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   useEffect(() => {
     const fetchEvent = async () => {
@@ -118,17 +131,9 @@ const UpdateEvent = () => {
       name: string;
     }[]
   >([]);
-  const partsAddress = event?.address
-    .split(',')
-    .map((part: string) => part.trim());
   const onFinish = async (values: any) => {
     setLoading(true);
-    const address = `${values.ward}, ${values.district}, ${values.province}`;
-    let coordinates = await getCoordinates(address);
     let location: string | null = null;
-    if (coordinates) {
-      location = `${coordinates.lat};${coordinates.lon}`;
-    }
     if (marker) {
       location = marker.latitude + ';' + marker.longitude;
     }
@@ -139,7 +144,7 @@ const UpdateEvent = () => {
       eventId: parseInt(id!),
       name: values.nameEvent,
       location: location,
-      address: address, 
+      address: address || event.address,
       startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
@@ -151,7 +156,7 @@ const UpdateEvent = () => {
       thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
     };
-    console.log(event)
+    console.log(event);
     try {
       const { data } = await api.put(`/event/update-an-event`, dataEvent);
       console.log(data);
@@ -340,12 +345,6 @@ const UpdateEvent = () => {
               />
             </svg>
           </div>
-          <FormAddress
-            province={partsAddress[2]}
-            district={partsAddress[1]}
-            ward={partsAddress[0]}
-            form={form}
-          />
         </div>
 
         <div className="mt-6 ">

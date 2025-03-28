@@ -55,9 +55,7 @@ const MapBox = ({
 
   const handleMapClick = (event: MapMouseEvent) => {
     const { lngLat } = event;
-    console.log(event)
-    showModal();
-    
+    showModal();   
     setMapMarker({
        longitude: lngLat.lng,
        latitude: lngLat.lat,

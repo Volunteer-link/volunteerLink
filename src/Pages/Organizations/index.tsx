@@ -108,7 +108,7 @@ const Organizations = () => {
     });
   };
   return (
-    <div className="my-12 px-4 container mx-auto  flex flex-col">
+    <div className="px-4 container mx-auto  flex flex-col">
       <div className="flex justify-center mb-6 items-center w-full">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
           <input
@@ -139,7 +139,7 @@ const Organizations = () => {
             <Select
               className="max-w-[200px] mb-4 cursor-pointer"
               maxTagCount="responsive"
-              mode='multiple'
+              mode="multiple"
               size={'middle'}
               placeholder="Vui lòng chọn lĩnh vực"
               onChange={handleChange}
@@ -163,7 +163,7 @@ const Organizations = () => {
             <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
               {organizationsList.map((item: any) => {
                 return (
-                  <Col key={item.id} span={8}>
+                  <Col key={item.id} xs={24} sm={8} md={8}>
                     <OrganizationsItem
                       image={item.urlImage}
                       name={item.name}
