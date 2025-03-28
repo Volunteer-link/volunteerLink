@@ -72,7 +72,7 @@ const NotificationPage = () => {
   };
 
   const handleClickNoti = (item: NotiType) => {
-    if (item.type === 0) {
+    if (item.type === 0 || item.type === 11) {
       item.urlId = item.urlId.split(",")[0];
     }
     if (
@@ -81,7 +81,10 @@ const NotificationPage = () => {
       item.type === 1 ||
       item.type === 4 ||
       item.type === 7 ||
-      item.type === 9
+      item.type === 9 ||
+      item.type === 11 ||
+      item.type === 12 ||
+      item.type === 14
     ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
@@ -92,6 +95,9 @@ const NotificationPage = () => {
       item.type === 8
     ) {
       navigate(`/volunteerProfile/${item.urlId}`);
+    }
+    if (item.type === 10 || item.type === 13 || item.type === 15) {
+      //show ra trang org chấm mình, mình là volunteer
     }
   };
   console.log(notiList);
@@ -123,7 +129,10 @@ const NotificationPage = () => {
             item.type === 8 ||
             item.type === 2 ||
             item.type === 6 ||
-            item.type === 3) && (
+            item.type === 3 ||
+            item.type === 11 ||
+            item.type === 12 ||
+            item.type === 14) && (
             <div className="bg-primary-color w-16 h-16 rounded-full overflow-hidden relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
 
@@ -142,7 +151,10 @@ const NotificationPage = () => {
             item.type === 5 ||
             item.type === 1 ||
             item.type === 7 ||
-            item.type === 9) && (
+            item.type === 9 ||
+            item.type === 10 ||
+            item.type === 13 ||
+            item.type === 15) && (
             <div className="bg-primary-color w-32 h-16 relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
               <img

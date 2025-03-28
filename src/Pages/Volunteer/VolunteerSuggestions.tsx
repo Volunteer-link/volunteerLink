@@ -50,6 +50,8 @@ const VolunteerSuggestions = () => {
         const { data } = await api.get(
           `/ai/suggested-volunteer?EventId=${id}&PageNumber=${PageNumber}&PageSize=1`
         );
+        console.log(data);
+
         setListVolunteer(
           data.data.items.map((item: any) =>
             Object.assign(item, {

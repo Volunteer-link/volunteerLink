@@ -19,7 +19,7 @@ const EventCard: React.FC<{
   const items: MenuProps["items"] = [
     {
       label: (
-        <div onClick={(e) => handleClickMenuItem(e)}>Yêu cầu rời sự kiện</div>
+        <div onClick={(e) => handleClickMenuItem(e)}>Cập nhật sự kiện</div>
       ),
       key: "0",
     },
@@ -32,12 +32,11 @@ const EventCard: React.FC<{
 
   const handleClickOption = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("optionnnnnnnn");
   };
 
   const handleClickMenuItem = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("rời");
+    navigate(`/update-event/${eventObject.id}`);
   };
 
   return (
