@@ -135,26 +135,28 @@ const ListSentRequest = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-16 h-16 rounded-full overflow-hidden relative">
-                {isLoadingImage && <SmallLoading size={"small"} />}
-                <img
-                  className="w-full h-full object-contain"
-                  src={item.pictureProfile}
-                  alt=""
-                  onLoad={() => setIsLoadingImage(false)}
-                  onError={(e) =>
-                    (e.currentTarget.src = "/materials/placeholder-image.jpg")
-                  }
-                />
-              </div>
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCancelInvitation(item.inviteId);
-                }}
-                className="bg-primary-color text-white px-4 py-1 rounded-md hover:scale-110 hover:opacity-90 transition-all "
-              >
-                Xóa lời mời
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden relative">
+                  {isLoadingImage && <SmallLoading size={"small"} />}
+                  <img
+                    className="w-full h-full object-contain"
+                    src={item.pictureProfile}
+                    alt=""
+                    onLoad={() => setIsLoadingImage(false)}
+                    onError={(e) =>
+                      (e.currentTarget.src = "/materials/placeholder-image.jpg")
+                    }
+                  />
+                </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCancelInvitation(item.inviteId);
+                  }}
+                  className="bg-primary-color text-white px-4 py-1 rounded-md hover:scale-110 hover:opacity-90 transition-all "
+                >
+                  Xóa lời mời
+                </div>
               </div>
             </div>
           ))}

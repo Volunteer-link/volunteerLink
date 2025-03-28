@@ -19,6 +19,8 @@ const VolunteerProfile = () => {
     const fetchVolunteer = async () => {
       try {
         const { data } = await api.get(`/profile/${id}`);
+        console.log(data);
+
         setVolunteer(data.data);
       } catch (e: any) {
         if (e.response.data.Message === "This profile is not available") {
