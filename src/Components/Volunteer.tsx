@@ -1,12 +1,9 @@
 import React, { useRef, useState } from "react";
-import { Button, Flex, message, Modal, Rate } from "antd";
+import { Button, message, Modal, Rate } from "antd";
 import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
-import Loading from "../Pages/Components/Loading";
-import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
 import SmallLoading from "../Pages/Components/SmallLoading";
 import api from "../apiService/useFetch";
 import { useNavigate } from "react-router-dom";
-import { DataRateType } from "../model/Volunteer/DataRateType";
 import { decodedCookie, getCookie } from "../ultils/cookie";
 import TextArea from "antd/es/input/TextArea";
 
@@ -21,11 +18,12 @@ const Volunteer: React.FC<{
 
   const user = decodedCookie(getCookie("accessToken"));
 
-  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalRating, setOpenModalRating] = useState<boolean>(false);
   const [openModalViewRated, setOpenModalViewRated] = useState<boolean>(false);
-  const [ratingValue, setRatingValue] = useState<number>(0);
+  const [ratingValue, setRatingValue] = useState<number>(
+    objectVolunteer.feedback?.star || 0
+  );
   const [displayName, setDisplayName] = useState<string>("");
   const textAreaRef = useRef<any>(null);
   const textAreaRefUpdate = useRef<any>(null);
@@ -78,8 +76,6 @@ const Volunteer: React.FC<{
   const handleClickInvite = async () => {
     try {
       setIsLoading(true);
-      // console.log(eventId);
-      // console.log(objectVolunteer.accountId);
       const { data } = await api.post(`/event/invite-volunteer`, {
         eventId: eventId,
         volunteerId: objectVolunteer.id,
@@ -104,7 +100,6 @@ const Volunteer: React.FC<{
           idRecord: objectVolunteer.id,
         },
       });
-      // console.log(data);
     } catch (e: any) {
     } finally {
       messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
@@ -149,28 +144,32 @@ const Volunteer: React.FC<{
   };
 
   const handleRatingVolunteer = async () => {
-    try {
-      const { data } = await api.post(
-        `/feedback/feedback-volunteer-of-organization`,
-        {
-          volunteerId: objectVolunteer.volunteerId,
-          eventId: eventId,
-          star: ratingValue,
-          feedback:
-            textAreaRef.current?.resizableTextArea?.textArea.value || "",
-        }
-      );
-    } catch (e: any) {
-      console.log(e);
-    } finally {
-      messageApi.success("Đánh giá tình nguyện viên thành công!");
-      setTimeout(() => {
-        if (setResetState) {
-          setResetState((prev) => ++prev);
-        }
-        setIsLoading(false);
-        setOpenModalRating(false);
-      }, 1000);
+    if (ratingValue === 0) {
+      messageApi.error("Vui lòng đánh giá số sao trước khi gửi nhận xét!");
+    } else {
+      try {
+        const { data } = await api.post(
+          `/feedback/feedback-volunteer-of-organization`,
+          {
+            volunteerId: objectVolunteer.volunteerId,
+            eventId: eventId,
+            star: ratingValue,
+            feedback:
+              textAreaRef.current?.resizableTextArea?.textArea.value || "",
+          }
+        );
+      } catch (e: any) {
+        console.log(e);
+      } finally {
+        messageApi.success("Đánh giá tình nguyện viên thành công!");
+        setTimeout(() => {
+          if (setResetState) {
+            setResetState((prev) => ++prev);
+          }
+          setIsLoading(false);
+          setOpenModalRating(false);
+        }, 1000);
+      }
     }
   };
 
@@ -182,7 +181,6 @@ const Volunteer: React.FC<{
         feedback:
           textAreaRefUpdate.current?.resizableTextArea?.textArea.value || "",
       });
-      console.log(data);
     } catch (e: any) {
       console.log(e);
     } finally {
@@ -193,9 +191,6 @@ const Volunteer: React.FC<{
       }, 1000);
     }
   };
-
-  console.log(objectVolunteer);
-  // console.log(eventId);
 
   return (
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">

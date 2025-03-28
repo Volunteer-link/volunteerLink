@@ -15,6 +15,7 @@ import api from "../../apiService/useFetch";
 import useWebSocket from "../../Hook/useWebSocket";
 import WebsocketContext from "../../ultils/WebsocketContext";
 import { SlEnvolopeLetter } from "react-icons/sl";
+import { TbStarsFilled } from "react-icons/tb";
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -116,6 +117,22 @@ const Header: React.FC<{}> = () => {
               >
                 <MdEvent />
                 <span>Quản lý sự kiện</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
+    ...(user?.role === "Volunteer"
+      ? [
+          {
+            key: "7",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={"/rating-management"}
+              >
+                <TbStarsFilled />
+                <span>Quản lý đánh giá</span>
               </NavLink>
             ),
           },
