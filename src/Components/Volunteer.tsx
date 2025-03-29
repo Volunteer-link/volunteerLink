@@ -13,9 +13,16 @@ import TextArea from "antd/es/input/TextArea";
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
   setResetState?: React.Dispatch<React.SetStateAction<number>>;
+  setResetStateAll?: React.Dispatch<React.SetStateAction<number>>;
   eventId?: number;
   checkDate?: boolean;
-}> = ({ objectVolunteer, setResetState, eventId, checkDate }) => {
+}> = ({
+  objectVolunteer,
+  setResetState,
+  setResetStateAll,
+  eventId,
+  checkDate,
+}) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -71,6 +78,10 @@ const Volunteer: React.FC<{
           setIsLoading(false);
           setResetState((prev) => ++prev);
         }
+        if (setResetStateAll) {
+          setIsLoading(false);
+          setResetStateAll((prev) => ++prev);
+        }
       }, 1000);
     }
   };
@@ -90,6 +101,10 @@ const Volunteer: React.FC<{
       setTimeout(() => {
         if (setResetState) {
           setResetState((prev) => ++prev);
+        }
+        if (setResetStateAll) {
+          setIsLoading(false);
+          setResetStateAll((prev) => ++prev);
         }
         setIsLoading(false);
       }, 1000);
@@ -193,9 +208,6 @@ const Volunteer: React.FC<{
       }, 1000);
     }
   };
-
-  console.log(objectVolunteer);
-  // console.log(eventId);
 
   return (
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
