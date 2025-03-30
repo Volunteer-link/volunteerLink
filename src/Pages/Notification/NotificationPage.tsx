@@ -72,7 +72,12 @@ const NotificationPage = () => {
   };
 
   const handleClickNoti = (item: NotiType) => {
-    if (item.type === 0 || item.type === 11) {
+    if (
+      item.type === 0 ||
+      item.type === 11 ||
+      item.type === 12 ||
+      item.type === 14
+    ) {
       item.urlId = item.urlId.split(",")[0];
     }
     if (
