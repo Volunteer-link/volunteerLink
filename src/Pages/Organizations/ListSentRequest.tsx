@@ -7,7 +7,7 @@ import SmallLoading from "../Components/SmallLoading";
 import api from "../../apiService/useFetch";
 
 const ListSentRequest = () => {
-  const pageSize = 1;
+  const pageSize = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errCode, setErrCode] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);

@@ -7,7 +7,7 @@ import SmallLoading from "./SmallLoading";
 import { useNavigate } from "react-router-dom";
 
 const RequestComponent = () => {
-  const pageSize = 1;
+  const pageSize = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listRequest, setListRequest] = useState<RequestType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
