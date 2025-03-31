@@ -46,8 +46,11 @@ const DetailEvent = () => {
   const [dataState, setDataState] = useState<DetailEventType>();
   const [messageApi, contextHolder] = message.useMessage();
   const [isPublish, setIsPublish] = useState<boolean>(false);
-  const [from, setFrom] = useState<string>('');
-  const [fromTitle, setFromTitle] = useState<string>('');
+
+  const [isRated, setIsRated] = useState<boolean>(false);
+  const [from, setFrom] = useState<string>("");
+  const [fromTitle, setFromTitle] = useState<string>("");
+
   const [listRating, setListRating] = useState<RatingType[]>([]);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -303,6 +306,22 @@ const DetailEvent = () => {
     fetchQR();
   }, []);
 
+  useEffect(() => {
+    const checkRated = async () => {
+      try {
+        const { data } = await api.get(
+          `/feedback/check-rated-event?eventId=${id}`
+        );
+        // console.log(data);
+        setIsRated(data.data.rated);
+      } catch (error: any) {
+      } finally {
+      }
+    };
+    if (user?.role === "Volunteer") {
+      checkRated();
+    }
+  }, [resetKey]);
   return (
     <div>
       {contextHolder}
@@ -439,6 +458,7 @@ const DetailEvent = () => {
             {user?.role === 'Volunteer' &&
               statusEvent === 1 && //có join
               dataState?.endTime && //hết sự kiện
+              !isRated &&
               new Date() > new Date(dataState?.endTime) && (
                 <div className="lg:col-span-3 lg:flex lg:items-center lg:justify-end lg:mb-0 px-4">
                   <div className="flex items-center gap-1 font-medium lg:pb-0 pb-4">
@@ -786,7 +806,7 @@ const DetailEvent = () => {
               )}
               {listRating.length === 0 && (
                 <div className="mb-8">
-                  <Empty description="Sự kiện này chưa có bình luận" />
+                  <Empty description="Sự kiện này chưa có đánh giá" />
                 </div>
               )}
             </div>

@@ -1,29 +1,24 @@
-import { AiOutlineUser } from 'react-icons/ai';
-import { MdEvent, MdLogout } from 'react-icons/md';
-import {
-  Dropdown,
-  Space,
-  MenuProps,
-  Menu,
-  Badge,
-  ConfigProvider,
-  Button,
-} from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import { VscBell } from 'react-icons/vsc';
-import { VscBellDot } from 'react-icons/vsc';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { decodedCookie, deleteCookie, getCookie } from '../../ultils/cookie';
-import { useLogout } from '../../ultils/logout';
-import { CgProfile } from 'react-icons/cg';
-import { FaCalendarAlt } from 'react-icons/fa';
-import { IoSettingsOutline } from 'react-icons/io5';
-import api from '../../apiService/useFetch';
-import useWebSocket from '../../Hook/useWebSocket';
-import WebsocketContext from '../../ultils/WebsocketContext';
-import { SlEnvolopeLetter } from 'react-icons/sl';
+
+import { AiOutlineUser } from "react-icons/ai";
+import { MdEvent, MdLogout } from "react-icons/md";
+import { Dropdown, Space, MenuProps, Menu, Badge, ConfigProvider, Button, } from "antd";
+import { useContext, useEffect, useState } from "react";
+import { VscBell } from "react-icons/vsc";
+import { VscBellDot } from "react-icons/vsc";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { decodedCookie, deleteCookie, getCookie } from "../../ultils/cookie";
+import { useLogout } from "../../ultils/logout";
+import { CgProfile } from "react-icons/cg";
+import { FaCalendarAlt } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
+import api from "../../apiService/useFetch";
+import useWebSocket from "../../Hook/useWebSocket";
+import WebsocketContext from "../../ultils/WebsocketContext";
+import { SlEnvolopeLetter } from "react-icons/sl";
+import { TbStarsFilled } from "react-icons/tb";
 import { useTranslation } from 'react-i18next';
+
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -125,6 +120,22 @@ const Header: React.FC<{}> = () => {
               >
                 <MdEvent />
                 <span>Quản lý sự kiện</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
+    ...(user?.role === "Volunteer"
+      ? [
+          {
+            key: "7",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={"/rating-management"}
+              >
+                <TbStarsFilled />
+                <span>Quản lý đánh giá</span>
               </NavLink>
             ),
           },
