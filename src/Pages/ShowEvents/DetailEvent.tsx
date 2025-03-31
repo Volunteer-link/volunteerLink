@@ -6,29 +6,29 @@ import {
   Modal,
   Pagination,
   Rate,
-} from "antd";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { decodedCookie, getCookie } from "../../ultils/cookie";
-import { FiUsers } from "react-icons/fi";
-import { FaCalendarAlt, FaHandshake, FaStar } from "react-icons/fa";
-import { FaLocationDot, FaXmark } from "react-icons/fa6";
-import { FaDotCircle } from "react-icons/fa";
-import MySlider from "../../Common/MySlider";
-import { FaCheck } from "react-icons/fa6";
-import { useContext, useEffect, useRef, useState } from "react";
-import api from "../../apiService/useFetch";
-import { EventCardType } from "../../model/ShowEventModel/EventCardType";
-import Loading from "../Components/Loading";
-import { DetailEventType } from "../../model/ShowEventModel/DetailEventType";
-import { TbTilde } from "react-icons/tb";
-import WebsocketContext from "../../ultils/WebsocketContext";
-import { IoIosSend } from "react-icons/io";
-import { AiFillLike } from "react-icons/ai";
-import { Input } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import { CiStar } from "react-icons/ci";
-import { RatingType } from "../../model/ShowEventModel/RatingType";
+} from 'antd';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { decodedCookie, getCookie } from '../../ultils/cookie';
+import { FiUsers } from 'react-icons/fi';
+import { FaCalendarAlt, FaHandshake, FaStar } from 'react-icons/fa';
+import { FaLocationDot, FaXmark } from 'react-icons/fa6';
+import { FaDotCircle } from 'react-icons/fa';
+import MySlider from '../../Common/MySlider';
+import { FaCheck } from 'react-icons/fa6';
+import { useContext, useEffect, useRef, useState } from 'react';
+import api from '../../apiService/useFetch';
+import { EventCardType } from '../../model/ShowEventModel/EventCardType';
+import Loading from '../Components/Loading';
+import { DetailEventType } from '../../model/ShowEventModel/DetailEventType';
+import { TbTilde } from 'react-icons/tb';
+import WebsocketContext from '../../ultils/WebsocketContext';
+import { IoIosSend } from 'react-icons/io';
+import { AiFillLike } from 'react-icons/ai';
+import { Input } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import { CiStar } from 'react-icons/ci';
+import { RatingType } from '../../model/ShowEventModel/RatingType';
 // const { TextArea } = Input;
 const DetailEvent = () => {
   const location = useLocation();
@@ -46,9 +46,11 @@ const DetailEvent = () => {
   const [dataState, setDataState] = useState<DetailEventType>();
   const [messageApi, contextHolder] = message.useMessage();
   const [isPublish, setIsPublish] = useState<boolean>(false);
+
   const [isRated, setIsRated] = useState<boolean>(false);
   const [from, setFrom] = useState<string>("");
   const [fromTitle, setFromTitle] = useState<string>("");
+
   const [listRating, setListRating] = useState<RatingType[]>([]);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -60,13 +62,13 @@ const DetailEvent = () => {
 
   const { id } = useParams();
 
-  const token = getCookie("accessToken");
+  const token = getCookie('accessToken');
   const user = decodedCookie(token);
 
   useEffect(() => {
-    if (dataStateNoti?.from === "noti") {
-      setFrom("/notification");
-      setFromTitle("Thông báo");
+    if (dataStateNoti?.from === 'noti') {
+      setFrom('/notification');
+      setFromTitle('Thông báo');
     }
   }, []);
   useEffect(() => {
@@ -96,7 +98,7 @@ const DetailEvent = () => {
   };
 
   useEffect(() => {
-    if (user?.role === "Volunteer") {
+    if (user?.role === 'Volunteer') {
       fetchStatus();
     }
   }, []);
@@ -120,7 +122,7 @@ const DetailEvent = () => {
     setStateModalRate(false);
   };
   const handleViewOrganization = (id: number) => {
-    window.open(`/organizations/profile/${id}`, "_blank");
+    window.open(`/organizations/profile/${id}`, '_blank');
   };
   const handleRating = (value: number) => {
     setRatingValue(value);
@@ -129,14 +131,14 @@ const DetailEvent = () => {
   const socket = useContext(WebsocketContext);
   useEffect(() => {
     if (socket) {
-      socket.addEventListener("message", (event) => {
+      socket.addEventListener('message', (event) => {
         const parsedData = JSON.parse(event.data);
         if (
-          parsedData.Message === "New Notification" &&
-          parsedData.message !== "Connected" &&
+          parsedData.Message === 'New Notification' &&
+          parsedData.message !== 'Connected' &&
           socket.readyState === WebSocket.OPEN
         ) {
-          if (user?.role === "Volunteer") {
+          if (user?.role === 'Volunteer') {
             fetchStatus();
           }
         }
@@ -152,8 +154,8 @@ const DetailEvent = () => {
     } catch (e: any) {
       // console.log(e);
     } finally {
-      messageApi.success("Yêu cầu tham gia của bạn đã được gửi!");
-      if (user?.role === "Volunteer") {
+      messageApi.success('Yêu cầu tham gia của bạn đã được gửi!');
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -167,8 +169,8 @@ const DetailEvent = () => {
     } catch (e: any) {
       // console.log(e);
     } finally {
-      messageApi.success("Bạn đã hủy yêu cầu tham gia sự kiện này!");
-      if (user?.role === "Volunteer") {
+      messageApi.success('Bạn đã hủy yêu cầu tham gia sự kiện này!');
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -177,7 +179,7 @@ const DetailEvent = () => {
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
-        const { data } = await api.get("/profile/check-publish-profile");
+        const { data } = await api.get('/profile/check-publish-profile');
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
@@ -210,11 +212,11 @@ const DetailEvent = () => {
     try {
       const { data } = await api.post(`/event/handle-invite`, {
         inviteId: idRequest,
-        accept: value === "yes" ? true : false,
+        accept: value === 'yes' ? true : false,
       });
     } catch (e: any) {
     } finally {
-      if (user?.role === "Volunteer") {
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -229,7 +231,7 @@ const DetailEvent = () => {
     } catch (e: any) {
     } finally {
       setStateModalJoin(false);
-      if (user?.role === "Volunteer") {
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -237,12 +239,12 @@ const DetailEvent = () => {
 
   const handleVolRateEvent = async () => {
     if (ratingValue === 0) {
-      messageApi.error("Vui lòng đánh giá số sao trước khi gửi nhận xét!");
+      messageApi.error('Vui lòng đánh giá số sao trước khi gửi nhận xét!');
     } else {
       try {
         setIsLoading(true);
         const comment =
-          textAreaRef.current?.resizableTextArea?.textArea.value || "";
+          textAreaRef.current?.resizableTextArea?.textArea.value || '';
         const { data } = await api.post(
           `/feedback/feedback-event-of-volunteer`,
           {
@@ -253,7 +255,7 @@ const DetailEvent = () => {
         );
       } catch (e: any) {
       } finally {
-        messageApi.success("Bạn đã đánh giá sự kiện thành công!");
+        messageApi.success('Bạn đã đánh giá sự kiện thành công!');
         setIsLoading(false);
         setStateModalRate(false);
         setResetKey((prev) => ++prev);
@@ -289,6 +291,22 @@ const DetailEvent = () => {
   };
 
   useEffect(() => {
+    const fetchQR = async () => {
+      try {
+        const { data } = await api.post(`/donate/create-donate-url`, {
+          organizationId: dataState?.organizationId,
+          eventName: dataState?.name,
+          description: '',
+        });
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+      }
+    };
+    fetchQR();
+  }, []);
+
+  useEffect(() => {
     const checkRated = async () => {
       try {
         const { data } = await api.get(
@@ -322,7 +340,7 @@ const DetailEvent = () => {
                   {
                     title: (
                       <span className="text-primary-color font-medium">
-                        {dataState?.name || "Tên sự kiện"}
+                        {dataState?.name || 'Tên sự kiện'}
                       </span>
                     ),
                   },
@@ -331,15 +349,15 @@ const DetailEvent = () => {
             )}
             {!fromTitle && (
               <div>
-                Sự kiện:{" "}
+                Sự kiện:{' '}
                 <span className="text-primary-color font-medium">
-                  {dataState?.name || "Tên sự kiện"}
+                  {dataState?.name || 'Tên sự kiện'}
                 </span>
               </div>
             )}
 
             {/* Organization sight */}
-            {user?.role === "Organization" &&
+            {user?.role === 'Organization' &&
               new Date() > new Date(dataState?.timePublish || 0) &&
               new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
               Number(user?.AccId) === dataState?.orgAccountId && (
@@ -367,36 +385,36 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
-            {user?.role === "Organization" &&
+            {user?.role === 'Organization' &&
               new Date() < new Date(dataState?.timePublish || 0) &&
               new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
-                  Thời gian xuất bản:{" "}
+                  Thời gian xuất bản:{' '}
                   <span className="text-primary-color">
                     {dataState?.timePublish
                       ? `${new Date(dataState.timePublish).getFullYear()}-${(
                           new Date(dataState.timePublish).getMonth() + 1
                         )
                           .toString()
-                          .padStart(2, "0")}-${new Date(dataState.timePublish)
+                          .padStart(2, '0')}-${new Date(dataState.timePublish)
                           .getDate()
                           .toString()
-                          .padStart(2, "0")} ${new Date(dataState.timePublish)
+                          .padStart(2, '0')} ${new Date(dataState.timePublish)
                           .getHours()
                           .toString()
-                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .padStart(2, '0')}:${new Date(dataState.timePublish)
                           .getMinutes()
                           .toString()
-                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .padStart(2, '0')}:${new Date(dataState.timePublish)
                           .getSeconds()
                           .toString()
-                          .padStart(2, "0")}`
-                      : ""}
+                          .padStart(2, '0')}`
+                      : ''}
                   </span>
                 </div>
               )}
-            {user?.role === "Organization" &&
+            {user?.role === 'Organization' &&
               new Date() > new Date(dataState?.endTime || 0) && //đã kết thúc
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
@@ -405,19 +423,19 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
-            {user?.role === "Volunteer" &&
+            {user?.role === 'Volunteer' &&
               statusEvent === 2 &&
               new Date() < new Date(dataState?.startTime || 0) && (
                 <div className="lg:flex lg:gap-2">
                   <div
-                    onClick={() => handleInvitation("yes")}
+                    onClick={() => handleInvitation('yes')}
                     className="gap-2 cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
                   >
                     <span>Chấp nhận lời mời</span>
                     <FaCheck />
                   </div>
                   <div
-                    onClick={() => handleInvitation("no")}
+                    onClick={() => handleInvitation('no')}
                     className="flex items-center justify-center gap-2 cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1"
                   >
                     <span>Từ chối lời mời</span>
@@ -427,7 +445,7 @@ const DetailEvent = () => {
               )}
             {dataState?.startTime &&
               new Date() < new Date(dataState?.startTime) &&
-              user?.role === "Volunteer" &&
+              user?.role === 'Volunteer' &&
               statusEvent !== 2 && (
                 <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                   <div className="text-primary-color inline-block py-2 px-12 rounded-full font-medium">
@@ -437,7 +455,7 @@ const DetailEvent = () => {
               )}
             {/* Organization sight */}
             {/* Volunteer event end */}
-            {user?.role === "Volunteer" &&
+            {user?.role === 'Volunteer' &&
               statusEvent === 1 && //có join
               dataState?.endTime && //hết sự kiện
               !isRated &&
@@ -461,7 +479,7 @@ const DetailEvent = () => {
               className="w-full lg:h-60 h-20 object-cover bg-primary-color"
               onLoad={() => setIsLoading(false)}
               onError={(e) =>
-                (e.currentTarget.src = "/materials/placeholder-image.jpg")
+                (e.currentTarget.src = '/materials/placeholder-image.jpg')
               }
             />
             <div className="w-full lg:grid lg:grid-cols-10 bg-primary-color">
@@ -481,7 +499,7 @@ const DetailEvent = () => {
                     <img
                       src={
                         !dataState?.organizationAvatar
-                          ? "/materials/blank-profile-picture-973460_1280.png"
+                          ? '/materials/blank-profile-picture-973460_1280.png'
                           : dataState.organizationAvatar
                       }
                       className="w-10 h-10 rounded-full"
@@ -515,7 +533,7 @@ const DetailEvent = () => {
                 new Date() > new Date(dataState.endTime) && <>đã xảy ra</>} */}
 
               {/* Volunteer sight */}
-              {user?.role === "Volunteer" &&
+              {user?.role === 'Volunteer' &&
                 statusEvent === 0 &&
                 dataState?.startTime &&
                 new Date() <
@@ -559,7 +577,7 @@ const DetailEvent = () => {
                 )} */}
               {dataState?.startTime &&
                 new Date() < new Date(dataState?.startTime) &&
-                user?.role === "Organization" && (
+                user?.role === 'Organization' && (
                   <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
                       Sự kiện chưa diễn ra
@@ -588,7 +606,7 @@ const DetailEvent = () => {
                 )}
 
               {/* Volunteer already sign */}
-              {user?.role === "Volunteer" &&
+              {user?.role === 'Volunteer' &&
                 statusEvent === 1 &&
                 dataState?.endTime &&
                 new Date() <= new Date(dataState?.endTime) && (
@@ -663,24 +681,24 @@ const DetailEvent = () => {
                                 new Date(dataState.startTime).getMonth() + 1
                               )
                                 .toString()
-                                .padStart(2, "0")}-${new Date(
+                                .padStart(2, '0')}-${new Date(
                                 dataState.startTime
                               )
                                 .getDate()
                                 .toString()
-                                .padStart(2, "0")}`
-                            : ""}
+                                .padStart(2, '0')}`
+                            : ''}
                           <TbTilde className="inline-block mx-2" />
                           {dataState?.endTime
                             ? `${new Date(dataState.endTime).getFullYear()}-${(
                                 new Date(dataState.endTime).getMonth() + 1
                               )
                                 .toString()
-                                .padStart(2, "0")}-${new Date(dataState.endTime)
+                                .padStart(2, '0')}-${new Date(dataState.endTime)
                                 .getDate()
                                 .toString()
-                                .padStart(2, "0")}`
-                            : ""}
+                                .padStart(2, '0')}`
+                            : ''}
                         </div>
                       </div>
                     </div>
@@ -708,12 +726,12 @@ const DetailEvent = () => {
                   className="hidden lg:block"
                   // listItem={listItem}
                   listItem={dataState?.images}
-                  size={"big"}
+                  size={'big'}
                 />
                 <MySlider
                   className="block lg:hidden"
                   listItem={dataState?.images}
-                  size={"small"}
+                  size={'small'}
                 />
               </div>
               <div></div>
@@ -739,7 +757,7 @@ const DetailEvent = () => {
                     <div
                       key={index}
                       className={`p-2 flex items-start gap-4 select-none ${
-                        index !== listRating.length - 1 ? "mb-6" : ""
+                        index !== listRating.length - 1 ? 'mb-6' : ''
                       } `}
                     >
                       <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -771,13 +789,13 @@ const DetailEvent = () => {
                         </div>
                         <div className="mb-2">{item.feedback}</div>
                         <div className="text-stone-500">
-                          {new Date(item.time).toLocaleString("en-US", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
+                          {new Date(item.time).toLocaleString('en-US', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
                             hour12: false,
                           })}
                         </div>
@@ -824,10 +842,10 @@ const DetailEvent = () => {
         theme={{
           components: {
             Pagination: {
-              itemActiveBg: "#3BA769",
-              colorPrimary: "white",
-              colorPrimaryHover: "white",
-              colorPrimaryBorder: "white",
+              itemActiveBg: '#3BA769',
+              colorPrimary: 'white',
+              colorPrimaryHover: 'white',
+              colorPrimaryBorder: 'white',
             },
           },
         }}
@@ -860,7 +878,6 @@ const DetailEvent = () => {
         <Modal
           title="Quyên góp cho sự kiện"
           open={stateModalDonation}
-          // onOk={handleOk}
           onCancel={handleCloseDonation}
         >
           <p>Bạn có chắc muốn hủy tham gia sự kiện không?</p>

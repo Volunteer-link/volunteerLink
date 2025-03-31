@@ -10,9 +10,16 @@ import TextArea from "antd/es/input/TextArea";
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
   setResetState?: React.Dispatch<React.SetStateAction<number>>;
+  setResetStateAll?: React.Dispatch<React.SetStateAction<number>>;
   eventId?: number;
   checkDate?: boolean;
-}> = ({ objectVolunteer, setResetState, eventId, checkDate }) => {
+}> = ({
+  objectVolunteer,
+  setResetState,
+  setResetStateAll,
+  eventId,
+  checkDate,
+}) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -69,6 +76,10 @@ const Volunteer: React.FC<{
           setIsLoading(false);
           setResetState((prev) => ++prev);
         }
+        if (setResetStateAll) {
+          setIsLoading(false);
+          setResetStateAll((prev) => ++prev);
+        }
       }, 1000);
     }
   };
@@ -86,6 +97,10 @@ const Volunteer: React.FC<{
       setTimeout(() => {
         if (setResetState) {
           setResetState((prev) => ++prev);
+        }
+        if (setResetStateAll) {
+          setIsLoading(false);
+          setResetStateAll((prev) => ++prev);
         }
         setIsLoading(false);
       }, 1000);
@@ -219,7 +234,7 @@ const Volunteer: React.FC<{
           </span>
           <span className="text-[14px] font-medium text-stone-700">
             {objectVolunteer.dob
-              ? `${calculateAge(objectVolunteer.dob)} tuổi`
+              ? `${calculateAge(new Date(objectVolunteer.dob))} tuổi`
               : ""}
           </span>
           <span className="text-[14px] font-medium text-stone-700">

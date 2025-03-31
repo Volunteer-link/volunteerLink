@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 const InvitationComponent = () => {
   const [listInvitation, setListInvitation] = useState<Invitation[]>([]);
-  const pageSize = 1;
+  const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [isLoadingImage, setIsLoadingImage] = useState<boolean>(true);
