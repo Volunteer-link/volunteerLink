@@ -208,6 +208,7 @@ const Volunteer: React.FC<{
       }, 1000);
     }
   };
+  console.log(objectVolunteer);
 
   return (
     <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
@@ -236,7 +237,7 @@ const Volunteer: React.FC<{
           </span>
           <span className="text-[14px] font-medium text-stone-700">
             {objectVolunteer.dob
-              ? `${calculateAge(objectVolunteer.dob)} tuổi`
+              ? `${calculateAge(new Date(objectVolunteer.dob))} tuổi`
               : ""}
           </span>
           <span className="text-[14px] font-medium text-stone-700">

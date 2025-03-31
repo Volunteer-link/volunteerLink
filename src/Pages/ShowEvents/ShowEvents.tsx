@@ -2,7 +2,7 @@ import { IoLocation } from "react-icons/io5";
 import EventCard from "../Components/EventCard";
 import LineSpacing from "../Components/LineSpacing";
 import { useEffect, useRef, useState } from "react";
-import { ConfigProvider, Modal, Pagination, Select } from "antd";
+import { ConfigProvider, Empty, Modal, Pagination, Select, Switch } from "antd";
 import api from "../../apiService/useFetch";
 import { Field } from "../../model/ShowEventModel/Field";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
@@ -12,6 +12,7 @@ import { decodedCookie, getCookie } from "../../ultils/cookie";
 import MapBox from "../Components/MapBox";
 import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
 import useWebSocket from "../../Hook/useWebSocket";
+import { FaBrain } from "react-icons/fa";
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -37,6 +38,7 @@ const ShowEvent = () => {
   const [showRelevent, setShowRelevent] = useState(false);
 
   const [isPublish, setIsPublish] = useState<boolean>(false);
+  const [AISearch, setAISearch] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const refSearch = useRef<HTMLInputElement>(null);
@@ -87,6 +89,7 @@ const ShowEvent = () => {
         const { data } = await api.get(
           `/ai/relevant-event?PageNumber=${currentPageRelevant}&PageSize=${pageSize}`
         );
+
         setListEventCardRelevant(data.data.items);
         setTotalRelevant(data.data.totalItems);
       } catch (e: any) {
@@ -125,14 +128,27 @@ const ShowEvent = () => {
     const location = `${marker?.latitude};${marker?.longitude}`;
 
     try {
-      const url = `/common/get-events?PageNumber=${pageNumber}&PageSize=${pageSize}${
-        searchKey ? `&SearchKey=${searchKey}` : ""
-      }${marker ? `&Location=${location}` : ""}`;
+      if (!AISearch) {
+        const url = `/common/get-events?PageNumber=${pageNumber}&PageSize=${pageSize}${
+          searchKey ? `&SearchKey=${searchKey}` : ""
+        }${marker ? `&Location=${location}` : ""}`;
 
-      const { data } = await api.get(url);
+        const { data } = await api.get(url);
 
-      setTotalSearch(data.data.totalItems);
-      setListEventCardSearch(data.data.items);
+        setTotalSearch(data.data.totalItems);
+        setListEventCardSearch(data.data.items);
+      }
+      if (AISearch && searchKey) {
+        const url = `/ai/advanced-search-event?PageNumber=${pageNumber}&PageSize=${pageSize}${
+          searchKey ? `&SearchKey=${searchKey}` : ""
+        }`;
+
+        const { data } = await api.get(url);
+        console.log(data);
+
+        setTotalSearch(data.data.totalItems);
+        setListEventCardSearch(data.data.items);
+      }
     } catch (e: any) {
     } finally {
     }
@@ -182,6 +198,11 @@ const ShowEvent = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+  const onChangeSwitchAIMode = (checked: boolean) => {
+    setAISearch(checked);
+  };
+
+  console.log(searchKey);
 
   return (
     <div className="">
@@ -203,28 +224,43 @@ const ShowEvent = () => {
           alt=""
           className="w-full lg:scale-110 mb-6 h-56 object-cover"
         />
-        <div className="lg:w-[36rem] w-4/5 bg-white rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-between">
-          <input
-            ref={refSearch}
-            type="text"
-            placeholder="Tên sự kiện..."
-            className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
-            onKeyDown={handleEnterKey}
-            onChange={handleChangeInput}
-          />
-          <div className="flex pr-2 items-center gap-4 select-none">
-            <IoLocation
-              onClick={showModal}
-              className="text-2xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+        {/* Search */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
+          <div className="lg:w-[36rem] w-4/5 bg-white rounded-full flex items-center justify-between">
+            <input
+              ref={refSearch}
+              type="text"
+              placeholder="Tên sự kiện..."
+              className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
+              onKeyDown={handleEnterKey}
+              onChange={handleChangeInput}
             />
-            <div
-              onClick={handleClickSearch}
-              className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
-            >
-              Tìm kiếm
+            <div className="flex pr-2 items-center gap-4 select-none">
+              {!AISearch && (
+                <IoLocation
+                  onClick={showModal}
+                  className="text-2xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+                />
+              )}
+
+              <div
+                onClick={handleClickSearch}
+                className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+              >
+                Tìm kiếm
+              </div>
             </div>
           </div>
+          {user?.role === "Volunteer" && (
+            <div className="bg-white rounded-full py-3 px-5 flex items-center gap-2">
+              <div>
+                <FaBrain className="text-xl text-primary-color" />
+              </div>
+              <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
+            </div>
+          )}
         </div>
+        {/* Search */}
       </div>
       {checkSearch && (
         <>
@@ -236,12 +272,7 @@ const ShowEvent = () => {
               </div>
             </div>
           </div>
-          {totalSearch === 0 && (
-            <div className="flex flex-col items-center text-primary-color select-none mb-8">
-              <RiEmotionSadLine className="text-7xl opacity-70" />
-              <div>Không có dữ liệu</div>
-            </div>
-          )}
+          {totalSearch === 0 && <Empty description="Không có kết quả" />}
           {totalSearch !== 0 && (
             <>
               <div className="container mx-auto px-12">
@@ -298,6 +329,12 @@ const ShowEvent = () => {
             <div className="text-primary-color">phù hợp</div>
           </div>
           <div className="container mx-auto px-12">
+            {listEventCardRelevant?.length === 0 && (
+              <Empty
+                className="mx-auto"
+                description="Không có sự kiện được gợi ý"
+              />
+            )}
             <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
               {listEventCardRelevant?.map((item, index) => (
                 <EventCard
@@ -321,7 +358,7 @@ const ShowEvent = () => {
               },
             }}
           >
-            {listEventCard?.length !== 0 && (
+            {listEventCardRelevant?.length !== 0 && (
               <div className="container mx-auto px-12 mb-8">
                 <Pagination
                   defaultCurrent={1}
@@ -366,10 +403,7 @@ const ShowEvent = () => {
           </div>
         </div>
         {listEventCard?.length === 0 && (
-          <div className="flex flex-col items-center text-primary-color select-none mb-8">
-            <RiEmotionSadLine className="text-7xl opacity-70" />
-            <div>Không có dữ liệu</div>
-          </div>
+          <Empty description="Không có sự kiện" />
         )}
         {/* {isLoading ? (
           <Loading />
