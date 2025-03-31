@@ -41,7 +41,7 @@ const VolunteerProfile = () => {
     },
     {
       key: "2",
-      label: "Sự kiện tham gia",
+      label: "Sự kiện đã tham gia",
       children: <VolunteerEvents id={parseInt(id || "")} />,
     },
   ];

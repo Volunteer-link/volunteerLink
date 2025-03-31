@@ -13,7 +13,6 @@ const OrganizationsDetail = () => {
     const fetchEvent = async () => {
       try {
         const { data } = await api.get(`/profile/${id}`);
-        console.log(data.data);
         setOrganization(data.data);
       } catch (e: any) {
         console.log(e);

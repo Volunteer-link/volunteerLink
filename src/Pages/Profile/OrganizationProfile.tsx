@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   App as AntdApp,
+  Popconfirm,
 } from 'antd';
 import { nameRules } from '../../ultils/validationRules';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
@@ -15,6 +16,7 @@ import type { DatePickerProps, GetProps } from 'antd';
 import api from '../../apiService/useFetch';
 import { decodedCookie, getCookie } from '../../ultils/cookie';
 import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
+import { PullRequestOutlined } from '@ant-design/icons';
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
@@ -27,6 +29,7 @@ const style: React.CSSProperties = {
 const OrganizationProfile = () => {
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
+  const [nameRequest, setNameRequest] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
@@ -67,7 +70,6 @@ const OrganizationProfile = () => {
       const address = `${values.ward}, ${values.district}, ${values.province}`;
       const image = await uploadFilesToFirebase(fileListThumbnail);
       const dataRequest = {
-        name: values.name.trim(),
         description: values.description.trim(),
         phoneNumber: values.phoneNumber.trim(),
         urlFacebook: values.urlFacebook.trim(),
@@ -100,6 +102,37 @@ const OrganizationProfile = () => {
     };
     fetchField();
   }, []);
+
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showPopconfirm = () => {
+    setOpen(true);
+  };
+
+  const handleOk = () => {
+    form
+      .validateFields(['name'])
+      .then(async (values) => {
+        setConfirmLoading(true);
+        const { data } = await api.post(`/profile/change-name-request`, {
+          newName: values.name,
+        });
+        message.success('Gửi yêu cầu đổi tên thành công!');
+      })
+      .catch((errorInfo) => {
+        message.success('Gửi yêu cầu đổi tên thất bại!');
+        console.log('Validate Failed:', errorInfo);
+      })
+      .finally(() => {
+        setOpen(false);
+        setConfirmLoading(false);
+      });
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="container mx-auto px-4">
@@ -156,15 +189,30 @@ const OrganizationProfile = () => {
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
-          <Form.Item
-            name="name"
-            initialValue={organization?.name}
-            className="mb-4 mt-3"
-            key={organization?.name}
-            rules={nameRules}
-          >
-            <Input readOnly />
-          </Form.Item>
+          <div className="flex items-center gap-5 justify-between">
+            <Form.Item
+              name="name"
+              initialValue={organization?.name}
+              className="mb-4 mt-3 flex-1"
+              key={organization?.name}
+              rules={nameRules}
+            >
+              <Input readOnly={!open} />
+            </Form.Item>
+            <Popconfirm
+              title="Yêu cầu"
+              description="Gửi yều cầu đổi tên tổ chức"
+              open={open}
+              onConfirm={handleOk}
+              okButtonProps={{ loading: confirmLoading }}
+              onCancel={handleCancel}
+            >
+              <PullRequestOutlined
+                className="bg-primary-color rounded-lg p-2 text-white"
+                onClick={showPopconfirm}
+              />
+            </Popconfirm>
+          </div>
         </div>
 
         <div className="mt-6 ">
