@@ -10,6 +10,7 @@ import {
   Modal,
   Checkbox,
   App as AntdApp,
+  Tag,
 } from 'antd';
 import {
   dateRulesEvent,
@@ -26,6 +27,7 @@ import { createEvent } from '../../model/Request/CreateEvent';
 import api from '../../apiService/useFetch';
 import dayjs from 'dayjs';
 import { toISOLocal } from '../../ultils/toISOLocal';
+import { useNavigate } from 'react-router-dom';
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
@@ -45,6 +47,7 @@ interface MarkerPosition {
   latitude: number;
 }
 const CreateEvent = () => {
+  const navigate = useNavigate();
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
     type: 'thumbnail',
@@ -70,11 +73,11 @@ const CreateEvent = () => {
       );
       setAddress(data.data.display_name);
     };
-  
+
     if (marker?.latitude && marker?.longitude) {
       fetchAddress();
     }
-  }, [marker]); 
+  }, [marker]);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
     {
@@ -84,7 +87,7 @@ const CreateEvent = () => {
   >([]);
   const { message } = AntdApp.useApp();
   const onFinish = async (values: any) => {
-    setLoading(true);;
+    setLoading(true);
     let location: string | null = null;
     if (marker) {
       location = marker.latitude + ';' + marker.longitude;
@@ -94,7 +97,7 @@ const CreateEvent = () => {
     const dataEvent: createEvent = {
       name: values.nameEvent,
       location: location,
-      address: address ?? "",
+      address: address ?? '',
       startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
@@ -109,6 +112,7 @@ const CreateEvent = () => {
     try {
       const { data } = await api.post(`/event/create-an-event`, dataEvent);
       console.log(data);
+      navigate('/organizations/events');
       message.success('Tạo sự kiện thành công!');
     } catch (e: any) {
       message.error('Tạo sự kiện thất bại!');
@@ -118,27 +122,10 @@ const CreateEvent = () => {
     }
   };
 
-  const getCoordinates = async (address: string) => {
-    const encodedAddress = encodeURIComponent(address);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data.length > 0) {
-        const { lat, lon } = data[0];
-        return { lat, lon };
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
-  };
-
   const onFinishFailed = (errorInfo: any) => {
     console.log('Submit thất bại:', errorInfo);
+    message.error('Có một số lỗi trong form của bạn. Vui lòng kiểm tra lại các trường  và sửa lỗi!');
+
   };
 
   const upLoadFileToCloud = async () => {
@@ -188,6 +175,15 @@ const CreateEvent = () => {
     };
     fetchField();
   }, []);
+  const [timePublish, setTimePublish] = useState<dayjs.Dayjs | null>(null); 
+  const handleTimePublishChange = (value: dayjs.Dayjs | null) => {
+    setTimePublish(value);
+  };
+  const disabledDate = (current: any) => {
+    if (!timePublish) return false;
+    const minDate = timePublish.add(2, 'days');
+    return current.isBefore(minDate, 'day');
+  };
 
   return (
     <div className="">
@@ -195,6 +191,7 @@ const CreateEvent = () => {
         items={[
           {
             title: 'Quản lý sự kiện',
+            href: '/organizations/events',
           },
           {
             title: 'Tạo sự kiện mới',
@@ -278,6 +275,37 @@ const CreateEvent = () => {
               />
             </svg>
           </div>
+
+          {address && <p className="mt-2">Vị trí đã chọn: {address}</p>}
+        </div>
+        <div className="mt-6">
+        <Tag className='mb-2 p-1' color="warning">Lưu ý: Trước thời gian bắt đầu diễn ra sự kiện 1 ngày, các tình nguyện viên sẽ không thể yêu cầu  tham gia sự kiện</Tag>
+          <Radio.Group
+            style={style}
+            onChange={onChange}
+            value={value}
+            options={[
+              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
+              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
+            ]}
+          />
+
+          {value === 2 && (
+            <Form.Item
+              name="timePublish"
+              className="mb-4 mt-3"
+              rules={[
+                { required: true, message: 'Vui lòng chọn ngày công bố!' },
+              ]}
+            >
+              <DatePicker
+                showTime={{ format: 'HH:mm' }}
+                format="YYYY-MM-DD HH:mm"
+                placeholder="Chọn ngày công bố"
+                onChange={handleTimePublishChange}
+              />
+            </Form.Item>
+          )}
         </div>
 
         <div className="mt-6 ">
@@ -293,6 +321,8 @@ const CreateEvent = () => {
               showTime={{ format: 'HH:mm' }}
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
+              disabled={!timePublish}
+              disabledDate={disabledDate}
             />
           </Form.Item>
         </div>
@@ -425,56 +455,6 @@ const CreateEvent = () => {
               maxCount={10}
             />
           </Form.Item>
-        </div>
-
-        <div className="mt-6">
-          <Radio.Group
-            style={style}
-            onChange={onChange}
-            value={value}
-            options={[
-              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
-            ]}
-          />
-
-          {value === 2 && (
-            <Form.Item
-              name="timePublish"
-              className="mb-4 mt-3"
-              rules={[
-                { required: true, message: 'Vui lòng chọn ngày công bố!' },
-                {
-                  validator: async (_, value) => {
-                    if (!value) return Promise.resolve();
-                    const { date } = form.getFieldsValue();
-                    const [startDate, endDate] = date || [];
-
-                    const selectedDate = dayjs(value);
-
-                    if (!startDate || !endDate) {
-                      return Promise.reject(
-                        'Vui lòng chọn ngày bắt đầu và ngày kết thúc trước!'
-                      );
-                    }
-
-                    if (!selectedDate.isBefore(startDate, 'minute')) {
-                      return Promise.reject(
-                        'Vui lòng chọn lại ngày công bố!. Ngày công bố cần phải trước ngày bắt đầu'
-                      );
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <DatePicker
-                showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
-                placeholder="Chọn ngày công bố"
-              />
-            </Form.Item>
-          )}
         </div>
 
         <div className="my-6">

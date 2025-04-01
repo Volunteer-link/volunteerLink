@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   DatePicker,
@@ -13,6 +13,7 @@ import {
   App as AntdApp,
   DatePickerProps,
   RadioChangeEvent,
+  Tag,
 } from 'antd';
 import api from '../../apiService/useFetch';
 import { createEvent } from '../../model/Request/CreateEvent';
@@ -23,7 +24,7 @@ import MapBox from '../Components/MapBox';
 import FormAddress from '../Components/FormAddress';
 import TextArea from 'antd/es/input/TextArea';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { toISOLocal } from '../../ultils/toISOLocal';
 import ErrorSolving from '../../Common/ErrorSolving';
 
@@ -44,6 +45,8 @@ const style: React.CSSProperties = {
 };
 const UpdateEvent = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const { message } = AntdApp.useApp();
   const [event, setEvent] = React.useState<any>();
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
@@ -156,11 +159,11 @@ const UpdateEvent = () => {
       thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
     };
-    console.log(event);
     try {
       const { data } = await api.put(`/event/update-an-event`, dataEvent);
       console.log(data);
       message.success('Cập nhật sự kiện thành công!');
+      navigate('/organizations/events');
     } catch (e: any) {
       message.error('Cập nhật sự kiện thất bại!');
       console.log(e);
@@ -169,27 +172,10 @@ const UpdateEvent = () => {
     }
   };
 
-  const getCoordinates = async (address: string) => {
-    const encodedAddress = encodeURIComponent(address);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data.length > 0) {
-        const { lat, lon } = data[0];
-        return { lat, lon };
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
-  };
-
   const onFinishFailed = (errorInfo: any) => {
     console.log('Submit thất bại:', errorInfo);
+    message.error('Có một số lỗi trong form của bạn. Vui lòng kiểm tra lại các trường  và sửa lỗi!');
+
   };
 
   const upLoadFileToCloud = async () => {
@@ -247,7 +233,15 @@ const UpdateEvent = () => {
   // if (event  && isBeforeOneDay  ) {
   //   return <ErrorSolving errCode={300} />;
   // }
-
+  const [timePublish, setTimePublish] = useState<dayjs.Dayjs | null>(dayjs(event?.timePublish));
+  const handleTimePublishChange = (value: dayjs.Dayjs | null) => {
+    setTimePublish(value); 
+  };
+  const disabledDate = (current: any) => {
+    if (!timePublish) return false;
+    const minDate = timePublish.add(2, 'days');
+    return current.isBefore(minDate, 'day');
+  };
   if (!event) {
     return <ErrorSolving errCode={404} />;
   }
@@ -257,6 +251,7 @@ const UpdateEvent = () => {
         items={[
           {
             title: 'Quản lý sự kiện',
+            href: '/organizations/events',
           },
           {
             title: 'Cập nhật sự kiện',
@@ -345,6 +340,40 @@ const UpdateEvent = () => {
               />
             </svg>
           </div>
+
+          <p className="mt-2">Vị trí đã chọn: {address || event.address}</p>
+        </div>
+
+        <div className="mt-6">
+        <Tag className='mb-2 p-1' color="warning">Lưu ý: Trước thời gian bắt đầu diễn ra sự kiện 1 ngày, các tình nguyện viên sẽ không thể yêu cầu  tham gia sự kiện</Tag>
+          <Radio.Group
+            style={style}
+            onChange={onChange}
+            value={value}
+            defaultValue={value}
+            options={[
+              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
+              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
+            ]}
+          />
+
+          {value === 2 && (
+            <Form.Item
+              name="timePublish"
+              className="mb-4 mt-3"
+              initialValue={dayjs(event.timePublish)}
+              rules={[
+                { required: true, message: 'Vui lòng chọn ngày công bố!' },
+              ]}
+            >
+              <DatePicker
+                showTime={{ format: 'HH:mm' }}
+                format="YYYY-MM-DD HH:mm"
+                placeholder="Chọn ngày công bố"
+                onChange={handleTimePublishChange}
+              />
+            </Form.Item>
+          )}
         </div>
 
         <div className="mt-6 ">
@@ -359,12 +388,47 @@ const UpdateEvent = () => {
             initialValue={[dayjs(event.startTime), dayjs(event.endTime)]}
             name="date"
             className="mb-4 mt-3 "
-            rules={dateRulesEvent}
+            rules={[
+               {
+                  required: true,
+                  message: 'Bạn cần chọn khoảng thời gian!',
+                },
+                {
+                  validator: async (_, value: [Dayjs, Dayjs]) => {
+                    if (!value || value.length < 2) {
+                      return Promise.reject('Hãy chọn cả ngày bắt đầu và ngày kết thúc!');
+                    }
+              
+                    const [startDate, endDate] = value;
+                    const currentDate = dayjs();
+                    const minStartDate = currentDate.add(1, 'day'); // Thêm 1 ngày vào ngày hiện tại
+                    const timePublish = form.getFieldValue('timePublish');
+                    if (startDate.isBefore(minStartDate, 'day')) {
+                      return Promise.reject('Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 1 ngày!');
+                    }
+                    if (endDate.isBefore(currentDate, 'day')) {
+                      return Promise.reject('Ngày kết thúc phải sau ngày hiện tại!');
+                    }
+              
+                    if (endDate.isBefore(startDate)) {
+                      return Promise.reject('Ngày kết thúc phải sau ngày bắt đầu!');
+                    }
+              
+                    if (timePublish && startDate.isBefore(dayjs(timePublish).add(1, 'day'), 'day')) {
+                      return Promise.reject('Ngày bắt đầu cần phải lớn hơn ngày xuất bản ít nhất 1 ngày!');
+                    }
+              
+                    return Promise.resolve();
+                  },
+                },
+            ]}
           >
             <DatePicker.RangePicker
               showTime={{ format: 'HH:mm' }}
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
+              disabledDate={disabledDate}
+              disabled={!timePublish}
             />
           </Form.Item>
         </div>
@@ -498,59 +562,6 @@ const UpdateEvent = () => {
               maxCount={10}
             />
           </Form.Item>
-        </div>
-
-        <div className="mt-6">
-          <Radio.Group
-            style={style}
-            onChange={onChange}
-            value={value}
-            defaultValue={value}
-            options={[
-              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
-            ]}
-          />
-
-          {value === 2 && (
-            <Form.Item
-              name="timePublish"
-              className="mb-4 mt-3"
-              initialValue={dayjs(event.timePublish)}
-              rules={[
-                { required: true, message: 'Vui lòng chọn ngày công bố!' },
-                {
-                  validator: async (_, value) => {
-                    if (!value) return Promise.resolve();
-                    const { date } = form.getFieldsValue();
-                    const [startDate, endDate] = date || [];
-
-                    const selectedDate = dayjs(value);
-
-                    if (!startDate || !endDate) {
-                      return Promise.reject(
-                        'Vui lòng chọn ngày bắt đầu và ngày kết thúc trước!'
-                      );
-                    }
-
-                    if (!selectedDate.isBefore(startDate, 'minute')) {
-                      return Promise.reject(
-                        'Vui lòng chọn lại ngày công bố!. Ngày công bố cần phải trước ngày bắt đầu'
-                      );
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <DatePicker
-                showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
-                placeholder=""
-                style={{ width: '30%' }}
-              />
-            </Form.Item>
-          )}
         </div>
 
         <div className="my-6">

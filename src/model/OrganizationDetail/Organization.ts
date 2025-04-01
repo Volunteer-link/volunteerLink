@@ -17,5 +17,5 @@ export interface Organization {
     isApproval: boolean,
     phoneNumber: string,
     address: string
-
+    star: number,
 }

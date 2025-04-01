@@ -9,12 +9,6 @@ const Home: React.FC<{}> = () => {
   return (
     <div className="mb-20">
       <div className="">
-        <img
-          className="w-full h-96 object-cover"
-          style={{ objectPosition: "50% 15%" }}
-          src="/materials/medium-shot-volunteers-working-together_23-2149181985.jpg"
-          alt=""
-        />
         <div className="w-full lg:px-[16rem] m-auto">
           <LineSpacing />
           <div className="lg:flex lg:justify-evenly">

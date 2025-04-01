@@ -1,4 +1,4 @@
-import { Typography, Image, Tabs } from 'antd';
+import { Typography, Image, Tabs, Rate } from 'antd';
 import React, { useEffect } from 'react';
 import OrganizationsDetailInformation from './OrganizationsDetailInformation';
 import { useParams } from 'react-router-dom';
@@ -44,16 +44,17 @@ const OrganizationsDetail = () => {
             width={200}
             height={200}
             alt="example"
-            src={
-              organization?.urlImage
-                ? organization.urlImage
-                : 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+            onError={(e) =>
+              (e.currentTarget.src =
+                "/materials/blank-profile-picture-973460_1280.png")
             }
+            src={organization?.urlImage }
           />
         </div>
 
         <div className="flex-1 self-end">
           <Typography.Title level={3}>{organization?.name}</Typography.Title>
+          <Rate disabled className='mb-2' allowHalf key={organization?.star} defaultValue={organization?.star} />
           <Typography.Paragraph
             className="px-2  rounded-lg inline-block py-2 max-w-lg leading-4 text-white bg-[#3BA769]"
             style={{ margin: 0 }}

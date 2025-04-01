@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Card, Col, Empty, Row, Tabs, Tag } from "antd";
+import { Avatar, Button, Card, Col, Empty, Rate, Row, Tabs, Tag } from "antd";
 import { StarOutlined } from "@ant-design/icons";
 import { TabsProps } from "antd/lib";
 import VolunteerInformation from "./VolunteerInformation";
@@ -70,12 +70,7 @@ const VolunteerProfile = () => {
                 {dayjs().diff(dayjs(volunteer.dateOfBirth), "year")} tuổi{" "}
               </p>
               <div className="flex items-center space-x-1">
-                {/* Rating */}
-                <StarOutlined className="text-yellow-500" />
-                <StarOutlined className="text-yellow-500" />
-                <StarOutlined className="text-yellow-500" />
-                <StarOutlined className="text-yellow-500" />
-                <StarOutlined className="text-yellow-500" />
+              <Rate disabled  allowHalf defaultValue={volunteer.numberRated} />
               </div>
             </div>
           </div>

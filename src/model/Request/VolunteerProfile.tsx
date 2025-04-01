@@ -18,4 +18,5 @@ export interface VolunteerProfilePage{
     phoneNumber: string;
     skill: string;
     isAvailable: boolean;
+    numberRated: number;
 }
