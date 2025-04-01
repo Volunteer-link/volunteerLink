@@ -103,6 +103,7 @@ const NotificationPage = () => {
     }
     if (item.type === 10 || item.type === 13 || item.type === 15) {
       //show ra trang org chấm mình, mình là volunteer
+      navigate(`/rating-management`);
     }
   };
   console.log(notiList);

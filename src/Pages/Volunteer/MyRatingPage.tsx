@@ -18,7 +18,7 @@ import Loading from "../Components/Loading";
 import MyRatingPageComponent from "./MyRatingPageComponent";
 
 const MyRatingPage = () => {
-  const pageSize = 1;
+  const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [resetKey, setResetKey] = useState<number>(1);
 
@@ -45,7 +45,7 @@ const MyRatingPage = () => {
       }
     };
     fetchRating();
-  }, [resetKey]);
+  }, [resetKey, currentPage]);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);

@@ -12,7 +12,7 @@ import { decodedCookie, getCookie } from "../../ultils/cookie";
 import MapBox from "../Components/MapBox";
 import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
 import useWebSocket from "../../Hook/useWebSocket";
-import { FaBrain } from "react-icons/fa";
+import { WiStars } from "react-icons/wi";
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -192,6 +192,7 @@ const ShowEvent = () => {
       handleClickSearch();
     }
   };
+
   const handleClose = () => {
     setIsModalOpen(false);
   };
@@ -201,8 +202,6 @@ const ShowEvent = () => {
   const onChangeSwitchAIMode = (checked: boolean) => {
     setAISearch(checked);
   };
-
-  console.log(searchKey);
 
   return (
     <div className="">
@@ -252,10 +251,8 @@ const ShowEvent = () => {
             </div>
           </div>
           {user?.role === "Volunteer" && (
-            <div className="bg-white rounded-full py-3 px-5 flex items-center gap-2">
-              <div>
-                <FaBrain className="text-xl text-primary-color" />
-              </div>
+            <div className="bg-white rounded-full py-3 px-5 flex items-center gap-3">
+              <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" />
               <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
             </div>
           )}

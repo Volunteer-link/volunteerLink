@@ -50,14 +50,17 @@ const MyRatingPageComponent: React.FC<{
         feedback:
           textAreaRefUpdate.current?.resizableTextArea?.textArea.value || "",
       });
-    } catch (error: any) {
-    } finally {
       messageApi.success("Cập nhật đánh giá sự kiện thành công!");
       setTimeout(() => {
         setIsLoading(false);
         setOpenUpdate(false);
         setResetKey((prev) => ++prev);
       }, 1000);
+    } catch (error: any) {
+      if (error.response.data.Message === "Update feedback time is over") {
+        messageApi.error("Quá hạn cập nhật đánh giá!");
+      }
+    } finally {
     }
   };
 
