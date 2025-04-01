@@ -108,7 +108,7 @@ const NotificationPage = () => {
   console.log(notiList);
 
   return (
-    <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
+    <div className="">
       <ErrorCards errCode={errCode} />
       {isLoading && <Loading color="green" />}
       {/* {notiList.map((item, index) => (
@@ -192,7 +192,7 @@ const NotificationPage = () => {
         }}
       >
         {notiList?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className=" flex justify-center px-12 mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

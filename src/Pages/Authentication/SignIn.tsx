@@ -53,8 +53,8 @@ const SignIn: React.FC = () => {
         const token = response.data.data.accessToken;
 
         handleAfterLogin(token);
-      } catch (err) {
-        message.error('Login failed!');
+      } catch (err: any) {
+        if (err.status == 400) message.error(`${err.response.data.Message}`);
         console.error(err);
       }
     },
@@ -99,9 +99,9 @@ const SignIn: React.FC = () => {
       handleAfterLogin(token);
 
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error('Login failed!');
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
     } finally {
       setLoading(false);
     }
@@ -129,7 +129,6 @@ const SignIn: React.FC = () => {
       navigate('/');
     }
   };
-
 
   return (
     <div>

@@ -23,7 +23,7 @@ const RatingManagement = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
+    <div className="">
       <div className="font-medium text-xl my-2">Quản lý đánh giá</div>
       <Tabs
         defaultActiveKey={currentTab}

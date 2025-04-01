@@ -35,6 +35,7 @@ import { setUser } from "./redux/slice";
 import MyInvitation from "./Pages/Profile/MyInvitation";
 import ListSentRequest from "./Pages/Organizations/ListSentRequest";
 import RatingManagement from "./Pages/Volunteer/RatingManagement";
+import AttendanceUI from "./Pages/Attendance";
 
 const router = createBrowserRouter([
   {
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
       {
         path: "participate-event/:id",
         element: <EventParticipated />,
+      },
+      {
+        path: "event/attendance/:id",
+        element: <AttendanceUI />,
       },
       {
         path: "detail-event/:id/participation-request",

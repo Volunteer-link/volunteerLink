@@ -252,7 +252,7 @@ const UpdateEvent = () => {
     return <ErrorSolving errCode={404} />;
   }
   return (
-    <div className="container mx-auto px-4">
+    <div className="">
       <Breadcrumb
         items={[
           {

@@ -120,7 +120,7 @@ const VolunteerSuggestions = () => {
   };
 
   return (
-    <div className="container mx-auto px-32 py-8 relative">
+    <div className="relative">
       <div>
         {isLoading && <Loading color="green" />}
         <ErrorCards errCode={errCode} />

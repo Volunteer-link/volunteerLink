@@ -108,7 +108,7 @@ const OrgRatingMePage = () => {
           },
         }}
       >
-        <div className="container flex justify-center mx-auto px-12 mb-8">
+        <div className="flex justify-center px-12 mb-8">
           <Pagination
             defaultCurrent={1}
             current={currentPage}

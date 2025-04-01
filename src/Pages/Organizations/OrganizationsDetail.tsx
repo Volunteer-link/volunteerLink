@@ -34,7 +34,7 @@ const OrganizationsDetail = () => {
     },
   ];
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className=" py-8">
       <div className="flex mt-4 justify-center flex-col md:flex-row items-start p-4 gap-4">
         <div className="w-[200px] h-[200px]  md:h-[200px]   md:w-[300px] shrink-0">
           <Image

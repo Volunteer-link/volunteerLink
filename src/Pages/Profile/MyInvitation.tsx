@@ -25,7 +25,7 @@ const MyInvitation = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
+    <div className="">
       <Tabs
         defaultActiveKey={currentTab}
         items={items}

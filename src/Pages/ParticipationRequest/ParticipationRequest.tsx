@@ -60,7 +60,7 @@ const ParticipationRequest = () => {
   console.log(dataRequest);
 
   return (
-    <div className="container mx-auto px-32 py-8">
+    <div className="px-32 py-8">
       {isLoading && <Loading color="green" />}
       <ErrorCards errCode={errCode} />
       <Breadcrumb
@@ -108,7 +108,7 @@ const ParticipationRequest = () => {
         }}
       >
         {dataRequest?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className="flex justify-center mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

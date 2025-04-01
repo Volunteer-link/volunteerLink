@@ -276,13 +276,6 @@ const Header: React.FC<{}> = () => {
       <div className="col-span-2">
         {!user && (
           <div className="flex w-full h-full justify-center items-center gap-2">
-            <Dropdown
-              menu={{ items: itemsLanguage }}
-              className="cursor-pointer text-white"
-              placement="bottomRight"
-            >
-              {i18n.language === 'en' ? 'English' : 'Tiếng Việt'}
-            </Dropdown>
             <NavLink to={'/authentication/signin'}>
               <div className="border-white border rounded-sm text-sm py-2 px-8 text-white font-medium text-center cursor-pointer hover:scale-105 transition-all">
                 Đăng nhập
@@ -297,13 +290,7 @@ const Header: React.FC<{}> = () => {
         )}
         {user && (
           <div className="flex gap-10 items-center justify-center h-full">
-            <Dropdown
-              menu={{ items: itemsLanguage }}
-              className="cursor-pointer text-white"
-              placement="bottomRight"
-            >
-              {i18n.language === 'en' ? 'English' : 'Tiếng Việt'}
-            </Dropdown>
+          
             <Badge dot={notiStatus}>
               <div
                 onClick={handleNotification}

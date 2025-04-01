@@ -48,7 +48,7 @@ const RequestComponent = () => {
         <Empty className="mt-10" description="Bạn chưa có lời mời nào" />
       )}
       {listRequest?.map((item, index) => (
-        <div key={index} className="container mx-auto">
+        <div key={index} className="">
           <div
             onClick={() => handleClickInvitation(item.eventId)}
             className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
@@ -100,7 +100,7 @@ const RequestComponent = () => {
         }}
       >
         {listRequest?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className=" flex justify-center mx-auto px-12 mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

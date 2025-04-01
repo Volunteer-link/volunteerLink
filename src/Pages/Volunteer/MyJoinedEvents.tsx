@@ -72,7 +72,7 @@ const MyJoinedEvents = () => {
   };
 
   return (
-    <div className="container mx-auto lg:mt-8 mt-16 px-12 lg:ml-auto">
+    <div className="lg:mt-8 mt-16">
       <div className="flex items-center gap-2 mb-10">
         <div className="inline-block my-2 font-medium text-lg text-primary-color before:w-full before:h-[0.125rem] before:absolute relative before:-bottom-2 before:bg-primary-color">
           Sự kiện bạn đã tham gia

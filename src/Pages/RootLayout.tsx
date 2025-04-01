@@ -14,7 +14,7 @@ export default function RootLayout() {
     <div className="relative">
       <ScrollToTop />
       {!hideHeader && <Header />}
-      <main className={hideFooter ? "" : `my-3 lg:my-8`}>
+      <main className={hideFooter ? "" : `my-3 lg:my-8` + "container mx-auto px-4 lg:px-0 lg:w-3/4"}>
         <Outlet />
       </main>
       {!hideHeader && <Footer />}

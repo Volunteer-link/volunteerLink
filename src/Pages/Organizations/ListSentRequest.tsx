@@ -75,7 +75,7 @@ const ListSentRequest = () => {
     }
   };
   return (
-    <div className="container mx-auto px-32 py-8">
+    <div className="px-32 py-8">
       {isLoading && <Loading color="green" />}
       {contextHolder}
       <ErrorCards errCode={errCode} />
@@ -102,7 +102,7 @@ const ListSentRequest = () => {
         ]}
       />
       <div className="lg:px-0 lg:w-3/4 mx-auto">
-        <div className="container mx-auto">
+        <div className="">
           {listInvitation?.map((item, index) => (
             <div
               key={index + new Date().toString()}
@@ -178,7 +178,7 @@ const ListSentRequest = () => {
           <Empty description="Không có dữ liệu" />
         )}
         {listInvitation?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className="flex justify-center mx-auto mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

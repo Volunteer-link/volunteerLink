@@ -264,7 +264,7 @@ const ShowEvent = () => {
       </div>
       {checkSearch && (
         <>
-          <div className="container mx-auto px-12 py-2">
+          <div className="">
             <div className="lg:col-span-2 col-span-7">
               <div className="inline-block mr-1 text-sm">Kết quả:</div>
               <div className="inline-block text-base font-medium text-primary-color">
@@ -275,7 +275,7 @@ const ShowEvent = () => {
           {totalSearch === 0 && <Empty description="Không có kết quả" />}
           {totalSearch !== 0 && (
             <>
-              <div className="container mx-auto px-12">
+              <div className="">
                 <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
                   {listEventCardSearch?.map((item, index) => (
                     <EventCard
@@ -299,7 +299,7 @@ const ShowEvent = () => {
                 }}
               >
                 {listEventCard?.length !== 0 && (
-                  <div className="container mx-auto px-12 mb-8">
+                  <div className=" mb-8">
                     <Pagination
                       defaultCurrent={1}
                       current={currentPageSearch}
@@ -328,7 +328,7 @@ const ShowEvent = () => {
             <div>Sự kiện</div>
             <div className="text-primary-color">phù hợp</div>
           </div>
-          <div className="container mx-auto px-12">
+          <div className="">
             {listEventCardRelevant?.length === 0 && (
               <Empty
                 className="mx-auto"
@@ -359,7 +359,7 @@ const ShowEvent = () => {
             }}
           >
             {listEventCardRelevant?.length !== 0 && (
-              <div className="container mx-auto px-12 mb-8">
+              <div className=" mb-8">
                 <Pagination
                   defaultCurrent={1}
                   current={currentPageRelevant}
@@ -383,7 +383,7 @@ const ShowEvent = () => {
         <div>Sự kiện</div>
         <div className="text-primary-color">đang diễn ra</div>
       </div> */}
-      <div className="container mx-auto px-12">
+      <div className="">
         <div className="lg:col-span-6 flex items-center gap-1 py-2">
           <div className="text-primary-color font-medium">Lĩnh vực:</div>
           <div>
@@ -433,7 +433,7 @@ const ShowEvent = () => {
         }}
       >
         {listEventCard?.length !== 0 && (
-          <div className="container mx-auto px-12 mb-8">
+          <div className=" mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

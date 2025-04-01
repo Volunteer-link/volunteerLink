@@ -19,8 +19,9 @@ const OrganizationEvents = () => {
   const navigate = useNavigate();
   const onChange = (key: string) => {
     setStatus(parseInt(key));
+    setPageNumber(1);
   };
-
+   
   const items: TabsProps["items"] = [
     {
       key: "0",
@@ -53,7 +54,6 @@ const OrganizationEvents = () => {
         },
       });
       console.log(data);
-
       setTotalPage(data.data.totalItems);
       setEventList(data.data.items);
       setLoading(false);
@@ -75,7 +75,7 @@ const OrganizationEvents = () => {
   };
 
   return (
-    <div className="container relative mx-auto px-4 py-8">
+    <div className="relative">
       <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
         <input
           type="text"
@@ -130,7 +130,7 @@ const OrganizationEvents = () => {
                 align="center"
                 current={PageNumber}
                 total={totalPage}
-                pageSize={9}
+                pageSize={8}
                 onChange={handlePageChange}
               />
             </div>

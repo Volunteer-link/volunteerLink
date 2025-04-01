@@ -108,7 +108,7 @@ const Organizations = () => {
     });
   };
   return (
-    <div className="px-4 container mx-auto  flex flex-col">
+    <div className="flex flex-col">
       <div className="flex justify-center mb-6 items-center w-full">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
           <input
@@ -127,7 +127,7 @@ const Organizations = () => {
           </div>
         </div>
       </div>
-      <div className="container relative mx-auto">
+      <div className="relative">
         {loading && (
           <div className="flex absolute z-10 inset-0 justify-center items-center min-h-[300px]">
             <Spin size="large" />

@@ -190,7 +190,7 @@ const CreateEvent = () => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="">
       <Breadcrumb
         items={[
           {

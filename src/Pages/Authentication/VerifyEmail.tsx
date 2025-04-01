@@ -71,9 +71,11 @@ const VerifyEmail = () => {
         message.success("Send successful!");
         setEmailStatus("VERIFY_OTP");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error("Send failed!");
+      if(error.status == 400)
+      message.error(`${error.response.data.Message}`);
+
     } finally {
       setLoading(false);
     }

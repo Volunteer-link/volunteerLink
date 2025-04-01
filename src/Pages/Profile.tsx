@@ -50,7 +50,7 @@ const Profile = () => {
   }, [user?.name]);
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="">
       <div className="mt-10 inline-block">
         <h3 className="font-medium text-[24px] text-[#3BA769]">
           Thông tin tài khoản

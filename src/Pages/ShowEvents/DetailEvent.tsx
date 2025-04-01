@@ -826,7 +826,7 @@ const DetailEvent = () => {
         }}
       >
         {listEventCard?.length !== 0 && (
-          <div className="container mx-auto px-12 mb-8">
+          <div className=" mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPageRelevant}
