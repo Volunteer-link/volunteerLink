@@ -6,7 +6,7 @@ import { decodedCookie, getCookie } from "../../ultils/cookie";
 import { OrgRatingMe } from "../../model/ShowEventModel/OrgRatingMe";
 
 const OrgRatingMePage = () => {
-  const pageSize = 1;
+  const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [errCode, setErrCode] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
@@ -29,7 +29,7 @@ const OrgRatingMePage = () => {
       }
     };
     fetchRating();
-  }, []);
+  }, [currentPage]);
 
   const handleClickEvent = (eventId: number) => {
     window.open(`/detail-event/${eventId}`, "_blank");

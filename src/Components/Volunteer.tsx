@@ -173,9 +173,6 @@ const Volunteer: React.FC<{
               textAreaRef.current?.resizableTextArea?.textArea.value || "",
           }
         );
-      } catch (e: any) {
-        console.log(e);
-      } finally {
         messageApi.success("Đánh giá tình nguyện viên thành công!");
         setTimeout(() => {
           if (setResetState) {
@@ -184,6 +181,11 @@ const Volunteer: React.FC<{
           setIsLoading(false);
           setOpenModalRating(false);
         }, 1000);
+      } catch (e: any) {
+        if (e.response.data.Message === "Feedback time is over") {
+          messageApi.error("Quá hạn đánh giá tình nguyện viên!");
+        }
+      } finally {
       }
     }
   };
@@ -196,14 +198,16 @@ const Volunteer: React.FC<{
         feedback:
           textAreaRefUpdate.current?.resizableTextArea?.textArea.value || "",
       });
-    } catch (e: any) {
-      console.log(e);
-    } finally {
       messageApi.success("Cập nhật đánh giá tình nguyện viên thành công!");
       setTimeout(() => {
         setIsLoading(false);
         setOpenModalViewRated(false);
       }, 1000);
+    } catch (e: any) {
+      if (e.response.data.Message === "Update feedback time is over") {
+        messageApi.error("Quá hạn cập nhật đánh giá!");
+      }
+    } finally {
     }
   };
 
