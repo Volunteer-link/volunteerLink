@@ -34,6 +34,7 @@ import { decodedCookie, getCookie } from "./ultils/cookie";
 import { setUser } from "./redux/slice";
 import MyInvitation from "./Pages/Profile/MyInvitation";
 import ListSentRequest from "./Pages/Organizations/ListSentRequest";
+import RatingManagement from "./Pages/Volunteer/RatingManagement";
 
 const router = createBrowserRouter([
   {
@@ -131,6 +132,10 @@ const router = createBrowserRouter([
       {
         path: "detail-event/:id/sent-invitation",
         element: <ListSentRequest />,
+      },
+      {
+        path: "/rating-management",
+        element: <RatingManagement />,
       },
     ],
   },

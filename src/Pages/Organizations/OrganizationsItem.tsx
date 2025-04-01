@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Typography } from 'antd';
 import { color } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 const { Paragraph } = Typography;
 
 interface OrganizationsItemProps {
@@ -10,8 +11,10 @@ interface OrganizationsItemProps {
 }
 
 const OrganizationsItem = ({ name, image, field }: OrganizationsItemProps) => {
+   
+
   return (
-    <div className="flex mt-4 justify-center rounded-lg border border-[#3BA769] items-start p-4 gap-4">
+    <div  className="flex mt-4 justify-center rounded-lg border border-[#3BA769] items-start p-4 gap-4">
       <div className="w-32 shrink-0">
         <Image
           style={{ objectFit: 'cover' }}

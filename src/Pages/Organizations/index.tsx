@@ -163,7 +163,16 @@ const Organizations = () => {
             <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
               {organizationsList.map((item: any) => {
                 return (
-                  <Col key={item.id} xs={24} sm={8} md={8}>
+                  <Col
+                    onClick={() => {
+                      navigate(`/organizations/profile/${item.accountId}`);
+                    }}
+                     className='cursor-pointer'
+                    key={item.id}
+                    xs={24}
+                    sm={8}
+                    md={8}
+                  >
                     <OrganizationsItem
                       image={item.urlImage}
                       name={item.name}

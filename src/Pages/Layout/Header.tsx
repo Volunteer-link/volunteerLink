@@ -1,6 +1,7 @@
+
 import { AiOutlineUser } from "react-icons/ai";
 import { MdEvent, MdLogout } from "react-icons/md";
-import { Dropdown, Space, MenuProps, Menu, Badge, ConfigProvider } from "antd";
+import { Dropdown, Space, MenuProps, Menu, Badge, ConfigProvider, Button, } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { VscBell } from "react-icons/vsc";
 import { VscBellDot } from "react-icons/vsc";
@@ -15,6 +16,9 @@ import api from "../../apiService/useFetch";
 import useWebSocket from "../../Hook/useWebSocket";
 import WebsocketContext from "../../ultils/WebsocketContext";
 import { SlEnvolopeLetter } from "react-icons/sl";
+import { TbStarsFilled } from "react-icons/tb";
+import { useTranslation } from 'react-i18next';
+
 
 const Header: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
@@ -22,11 +26,11 @@ const Header: React.FC<{}> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [notiStatus, setNotiStatus] = useState<boolean>(false);
-  const token = getCookie("accessToken");
+  const token = getCookie('accessToken');
   const user = decodedCookie(token);
   const logout = useLogout();
 
-  const isExactMatch = location.pathname === "/organizations";
+  const isExactMatch = location.pathname === '/organizations';
 
   useEffect(() => {
     const fetchCheckStatus = async () => {
@@ -43,44 +47,44 @@ const Header: React.FC<{}> = () => {
     }
   }, []);
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: `Chào! ${user?.given_name}`,
       disabled: true,
     },
     {
-      type: "divider",
+      type: 'divider',
     },
     {
-      key: "2",
+      key: '2',
       label: (
         <NavLink
           className="flex items-center gap-1"
           to={`${
-            user?.role === "Volunteer"
-              ? "/volunteerProfile"
-              : "/organizations/edit-profile"
+            user?.role === 'Volunteer'
+              ? '/volunteerProfile'
+              : '/organizations/edit-profile'
           }`}
         >
           <CgProfile />
           <span>Hồ sơ của tôi</span>
           <div
             className={`w-1 h-1 rounded-full bg-red-500 ${
-              !checkProfile ? "" : "hidden"
+              !checkProfile ? '' : 'hidden'
             }`}
           ></div>
         </NavLink>
       ),
     },
-    ...(user?.role === "Volunteer"
+    ...(user?.role === 'Volunteer'
       ? [
           {
-            key: "3",
+            key: '3',
             label: (
               <NavLink
                 className="flex items-center gap-1"
-                to={"/joined-events"}
+                to={'/joined-events'}
               >
                 <FaCalendarAlt />
                 <span>Các sự kiện đã tham gia</span>
@@ -89,14 +93,14 @@ const Header: React.FC<{}> = () => {
           },
         ]
       : []),
-    ...(user?.role === "Volunteer"
+    ...(user?.role === 'Volunteer'
       ? [
           {
-            key: "4",
+            key: '4',
             label: (
               <NavLink
                 className="flex items-center gap-1"
-                to={"/my-invitation"}
+                to={'/my-invitation'}
               >
                 <SlEnvolopeLetter />
                 <span>Quản lý lời mời</span>
@@ -105,14 +109,14 @@ const Header: React.FC<{}> = () => {
           },
         ]
       : []),
-    ...(user?.role === "Organization"
+    ...(user?.role === 'Organization'
       ? [
           {
-            key: "6",
+            key: '6',
             label: (
               <NavLink
                 className="flex items-center gap-1"
-                to={"/organizations/events"}
+                to={'/organizations/events'}
               >
                 <MdEvent />
                 <span>Quản lý sự kiện</span>
@@ -121,12 +125,28 @@ const Header: React.FC<{}> = () => {
           },
         ]
       : []),
+    ...(user?.role === "Volunteer"
+      ? [
+          {
+            key: "7",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={"/rating-management"}
+              >
+                <TbStarsFilled />
+                <span>Quản lý đánh giá</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
     {
-      key: "5",
+      key: '5',
       label: (
         <NavLink
           className="flex items-center gap-1"
-          to={"/account-information"}
+          to={'/account-information'}
         >
           <IoSettingsOutline />
           <span>Thông tin tài khoản</span>
@@ -134,6 +154,35 @@ const Header: React.FC<{}> = () => {
       ),
     },
   ];
+
+  const { t, i18n } = useTranslation();
+
+  const handleChangeLanguage = (e: any) => {
+    e.preventDefault();
+    const lang = e.currentTarget.dataset.lang;
+    i18n.changeLanguage(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const itemsLanguage = [
+    {
+      key: '1',
+      label: (
+        <a data-lang="vi" onClick={handleChangeLanguage}>
+          Tiếng Việt
+        </a>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <a data-lang="en" onClick={handleChangeLanguage}>
+          English
+        </a>
+      ),
+    },
+  ];
+
   const handleVisibleChange = (newVisible: boolean) => {
     setVisible(newVisible);
   };
@@ -145,11 +194,11 @@ const Header: React.FC<{}> = () => {
   const socket = useContext(WebsocketContext);
   useEffect(() => {
     if (socket) {
-      socket.addEventListener("message", (event) => {
+      socket.addEventListener('message', (event) => {
         const parsedData = JSON.parse(event.data);
         if (
-          parsedData.Message === "New Notification" &&
-          parsedData.message !== "Connected" &&
+          parsedData.Message === 'New Notification' &&
+          parsedData.message !== 'Connected' &&
           socket.readyState === WebSocket.OPEN
         ) {
           setNotiStatus(true);
@@ -161,13 +210,13 @@ const Header: React.FC<{}> = () => {
 
   const handleNotification = () => {
     setNotiStatus(false);
-    navigate("notification");
+    navigate('notification');
   };
 
   return (
     <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 sticky top-0 w-full z-50">
       <div></div>
-      <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo</div>
+      <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo </div>
       <div className="col-span-3 hidden md:block">
         <ul className="flex gap-8 text-white text-sm h-full items-center">
           <li className="hover:scale-110 transition-all cursor-pointer">
@@ -175,9 +224,9 @@ const Header: React.FC<{}> = () => {
               to="/home"
               className={({ isActive }) =>
                 `text-white hover:text-white ${
-                  isActive || location.pathname === "/"
-                    ? "font-bold border-b-2 pb-1 border-white"
-                    : ""
+                  isActive || location.pathname === '/'
+                    ? 'font-bold border-b-2 pb-1 border-white'
+                    : ''
                 }`
               }
             >
@@ -189,7 +238,7 @@ const Header: React.FC<{}> = () => {
               to="/organizations"
               className={({ isActive }) =>
                 `text-white hover:text-white ${
-                  isActive ? "font-bold border-b-2 pb-1 border-white" : ""
+                  isActive ? 'font-bold border-b-2 pb-1 border-white' : ''
                 }`
               }
             >
@@ -201,7 +250,7 @@ const Header: React.FC<{}> = () => {
               to="/events"
               className={({ isActive }) =>
                 `text-white hover:text-white ${
-                  isActive ? "font-bold border-b-2 pb-1 border-white" : ""
+                  isActive ? 'font-bold border-b-2 pb-1 border-white' : ''
                 }`
               }
             >
@@ -213,7 +262,7 @@ const Header: React.FC<{}> = () => {
               to={`/aboutus`}
               className={({ isActive }) =>
                 `text-white hover:text-white ${
-                  isActive ? "font-bold border-b-2 pb-1 border-white" : ""
+                  isActive ? 'font-bold border-b-2 pb-1 border-white' : ''
                 }`
               }
             >
@@ -227,12 +276,19 @@ const Header: React.FC<{}> = () => {
       <div className="col-span-2">
         {!user && (
           <div className="flex w-full h-full justify-center items-center gap-2">
-            <NavLink to={"/authentication/signin"}>
+            <Dropdown
+              menu={{ items: itemsLanguage }}
+              className="cursor-pointer text-white"
+              placement="bottomRight"
+            >
+              {i18n.language === 'en' ? 'English' : 'Tiếng Việt'}
+            </Dropdown>
+            <NavLink to={'/authentication/signin'}>
               <div className="border-white border rounded-sm text-sm py-2 px-8 text-white font-medium text-center cursor-pointer hover:scale-105 transition-all">
                 Đăng nhập
               </div>
             </NavLink>
-            <NavLink to={"/authentication/signup"}>
+            <NavLink to={'/authentication/signup'}>
               <div className="bg-white rounded-sm text-sm py-2 px-8 text-primary-color font-medium text-center cursor-pointer hover:scale-105 transition-all">
                 Đăng ký
               </div>
@@ -241,6 +297,13 @@ const Header: React.FC<{}> = () => {
         )}
         {user && (
           <div className="flex gap-10 items-center justify-center h-full">
+            <Dropdown
+              menu={{ items: itemsLanguage }}
+              className="cursor-pointer text-white"
+              placement="bottomRight"
+            >
+              {i18n.language === 'en' ? 'English' : 'Tiếng Việt'}
+            </Dropdown>
             <Badge dot={notiStatus}>
               <div
                 onClick={handleNotification}
