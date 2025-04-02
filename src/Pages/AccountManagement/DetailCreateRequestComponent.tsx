@@ -9,7 +9,7 @@ const DetailCreateRequestComponent: React.FC<{
   idDetailRequest: number;
 }> = ({ setMode, idDetailRequest }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [stateModal, setStateModal] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -21,9 +21,9 @@ const DetailCreateRequestComponent: React.FC<{
   const handleChangeMode = () => {
     setMode("create");
   };
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -115,7 +115,7 @@ const DetailCreateRequestComponent: React.FC<{
             <Spin size="large" fullscreen />
           </Flex>
         )}
-        <ErrorSolving errCode={errCode} />
+        {/* <ErrorSolving errCode={errCode} /> */}
         <Modal
           title="Xác nhận"
           open={openModal}

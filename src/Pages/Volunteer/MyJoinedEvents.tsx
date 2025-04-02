@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import EventCard from '../Components/EventCard';
+import React, { useCallback, useEffect, useState } from "react";
+import EventCard from "../Components/EventCard";
 import {
   Col,
   ConfigProvider,
@@ -9,12 +9,12 @@ import {
   Spin,
   Tabs,
   Tooltip,
-} from 'antd';
-import { RiInformation2Fill } from 'react-icons/ri';
-import api from '../../apiService/useFetch';
-import { TabsProps } from 'antd/lib';
-import { useNavigate } from 'react-router-dom';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
+} from "antd";
+import { RiInformation2Fill } from "react-icons/ri";
+import api from "../../apiService/useFetch";
+import { TabsProps } from "antd/lib";
+import { useNavigate } from "react-router-dom";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 
 const MyJoinedEvents = () => {
   const [PageNumber, setPageNumber] = React.useState<number>(1);
@@ -27,22 +27,18 @@ const MyJoinedEvents = () => {
     setStatus(parseInt(key));
   };
 
-  const items: TabsProps['items'] = [
+  const items: TabsProps["items"] = [
     {
-      key: '0',
-      label: 'Đang diễn ra',
+      key: "0",
+      label: "Đang diễn ra",
     },
     {
-      key: '1',
-      label: 'Đã diễn ra',
+      key: "1",
+      label: "Đã diễn ra",
     },
     {
-      key: '-1',
-      label: 'Chưa bắt đầu',
-    },
-    {
-      key: '2',
-      label: 'Chưa xuất bản',
+      key: "-1",
+      label: "Chưa bắt đầu",
     },
   ];
 
@@ -97,7 +93,7 @@ const MyJoinedEvents = () => {
               <Empty />
             ) : (
               <div>
-                <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
+                <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
                   {eventList.map((item: EventCardType) => {
                     return (
                       <Col key={item.id} xs={24} sm={12} md={8} lg={6}>

@@ -8,13 +8,13 @@ import { OrgRatingMe } from "../../model/ShowEventModel/OrgRatingMe";
 const OrgRatingMePage = () => {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [listRating, setListRating] = useState<OrgRatingMe[]>([]);
 
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchRating = async () => {
       try {
@@ -40,7 +40,7 @@ const OrgRatingMePage = () => {
   };
   return (
     <div>
-      <ErrorCards errCode={errCode} />
+      {/* <ErrorCards errCode={errCode} /> */}
       {listRating.length !== 0 && (
         <div className="rounded-md border-2 border-primary-color p-4 mb-4">
           {listRating.map((item, index) => (
