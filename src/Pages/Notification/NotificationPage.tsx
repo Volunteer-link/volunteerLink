@@ -15,7 +15,7 @@ const NotificationPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingImage, setIsLoadingImage] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const navigate = useNavigate();
   const [total, setTotal] = useState<number>(0);
 
@@ -47,9 +47,9 @@ const NotificationPage = () => {
     }
   }, [socket]);
 
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchNoti = async () => {
       try {
@@ -110,7 +110,7 @@ const NotificationPage = () => {
 
   return (
     <div className="">
-      <ErrorCards errCode={errCode} />
+      {/* <ErrorCards errCode={errCode} /> */}
       {isLoading && <Loading color="green" />}
       {/* {notiList.map((item, index) => (
         <div

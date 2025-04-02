@@ -18,12 +18,16 @@ const VolunteerProfile = () => {
   useEffect(() => {
     const fetchVolunteer = async () => {
       try {
-        const { data } = await api.get(`/profile/${id}`);
+        const { data } = await api.get(`/profile/volunteer`, {
+          params: {
+            Id: id,
+          },
+        });
         console.log(data);
 
         setVolunteer(data.data);
       } catch (e: any) {
-        if (e.response.data.Message === "This profile is not available") {
+        if (e.response?.data.Message === "This profile is not available") {
           setIsAvailable(true);
         }
       } finally {
@@ -70,7 +74,7 @@ const VolunteerProfile = () => {
                 {dayjs().diff(dayjs(volunteer.dateOfBirth), "year")} tuổi{" "}
               </p>
               <div className="flex items-center space-x-1">
-              <Rate disabled  allowHalf defaultValue={volunteer.numberRated} />
+                <Rate disabled allowHalf defaultValue={volunteer.numberRated} />
               </div>
             </div>
           </div>

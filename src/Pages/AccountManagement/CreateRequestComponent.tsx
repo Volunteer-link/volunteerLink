@@ -1,4 +1,4 @@
-import { ConfigProvider, Flex, Pagination, Spin } from "antd";
+import { ConfigProvider, Empty, Flex, Pagination, Spin } from "antd";
 import { useEffect, useState } from "react";
 import api, { setupInterceptors } from "../../apiService/useFetch";
 import ErrorSolving from "../../Common/ErrorSolving";
@@ -9,7 +9,7 @@ const CreateRequestComponent: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [sizePage, setSizePage] = useState<number>(5);
   const [dataDisplay, setDataDisplay] = useState<
     {
@@ -23,7 +23,7 @@ const CreateRequestComponent: React.FC<{
   >([]);
 
   useEffect(() => {
-    setupInterceptors(setErrCode, setPageNumber, setTotalItems);
+    setupInterceptors(setPageNumber, setTotalItems);
   }, []);
   useEffect(() => {
     const fetchData = async () => {
@@ -68,7 +68,11 @@ const CreateRequestComponent: React.FC<{
               </div>
             </div>
           ))}
-        {dataDisplay.length === 0 && <div>Không có thông tin</div>}
+        {dataDisplay.length === 0 && (
+          <div>
+            <Empty description="Không có yêu cầu" />
+          </div>
+        )}
       </div>
       <ConfigProvider
         theme={{
@@ -91,7 +95,7 @@ const CreateRequestComponent: React.FC<{
             <Spin size="large" fullscreen />
           </Flex>
         )}
-        <ErrorSolving errCode={errCode} />
+        {/* <ErrorSolving errCode={errCode} /> */}
         {dataDisplay.length > 0 && (
           <Pagination
             defaultCurrent={1}

@@ -20,7 +20,6 @@ import VolunteerProfile from "./Pages/Profile/VolunteerProfile";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
-import Chat from "./Pages/ShowEvents/Chat";
 import ParticipationRequest from "./Pages/ParticipationRequest/ParticipationRequest";
 import useWebSocket from "./Hook/useWebSocket";
 import { WebsocketProvider } from "./ultils/WebsocketContext";
@@ -36,6 +35,9 @@ import MyInvitation from "./Pages/Profile/MyInvitation";
 import ListSentRequest from "./Pages/Organizations/ListSentRequest";
 import RatingManagement from "./Pages/Volunteer/RatingManagement";
 import AttendanceUI from "./Pages/Attendance";
+import Unauthorized from "./Pages/ErrorPages/Unauthorized";
+import Forbidden from "./Pages/ErrorPages/Forbidden";
+import ServerError from "./Pages/ErrorPages/ServerError";
 
 const router = createBrowserRouter([
   {
@@ -157,8 +159,16 @@ const router = createBrowserRouter([
     element: <VerifyEmail />,
   },
   {
-    path: "/test-chat",
-    element: <Chat />,
+    path: "/unauthorized",
+    element: <Unauthorized />,
+  },
+  {
+    path: "/forbidden",
+    element: <Forbidden />,
+  },
+  {
+    path: "/server-error",
+    element: <ServerError />,
   },
 ]);
 

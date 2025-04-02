@@ -26,14 +26,14 @@ const VolunteerSuggestions = () => {
   const [totalAll, setTotalAll] = useState<number>(0);
   const [resetState, setResetState] = useState<number>(0);
   const [resetStateAll, setResetStateAll] = useState<number>(0);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const refSearch = useRef<HTMLInputElement>(null);
   const [AISearch, setAISearch] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState<string>("");
 
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -161,7 +161,7 @@ const VolunteerSuggestions = () => {
     <div className="relative">
       <div>
         {isLoading && <Loading color="green" />}
-        <ErrorCards errCode={errCode} />
+        {/* <ErrorCards errCode={errCode} /> */}
 
         {/* <Loading color="green" /> */}
         <Breadcrumb

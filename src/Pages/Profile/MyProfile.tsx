@@ -71,7 +71,7 @@ const MyProfile = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [radioState, setRadioState] = useState<number>(-2);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
 
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
@@ -135,9 +135,9 @@ const MyProfile = () => {
   const [form] = Form.useForm();
 
   const [messageApi, contextHolder] = message.useMessage();
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
@@ -196,9 +196,10 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await api.get(`/profile`);
+        const res = await api.get(`/profile/volunteer`);
 
         const data = res.data.data;
+        console.log(data);
 
         setProfileState((prev) => ({
           ...(prev ?? {}),
@@ -416,7 +417,7 @@ const MyProfile = () => {
   return (
     <div className=" py-4 relative">
       {isLoading && <Loading color="green" />}
-      <ErrorCards errCode={errCode} />
+      {/* <ErrorCards errCode={errCode} /> */}
       {contextHolder}
       {/* {!currentUser && <ErrorLoginRequired />} */}
       <div className="mb-8 inline-block lg:mt-0 mt-10 before:w-full before:h-[0.125rem] before:absolute relative before:-bottom-2 before:bg-primary-color select-none">

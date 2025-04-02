@@ -22,14 +22,14 @@ const MyRatingPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [resetKey, setResetKey] = useState<number>(1);
 
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [listRating, setListRating] = useState<MyRatingType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchRating = async () => {
       try {
@@ -54,7 +54,7 @@ const MyRatingPage = () => {
   return (
     <div>
       {isLoading && <Loading color="green" />}
-      <ErrorCards errCode={errCode} />
+      {/* <ErrorCards errCode={errCode} /> */}
       {listRating.length !== 0 && (
         <div className="rounded-md border-2 border-primary-color p-4 mb-4">
           {listRating.map((item, index) => (

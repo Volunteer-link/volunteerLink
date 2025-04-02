@@ -41,12 +41,21 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (error.response?.status === 401) {
+      window.location.href = "/unauthorized"; // Chuyển trang khi lỗi 401
+    }
+    if (error.response?.status === 403) {
+      window.location.href = "/forbidden"; // Chuyển trang khi lỗi 401
+    }
+    if (error.response?.status === 500) {
+      window.location.href = "/server-error"; // Chuyển trang khi lỗi 401
+    }
     return Promise.reject(error);
   }
 );
 
 export const setupInterceptors = (
-  setError?: (message: number) => void,
+  // setError?: (message: number) => void,
   setPageNumber?: (message: number) => void,
   setTotalItems?: (message: number) => void,
   setCheckPagination?: (message: number) => void
@@ -61,9 +70,9 @@ export const setupInterceptors = (
       return response;
     },
     (error) => {
-      setError?.(error.response?.status || 500);
-      setError?.(error.response?.status || 401);
-      setError?.(error.response?.status || 403);
+      // setError?.(error.response?.status || 500);
+      // setError?.(error.response?.status || 401);
+      // setError?.(error.response?.status || 403);
       return Promise.reject(error);
     }
   );

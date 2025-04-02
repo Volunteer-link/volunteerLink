@@ -14,7 +14,7 @@ const ParticipationRequest = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dataRequest, setDataRequest] = useState<volunteerProps[]>([]);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [nameEvent, setNameEvent] = useState<string>("");
   const [resetState, setResetState] = useState<number>(0);
@@ -23,9 +23,9 @@ const ParticipationRequest = () => {
   const { nameEventState } = location.state || { nameEventState: "" };
 
   const { id } = useParams<{ id: string }>();
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,7 +62,7 @@ const ParticipationRequest = () => {
   return (
     <div className="px-32 py-8">
       {isLoading && <Loading color="green" />}
-      <ErrorCards errCode={errCode} />
+      {/* <ErrorCards errCode={errCode} /> */}
       <Breadcrumb
         className=""
         items={[
