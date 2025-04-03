@@ -146,7 +146,7 @@ const AttendanceUI: React.FC = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <h2 className="text-[30 px] font-semibold mb-4">
+      <h2 className="text-[20px] font-semibold mb-4">
         Điểm danh tình nguyện viên
       </h2>
 

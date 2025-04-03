@@ -106,7 +106,7 @@ const VerifyEmail = () => {
   return (
     <div>
       <Row className="w-full h-screen">
-        <Col span={18}>
+        <Col span={16}>
           {emailStatus == "FORGOT_PASSWORD" ? (
             <div className="w-full mx-auto lg:max-w-80 gap-6 h-full">
               <ForgotPassword
@@ -204,13 +204,15 @@ const VerifyEmail = () => {
             </div>
           )}
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Image
-            className="w-full h-screen"
+            className="w-full h-screen object-cover"
             preview={false}
             placeholder={true}
             alt="logo"
-            src={logo}
+            src={
+              "/materials/environment-volunteer-concept-with-group-persons.jpg"
+            }
             style={{ height: "100vh", width: "100%" }}
           />
         </Col>

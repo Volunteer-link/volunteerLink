@@ -117,7 +117,7 @@ const router = createBrowserRouter([
         element: <EventParticipated />,
       },
       {
-        path: "event/attendance/:id",
+        path: "/event/attendance/:id",
         element: <AttendanceUI />,
       },
       {

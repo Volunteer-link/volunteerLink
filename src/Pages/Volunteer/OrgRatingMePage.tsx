@@ -76,7 +76,7 @@ const OrgRatingMePage = () => {
                 </div>
                 <div className="mb-2">{item.feedback}</div>
                 <div className="text-stone-500">
-                  {new Date(item.time).toLocaleString("en-US", {
+                  {new Date(item.time).toLocaleString("vi-VN", {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",

@@ -63,7 +63,7 @@ const RequestComponent = () => {
                 </span>
               </div>
               <div>
-                Thời gian: {new Date(item.time).toLocaleString("sv-SE")}
+                Thời gian: {new Date(item.time).toLocaleString("vi-VN")}
               </div>
               <div>
                 Trạng thái:{" "}

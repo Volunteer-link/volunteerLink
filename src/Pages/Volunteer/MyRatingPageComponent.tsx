@@ -117,7 +117,7 @@ const MyRatingPageComponent: React.FC<{
           </div>
           <div className="mb-2">{object.feedback}</div>
           <div className="text-stone-500">
-            {new Date(object.time).toLocaleString("en-US", {
+            {new Date(object.time).toLocaleString("vi-VN", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",

@@ -101,7 +101,7 @@ const SignIn: React.FC = () => {
       return response;
     } catch (error: any) {
       console.error(error);
-      if (error.status == 401) message.error(`${error.response.data.Message}`);
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
     } finally {
       setLoading(false);
     }
@@ -250,7 +250,7 @@ const SignIn: React.FC = () => {
             preview={false}
             placeholder={true}
             alt="logo"
-            src={logo}
+            src={"/materials/environmentalists-stacking-hands_13339-160020.jpg"}
             style={{ height: "100vh", width: "100%" }}
           />
         </Col>
