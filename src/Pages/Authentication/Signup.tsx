@@ -52,7 +52,7 @@ const Signup = () => {
         isOrganization: organization,
         name: trimmedValues.name,
         dateOfBirth: trimmedValues.date,
-        listCertificates: listCertificates
+        listCertificates: listCertificates,
       });
       // Nếu gọi thành công => hiển thị thông báo
       message.success("signup successful!");
@@ -98,8 +98,8 @@ const Signup = () => {
       });
 
       const downloadURLs = await Promise.all(promises);
-      console.log(downloadURLs)
-      setListCertificates(() => [...downloadURLs])
+      console.log(downloadURLs);
+      setListCertificates(() => [...downloadURLs]);
       console.log(listCertificates);
     } catch (error) {
       console.error(error);
@@ -153,15 +153,17 @@ const Signup = () => {
             {!location.state ? (
               <div>
                 <p>
-                  Bạn cần xác thực Email trước khi đăng ký. {""}
-                  <a
-                    onClick={() => {
-                      navigate("/authentication/verify-email");
-                    }}
-                    className="text-[#3BA769]"
-                  >
-                    Xác thực Email
-                  </a>
+                  Bạn cần xác thực Email trước khi đăng ký.
+                  <div className="text-center">
+                    <a
+                      onClick={() => {
+                        navigate("/authentication/verify-email");
+                      }}
+                      className="text-[#3BA769]"
+                    >
+                      Xác thực Email
+                    </a>
+                  </div>
                   <NavLink to={"/"}>
                     <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
                   </NavLink>

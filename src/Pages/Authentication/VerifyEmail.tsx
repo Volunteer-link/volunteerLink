@@ -73,9 +73,7 @@ const VerifyEmail = () => {
       }
     } catch (error: any) {
       console.error(error);
-      if(error.status == 400)
-      message.error(`${error.response.data.Message}`);
-
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
     } finally {
       setLoading(false);
     }
@@ -196,6 +194,7 @@ const VerifyEmail = () => {
                   }}
                   className="text-[#3BA769]"
                 >
+                  {" "}
                   Đăng nhập{" "}
                 </a>
                 <NavLink to={"/"}>

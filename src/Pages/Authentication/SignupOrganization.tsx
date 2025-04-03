@@ -1,8 +1,8 @@
-import { Flex, Input, Button, ConfigProvider, Form, Upload } from 'antd';
-import { useNavigate } from 'react-router';
-import type { Rule, FormInstance } from 'antd/es/form';
-import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Flex, Input, Button, ConfigProvider, Form, Upload } from "antd";
+import { useNavigate } from "react-router";
+import type { Rule, FormInstance } from "antd/es/form";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 interface SignupOrganizationProps {
   onFinish?: (values: any) => void;
@@ -31,7 +31,7 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
@@ -46,19 +46,19 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item name="name" className='mb-4' rules={nameRules}>
+        <Form.Item name="name" className="mb-4" rules={nameRules}>
           <Input className={`max-w-[400px]`} placeholder="Tên tổ chức..." />
         </Form.Item>
-        <Form.Item name="password" className='mb-4' rules={passwordRules}>
+        <Form.Item name="password" className="mb-4" rules={passwordRules}>
           <Input.Password
             className={`max-w-[400px]`}
             placeholder="Mật khẩu..."
           />
         </Form.Item>
         <Form.Item
-        className='mb-4'
+          className="mb-4"
           name="confirmPassword"
-          dependencies={['password']}
+          dependencies={["password"]}
           rules={confirmPasswordRules(form)}
         >
           <Input.Password
@@ -67,13 +67,13 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
           />
         </Form.Item>
         <Form.Item
-        className='mb-4'
+          className="mb-4"
           name="image"
           rules={[
             {
               validator(_: any, value: string) {
                 if (!fileList.length) {
-                  return Promise.reject('Bạn cần upload ảnh');
+                  return Promise.reject("Bạn cần upload ảnh");
                 }
                 return Promise.resolve();
               },
@@ -88,14 +88,14 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
             onChange={handleChange}
             beforeUpload={() => false}
           >
-             <Button icon={<UploadOutlined />}>Select File</Button>
+            <Button icon={<UploadOutlined />}>Select File</Button>
           </Upload>
         </Form.Item>
         <Flex className="w-full" justify={`center`} gap="middle" vertical>
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: '#3BA769',
+                colorPrimary: "#3BA769",
               },
             }}
           >
@@ -115,10 +115,11 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
         Bạn đã có tài khoản?
         <a
           onClick={() => {
-            navigate('/authentication/signin');
+            navigate("/authentication/signin");
           }}
           className="text-[#3BA769]"
         >
+          {" "}
           Đăng nhập
         </a>
       </p>

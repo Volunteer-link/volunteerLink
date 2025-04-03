@@ -178,7 +178,7 @@ const NotificationPage = () => {
       ))}
 
       {notiList.length === 0 && (
-        <Empty className="mt-10" description="Không có dữ liệu" />
+        <Empty className="mt-10" description="Không có thông báo" />
       )}
       <ConfigProvider
         theme={{

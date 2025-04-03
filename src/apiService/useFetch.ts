@@ -41,12 +41,17 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
+    console.log(error);
+
+    if (
+      error.response?.status === 401 &&
+      error.response?.data.Message !== "Gmail hoặc mật khẩu chưa chính xác."
+    ) {
       window.location.href = "/unauthorized"; // Chuyển trang khi lỗi 401
     }
-    if (error.response?.status === 403) {
-      window.location.href = "/forbidden"; // Chuyển trang khi lỗi 401
-    }
+    // if (error.response?.status === 403) {
+    //   window.location.href = "/forbidden"; // Chuyển trang khi lỗi 401
+    // }
     if (error.response?.status === 500) {
       window.location.href = "/server-error"; // Chuyển trang khi lỗi 401
     }

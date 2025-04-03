@@ -175,7 +175,7 @@ const ListSentRequest = () => {
         }}
       >
         {listInvitation?.length === 0 && (
-          <Empty description="Không có dữ liệu" />
+          <Empty description="Không có lời mời" />
         )}
         {listInvitation?.length !== 0 && (
           <div className="flex justify-center mx-auto mb-8">

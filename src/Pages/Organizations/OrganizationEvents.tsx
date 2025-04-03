@@ -21,7 +21,7 @@ const OrganizationEvents = () => {
     setStatus(parseInt(key));
     setPageNumber(1);
   };
-   
+
   const items: TabsProps["items"] = [
     {
       key: "0",
@@ -113,13 +113,13 @@ const OrganizationEvents = () => {
       ) : (
         <>
           {eventList.length === 0 ? (
-            <Empty />
+            <Empty description="Không có dữ liệu sự kiện" />
           ) : (
             <div>
               <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
                 {eventList.map((item: EventCardType) => {
                   return (
-                    <Col key={item.id} xs={24} sm={12} md={8} lg={6} >
+                    <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
                       <EventCard eventObject={item} showOption={true} />
                     </Col>
                   );

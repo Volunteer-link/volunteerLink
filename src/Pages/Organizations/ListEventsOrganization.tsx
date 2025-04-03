@@ -47,7 +47,7 @@ const ListEventsOrganization = ({
       )}
 
       {eventList.length === 0 ? (
-        <Empty />
+        <Empty description="Không có dữ liệu sự kiện" />
       ) : (
         <div>
           <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>

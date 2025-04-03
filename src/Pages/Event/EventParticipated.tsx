@@ -134,7 +134,7 @@ const EventParticipated = () => {
         ) : (
           <>
             {!listVolunteer || listVolunteer.length === 0 ? (
-              <Empty description="Không có dữ liệu" />
+              <Empty description="Không có tình nguyện viên tham gia" />
             ) : (
               listVolunteer.map((volunteer, index) => (
                 <Volunteer

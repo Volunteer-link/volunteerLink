@@ -63,7 +63,6 @@ const DetailCreateRequestComponent: React.FC<{
       handleChangeMode();
     }
   };
-  console.log(dataDisplay);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -78,7 +77,9 @@ const DetailCreateRequestComponent: React.FC<{
       </div>
       <div className="mt-4">Tài liệu liên quan:</div>
       {dataDisplay?.listCertificates.map((item, index) => (
-        <DownLoadFile key={index} fileUrl={item} />
+        <div key={index}>
+          <DownLoadFile fileUrl={item} />
+        </div>
       ))}
       <div className="lg:flex lg:gap-2 mt-4">
         <div
