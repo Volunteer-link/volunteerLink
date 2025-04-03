@@ -68,7 +68,7 @@ const InvitationComponent = () => {
                 </span>
               </div>
               <div>
-                Thời gian: {new Date(item.time).toLocaleString("sv-SE")}
+                Thời gian: {new Date(item.time).toLocaleString("vi-VN")}
               </div>
             </div>
             <div className="bg-primary-color w-32 h-16 relative">

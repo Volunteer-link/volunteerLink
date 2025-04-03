@@ -1,10 +1,10 @@
-import { Col, Empty, Pagination, Row, Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import EventCard from '../Components/EventCard';
-import api from '../../apiService/useFetch';
+import { Col, Empty, Pagination, Row, Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import EventCard from "../Components/EventCard";
+import api from "../../apiService/useFetch";
 
-const VolunteerEvents = ({id} : { id: number | undefined}) => {
+const VolunteerEvents = ({ id }: { id: number | undefined }) => {
   const [PageNumber, setPageNumber] = React.useState<number>(1);
   const [eventList, setEventList] = useState<EventCardType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -41,10 +41,10 @@ const VolunteerEvents = ({id} : { id: number | undefined}) => {
       )}
 
       {eventList.length === 0 ? (
-        <Empty />
+        <Empty description="Không có dữ liệu sự kiện" />
       ) : (
         <div>
-          <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
+          <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
             {eventList.map((item: EventCardType) => {
               return (
                 <Col key={item.id} xs={24} sm={12} md={8} lg={6}>

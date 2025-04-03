@@ -326,7 +326,11 @@ const DetailEvent = () => {
       checkRated();
     }
   }, [resetKey]);
-  console.log(statusEvent);
+
+  const handleClickAttendance = () => {
+    window.open(`/event/attendance/${id}`, "_blank");
+    // navigate(`/event/attendance/${id}`);
+  };
 
   return (
     <div>
@@ -426,6 +430,12 @@ const DetailEvent = () => {
                 <div className="lg:flex lg:gap-2">
                   <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center">
                     Viết tổng kết sự kiện
+                  </div>
+                  <div
+                    onClick={handleClickAttendance}
+                    className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-white rounded-xl text-primary-color border-2 border-primary-color font-medium lg:w-auto w-full my-1 flex items-center justify-center"
+                  >
+                    Điểm danh tình nguyện viên
                   </div>
                 </div>
               )}
@@ -702,7 +712,7 @@ const DetailEvent = () => {
                       </div>
                       <div>
                         <div>
-                          {dataState?.startTime
+                          {/* {dataState?.startTime
                             ? `${new Date(
                                 dataState.startTime
                               ).getFullYear()}-${(
@@ -715,18 +725,22 @@ const DetailEvent = () => {
                                 .getDate()
                                 .toString()
                                 .padStart(2, "0")}`
-                            : ""}
+                            : ""} */}
+                          {new Date(
+                            dataState?.startTime || new Date()
+                          ).toLocaleDateString("vi-VN", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
                           <TbTilde className="inline-block mx-2" />
-                          {dataState?.endTime
-                            ? `${new Date(dataState.endTime).getFullYear()}-${(
-                                new Date(dataState.endTime).getMonth() + 1
-                              )
-                                .toString()
-                                .padStart(2, "0")}-${new Date(dataState.endTime)
-                                .getDate()
-                                .toString()
-                                .padStart(2, "0")}`
-                            : ""}
+                          {new Date(
+                            dataState?.endTime || new Date()
+                          ).toLocaleDateString("vi-VN", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
                         </div>
                       </div>
                     </div>

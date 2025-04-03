@@ -65,12 +65,20 @@ const OrganizationsDetail = () => {
             key={organization?.star}
             defaultValue={organization?.star}
           />
-          <Typography.Paragraph
-            className="px-2  rounded-lg inline-block py-2 max-w-lg leading-4 text-white bg-[#3BA769]"
-            style={{ margin: 0 }}
-          >
-            {organization?.fields.map((field) => field.name).join(", ")}
-          </Typography.Paragraph>
+          <div className="flex gap-1">
+            {/* <Typography.Paragraph
+              className="px-2  rounded-lg inline-block py-2 max-w-lg leading-4 text-white bg-[#3BA769]"
+              style={{ margin: 0 }}
+            > */}
+            {organization?.fields.map((field) => (
+              <div>
+                <div className="select-none px-4 py-2 bg-primary-color rounded-xl text-white">
+                  {field.name}
+                </div>
+              </div>
+            ))}
+            {/* </Typography.Paragraph> */}
+          </div>
         </div>
       </div>
       <Tabs

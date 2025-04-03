@@ -86,17 +86,19 @@ const MyRatingPage = () => {
           },
         }}
       >
-        <div className="flex justify-center px-12 mb-8">
-          <Pagination
-            defaultCurrent={1}
-            current={currentPage}
-            total={total}
-            pageSize={pageSize}
-            className="mt-4"
-            onChange={handleChangePage}
-            showSizeChanger={false}
-          />
-        </div>
+        {listRating.length !== 0 && (
+          <div className="flex justify-center px-12 mb-8">
+            <Pagination
+              defaultCurrent={1}
+              current={currentPage}
+              total={total}
+              pageSize={pageSize}
+              className="mt-4"
+              onChange={handleChangePage}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </ConfigProvider>
     </div>
   );

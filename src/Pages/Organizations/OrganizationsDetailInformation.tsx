@@ -1,6 +1,7 @@
-import { Carousel, ConfigProvider, Image, Typography } from 'antd';
-import React from 'react';
-import { Organization } from '../../model/OrganizationDetail/Organization';
+import { Carousel, ConfigProvider, Image, Typography } from "antd";
+import React from "react";
+import { Organization } from "../../model/OrganizationDetail/Organization";
+import { NavLink } from "react-router-dom";
 
 const OrganizationsDetailInformation = ({
   organization,
@@ -10,7 +11,7 @@ const OrganizationsDetailInformation = ({
   return (
     <>
       <div className="flex items-center gap-4">
-        <Typography.Title style={{ color: '#3BA769', margin: 0 }} level={4}>
+        <Typography.Title style={{ color: "#3BA769", margin: 0 }} level={4}>
           Thông tin liên hệ
         </Typography.Title>
         <div className="flex-1 h-1 bg-[#3BA769] "></div>
@@ -18,16 +19,23 @@ const OrganizationsDetailInformation = ({
       <div className="max-w-[800px] mx-auto w-full">
         <div className="flex py-4 flex-col gap-2">
           <Typography.Text>
-            Hotline: {organization?.phoneNumber}
+            Hotline: {organization?.phoneNumber || "Không có thông tin"}
           </Typography.Text>
           <Typography.Link target="_blank">
-            Facebook: {organization?.urlFacebook}
+            Facebook:{" "}
+            <a
+              href={organization?.urlFacebook ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {organization?.urlFacebook}
+            </a>
           </Typography.Link>
           <Typography.Text>Email: {organization?.gmail}</Typography.Text>
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <Typography.Title style={{ color: '#3BA769', margin: 0 }} level={4}>
+        <Typography.Title style={{ color: "#3BA769", margin: 0 }} level={4}>
           Lý tưởng & mục tiêu
         </Typography.Title>
         <div className="flex-1 h-1 bg-[#3BA769] "></div>

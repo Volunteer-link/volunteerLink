@@ -195,7 +195,10 @@ const VolunteerSuggestions = () => {
             />
           ))}
           {listVolunteer?.length === 0 && (
-            <Empty className="" description="Không có dữ liệu" />
+            <Empty
+              className=""
+              description="Không có tình nguyện viên được gợi ý"
+            />
           )}
         </div>
         {total !== 0 && (
@@ -248,7 +251,10 @@ const VolunteerSuggestions = () => {
           />
         ))}
         {listVolunteerAll?.length === 0 && (
-          <Empty className="mt-4" description="Không có dữ liệu" />
+          <Empty
+            className="mt-4"
+            description="Không có dữ liệu tình nguyện viên"
+          />
         )}
         {totalAll !== 0 && (
           <Pagination

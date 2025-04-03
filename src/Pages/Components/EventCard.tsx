@@ -97,7 +97,11 @@ const EventCard: React.FC<{
               <div className="flex items-center gap-1">
                 <FaCalendarAlt className="text-sm" />
                 <div className="truncate max-w-32">
-                  {new Date(eventObject.startTime).toISOString().split("T")[0]}
+                  {new Date(eventObject.startTime).toLocaleDateString("vi-VN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </div>
               </div>
             </div>

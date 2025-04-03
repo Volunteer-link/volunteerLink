@@ -76,7 +76,7 @@ const OrgRatingMePage = () => {
                 </div>
                 <div className="mb-2">{item.feedback}</div>
                 <div className="text-stone-500">
-                  {new Date(item.time).toLocaleString("en-US", {
+                  {new Date(item.time).toLocaleString("vi-VN", {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
@@ -108,17 +108,19 @@ const OrgRatingMePage = () => {
           },
         }}
       >
-        <div className="flex justify-center px-12 mb-8">
-          <Pagination
-            defaultCurrent={1}
-            current={currentPage}
-            total={total}
-            pageSize={pageSize}
-            className="mt-4"
-            onChange={handleChangePage}
-            showSizeChanger={false}
-          />
-        </div>
+        {listRating.length !== 0 && (
+          <div className="flex justify-center px-12 mb-8">
+            <Pagination
+              defaultCurrent={1}
+              current={currentPage}
+              total={total}
+              pageSize={pageSize}
+              className="mt-4"
+              onChange={handleChangePage}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </ConfigProvider>
     </div>
   );

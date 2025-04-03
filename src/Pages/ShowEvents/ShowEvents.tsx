@@ -108,7 +108,7 @@ const ShowEvent = () => {
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
-    if (user) {
+    if (user && user?.role !== "Admin") {
       fetchCheckPublish();
     }
   }, [user]);
@@ -126,6 +126,7 @@ const ShowEvent = () => {
   const fetchSearch = async (page?: number) => {
     const pageNumber = page ?? 1;
     const location = `${marker?.latitude};${marker?.longitude}`;
+    console.log(searchKey);
 
     try {
       if (!AISearch) {
@@ -179,8 +180,6 @@ const ShowEvent = () => {
     setCurrentPage(1);
     setCurrentPageSearch(1);
     fetchSearch();
-    console.log(searchKey);
-    console.log(marker);
   };
 
   const handleChangeInput = () => {
@@ -269,7 +268,9 @@ const ShowEvent = () => {
               </div>
             </div>
           </div>
-          {totalSearch === 0 && <Empty description="Không có kết quả" />}
+          {totalSearch === 0 && (
+            <Empty description="Không có dữ liệu sự kiện" />
+          )}
           {totalSearch !== 0 && (
             <>
               <div className="">
@@ -400,7 +401,7 @@ const ShowEvent = () => {
           </div>
         </div>
         {listEventCard?.length === 0 && (
-          <Empty description="Không có sự kiện" />
+          <Empty description="Không có dữ liệu sự kiện" />
         )}
         {/* {isLoading ? (
           <Loading />

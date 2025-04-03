@@ -11,7 +11,13 @@ const Footer: React.FC<{}> = () => {
         <div></div>
         <div className="col-span-6 grid grid-cols-4 w-full relative">
           <div>
-            <div className="bg-white w-16 h-16">Logo</div>
+            <div className="bg-white w-16 h-16 rounded-full overflow-hidden">
+              <img
+                src="/materials/logo.jfif"
+                className="w-full h-full object-contain"
+                alt=""
+              />
+            </div>
             <div className="text-base text-shadow-md mt-4">Volunteer Link</div>
           </div>
           <div className="">

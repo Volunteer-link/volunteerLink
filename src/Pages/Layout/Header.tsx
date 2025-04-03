@@ -48,7 +48,7 @@ const Header: React.FC<{}> = () => {
       }
     };
 
-    if (user) {
+    if (user && user?.role !== "Admin") {
       fetchCheckStatus();
     }
   }, []);
@@ -236,7 +236,13 @@ const Header: React.FC<{}> = () => {
   return (
     <div className="bg-primary-color md:grid md:grid-cols-8 py-2 px-4 sticky top-0 w-full z-50">
       <div></div>
-      <div className="bg-white w-16 h-16 m-auto my-2 lg:my-0">Logo </div>
+      <div className="bg-primary-color w-16 h-16 m-auto my-2 rounded-full overflow-hidden lg:my-0">
+        <img
+          src="/materials/logo.jfif"
+          className="w-full h-full object-contain"
+          alt=""
+        />
+      </div>
       <div className="col-span-3 hidden md:block">
         <ul className="flex gap-8 text-white text-sm h-full items-center">
           <li className="hover:scale-110 transition-all cursor-pointer">

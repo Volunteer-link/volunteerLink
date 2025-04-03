@@ -94,7 +94,9 @@ const ParticipationRequest = () => {
           setResetState={setResetState}
         />
       ))}
-      {dataRequest.length === 0 && <Empty description="Không có dữ liệu" />}
+      {dataRequest.length === 0 && (
+        <Empty description="Không có yêu cầu tham gia" />
+      )}
       <ConfigProvider
         theme={{
           components: {
