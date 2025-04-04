@@ -15,6 +15,7 @@ import api from "../../apiService/useFetch";
 import { TabsProps } from "antd/lib";
 import { useNavigate } from "react-router-dom";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
 
 const MyJoinedEvents = () => {
   const [PageNumber, setPageNumber] = React.useState<number>(1);
@@ -26,6 +27,15 @@ const MyJoinedEvents = () => {
   const onChange = (key: string) => {
     setStatus(parseInt(key));
   };
+
+  useEffect(() => {
+    const user = decodedCookie(getCookie("accessToken"));
+    if (!user) {
+      window.location.href = "/unauthorized";
+    } else if (user?.role !== "Volunteer") {
+      window.location.href = "/forbidden";
+    }
+  }, []);
 
   const items: TabsProps["items"] = [
     {
@@ -97,7 +107,7 @@ const MyJoinedEvents = () => {
                   {eventList.map((item: EventCardType) => {
                     return (
                       <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
-                        <EventCard eventObject={item} showOption={true} />
+                        <EventCard eventObject={item} showOption={false} />
                       </Col>
                     );
                   })}

@@ -11,7 +11,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { decodedCookie, getCookie } from "../../ultils/cookie";
 import { FiUsers } from "react-icons/fi";
-import { FaCalendarAlt, FaHandshake, FaStar } from "react-icons/fa";
+import { FaCalendarAlt, FaHandshake, FaStar, FaUsers } from "react-icons/fa";
 import { FaLocationDot, FaXmark } from "react-icons/fa6";
 import { FaDotCircle } from "react-icons/fa";
 import MySlider from "../../Common/MySlider";
@@ -377,7 +377,7 @@ const DetailEvent = () => {
                     className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center gap-1 justify-center"
                   >
                     <IoIosSend />
-                    Các lời mời đã gửi
+                    Danh sách lời mời đã gửi
                   </div>
                   <div
                     onClick={handleViewParticipationRequest}
@@ -390,8 +390,8 @@ const DetailEvent = () => {
                     onClick={handleViewSuggestedVolunteers}
                     className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center gap-1 justify-center"
                   >
-                    <AiFillLike />
-                    Gợi ý tình nguyện viên
+                    <FaUsers />
+                    Danh sách tình nguyện viên
                   </div>
                 </div>
               )}

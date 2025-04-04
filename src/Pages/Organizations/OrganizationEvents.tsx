@@ -6,6 +6,7 @@ import { Button, Col, Empty, Pagination, Row, Spin, Tabs } from "antd";
 import EventCard from "../Components/EventCard";
 import { TabsProps } from "antd/lib";
 import { useDebounce } from "../../ultils/useDebounce";
+import { FaPlus } from "react-icons/fa";
 
 const OrganizationEvents = () => {
   const { id } = useParams();
@@ -76,10 +77,13 @@ const OrganizationEvents = () => {
 
   return (
     <div className="relative">
+      <div className="text-primary-color font-medium text-xl my-6">
+        Quản lý sự kiện
+      </div>
       <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
         <input
           type="text"
-          placeholder="Tên sự kiện..."
+          placeholder="Tìm kiếm theo tên sự kiện..."
           className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
           onChange={(e) => setSearchName(e.target.value)}
         />
@@ -101,8 +105,8 @@ const OrganizationEvents = () => {
           type="primary"
           size="large"
         >
-          {" "}
           Tạo sự kiện mới
+          <FaPlus />
         </Button>
       </div>
 

@@ -9,11 +9,12 @@ import Loading from "../Components/Loading";
 import ErrorSolving from "../../Common/ErrorSolving";
 import ErrorCards from "../Components/ErrorCards";
 import LineSpacing from "../Components/LineSpacing";
+import { FaUsers } from "react-icons/fa";
 const VolunteerSuggestions = () => {
   const [searchParams] = useSearchParams();
   const { id } = useParams();
-  const pageSizeAI = 1;
-  const pageSizeAll = 3;
+  const pageSizeAI = 5;
+  const pageSizeAll = 10;
   const pageFromUrl = searchParams.get("page");
   const [PageNumber, setPageNumber] = React.useState<number>(1);
   const [currentPageAll, setCurrentPageAll] = React.useState<number>(1);
@@ -177,13 +178,23 @@ const VolunteerSuggestions = () => {
               ),
             },
             {
-              title: "Gợi ý tình nguyện viên",
+              title: "Danh sách tình nguyện viên",
             },
           ]}
         />
         <div>
           <LineSpacing />
-          <div className="text-xl text-center mb-8">Gợi ý tình nguyện viên</div>
+          <div className="text-xl mb-8 text-center">
+            <div>
+              Tình nguyện viên{" "}
+              <span className="text-primary-color">được gợi ý</span>
+            </div>
+            <img
+              src="/materials/AI.png"
+              className="select-none w-6 h-6 my-2 mx-auto"
+              alt=""
+            />
+          </div>
           {/* <Volunteer volunteerDisplayType="SUGGESTION" /> */}
           {listVolunteer?.map((item, index) => (
             <Volunteer
@@ -215,14 +226,14 @@ const VolunteerSuggestions = () => {
       <div>
         <LineSpacing />
         <div className="text-xl text-center mb-8">
-          Các tình nguyện viên trong hệ thống
+          <span className="text-primary-color">Tất cả</span> tình nguyện viên
         </div>
         <div className="flex items-center justify-center gap-2">
           <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">
             <input
               ref={refSearch}
               type="text"
-              placeholder="Tên sự kiện..."
+              placeholder="Tìm kiếm theo tên tình nguyện viên..."
               className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
               onKeyDown={handleEnterKey}
               onChange={handleChangeInput}

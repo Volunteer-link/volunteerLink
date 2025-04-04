@@ -134,8 +134,11 @@ const MyRatingPageComponent: React.FC<{
         >
           <img
             src={object.thumbnail}
-            className="w-32 h-16 bg-primary-color shadow-xl"
+            className="w-32 h-16 bg-primary-color shadow-xl object-contain"
             alt=""
+            onError={(e) =>
+              (e.currentTarget.src = "/materials/placeholder-image.jpg")
+            }
           />
         </div>
         <Dropdown
