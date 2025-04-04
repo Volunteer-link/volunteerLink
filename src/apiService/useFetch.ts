@@ -41,8 +41,6 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error);
-
     if (error.response?.status === 401) {
       window.location.href = "/unauthorized"; // Chuyển trang khi lỗi 401
     }

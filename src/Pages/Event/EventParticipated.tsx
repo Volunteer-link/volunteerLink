@@ -108,10 +108,10 @@ const EventParticipated = () => {
         <p className="mt-3">{totalVolunteers} tình nguyện viên tham gia</p>
       </div>
       <div className="flex mb-6 justify-center items-center">
-        <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-[#000000] flex items-center justify-between mx-auto">
+        <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">
           <input
             type="text"
-            placeholder="Tên tình nguyện viên..."
+            placeholder="Tìm kiếm theo tên tình nguyện viên..."
             className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
             onChange={(e) => setSearchName(e.target.value)}
           />

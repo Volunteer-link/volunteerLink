@@ -95,7 +95,7 @@ const ListSentRequest = () => {
           {
             title: (
               <div className="">
-                <span>Các lời mời đã gửi</span>
+                <span>Danh sách lời mời đã gửi</span>
               </div>
             ),
           },

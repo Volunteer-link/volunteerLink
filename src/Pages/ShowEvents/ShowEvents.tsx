@@ -228,7 +228,7 @@ const ShowEvent = () => {
             <input
               ref={refSearch}
               type="text"
-              placeholder="Tên sự kiện..."
+              placeholder="Tìm kiếm theo tên sự kiện..."
               className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
               onKeyDown={handleEnterKey}
               onChange={handleChangeInput}

@@ -110,6 +110,9 @@ const NotificationPage = () => {
 
   return (
     <div className="">
+      <div className="font-medium text-primary-color my-6 text-xl">
+        Thông báo của bạn
+      </div>
       {/* <ErrorCards errCode={errCode} /> */}
       {isLoading && <Loading color="green" />}
       {/* {notiList.map((item, index) => (
