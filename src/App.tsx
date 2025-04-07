@@ -41,6 +41,7 @@ import ServerError from "./Pages/ErrorPages/ServerError";
 import Bill from "./Pages/Bill/Bill";
 import HistoryOrganization from "./Pages/History/HistoryOrganization";
 import HistoryVolunteer from "./Pages/History/HistoryVolunteer";
+import NotFound from "./Pages/ErrorPages/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -176,6 +177,10 @@ const router = createBrowserRouter([
   {
     path: "/unauthorized",
     element: <Unauthorized />,
+  },
+  {
+    path: "/not-found",
+    element: <NotFound />,
   },
   {
     path: "/forbidden",

@@ -55,7 +55,7 @@ const VolunteerProfile = () => {
   // }
 
   return (
-    <div className="px-52 py-8">
+    <div className="py-8">
       {isAvailable && <Empty description="Hồ sơ của người dùng này đã bị ẩn" />}
       {volunteer && (
         <div className="w-full">

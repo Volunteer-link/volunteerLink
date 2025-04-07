@@ -34,11 +34,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
         gmail: email,
         password: trimmedValues.password,
       });
-      message.success('Reset password successfully!');
+      message.success('Thay đổi mật khẩu thành công!');
       navigate('/authentication/signin');
     } catch (error) {
       console.error(error);
-      message.error('Something went wrong!');
+      message.error('Đã có lỗi xảy ra!');
     } finally {
       setLoading(false);
     }

@@ -44,6 +44,9 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       window.location.href = "/unauthorized"; // Chuyển trang khi lỗi 401
     }
+    if (error.response?.status === 404) {
+      window.location.href = "/not-found"; // Chuyển trang khi lỗi 401
+    }
     if (error.response?.status === 403) {
       window.location.href = "/forbidden"; // Chuyển trang khi lỗi 403
     }
