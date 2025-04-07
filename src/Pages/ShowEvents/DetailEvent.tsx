@@ -269,7 +269,7 @@ const DetailEvent = () => {
   };
 
   const handleSummaryOpen = () => {
-    setSummaryValue(dataState?.summary.content || ''); 
+    setSummaryValue(dataState?.summary?.content || '');
     setOpenModalSummary(true);
   }
 
@@ -280,16 +280,16 @@ const DetailEvent = () => {
   }
 
   const handleCreateSummary = async () => {
-    
+
     const value = summaryRef.current?.resizableTextArea?.textArea?.value;
-    if ( !value || value.trim() === '') {
-        messageApi.warning("Tổng kết sự kiện không được để trống!")
-        return;
-    } 
+    if (!value || value.trim() === '') {
+      messageApi.warning("Tổng kết sự kiện không được để trống!")
+      return;
+    }
     try {
       if (dataState?.summary) {
         await api.put('/report/get-reports-of-event', {
-          eventId: id,
+          reportId: dataState.summary.id,
           content: value,
         });
         messageApi.success("Cập nhật tổng kết sự kiện thành công");
@@ -469,18 +469,17 @@ const DetailEvent = () => {
                 <div className="lg:flex lg:gap-2">
                   <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
                     onClick={handleSummaryOpen}
-                  >
-                    Viết tổng kết sự kiện
+                  >{dataState.summary ? "Cập nhật tổng kết sự kiện" : "Viết tổng kết sự kiện"}
                     <Modal title={dataState.summary ? "Cập nhật tổng kết sự kiện" : "Tạo tổng kết sự kiện"} open={OpenModalSummary} onOk={handleCreateSummary} onCancel={handleSummaryCancel} >
                       <TextArea
                         ref={summaryRef}
-                        value={summaryValue}
-                        className= "mb-4"
+                        defaultValue={summaryValue}
+                        className="mb-4"
                         showCount
                         maxLength={1000}
                         placeholder="Tổng kết sự kiện..."
                         style={{ height: 300, resize: 'none' }
-                      }
+                        }
                       />
                     </Modal>
 
@@ -493,6 +492,22 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
+
+            {user?.role === "Volunteer" && new Date(dataState?.endTime || 0) < new Date() && (
+             
+              <div className="lg:flex lg:gap-2">
+                <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
+                  onClick={handleSummaryOpen}
+                >
+                  Xem tổng kết sự kiện
+                  <Modal title="Tổng kết sự kiện" open={OpenModalSummary}  onCancel={handleSummaryCancel} footer={() => null}>
+                    <p>{summaryValue}</p>
+                  </Modal>
+                </div>
+              
+              </div>
+
+            )}
             {user?.role === "Volunteer" &&
               statusEvent === 2 &&
               new Date() < new Date(dataState?.startTime || 0) && (
