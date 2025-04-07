@@ -24,7 +24,10 @@ const EventParticipated = () => {
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [totalVolunteers, setTotalVolunteers] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [checkDate, setCheckDate] = React.useState<boolean>(false);
+  const [checkDateDelete, setCheckDateDelete] = React.useState<boolean>(false);
+  const [checkDateRate, setCheckDateRate] = React.useState<boolean>(false);
+  const [checkDateViewRate, setCheckDateViewRate] =
+    React.useState<boolean>(false);
   const [resetState, setResetState] = useState<number>(0);
 
   useEffect(() => {
@@ -33,8 +36,14 @@ const EventParticipated = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
+        console.log(new Date(data.data.endTime) <= new Date());
+
+        if (new Date(data.data.startTime) > new Date()) {
+          setCheckDateDelete(true);
+        }
+
         if (new Date(data.data.endTime) <= new Date()) {
-          setCheckDate(true);
+          setCheckDateRate(true);
         }
         setEvent(data.data);
       } catch (e: any) {
@@ -144,7 +153,8 @@ const EventParticipated = () => {
                     volunteerDisplayType: "PARTICIPATED",
                   }}
                   setResetState={setResetState}
-                  checkDate={checkDate}
+                  checkDateDelete={checkDateDelete}
+                  checkDateRate={checkDateRate}
                   eventId={Number(id)}
                 />
               ))
