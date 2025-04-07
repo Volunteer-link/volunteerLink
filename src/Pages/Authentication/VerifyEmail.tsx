@@ -68,7 +68,7 @@ const VerifyEmail = () => {
       ) {
         message.error("Email không tồn tại!");
       } else {
-        message.success("Send successful!");
+        message.success("Gửi email thành công!");
         setEmailStatus("VERIFY_OTP");
       }
     } catch (error: any) {
@@ -89,7 +89,7 @@ const VerifyEmail = () => {
       if (location.state == "FORGOT_PASSWORD") {
         setEmailStatus("FORGOT_PASSWORD");
       } else {
-        message.success("Verify successful!");
+        message.success("Xác thực thành công!");
         navigate("/authentication/signup", { state: email });
       }
     } catch (error) {

@@ -35,7 +35,7 @@ const OrganizationEvents = () => {
     },
     {
       key: "-1",
-      label: "Chưa bắt đầu",
+      label: "Sắp diễn ra",
     },
     {
       key: "2",
@@ -64,7 +64,6 @@ const OrganizationEvents = () => {
           PageSize: 8,
         },
       });
-      console.log(data);
       setTotalPage(data.data.totalItems);
       setEventList(data.data.items);
       setLoading(false);

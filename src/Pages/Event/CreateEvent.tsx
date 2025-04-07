@@ -336,7 +336,7 @@ const CreateEvent = () => {
               showTime={{ format: "HH:mm" }}
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
-              disabled={!timePublish}
+              disabled={!timePublish && value == 2}
               disabledDate={disabledDate}
             />
           </Form.Item>

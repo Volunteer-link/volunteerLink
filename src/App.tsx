@@ -38,6 +38,7 @@ import AttendanceUI from "./Pages/Attendance";
 import Unauthorized from "./Pages/ErrorPages/Unauthorized";
 import Forbidden from "./Pages/ErrorPages/Forbidden";
 import ServerError from "./Pages/ErrorPages/ServerError";
+import NotFound from "./Pages/ErrorPages/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -161,6 +162,10 @@ const router = createBrowserRouter([
   {
     path: "/unauthorized",
     element: <Unauthorized />,
+  },
+  {
+    path: "/not-found",
+    element: <NotFound />,
   },
   {
     path: "/forbidden",

@@ -456,7 +456,7 @@ const UpdateEvent = () => {
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
               disabledDate={disabledDate}
-              disabled={!timePublish}
+              disabled={!timePublish && value == 2}
             />
           </Form.Item>
         </div>
