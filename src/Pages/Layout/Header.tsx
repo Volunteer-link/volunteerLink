@@ -1,5 +1,5 @@
 import { AiOutlineUser } from "react-icons/ai";
-import { MdEvent, MdLogout } from "react-icons/md";
+import { MdEvent, MdLogout, MdOutlineAttachMoney } from "react-icons/md";
 import {
   Dropdown,
   Space,
@@ -159,6 +159,26 @@ const Header: React.FC<{}> = () => {
               >
                 <TbStarsFilled />
                 <span>Quản lý đánh giá</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
+    ...(user?.role !== "Admin"
+      ? [
+          {
+            key: "9",
+            label: (
+              <NavLink
+                className="flex items-center gap-1"
+                to={`${
+                  user?.role === "Organization"
+                    ? `/transaction-tracking/organization`
+                    : `/transaction-tracking/volunteer`
+                }`}
+              >
+                <MdOutlineAttachMoney />
+                <span>Lịch sử giao dịch</span>
               </NavLink>
             ),
           },

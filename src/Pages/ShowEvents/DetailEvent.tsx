@@ -335,22 +335,6 @@ const DetailEvent = () => {
   };
 
   useEffect(() => {
-    const fetchQR = async () => {
-      try {
-        const { data } = await api.post(`/donate/create-donate-url`, {
-          organizationId: dataState?.organizationId,
-          eventName: dataState?.name,
-          description: "",
-        });
-      } catch (error: any) {
-        console.log(error);
-      } finally {
-      }
-    };
-    fetchQR();
-  }, []);
-
-  useEffect(() => {
     const checkRated = async () => {
       try {
         const { data } = await api.get(
@@ -370,6 +354,32 @@ const DetailEvent = () => {
   const handleClickAttendance = () => {
     window.open(`/event/attendance/${id}`, "_blank");
     // navigate(`/event/attendance/${id}`);
+  };
+
+  const [amount, setAmount] = useState<number>(10000);
+
+  const handleChangeDonation = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setAmount(value);
+  };
+
+  const handleOkDonation = async () => {
+    if (amount >= 10000 && amount <= 10000000) {
+      try {
+        setIsLoading(true);
+        const { data } = await api.post(`/donate/create-donate-url-vnpay`, {
+          eventId: id,
+          moneyToPay: amount,
+        });
+        console.log(data);
+        window.location.href = data.data.url.toString();
+      } catch (e: any) {
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      messageApi.error("Số tiền phải nằm trong khoảng 5.000 - 1.000.000 VNĐ");
+    }
   };
 
   return (
@@ -999,8 +1009,21 @@ const DetailEvent = () => {
           title="Quyên góp cho sự kiện"
           open={stateModalDonation}
           onCancel={handleCloseDonation}
+          onOk={handleOkDonation}
         >
-          <p>Bạn có chắc muốn hủy tham gia sự kiện không?</p>
+          <Input
+            placeholder="Nhập số tiền quyên góp..."
+            type="number"
+            value={amount}
+            onChange={handleChangeDonation}
+            min={10000}
+            max={10000000}
+          />
+          <div>
+            Đơn vị: (<span className="text-primary-color font-medium">VND</span>
+            )
+          </div>
+          <div>Min: 10.000 ~ Max: 10.000.000</div>
         </Modal>
 
         <Modal

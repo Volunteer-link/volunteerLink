@@ -38,6 +38,9 @@ import AttendanceUI from "./Pages/Attendance";
 import Unauthorized from "./Pages/ErrorPages/Unauthorized";
 import Forbidden from "./Pages/ErrorPages/Forbidden";
 import ServerError from "./Pages/ErrorPages/ServerError";
+import Bill from "./Pages/Bill/Bill";
+import HistoryOrganization from "./Pages/History/HistoryOrganization";
+import HistoryVolunteer from "./Pages/History/HistoryVolunteer";
 import NotFound from "./Pages/ErrorPages/NotFound";
 
 const router = createBrowserRouter([
@@ -144,6 +147,18 @@ const router = createBrowserRouter([
       {
         path: "/rating-management",
         element: <RatingManagement />,
+      },
+      {
+        path: "/donation-result",
+        element: <Bill />,
+      },
+      {
+        path: "/transaction-tracking/organization",
+        element: <HistoryOrganization />,
+      },
+      {
+        path: "/transaction-tracking/volunteer",
+        element: <HistoryVolunteer />,
       },
     ],
   },
