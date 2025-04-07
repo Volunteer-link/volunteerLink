@@ -16,6 +16,7 @@ import { FaLocationDot, FaXmark } from "react-icons/fa6";
 import { FaDotCircle } from "react-icons/fa";
 import MySlider from "../../Common/MySlider";
 import { FaCheck } from "react-icons/fa6";
+import type { TextAreaRef } from 'antd/es/input/TextArea';
 import { useContext, useEffect, useRef, useState } from "react";
 import api from "../../apiService/useFetch";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
@@ -46,7 +47,7 @@ const DetailEvent = () => {
   const [dataState, setDataState] = useState<DetailEventType>();
   const [messageApi, contextHolder] = message.useMessage();
   const [isPublish, setIsPublish] = useState<boolean>(false);
-
+  const [OpenModalSummary, setOpenModalSummary] = useState<boolean>(false);
   const [isRated, setIsRated] = useState<boolean>(false);
   const [from, setFrom] = useState<string>("");
   const [fromTitle, setFromTitle] = useState<string>("");
@@ -64,7 +65,7 @@ const DetailEvent = () => {
 
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
-
+  const [summaryValue, setSummaryValue] = useState('');
   useEffect(() => {
     if (dataStateNoti?.from === "noti") {
       setFrom("/notification");
@@ -94,7 +95,7 @@ const DetailEvent = () => {
 
       setIdRequest(data.data.id);
       setStatusEvent(data.data.status);
-    } catch (e: any) {}
+    } catch (e: any) { }
   };
 
   useEffect(() => {
@@ -181,13 +182,13 @@ const DetailEvent = () => {
       try {
         const { data } = await api.get("/profile/check-publish-profile");
         setIsPublish(data.data.success);
-      } catch (e: any) {}
+      } catch (e: any) { }
     };
     if (user) {
       fetchCheckPublish();
     }
   }, [user]);
-
+  const summaryRef = useRef<TextAreaRef>(null);
   const handleViewParticipationRequest = () => {
     navigate(`participation-request`, {
       state: { nameEvent: dataState?.name },
@@ -267,6 +268,44 @@ const DetailEvent = () => {
     }
   };
 
+  const handleSummaryOpen = () => {
+    setSummaryValue(dataState?.summary.content || ''); 
+    setOpenModalSummary(true);
+  }
+
+  const handleSummaryCancel = (e: any) => {
+    e.stopPropagation();
+    setOpenModalSummary(false);
+
+  }
+
+  const handleCreateSummary = async () => {
+    
+    const value = summaryRef.current?.resizableTextArea?.textArea?.value;
+    if ( !value || value.trim() === '') {
+        messageApi.warning("Tổng kết sự kiện không được để trống!")
+        return;
+    } 
+    try {
+      if (dataState?.summary) {
+        await api.put('/report/get-reports-of-event', {
+          eventId: id,
+          content: value,
+        });
+        messageApi.success("Cập nhật tổng kết sự kiện thành công");
+      } else {
+        await api.post('/report/create-report-of-event', {
+          eventId: id,
+          content: value,
+        });
+        messageApi.success("Thêm tổng kết sự kiện thành công");
+      }
+      setOpenModalSummary(false);
+    } catch (err) {
+      messageApi.error("Có lỗi xảy ra khi gửi tổng kết!");
+    }
+  }
+
   useEffect(() => {
     const fetchRating = async () => {
       try {
@@ -331,6 +370,7 @@ const DetailEvent = () => {
     window.open(`/event/attendance/${id}`, "_blank");
     // navigate(`/event/attendance/${id}`);
   };
+console.log(dataState);
 
   return (
     <div>
@@ -404,22 +444,22 @@ const DetailEvent = () => {
                   <span className="text-primary-color">
                     {dataState?.timePublish
                       ? `${new Date(dataState.timePublish).getFullYear()}-${(
-                          new Date(dataState.timePublish).getMonth() + 1
-                        )
-                          .toString()
-                          .padStart(2, "0")}-${new Date(dataState.timePublish)
+                        new Date(dataState.timePublish).getMonth() + 1
+                      )
+                        .toString()
+                        .padStart(2, "0")}-${new Date(dataState.timePublish)
                           .getDate()
                           .toString()
                           .padStart(2, "0")} ${new Date(dataState.timePublish)
-                          .getHours()
-                          .toString()
-                          .padStart(2, "0")}:${new Date(dataState.timePublish)
-                          .getMinutes()
-                          .toString()
-                          .padStart(2, "0")}:${new Date(dataState.timePublish)
-                          .getSeconds()
-                          .toString()
-                          .padStart(2, "0")}`
+                            .getHours()
+                            .toString()
+                            .padStart(2, "0")}:${new Date(dataState.timePublish)
+                              .getMinutes()
+                              .toString()
+                              .padStart(2, "0")}:${new Date(dataState.timePublish)
+                                .getSeconds()
+                                .toString()
+                                .padStart(2, "0")}`
                       : ""}
                   </span>
                 </div>
@@ -428,8 +468,23 @@ const DetailEvent = () => {
               new Date() > new Date(dataState?.endTime || 0) && //đã kết thúc
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
-                  <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center">
+                  <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
+                    onClick={handleSummaryOpen}
+                  >
                     Viết tổng kết sự kiện
+                    <Modal title={dataState.summary ? "Cập nhật tổng kết sự kiện" : "Tạo tổng kết sự kiện"} open={OpenModalSummary} onOk={handleCreateSummary} onCancel={handleSummaryCancel} >
+                      <TextArea
+                        ref={summaryRef}
+                        value={summaryValue}
+                        className= "mb-4"
+                        showCount
+                        maxLength={1000}
+                        placeholder="Tổng kết sự kiện..."
+                        style={{ height: 300, resize: 'none' }
+                      }
+                      />
+                    </Modal>
+
                   </div>
                   <div
                     onClick={handleClickAttendance}
@@ -572,11 +627,11 @@ const DetailEvent = () => {
                 statusEvent === 0 &&
                 dataState?.startTime &&
                 new Date() <
-                  new Date(
-                    new Date(dataState.startTime).setDate(
-                      new Date(dataState.startTime).getDate() - 1
-                    ) //trước bắt đầu 1 ngày
-                  ) &&
+                new Date(
+                  new Date(dataState.startTime).setDate(
+                    new Date(dataState.startTime).getDate() - 1
+                  ) //trước bắt đầu 1 ngày
+                ) &&
                 isPublish && (
                   <div
                     className="lg:col-span-3 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
@@ -798,9 +853,8 @@ const DetailEvent = () => {
                   {listRating.map((item, index) => (
                     <div
                       key={index}
-                      className={`p-2 flex items-start gap-4 select-none ${
-                        index !== listRating.length - 1 ? "mb-6" : ""
-                      } `}
+                      className={`p-2 flex items-start gap-4 select-none ${index !== listRating.length - 1 ? "mb-6" : ""
+                        } `}
                     >
                       <div className="w-10 h-10 rounded-full overflow-hidden">
                         <img
