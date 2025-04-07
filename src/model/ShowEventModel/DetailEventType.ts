@@ -18,4 +18,9 @@ export interface DetailEventType {
   status: number;
   thumbnail: string;
   timePublish: Date | string;
+  summary: {
+    content: string,
+    eventId: number,
+    id: number
+  };
 }
