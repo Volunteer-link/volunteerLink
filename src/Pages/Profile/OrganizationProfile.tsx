@@ -40,7 +40,7 @@ const OrganizationProfile = () => {
   >([]);
   const [organization, setOrganization] = useState<any>();
   const partsAddress =
-    organization?.address.split(",").map((part: string) => part.trim()) || [];
+    organization?.address?.split(",").map((part: string) => part.trim()) || [];
   useEffect(() => {
     const fetchOrganization = async () => {
       const token = getCookie("accessToken");
@@ -334,7 +334,7 @@ const OrganizationProfile = () => {
         <div className="mt-6 ">
           <div className="flex justify-start items-center gap-1">
             <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
-              Facebook
+              Mạng xã hội
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>

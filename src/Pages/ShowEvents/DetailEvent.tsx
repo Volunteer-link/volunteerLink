@@ -370,7 +370,6 @@ const DetailEvent = () => {
     window.open(`/event/attendance/${id}`, "_blank");
     // navigate(`/event/attendance/${id}`);
   };
-console.log(dataState);
 
   return (
     <div>
@@ -535,6 +534,15 @@ console.log(dataState);
                 </div>
               )}
             {user?.role !== "Organization" &&
+              dataState?.endTime &&
+              new Date() > new Date(dataState?.endTime) && (
+                <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  <div className="text-primary-color inline-block py-2 px-12 rounded-full font-medium">
+                    Sự kiện đã kết thúc
+                  </div>
+                </div>
+              )}
+            {user?.role !== "Volunteer" &&
               dataState?.endTime &&
               new Date() > new Date(dataState?.endTime) && (
                 <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">

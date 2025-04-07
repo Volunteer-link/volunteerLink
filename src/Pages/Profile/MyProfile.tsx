@@ -151,8 +151,6 @@ const MyProfile = () => {
     }
   }, [user]);
 
-  console.log(isPublish);
-
   useEffect(() => {
     const fetchCheckStatus = async () => {
       try {
@@ -199,7 +197,6 @@ const MyProfile = () => {
         const res = await api.get(`/profile/volunteer`);
 
         const data = res.data.data;
-        console.log(data);
 
         setProfileState((prev) => ({
           ...(prev ?? {}),
@@ -376,9 +373,14 @@ const MyProfile = () => {
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    console.log(newFileList.length);
+
     let newArray = newFileList as Array<UploadFile>;
-    setListFile([newArray[1]]);
+
+    setListFile([newArray[newFileList.length === 1 ? 0 : 1]]);
   };
+
+  console.log(listFile);
 
   const publicProfile = async (value: boolean) => {
     try {
