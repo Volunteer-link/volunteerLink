@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react";
-import api from "../../apiService/useFetch";
-import { Dropdown, Select, Space, Table } from "antd";
-import { MenuProps } from "antd/lib";
-import { DownOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from 'react';
+import api from '../../apiService/useFetch';
+import { Avatar, Pagination, Select, Table } from 'antd';
+import { useSearchParams } from 'react-router-dom';
+import dayjs from 'dayjs';
+import Loading from '../Components/Loading';
+
+const { Option } = Select;
 
 const HistoryOrganization = () => {
-  const [stateEvent, setStateEvent] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
+  const [searchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const page = searchParams.get('page');
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(parseInt(page!) || 1);
+  const [eventId, setEventId] = useState<number | null>(null);
+  const [stateEvent, setStateEvent] = useState<{ id: number; name: string }[]>(
+    []
+  );
+
   const [stateTransaction, setStateTransaction] = useState<
     {
       accountVolunteerId: number;
@@ -22,59 +29,109 @@ const HistoryOrganization = () => {
       volunteerName: string;
     }[]
   >([]);
+
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await api.get(`/donate/organization-history`);
-      setStateEvent(data.data.events);
-      setStateTransaction(data.data.transactions);
+      try {
+        setIsLoading(true);
+        const { data } = await api.get(`/donate/organization-history`, {
+          params: {
+            EventId: eventId,
+            PageNumber: pageNumber,
+            PageSize: 5,
+          },
+        });
+        setTotalPage(data.data.transactions.totalItems || 0);
+        setStateEvent(data.data.events || []);
+        setStateTransaction(
+          Array.isArray(data.data.transactions.items)
+            ? data.data.transactions.items
+            : []
+        );
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+
+        console.error(error);
+      }
     };
+
     fetchData();
-  }, []);
-
-  console.log(stateEvent);
-  console.log(stateTransaction);
-
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-  ];
+  }, [pageNumber, eventId]);
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Ảnh',
+      dataIndex: 'volunteerImageUrl',
+      key: 'volunteerImageUrl',
+      render: (volunteerImageUrl: string, record: any) => (
+        <Avatar src={volunteerImageUrl} alt={record.volunteerName} />
+      ),
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: 'Tên',
+      dataIndex: 'volunteerName',
+      key: 'volunteerName',
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: 'Tên sự kiện',
+      dataIndex: 'eventName',
+      key: 'eventName',
+    },
+    {
+      title: 'Thời gian',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+      render: (date: string) => dayjs(date).format('DD/MM/YYYY HH:mm'),
+    },
+    {
+      title: 'Tiền',
+      dataIndex: 'money',
+      key: 'money',
+      render: (money: number) => money.toLocaleString('vi-VN') + ' đ',
     },
   ];
+
+  // Chuyển trang
+  const handlePageChange = (page: number) => {
+    setPageNumber(page);
+  };
 
   return (
     <div>
       <div className="text-primary-color text-xl font-medium">
         Lịch sử giao dịch
       </div>
-      <div>filter</div>
+      <div className="my-4">
+        <Select
+          placeholder="Chọn sự kiện"
+          style={{ width: 250 }}
+          onChange={(value) => setEventId(value)}
+        >
+          {stateEvent.map((event) => (
+            <Option key={event.id} value={event.id}>
+              {event.name}
+            </Option>
+          ))}
+        </Select>
+      </div>
+
       <div>
-        <Table dataSource={dataSource} columns={columns} />;
+        <Table
+          rowKey="createdDate"
+          columns={columns}
+          loading={isLoading}
+          dataSource={stateTransaction}
+          pagination={false}
+        />
+        <Pagination
+          className="my-8"
+          current={pageNumber}
+          total={totalPage}
+          pageSize={5}
+          onChange={handlePageChange}
+          responsive
+        />
       </div>
     </div>
   );
