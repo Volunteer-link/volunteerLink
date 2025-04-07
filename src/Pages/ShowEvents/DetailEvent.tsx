@@ -79,7 +79,8 @@ const DetailEvent = () => {
         const { data } = await api.get(
           `/common/get-event-infomation?eventId=${id}`
         );
-
+        console.log(data);
+        
         setDataState(data.data);
       } catch (e: any) {
       } finally {

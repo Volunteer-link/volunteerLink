@@ -129,7 +129,7 @@ const VolunteerSuggestions = () => {
 
   useEffect(() => {
     fetchAllVolunteer();
-  }, []);
+  }, [resetStateAll]);
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
