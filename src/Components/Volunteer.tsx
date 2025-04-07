@@ -12,13 +12,15 @@ const Volunteer: React.FC<{
   setResetState?: React.Dispatch<React.SetStateAction<number>>;
   setResetStateAll?: React.Dispatch<React.SetStateAction<number>>;
   eventId?: number;
-  checkDate?: boolean;
+  checkDateDelete?: boolean;
+  checkDateRate?: boolean;
 }> = ({
   objectVolunteer,
   setResetState,
   setResetStateAll,
   eventId,
-  checkDate,
+  checkDateDelete,
+  checkDateRate,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
@@ -272,13 +274,13 @@ const Volunteer: React.FC<{
       )}
       {user?.role === "Organization" &&
         objectVolunteer.volunteerDisplayType === "PARTICIPATED" &&
-        !checkDate && (
+        checkDateDelete && (
           <Button onClick={handleOpenModal} size="large" type="primary">
             Xóa tình nguyện viên
           </Button>
         )}
       {user?.role === "Organization" &&
-        checkDate &&
+        checkDateRate &&
         !objectVolunteer.feedback && (
           <Button
             onClick={() => handleOpenRating(objectVolunteer?.name)}
@@ -289,7 +291,7 @@ const Volunteer: React.FC<{
           </Button>
         )}
       {user?.role === "Organization" &&
-        checkDate &&
+        checkDateRate &&
         objectVolunteer.feedback && (
           <Button onClick={handleOpenViewRated} size="large" type="primary">
             Xem đánh giá
