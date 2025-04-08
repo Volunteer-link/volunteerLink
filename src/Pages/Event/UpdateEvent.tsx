@@ -138,6 +138,7 @@ const UpdateEvent = () => {
   const [loading, setLoading] = useState(false);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+    setTimePublish(null);
   };
 
   const [listFieldState, setListFieldState] = useState<
@@ -426,12 +427,20 @@ const UpdateEvent = () => {
                   }
 
                   const [startDate, endDate] = value;
-                  const currentDate = dayjs();
-                  const minStartDate = currentDate.add(1, 'day'); // Thêm 1 ngày vào ngày hiện tại
                   const timePublish = form.getFieldValue('timePublish');
+                  const currentDate = dayjs();
+                  const minStartDate = currentDate.add(2, 'day');
+                  if (
+                    timePublish &&
+                    startDate.isBefore(timePublish.add(2, 'day'))
+                  ) {
+                    return Promise.reject(
+                      'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
+                    );
+                  }
                   if (startDate.isBefore(minStartDate, 'day')) {
                     return Promise.reject(
-                      'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 1 ngày!'
+                      'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!'
                     );
                   }
                   if (endDate.isBefore(currentDate, 'day')) {
@@ -443,15 +452,6 @@ const UpdateEvent = () => {
                   if (endDate.isBefore(startDate)) {
                     return Promise.reject(
                       'Ngày kết thúc phải sau ngày bắt đầu!'
-                    );
-                  }
-
-                  if (
-                    timePublish &&
-                    startDate.isBefore(dayjs(timePublish).add(1, 'day'), 'day')
-                  ) {
-                    return Promise.reject(
-                      'Ngày bắt đầu cần phải lớn hơn ngày xuất bản ít nhất 1 ngày!'
                     );
                   }
 

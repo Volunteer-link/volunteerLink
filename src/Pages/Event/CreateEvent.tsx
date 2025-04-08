@@ -25,7 +25,7 @@ import MapBox from '../Components/MapBox';
 import type { DatePickerProps, GetProps } from 'antd';
 import { createEvent } from '../../model/Request/CreateEvent';
 import api from '../../apiService/useFetch';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { toISOLocal } from '../../ultils/toISOLocal';
 import { useNavigate } from 'react-router-dom';
 import { decodedCookie, getCookie } from '../../ultils/cookie';
@@ -63,6 +63,7 @@ const CreateEvent = () => {
   const [loading, setLoading] = useState(false);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+    setTimePublish(null);
   };
 
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
@@ -197,7 +198,7 @@ const CreateEvent = () => {
   const disabledDate = (current: any) => {
     if (!timePublish) return false;
     const minDate = timePublish.add(2, 'days');
-    return current.isBefore(minDate, 'day');
+    return current.isBefore(minDate,"day");
   };
 
   return (
@@ -340,11 +341,58 @@ const CreateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
-          <Form.Item name="date" className="mb-4 mt-3 " rules={dateRulesEvent}>
+          <Form.Item
+            name="date"
+            className="mb-4 mt-3 "
+            rules={[
+              {
+                required: true,
+                message: 'Bạn cần chọn khoảng thời gian!',
+              },
+              {
+                validator: async (_, value: [Dayjs, Dayjs]) => {
+                  if (!value || value.length < 2) {
+                    return Promise.reject(
+                      'Hãy chọn cả ngày bắt đầu và ngày kết thúc!'
+                    );
+                  }
+
+                  const [startDate, endDate] = value;
+                  const timePublish = form.getFieldValue('timePublish');
+                  const currentDate = dayjs();
+                  const minStartDate = currentDate.add(2, 'day');
+                  if (timePublish && startDate.isBefore(timePublish.add(2, 'day'))) {
+                    return Promise.reject(
+                      'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
+                    );
+                  }
+                  if (startDate.isBefore(minStartDate, 'day')) {
+                    return Promise.reject(
+                      'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!'
+                    );
+                  }
+                  if (endDate.isBefore(currentDate, 'day')) {
+                    return Promise.reject(
+                      'Ngày kết thúc phải sau ngày hiện tại!'
+                    );
+                  }
+
+                  if (endDate.isBefore(startDate)) {
+                    return Promise.reject(
+                      'Ngày kết thúc phải sau ngày bắt đầu!'
+                    );
+                  }
+
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
             <DatePicker.RangePicker
               showTime={{ format: 'HH:mm' }}
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
+              allowEmpty
               disabled={!timePublish && value == 2}
               disabledDate={disabledDate}
             />
