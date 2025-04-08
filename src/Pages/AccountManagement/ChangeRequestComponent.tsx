@@ -42,9 +42,7 @@ const ChangeRequestComponent: React.FC<{
   const handleCancel = async (id: number) => {
     try {
       const { data } = await api.delete(`/admin/change-request`, {
-        params: {
-          id: id,
-        },
+        data: { id },
       });
     } catch (error: any) {
     } finally {

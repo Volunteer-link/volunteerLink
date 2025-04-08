@@ -43,7 +43,7 @@ const Bill = () => {
       </div>
       <div className="text-xl">
         <div className="text-center">
-          Bạn đã quyên góp thành công{" "}
+          Bạn đã ủng hộ thành công{" "}
           <span className="text-primary-color">
             {new Intl.NumberFormat("vi-VN").format(Number(amount) / 100)} VND
           </span>{" "}
@@ -53,7 +53,7 @@ const Bill = () => {
           {eventName}
         </div>
         <div className="text-center text-base mt-2">
-          Cảm ơn bạn đã quyên góp cho sự kiện! 🤗😘🥰
+          Cảm ơn bạn đã ủng hộ cho sự kiện! 🤗😘🥰
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@ import { FaUsers } from "react-icons/fa";
 const VolunteerSuggestions = () => {
   const [searchParams] = useSearchParams();
   const { id } = useParams();
-  const pageSizeAI = 5;
+  const pageSizeAI = 10;
   const pageSizeAll = 10;
   const pageFromUrl = searchParams.get("page");
   const [PageNumber, setPageNumber] = React.useState<number>(1);

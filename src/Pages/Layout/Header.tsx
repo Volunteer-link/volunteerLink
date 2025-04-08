@@ -293,6 +293,18 @@ const Header: React.FC<{}> = () => {
           </li>
           <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
             <NavLink
+              to="/volunteers"
+              className={({ isActive }) =>
+                `text-white hover:text-white ${
+                  isActive ? "font-bold border-b-2 pb-1 border-white" : ""
+                }`
+              }
+            >
+              Tình nguyện viên
+            </NavLink>
+          </li>
+          <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
+            <NavLink
               to="/events"
               className={({ isActive }) =>
                 `text-white hover:text-white ${
@@ -301,6 +313,18 @@ const Header: React.FC<{}> = () => {
               }
             >
               Sự kiện
+            </NavLink>
+          </li>
+          <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
+            <NavLink
+              to="/donative-events"
+              className={({ isActive }) =>
+                `text-white hover:text-white ${
+                  isActive ? "font-bold border-b-2 pb-1 border-white" : ""
+                }`
+              }
+            >
+              Ủng hộ
             </NavLink>
           </li>
           <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">

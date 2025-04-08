@@ -16,7 +16,7 @@ import { FaLocationDot, FaXmark } from "react-icons/fa6";
 import { FaDotCircle } from "react-icons/fa";
 import MySlider from "../../Common/MySlider";
 import { FaCheck } from "react-icons/fa6";
-import type { TextAreaRef } from 'antd/es/input/TextArea';
+import type { TextAreaRef } from "antd/es/input/TextArea";
 import { useContext, useEffect, useRef, useState } from "react";
 import api from "../../apiService/useFetch";
 import { EventCardType } from "../../model/ShowEventModel/EventCardType";
@@ -65,7 +65,7 @@ const DetailEvent = () => {
 
   const token = getCookie("accessToken");
   const user = decodedCookie(token);
-  const [summaryValue, setSummaryValue] = useState('');
+  const [summaryValue, setSummaryValue] = useState("");
   useEffect(() => {
     if (dataStateNoti?.from === "noti") {
       setFrom("/notification");
@@ -80,7 +80,7 @@ const DetailEvent = () => {
           `/common/get-event-infomation?eventId=${id}`
         );
         console.log(data);
-        
+
         setDataState(data.data);
       } catch (e: any) {
       } finally {
@@ -96,7 +96,7 @@ const DetailEvent = () => {
 
       setIdRequest(data.data.id);
       setStatusEvent(data.data.status);
-    } catch (e: any) { }
+    } catch (e: any) {}
   };
 
   useEffect(() => {
@@ -183,7 +183,7 @@ const DetailEvent = () => {
       try {
         const { data } = await api.get("/profile/check-publish-profile");
         setIsPublish(data.data.success);
-      } catch (e: any) { }
+      } catch (e: any) {}
     };
     if (user) {
       fetchCheckPublish();
@@ -270,32 +270,30 @@ const DetailEvent = () => {
   };
 
   const handleSummaryOpen = () => {
-    setSummaryValue(dataState?.summary?.content || '');
+    setSummaryValue(dataState?.summary?.content || "");
     setOpenModalSummary(true);
-  }
+  };
 
   const handleSummaryCancel = (e: any) => {
     e.stopPropagation();
     setOpenModalSummary(false);
-
-  }
+  };
 
   const handleCreateSummary = async () => {
-
     const value = summaryRef.current?.resizableTextArea?.textArea?.value;
-    if (!value || value.trim() === '') {
-      messageApi.warning("Tổng kết sự kiện không được để trống!")
+    if (!value || value.trim() === "") {
+      messageApi.warning("Tổng kết sự kiện không được để trống!");
       return;
     }
     try {
       if (dataState?.summary) {
-        await api.put('/report/get-reports-of-event', {
+        await api.put("/report/get-reports-of-event", {
           reportId: dataState.summary.id,
           content: value,
         });
         messageApi.success("Cập nhật tổng kết sự kiện thành công");
       } else {
-        await api.post('/report/create-report-of-event', {
+        await api.post("/report/create-report-of-event", {
           eventId: id,
           content: value,
         });
@@ -305,7 +303,7 @@ const DetailEvent = () => {
     } catch (err) {
       messageApi.error("Có lỗi xảy ra khi gửi tổng kết!");
     }
-  }
+  };
 
   useEffect(() => {
     const fetchRating = async () => {
@@ -364,7 +362,7 @@ const DetailEvent = () => {
   };
 
   const handleOkDonation = async () => {
-    if (amount >= 10000 && amount <= 10000000) {
+    if (amount >= 10000) {
       try {
         setIsLoading(true);
         const { data } = await api.post(`/donate/create-donate-url-vnpay`, {
@@ -381,14 +379,15 @@ const DetailEvent = () => {
       messageApi.error("Số tiền phải nằm trong khoảng 5.000 - 1.000.000 VNĐ");
     }
   };
+  console.log(dataState);
 
   return (
     <div>
       {contextHolder}
       {isLoading && <Loading color="white" />}
       <div className="grid grid-cols-8">
-        <div></div>
-        <div className="col-span-6 ">
+        {/* <div></div> */}
+        <div className="col-span-8">
           <div className="lg:flex lg:items-center lg:justify-between lg:my-6 mt-20 mb-6">
             {fromTitle && (
               <Breadcrumb
@@ -454,22 +453,22 @@ const DetailEvent = () => {
                   <span className="text-primary-color">
                     {dataState?.timePublish
                       ? `${new Date(dataState.timePublish).getFullYear()}-${(
-                        new Date(dataState.timePublish).getMonth() + 1
-                      )
-                        .toString()
-                        .padStart(2, "0")}-${new Date(dataState.timePublish)
+                          new Date(dataState.timePublish).getMonth() + 1
+                        )
+                          .toString()
+                          .padStart(2, "0")}-${new Date(dataState.timePublish)
                           .getDate()
                           .toString()
                           .padStart(2, "0")} ${new Date(dataState.timePublish)
-                            .getHours()
-                            .toString()
-                            .padStart(2, "0")}:${new Date(dataState.timePublish)
-                              .getMinutes()
-                              .toString()
-                              .padStart(2, "0")}:${new Date(dataState.timePublish)
-                                .getSeconds()
-                                .toString()
-                                .padStart(2, "0")}`
+                          .getHours()
+                          .toString()
+                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .getMinutes()
+                          .toString()
+                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .getSeconds()
+                          .toString()
+                          .padStart(2, "0")}`
                       : ""}
                   </span>
                 </div>
@@ -478,10 +477,23 @@ const DetailEvent = () => {
               new Date() > new Date(dataState?.endTime || 0) && //đã kết thúc
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
-                  <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
+                  <div
+                    className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
                     onClick={handleSummaryOpen}
-                  >{dataState.summary ? "Cập nhật tổng kết sự kiện" : "Viết tổng kết sự kiện"}
-                    <Modal title={dataState.summary ? "Cập nhật tổng kết sự kiện" : "Tạo tổng kết sự kiện"} open={OpenModalSummary} onOk={handleCreateSummary} onCancel={handleSummaryCancel} >
+                  >
+                    {dataState.summary
+                      ? "Cập nhật tổng kết sự kiện"
+                      : "Viết tổng kết sự kiện"}
+                    <Modal
+                      title={
+                        dataState.summary
+                          ? "Cập nhật tổng kết sự kiện"
+                          : "Tạo tổng kết sự kiện"
+                      }
+                      open={OpenModalSummary}
+                      onOk={handleCreateSummary}
+                      onCancel={handleSummaryCancel}
+                    >
                       <TextArea
                         ref={summaryRef}
                         defaultValue={summaryValue}
@@ -489,11 +501,9 @@ const DetailEvent = () => {
                         showCount
                         maxLength={1000}
                         placeholder="Tổng kết sự kiện..."
-                        style={{ height: 300, resize: 'none' }
-                        }
+                        style={{ height: 300, resize: "none" }}
                       />
                     </Modal>
-
                   </div>
                   <div
                     onClick={handleClickAttendance}
@@ -504,21 +514,25 @@ const DetailEvent = () => {
                 </div>
               )}
 
-            {user?.role === "Volunteer" && new Date(dataState?.endTime || 0) < new Date() && (
-             
-              <div className="lg:flex lg:gap-2">
-                <div className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
-                  onClick={handleSummaryOpen}
-                >
-                  Xem tổng kết sự kiện
-                  <Modal title="Tổng kết sự kiện" open={OpenModalSummary}  onCancel={handleSummaryCancel} footer={() => null}>
-                    <p>{summaryValue}</p>
-                  </Modal>
+            {user?.role === "Volunteer" &&
+              new Date(dataState?.endTime || 0) < new Date() && (
+                <div className="lg:flex lg:gap-2">
+                  <div
+                    className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
+                    onClick={handleSummaryOpen}
+                  >
+                    Xem tổng kết sự kiện
+                    <Modal
+                      title="Tổng kết sự kiện"
+                      open={OpenModalSummary}
+                      onCancel={handleSummaryCancel}
+                      footer={() => null}
+                    >
+                      <p>{summaryValue}</p>
+                    </Modal>
+                  </div>
                 </div>
-              
-              </div>
-
-            )}
+              )}
             {user?.role === "Volunteer" &&
               statusEvent === 2 &&
               new Date() < new Date(dataState?.startTime || 0) && (
@@ -608,7 +622,7 @@ const DetailEvent = () => {
             />
             <div className="w-full lg:grid lg:grid-cols-10 bg-primary-color">
               <div className=""></div>
-              <div className="text-white lg:col-span-5 lg:py-8 py-4 lg:px-0 px-4">
+              <div className="text-white lg:col-span-4 lg:py-8 py-4 lg:px-0 px-4">
                 <div className="lg:flex items-center justify-between mb-4">
                   <div
                     onClick={() =>
@@ -657,31 +671,31 @@ const DetailEvent = () => {
                 new Date() > new Date(dataState.endTime) && <>đã xảy ra</>} */}
 
               {/* Volunteer sight */}
-              {user?.role === "Volunteer" &&
+              {/* {user?.role === "Volunteer" &&
                 statusEvent === 0 &&
                 dataState?.startTime &&
                 new Date() <
-                new Date(
-                  new Date(dataState.startTime).setDate(
-                    new Date(dataState.startTime).getDate() - 1
-                  ) //trước bắt đầu 1 ngày
-                ) &&
+                  new Date(
+                    new Date(dataState.startTime).setDate(
+                      new Date(dataState.startTime).getDate() - 1
+                    ) //trước bắt đầu 1 ngày
+                  ) &&
                 isPublish && (
                   <div
-                    className="lg:col-span-3 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
+                    className="lg:col-span-4 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
                     onClick={handleJoinRequest}
                   >
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium lg:hover:opacity-95 lg:hover:scale-105 duration-300 cursor-pointer">
                       Tham gia sự kiện
                     </div>
                   </div>
-                )}
+                )} */}
               {/* Volunteer sight */}
 
               {statusEvent === 3 && (
                 <div
                   onClick={handleCancelRequest}
-                  className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
+                  className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
                 >
                   <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium cursor-pointer">
                     Đã gửi yêu cầu...
@@ -703,7 +717,7 @@ const DetailEvent = () => {
                 user?.role === "Organization" &&
                 new Date() < new Date(dataState?.startTime) &&
                 user?.role === "Organization" && (
-                  <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  <div className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
                       Sự kiện chưa diễn ra
                     </div>
@@ -715,7 +729,7 @@ const DetailEvent = () => {
                 dataState?.endTime &&
                 new Date() >= new Date(dataState?.startTime) &&
                 new Date() <= new Date(dataState?.endTime) && (
-                  <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  <div className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
                       Sự kiện đang diễn ra
                     </div>
@@ -725,7 +739,7 @@ const DetailEvent = () => {
               {dataState?.endTime &&
                 user?.role === "Organization" &&
                 new Date() >= new Date(dataState?.endTime) && (
-                  <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
+                  <div className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
                       Sự kiện đã kết thúc
                     </div>
@@ -733,31 +747,62 @@ const DetailEvent = () => {
                 )}
 
               {/* Volunteer already sign */}
-              {user?.role === "Volunteer" && statusEvent === 1 && (
-                <div className="lg:col-span-3 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
-                  {dataState?.startTime &&
-                    new Date() <= new Date(dataState?.startTime) && (
-                      <div
-                        onClick={handleOpenJoin}
-                        className="text-xs lg:text-sm flex items-center gap-1 border-2 px-6 py-2 rounded-full text-white font-medium hover:cursor-pointer hover:lg:bg-white hover:lg:scale-105 hover:lg:text-primary-color duration-300"
-                      >
-                        <div>Đã tham gia</div>
-                        <FaCheck />
-                      </div>
-                    )}
-
-                  {dataState?.hasDonate && (
-                    <div className="flex items-center gap-1 font-medium">
-                      <div
-                        onClick={handleOpenDonation}
-                        className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
-                      >
-                        Quyên góp
+              <div className="lg:col-span-4 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
+                {user?.role === "Volunteer" &&
+                  statusEvent === 1 &&
+                  dataState?.startTime &&
+                  new Date() <= new Date(dataState?.startTime) && (
+                    <div
+                      onClick={handleOpenJoin}
+                      className="text-xs lg:text-sm flex items-center gap-1 border-2 px-6 py-2 rounded-full text-white font-medium hover:cursor-pointer hover:lg:bg-white hover:lg:scale-105 hover:lg:text-primary-color duration-300"
+                    >
+                      <div>Đã tham gia</div>
+                      <FaCheck />
+                    </div>
+                  )}
+                {user?.role === "Volunteer" &&
+                  statusEvent === 0 &&
+                  dataState?.startTime &&
+                  new Date() <
+                    new Date(
+                      new Date(dataState.startTime).setDate(
+                        new Date(dataState.startTime).getDate() - 1
+                      ) //trước bắt đầu 1 ngày
+                    ) &&
+                  isPublish && (
+                    <div
+                      className="lg:col-span-4 lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
+                      onClick={handleJoinRequest}
+                    >
+                      <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium lg:hover:opacity-95 lg:hover:scale-105 duration-300 cursor-pointer">
+                        Tham gia sự kiện
                       </div>
                     </div>
                   )}
+                {dataState?.hasDonate && user?.role !== "Organization" && (
+                  <div className="flex items-center gap-1 font-medium">
+                    <div
+                      onClick={handleOpenDonation}
+                      className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
+                    >
+                      Ủng hộ
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* {dataState?.hasDonate && !user?.role && (
+                <div className="lg:col-span-4 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
+                  <div className="flex items-center gap-1 font-medium">
+                    <div
+                      onClick={handleOpenDonation}
+                      className="text-xs lg:text-sm bg-white px-6 py-2 rounded-full text-primary-color hover:cursor-pointer hover:lg:scale-105 hover:lg:opacity-95 duration-300"
+                    >
+                      Quyên góp
+                    </div>
+                  </div>
                 </div>
-              )}
+              )} */}
 
               {/* Volunteer already sign */}
 
@@ -801,34 +846,28 @@ const DetailEvent = () => {
                       </div>
                       <div>
                         <div>
-                          {/* {dataState?.startTime
-                            ? `${new Date(
-                                dataState.startTime
-                              ).getFullYear()}-${(
-                                new Date(dataState.startTime).getMonth() + 1
-                              )
-                                .toString()
-                                .padStart(2, "0")}-${new Date(
-                                dataState.startTime
-                              )
-                                .getDate()
-                                .toString()
-                                .padStart(2, "0")}`
-                            : ""} */}
                           {new Date(
                             dataState?.startTime || new Date()
-                          ).toLocaleDateString("vi-VN", {
+                          ).toLocaleString("vi-VN", {
                             day: "2-digit",
                             month: "2-digit",
                             year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: false, // 24h format, bỏ nếu mày thích AM/PM
                           })}
                           <TbTilde className="inline-block mx-2" />
                           {new Date(
                             dataState?.endTime || new Date()
-                          ).toLocaleDateString("vi-VN", {
+                          ).toLocaleString("vi-VN", {
                             day: "2-digit",
                             month: "2-digit",
                             year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: false,
                           })}
                         </div>
                       </div>
@@ -869,13 +908,13 @@ const DetailEvent = () => {
             </div>
           </div>
         </div>
-        <div></div>
+        {/* <div></div> */}
       </div>
       {dataState?.endTime && //hết sự kiện
         new Date() > new Date(dataState?.endTime) && (
           <div className="grid grid-cols-8">
             <div></div>
-            <div className="col-span-6">
+            <div className="col-span-8">
               <div className="flex items-center gap-1 mb-4">
                 <span className="text-xl text-primary-color font-medium">
                   Đánh giá sự kiện
@@ -887,8 +926,9 @@ const DetailEvent = () => {
                   {listRating.map((item, index) => (
                     <div
                       key={index}
-                      className={`p-2 flex items-start gap-4 select-none ${index !== listRating.length - 1 ? "mb-6" : ""
-                        } `}
+                      className={`p-2 flex items-start gap-4 select-none ${
+                        index !== listRating.length - 1 ? "mb-6" : ""
+                      } `}
                     >
                       <div className="w-10 h-10 rounded-full overflow-hidden">
                         <img
@@ -1006,24 +1046,22 @@ const DetailEvent = () => {
         </Modal>
 
         <Modal
-          title="Quyên góp cho sự kiện"
+          title="Ủng hộ cho sự kiện"
           open={stateModalDonation}
           onCancel={handleCloseDonation}
           onOk={handleOkDonation}
         >
           <Input
-            placeholder="Nhập số tiền quyên góp..."
+            placeholder="Nhập số tiền ủng hộ..."
             type="number"
             value={amount}
             onChange={handleChangeDonation}
             min={10000}
-            max={10000000}
           />
           <div>
-            Đơn vị: (<span className="text-primary-color font-medium">VND</span>
-            )
+            Tối thiểu: 10.000{" "}
+            <span className="text-primary-color font-medium">VND</span>
           </div>
-          <div>Min: 10.000 ~ Max: 10.000.000</div>
         </Modal>
 
         <Modal

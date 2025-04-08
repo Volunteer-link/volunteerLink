@@ -42,6 +42,8 @@ import Bill from "./Pages/Bill/Bill";
 import HistoryOrganization from "./Pages/History/HistoryOrganization";
 import HistoryVolunteer from "./Pages/History/HistoryVolunteer";
 import NotFound from "./Pages/ErrorPages/NotFound";
+import Volunteers from "./Pages/Volunteers/Volunteers";
+import DonativeEvents from "./Pages/DonativeEvents/DonativeEvents";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +69,14 @@ const router = createBrowserRouter([
       {
         path: "organizations",
         element: <Organizations />,
+      },
+      {
+        path: "/volunteers",
+        element: <Volunteers />,
+      },
+      {
+        path: "/donative-events",
+        element: <DonativeEvents />,
       },
       {
         path: "organizations/profile/:id",
