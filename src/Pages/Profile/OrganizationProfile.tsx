@@ -48,26 +48,29 @@ const OrganizationProfile = () => {
     organization?.address?.split(',').map((part: string) => part.trim()) || [];
   useEffect(() => {
     const fetchOrganization = async () => {
-      const token = getCookie('accessToken');
-      const user = decodedCookie(token);
-      const { data } = await api.get(`/profile/organization`, {
-        params: {
-          Id: user.AccId,
-        },
-      });
-      setListSelectedField(data.data?.fields.map((field: any) => field.id));
-      setFileListThumbnail((prev) => {
-        return [
-          {
-            uid: '-1',
-            name: 'imageThumbnail',
-            status: 'done',
-            url: `${data.data?.urlImage}`,
+      try {
+        const token = getCookie('accessToken');
+        const user = decodedCookie(token);
+        const { data } = await api.get(`/profile/organization`, {
+          params: {
+            Id: user?.AccId,
           },
-        ];
-      });
-      setOrganization(data.data);
-      console.log(data);
+        });
+        setListSelectedField(data.data?.fields.map((field: any) => field.id));
+        setFileListThumbnail((prev) => {
+          return [
+            {
+              uid: '-1',
+              name: 'imageThumbnail',
+              status: 'done',
+              url: `${data.data?.urlImage}`,
+            },
+          ];
+        });
+        setOrganization(data.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchOrganization();
@@ -165,6 +168,8 @@ const OrganizationProfile = () => {
 
     fetchBanks();
   }, []);
+
+  if (!organization) return null;
 
   return (
     <div className="">
@@ -393,7 +398,7 @@ const OrganizationProfile = () => {
               </Select.Option>
             ) : (
               bankList.map((bank: any) => (
-                <Select.Option key={bank.id} label={bank.name}  value={bank.bin}>
+                <Select.Option key={bank.id} label={bank.name} value={bank.bin}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img
                       src={bank.logo}
