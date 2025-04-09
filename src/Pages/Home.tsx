@@ -7,7 +7,7 @@ const Home: React.FC<{}> = () => {
     document.documentElement.style.scrollBehavior = "smooth";
   }, []);
   return (
-    <div className="mb-20">
+    <div className="mb-20 font-quicksand">
       <div className="">
         <div className="w-full m-auto">
           <LineSpacing />
@@ -20,10 +20,10 @@ const Home: React.FC<{}> = () => {
                   className="w-52 pt-2 m-auto "
                 />
               </div>
-              <div className="text-primary-color text-xl font-medium text-center">
+              <div className="text-primary-color text-xl font-semibold text-center">
                 CỘNG ĐỒNG
               </div>
-              <div className="w-44 text-center m-auto mt-4 pb-20 font-normal text-sm">
+              <div className="w-44 text-center m-auto mt-4 pb-20 font-normal text-base">
                 Kết nối tình nguyện viên và tổ chức, xây dựng một cộng đồng hỗ
                 trợ và phát triển bền vững
               </div>
@@ -36,10 +36,10 @@ const Home: React.FC<{}> = () => {
                   className="w-40 pt-2 m-auto "
                 />
               </div>
-              <div className="text-primary-color text-xl font-medium text-center">
+              <div className="text-primary-color text-xl font-semibold text-center">
                 HỖ TRỢ PHÁT TRIỂN
               </div>
-              <div className="w-44 text-center m-auto mt-4 pb-20 font-normal text-sm">
+              <div className="w-44 text-center m-auto mt-4 pb-20 font-normal text-base">
                 Cung cấp công cụ và tài nguyên giúp tình nguyện viên phát triển
                 kỹ năng và nâng cao hiệu quả làm việc
               </div>
@@ -52,10 +52,10 @@ const Home: React.FC<{}> = () => {
                   className="w-40 pt-2 m-auto "
                 />
               </div>
-              <div className="text-primary-color text-xl font-medium text-center">
+              <div className="text-primary-color text-xl font-semibold text-center">
                 ẢNH HƯỞNG TÍCH CỰC
               </div>
-              <div className="w-44 text-center m-auto mt-4 pb-20 font-normal text-sm">
+              <div className="w-44 text-center m-auto mt-4 pb-20 font-normal text-base">
                 Đảm bảo mọi nỗ lực tình nguyện mang lại lợi ích rõ ràng và tạo
                 ra thay đổi lâu dài trong xã hội
               </div>

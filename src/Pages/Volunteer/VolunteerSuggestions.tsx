@@ -190,8 +190,8 @@ const VolunteerSuggestions = () => {
               <span className="text-primary-color">được gợi ý</span>
             </div>
             <img
-              src="/materials/AI.png"
-              className="select-none w-6 h-6 my-2 mx-auto"
+              src="/materials/VTLAI_blackbrain_transparentbg.png"
+              className="w-40 mx-auto"
               alt=""
             />
           </div>
