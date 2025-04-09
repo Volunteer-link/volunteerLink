@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../apiService/useFetch';
-import { Avatar, Pagination, Select, Table } from 'antd';
-import { useSearchParams } from 'react-router-dom';
-import dayjs from 'dayjs';
-import Loading from '../Components/Loading';
+import React, { useEffect, useState } from "react";
+import api from "../../apiService/useFetch";
+import { Avatar, Pagination, Select, Table } from "antd";
+import { useSearchParams } from "react-router-dom";
+import dayjs from "dayjs";
+import Loading from "../Components/Loading";
 
 const { Option } = Select;
 
 const HistoryOrganization = () => {
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const page = searchParams.get('page');
+  const page = searchParams.get("page");
   const [totalPage, setTotalPage] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(parseInt(page!) || 1);
   const [eventId, setEventId] = useState<number | null>(null);
@@ -61,34 +61,34 @@ const HistoryOrganization = () => {
 
   const columns = [
     {
-      title: 'Ảnh',
-      dataIndex: 'volunteerImageUrl',
-      key: 'volunteerImageUrl',
+      title: "Ảnh",
+      dataIndex: "volunteerImageUrl",
+      key: "volunteerImageUrl",
       render: (volunteerImageUrl: string, record: any) => (
         <Avatar src={volunteerImageUrl} alt={record.volunteerName} />
       ),
     },
     {
-      title: 'Tên',
-      dataIndex: 'volunteerName',
-      key: 'volunteerName',
+      title: "Tên",
+      dataIndex: "volunteerName",
+      key: "volunteerName",
     },
     {
-      title: 'Tên sự kiện',
-      dataIndex: 'eventName',
-      key: 'eventName',
+      title: "Tên sự kiện",
+      dataIndex: "eventName",
+      key: "eventName",
     },
     {
-      title: 'Thời gian',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      render: (date: string) => dayjs(date).format('DD/MM/YYYY HH:mm'),
+      title: "Thời gian",
+      dataIndex: "createdDate",
+      key: "createdDate",
+      render: (date: string) => dayjs(date).format("DD/MM/YYYY HH:mm"),
     },
     {
-      title: 'Tiền',
-      dataIndex: 'money',
-      key: 'money',
-      render: (money: number) => money.toLocaleString('vi-VN') + ' đ',
+      title: "Tiền",
+      dataIndex: "money",
+      key: "money",
+      render: (money: number) => money.toLocaleString("vi-VN") + " VND",
     },
   ];
 

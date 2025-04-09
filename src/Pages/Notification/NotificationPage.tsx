@@ -24,6 +24,8 @@ const NotificationPage = () => {
     if (socket) {
       socket.addEventListener("message", (event) => {
         const parsedData = JSON.parse(event.data);
+        console.log(parsedData);
+
         if (
           parsedData.Message === "New Notification" &&
           parsedData.message !== "Connected" &&
@@ -89,7 +91,8 @@ const NotificationPage = () => {
       item.type === 9 ||
       item.type === 11 ||
       item.type === 12 ||
-      item.type === 14
+      item.type === 14 ||
+      item.type === 17
     ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
@@ -106,7 +109,7 @@ const NotificationPage = () => {
       navigate(`/rating-management`);
     }
   };
-  console.log(notiList);
+  // console.log(notiList);
 
   return (
     <div className="">
@@ -163,7 +166,8 @@ const NotificationPage = () => {
             item.type === 9 ||
             item.type === 10 ||
             item.type === 13 ||
-            item.type === 15) && (
+            item.type === 15 ||
+            item.type === 17) && (
             <div className="bg-primary-color w-32 h-16 relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
               <img

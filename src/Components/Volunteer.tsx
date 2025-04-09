@@ -234,7 +234,7 @@ const Volunteer: React.FC<{
         <div className="flex text-[#3BA769] leading-none gap-2 flex-col">
           <span
             onClick={handleClickName}
-            className="text-[20px] cursor-pointer transition-all"
+            className="text-[20px] cursor-pointer transition-all max-w-60 truncate"
           >
             {objectVolunteer.name}
           </span>
@@ -243,7 +243,7 @@ const Volunteer: React.FC<{
               ? `${calculateAge(new Date(objectVolunteer.dob))} tuổi`
               : ""}
           </span>
-          <span className="text-[14px] font-medium text-stone-700">
+          <span className="text-[14px] font-medium text-stone-700 max-w-60 truncate">
             {objectVolunteer.address}
           </span>
         </div>
