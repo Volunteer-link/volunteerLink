@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import Header from "./Layout/Header";
-import Footer from "./Layout/Footer";
-import ScrollToTop from "../Common/ScrollToTop";
-import { Carousel } from "antd";
-import { motion } from "framer-motion";
-import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import Header from './Layout/Header';
+import Footer from './Layout/Footer';
+import ScrollToTop from '../Common/ScrollToTop';
+import { Carousel } from 'antd';
+import { motion } from 'framer-motion';
+import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
 
 interface SlideOneProps {
   isActive: boolean;
@@ -16,9 +16,9 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
   return (
     <div
       style={{
-        height: "600px",
-        position: "relative",
-        background: "white",
+        height: '600px',
+        position: 'relative',
+        background: 'white',
       }}
     >
       <img
@@ -26,8 +26,8 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: "cover",
-          objectPosition: "center",
+          objectFit: 'cover',
+          objectPosition: 'center',
         }}
       />
       {isActive && (
@@ -35,13 +35,13 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
           key="slide-2-animate"
           initial={{ opacity: 0, x: 0 }}
           animate={{ opacity: 1, x: -300 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
           className="absolute text-white right-10 top-1/4 max-w-[600px]"
         >
           <div className="scale-110 text-end">
             <div className="mb-12">
               <span className="text-2xl font-quicksand font-light text-shadow-lg">
-                Bạn không thể làm{" "}
+                Bạn không thể làm{' '}
               </span>
               <div className="bg-white opacity-80 inline-block py-2 px-4 rounded-tr-3xl">
                 <span className="text-5xl text-primary-color font-merriweather">
@@ -54,7 +54,7 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
             </div>
             <div>
               <span className="text-2xl font-quicksand font-light text-shadow-lg">
-                Bạn có thể làm{" "}
+                Bạn có thể làm{' '}
               </span>
               <div className="bg-white opacity-80 inline-block py-4 px-4 rounded-br-3xl">
                 <span className="text-5xl text-primary-color font-merriweather">
@@ -73,9 +73,9 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
   return (
     <div
       style={{
-        height: "600px",
-        position: "relative",
-        background: "white",
+        height: '600px',
+        position: 'relative',
+        background: 'white',
       }}
     >
       <img
@@ -83,8 +83,8 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: "cover",
-          objectPosition: "center",
+          objectFit: 'cover',
+          objectPosition: 'center',
         }}
       />
       {isActive && (
@@ -94,7 +94,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
             key="slide-left"
             initial={{ opacity: 0, x: -200 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
             className="text-white text-right mb-20"
           >
             <div className="flex">
@@ -104,7 +104,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
                   Một hành động
                 </span>
                 <span className="text-primary-color bg-white rounded-bl-3xl opacity-90 py-3 font-thin px-6 text-7xl mt-4 inline-block font-merriweather">
-                  {" "}
+                  {' '}
                   nhỏ
                 </span>
               </div>
@@ -116,7 +116,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
             key="slide-right"
             initial={{ opacity: 0, x: 200 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
             className="text-white text-left mt-20"
           >
             <div className="flex">
@@ -125,7 +125,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
                   một trái tim
                 </span>
                 <span className="text-primary-color bg-white rounded-br-3xl opacity-90 py-3 font-thin px-6 text-7xl mt-4 inline-block font-merriweather">
-                  {" "}
+                  {' '}
                   lớn
                 </span>
               </div>
@@ -142,9 +142,9 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
   return (
     <div
       style={{
-        height: "600px",
-        position: "relative",
-        background: "white",
+        height: '600px',
+        position: 'relative',
+        background: 'white',
       }}
     >
       <img
@@ -152,8 +152,8 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: "cover",
-          objectPosition: "center",
+          objectFit: 'cover',
+          objectPosition: 'center',
         }}
       />
       {isActive && (
@@ -161,7 +161,7 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
           key="slide-2-animate"
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
           className="absolute text-white right-[10%] top-1/3"
         >
           <div className="text-end">
@@ -169,13 +169,13 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
               <RiDoubleQuotesL className="text-stone-700 text-4xl" />
               <span>
                 <span className="text-3xl text-stone-700 font-quicksand font-light">
-                  Tình nguyện là{" "}
+                  Tình nguyện là{' '}
                 </span>
                 <span className="text-5xl font-merriweather text-primary-color">
-                  ngôn ngữ{" "}
+                  ngôn ngữ{' '}
                 </span>
                 <span className="text-3xl text-stone-700 font-quicksand font-light">
-                  của{" "}
+                  của{' '}
                 </span>
                 <span className="text-5xl font-merriweather text-primary-color">
                   trái tim
@@ -192,11 +192,16 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
 
 export default function RootLayout() {
   const location = useLocation();
-  const hideHeader = location.pathname.startsWith("/admin");
-  const hideFooter = location.pathname.startsWith("/admin");
+  const hideHeader = location.pathname.startsWith('/admin');
+  const hideFooter = location.pathname.startsWith('/admin');
   const shouldHideImage =
-    location.pathname === "/" || location.pathname === "/home";
+    location.pathname === '/' || location.pathname === '/home';
   const [currentSlide, setCurrentSlide] = useState(0);
+  useEffect(() => {
+    if (shouldHideImage) {
+      setCurrentSlide(0);
+    }
+  }, [location.pathname]);
   return (
     <div className="relative">
       <ScrollToTop />
@@ -225,8 +230,8 @@ export default function RootLayout() {
       <main
         className={
           hideFooter
-            ? ""
-            : `my-3 lg:my-8` + "container mx-auto px-4 lg:px-0 lg:w-3/4"
+            ? ''
+            : `my-3 lg:my-8` + 'container mx-auto px-4 lg:px-0 lg:w-3/4'
         }
       >
         <Outlet />
