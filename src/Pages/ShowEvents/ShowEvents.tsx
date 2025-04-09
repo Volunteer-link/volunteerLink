@@ -369,6 +369,13 @@ const ShowEvent = () => {
           <div className="items-center gap-1 justify-center text-2xl flex mt-10 mb-6">
             <div>Sự kiện</div>
             <div className="text-primary-color">gợi ý</div>
+            <div>
+              <img
+                src="/materials/VTLAI_blackbrain_transparentbg.png"
+                className="w-40"
+                alt=""
+              />
+            </div>
           </div>
           <div className="">
             {listEventCardRelevant?.length === 0 && (
