@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
           gmail: email,
           name: name,
         });
-        message.success("Login successful!");
+        message.success("Đăng nhập thành công!");
         const token = response.data.data.accessToken;
 
         handleAfterLogin(token);

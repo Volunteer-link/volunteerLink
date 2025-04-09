@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { getCookie } from "../ultils/cookie";
+import { getCookie, setCookie } from "../ultils/cookie";
 
 const devURL = process.env.REACT_APP_URL_DEV;
 const prodURL = process.env.REACT_APP_URL_PRO;
@@ -34,15 +34,66 @@ api.interceptors.request.use(
   }
 );
 
-// Thêm Interceptors cho response (nếu cần)
+async function refreshToken() {
+  const response = await axios.post('https://dev.api.volunteer-link.site/refresh-token');
+
+  return response.data.data;
+}
+
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (response) => {
-    // Bạn có thể xử lý dữ liệu trả về ở đây trước khi component nhận
     return response;
   },
-  (error) => {
-    if (error.response?.status === 401) {
-      window.location.href = "/unauthorized"; // Chuyển trang khi lỗi 401
+  async (error) => {
+
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry ) {
+      originalRequest._retry = true;
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = 'Bearer ' + token;
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+      isRefreshing = true;
+      try {
+        const data = await refreshToken();
+        const newAccessToken = data?.accessToken;
+        setCookie("accessToken", newAccessToken);
+        api.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken;
+        processQueue(null, newAccessToken);
+
+        originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+         window.location.href = '/unauthorized';
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
     }
     if (error.response?.status === 404) {
       window.location.href = "/not-found"; // Chuyển trang khi lỗi 401
