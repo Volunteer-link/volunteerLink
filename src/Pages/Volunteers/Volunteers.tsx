@@ -61,7 +61,6 @@ const Volunteers = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       // Việc cần làm khi bấm Enter nè
-      console.log("enter");
 
       handleClickSearch();
     }
