@@ -7,6 +7,9 @@ import {
   Button,
   Checkbox,
   App as AntdApp,
+  Popconfirm,
+  Spin,
+  Select,
 } from 'antd';
 import { nameRules } from '../../ultils/validationRules';
 import PreviewImageUpload from '../Components/PreviewImageUpload';
@@ -15,6 +18,7 @@ import type { DatePickerProps, GetProps } from 'antd';
 import api from '../../apiService/useFetch';
 import { decodedCookie, getCookie } from '../../ultils/cookie';
 import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
+import { PullRequestOutlined } from '@ant-design/icons';
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
@@ -27,7 +31,10 @@ const style: React.CSSProperties = {
 const OrganizationProfile = () => {
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
+  const [nameRequest, setNameRequest] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const [loadingBanking, setLoadingBanking] = useState(false);
+  const [bankBin, setBankBin] = useState<string>('');
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
     {
@@ -35,26 +42,35 @@ const OrganizationProfile = () => {
       name: string;
     }[]
   >([]);
+  const [bankList, setBankList] = useState([]);
   const [organization, setOrganization] = useState<any>();
   const partsAddress =
-    organization?.address.split(',').map((part: string) => part.trim()) || [];
+    organization?.address?.split(',').map((part: string) => part.trim()) || [];
   useEffect(() => {
     const fetchOrganization = async () => {
-      const token = getCookie('accessToken');
-      const user = decodedCookie(token);
-      const { data } = await api.get(`/profile/${user.AccId}`);
-      setListSelectedField(data.data?.fields.map((field: any) => field.id));
-      setFileListThumbnail((prev) => {
-        return [
-          {
-            uid: '-1',
-            name: 'imageThumbnail',
-            status: 'done',
-            url: `${data.data?.urlImage}`,
+      try {
+        const token = getCookie('accessToken');
+        const user = decodedCookie(token);
+        const { data } = await api.get(`/profile/organization`, {
+          params: {
+            Id: user?.AccId,
           },
-        ];
-      });
-      setOrganization(data.data);
+        });
+        setListSelectedField(data.data?.fields.map((field: any) => field.id));
+        setFileListThumbnail((prev) => {
+          return [
+            {
+              uid: '-1',
+              name: 'imageThumbnail',
+              status: 'done',
+              url: `${data.data?.urlImage}`,
+            },
+          ];
+        });
+        setOrganization(data.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchOrganization();
@@ -67,7 +83,6 @@ const OrganizationProfile = () => {
       const address = `${values.ward}, ${values.district}, ${values.province}`;
       const image = await uploadFilesToFirebase(fileListThumbnail);
       const dataRequest = {
-        name: values.name.trim(),
         description: values.description.trim(),
         phoneNumber: values.phoneNumber.trim(),
         urlFacebook: values.urlFacebook.trim(),
@@ -76,6 +91,12 @@ const OrganizationProfile = () => {
         imageUrl: image?.[0] || organization.urlImage,
       };
       const { data } = await api.put('profile/organization', dataRequest);
+      if (values.bankNumber && bankBin) {
+        await api.put('profile/setup-bank-account', {
+          bankNumber: values.bankNumber,
+          bankBin: bankBin,
+        });
+      }
       message.success('Cập nhật thông tin thành công!');
     } catch (e: any) {
       message.error('Cập nhật thông tin thất bại!');
@@ -101,8 +122,57 @@ const OrganizationProfile = () => {
     fetchField();
   }, []);
 
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showPopconfirm = () => {
+    setOpen(true);
+  };
+
+  const handleOk = () => {
+    form
+      .validateFields(['name'])
+      .then(async (values) => {
+        setConfirmLoading(true);
+        const { data } = await api.post(`/profile/change-name-request`, {
+          newName: values.name,
+        });
+        message.success('Gửi yêu cầu đổi tên thành công!');
+      })
+      .catch((errorInfo) => {
+        message.success('Gửi yêu cầu đổi tên thất bại!');
+        console.log('Validate Failed:', errorInfo);
+      })
+      .finally(() => {
+        setOpen(false);
+        setConfirmLoading(false);
+      });
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      setLoadingBanking(true);
+      try {
+        const { data } = await api.get(`https://api.vietqr.io/v2/banks`);
+        setBankList(data.data || []); // Tuỳ theo structure JSON thật sự trả về
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingBanking(false);
+      }
+    };
+
+    fetchBanks();
+  }, []);
+
+  if (!organization) return null;
+
   return (
-    <div className="container mx-auto px-4">
+    <div className="">
       <div className="mt-10 inline-block">
         <h3 className="font-medium text-[24px] text-[#3BA769]">
           Hồ sơ tổ chức
@@ -156,15 +226,30 @@ const OrganizationProfile = () => {
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
-          <Form.Item
-            name="name"
-            initialValue={organization?.name}
-            className="mb-4 mt-3"
-            key={organization?.name}
-            rules={nameRules}
-          >
-            <Input readOnly />
-          </Form.Item>
+          <div className="flex items-center gap-5 justify-between">
+            <Form.Item
+              name="name"
+              initialValue={organization?.name}
+              className="mb-4 mt-3 flex-1"
+              key={organization?.name}
+              rules={nameRules}
+            >
+              <Input readOnly={!open} />
+            </Form.Item>
+            <Popconfirm
+              title="Yêu cầu"
+              description="Gửi yều cầu đổi tên tổ chức"
+              open={open}
+              onConfirm={handleOk}
+              okButtonProps={{ loading: confirmLoading }}
+              onCancel={handleCancel}
+            >
+              <PullRequestOutlined
+                className="bg-primary-color rounded-lg p-2 text-white"
+                onClick={showPopconfirm}
+              />
+            </Popconfirm>
+          </div>
         </div>
 
         <div className="mt-6 ">
@@ -282,7 +367,7 @@ const OrganizationProfile = () => {
         <div className="mt-6 ">
           <div className="flex justify-start items-center gap-1">
             <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
-              Facebook
+              Mạng xã hội
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
@@ -296,6 +381,62 @@ const OrganizationProfile = () => {
           >
             <Input />
           </Form.Item>
+        </div>
+
+        <div className="mt-6">
+          <Select
+            showSearch
+            placeholder="Chọn ngân hàng"
+            style={{ width: '100%' }}
+            loading={loadingBanking}
+            optionFilterProp="label"
+            onChange={(value) => setBankBin(value)}
+          >
+            {loadingBanking ? (
+              <Select.Option value="">
+                <Spin />
+              </Select.Option>
+            ) : (
+              bankList.map((bank: any) => (
+                <Select.Option key={bank.id} label={bank.name} value={bank.bin}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img
+                      src={bank.logo}
+                      alt={bank.name}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        marginRight: 8,
+                      }}
+                    />
+                    <span>{bank.name}</span>
+                  </div>
+                </Select.Option>
+              ))
+            )}
+          </Select>
+          {bankBin && (
+            <Form.Item
+              label="Số tài khoản"
+              name="bankNumber"
+              key={organization?.urlFacebook}
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập số tài khoản!',
+                },
+                {
+                  pattern: /^[0-9]+$/,
+                  message: 'Số tài khoản không hợp lệ! (chỉ bao gồm số)',
+                },
+              ]}
+              className="mb-4 mt-3 max-w-80"
+            >
+              <Input />
+            </Form.Item>
+          )}
         </div>
 
         <div className="my-6">

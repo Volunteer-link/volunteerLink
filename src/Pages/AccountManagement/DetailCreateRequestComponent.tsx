@@ -9,7 +9,7 @@ const DetailCreateRequestComponent: React.FC<{
   idDetailRequest: number;
 }> = ({ setMode, idDetailRequest }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [stateModal, setStateModal] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -21,9 +21,9 @@ const DetailCreateRequestComponent: React.FC<{
   const handleChangeMode = () => {
     setMode("create");
   };
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,7 +63,6 @@ const DetailCreateRequestComponent: React.FC<{
       handleChangeMode();
     }
   };
-  console.log(dataDisplay);
 
   return (
     <div className="p-12 lg:flex-1">
@@ -78,7 +77,9 @@ const DetailCreateRequestComponent: React.FC<{
       </div>
       <div className="mt-4">Tài liệu liên quan:</div>
       {dataDisplay?.listCertificates.map((item, index) => (
-        <DownLoadFile key={index} fileUrl={item} />
+        <div key={index}>
+          <DownLoadFile fileUrl={item} />
+        </div>
       ))}
       <div className="lg:flex lg:gap-2 mt-4">
         <div
@@ -115,7 +116,7 @@ const DetailCreateRequestComponent: React.FC<{
             <Spin size="large" fullscreen />
           </Flex>
         )}
-        <ErrorSolving errCode={errCode} />
+        {/* <ErrorSolving errCode={errCode} /> */}
         <Modal
           title="Xác nhận"
           open={openModal}

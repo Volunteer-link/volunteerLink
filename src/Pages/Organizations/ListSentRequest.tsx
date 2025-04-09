@@ -7,7 +7,7 @@ import SmallLoading from "../Components/SmallLoading";
 import api from "../../apiService/useFetch";
 
 const ListSentRequest = () => {
-  const pageSize = 1;
+  const pageSize = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errCode, setErrCode] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -75,7 +75,7 @@ const ListSentRequest = () => {
     }
   };
   return (
-    <div className="container mx-auto px-32 py-8">
+    <div className="px-32 py-8">
       {isLoading && <Loading color="green" />}
       {contextHolder}
       <ErrorCards errCode={errCode} />
@@ -95,14 +95,14 @@ const ListSentRequest = () => {
           {
             title: (
               <div className="">
-                <span>Các lời mời đã gửi</span>
+                <span>Danh sách lời mời đã gửi</span>
               </div>
             ),
           },
         ]}
       />
       <div className="lg:px-0 lg:w-3/4 mx-auto">
-        <div className="container mx-auto">
+        <div className="">
           {listInvitation?.map((item, index) => (
             <div
               key={index + new Date().toString()}
@@ -135,26 +135,28 @@ const ListSentRequest = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-16 h-16 rounded-full overflow-hidden relative">
-                {isLoadingImage && <SmallLoading size={"small"} />}
-                <img
-                  className="w-full h-full object-contain"
-                  src={item.pictureProfile}
-                  alt=""
-                  onLoad={() => setIsLoadingImage(false)}
-                  onError={(e) =>
-                    (e.currentTarget.src = "/materials/placeholder-image.jpg")
-                  }
-                />
-              </div>
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCancelInvitation(item.inviteId);
-                }}
-                className="bg-primary-color text-white px-4 py-1 rounded-md hover:scale-110 hover:opacity-90 transition-all "
-              >
-                Xóa lời mời
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden relative">
+                  {isLoadingImage && <SmallLoading size={"small"} />}
+                  <img
+                    className="w-full h-full object-contain"
+                    src={item.pictureProfile}
+                    alt=""
+                    onLoad={() => setIsLoadingImage(false)}
+                    onError={(e) =>
+                      (e.currentTarget.src = "/materials/placeholder-image.jpg")
+                    }
+                  />
+                </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCancelInvitation(item.inviteId);
+                  }}
+                  className="bg-primary-color text-white px-4 py-1 rounded-md hover:scale-110 hover:opacity-90 transition-all "
+                >
+                  Xóa lời mời
+                </div>
               </div>
             </div>
           ))}
@@ -173,10 +175,10 @@ const ListSentRequest = () => {
         }}
       >
         {listInvitation?.length === 0 && (
-          <Empty description="Không có dữ liệu" />
+          <Empty description="Không có lời mời" />
         )}
         {listInvitation?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className="flex justify-center mx-auto mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

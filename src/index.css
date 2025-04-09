@@ -36,15 +36,31 @@ code {
 .no-spinner {
   -moz-appearance: textfield;
 }
-.ant-form-item-control-input{
+
+.ant-form-item-control-input {
   min-height: unset !important;
 }
-.slick-center img{
+
+.slick-center img {
   transform: scale(1.25);
   transition: transform 0.5s;
 }
 
 .ant-carousel .slick-prev::after,
 .ant-carousel .slick-next::after {
-  color: black !important;   
+  color: black !important;
 }
+
+.slick-track {
+  display: flex;
+}
+
+.slick-track .slick-slide {
+  display: flex;
+  height: auto;
+}
+
+/* .slick-slide img {
+  height: 250px !important;
+  object-position: center;
+} */

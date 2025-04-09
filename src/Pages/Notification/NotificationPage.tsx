@@ -15,7 +15,7 @@ const NotificationPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingImage, setIsLoadingImage] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const navigate = useNavigate();
   const [total, setTotal] = useState<number>(0);
 
@@ -24,6 +24,8 @@ const NotificationPage = () => {
     if (socket) {
       socket.addEventListener("message", (event) => {
         const parsedData = JSON.parse(event.data);
+        console.log(parsedData);
+
         if (
           parsedData.Message === "New Notification" &&
           parsedData.message !== "Connected" &&
@@ -47,9 +49,9 @@ const NotificationPage = () => {
     }
   }, [socket]);
 
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchNoti = async () => {
       try {
@@ -72,7 +74,12 @@ const NotificationPage = () => {
   };
 
   const handleClickNoti = (item: NotiType) => {
-    if (item.type === 0) {
+    if (
+      item.type === 0 ||
+      item.type === 11 ||
+      item.type === 12 ||
+      item.type === 14
+    ) {
       item.urlId = item.urlId.split(",")[0];
     }
     if (
@@ -81,7 +88,11 @@ const NotificationPage = () => {
       item.type === 1 ||
       item.type === 4 ||
       item.type === 7 ||
-      item.type === 9
+      item.type === 9 ||
+      item.type === 11 ||
+      item.type === 12 ||
+      item.type === 14 ||
+      item.type === 17
     ) {
       navigate(`/detail-event/${item.urlId}`, { state: { from: "noti" } });
     }
@@ -93,12 +104,19 @@ const NotificationPage = () => {
     ) {
       navigate(`/volunteerProfile/${item.urlId}`);
     }
+    if (item.type === 10 || item.type === 13 || item.type === 15) {
+      //show ra trang org chấm mình, mình là volunteer
+      navigate(`/rating-management`);
+    }
   };
-  console.log(notiList);
+  // console.log(notiList);
 
   return (
-    <div className="container mx-auto px-4 lg:px-0 lg:w-3/5">
-      <ErrorCards errCode={errCode} />
+    <div className="">
+      <div className="font-medium text-primary-color my-6 text-xl">
+        Thông báo của bạn
+      </div>
+      {/* <ErrorCards errCode={errCode} /> */}
       {isLoading && <Loading color="green" />}
       {/* {notiList.map((item, index) => (
         <div
@@ -123,7 +141,10 @@ const NotificationPage = () => {
             item.type === 8 ||
             item.type === 2 ||
             item.type === 6 ||
-            item.type === 3) && (
+            item.type === 3 ||
+            item.type === 11 ||
+            item.type === 12 ||
+            item.type === 14) && (
             <div className="bg-primary-color w-16 h-16 rounded-full overflow-hidden relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
 
@@ -142,7 +163,11 @@ const NotificationPage = () => {
             item.type === 5 ||
             item.type === 1 ||
             item.type === 7 ||
-            item.type === 9) && (
+            item.type === 9 ||
+            item.type === 10 ||
+            item.type === 13 ||
+            item.type === 15 ||
+            item.type === 17) && (
             <div className="bg-primary-color w-32 h-16 relative">
               {isLoadingImage && <SmallLoading size={"small"} />}
               <img
@@ -160,7 +185,7 @@ const NotificationPage = () => {
       ))}
 
       {notiList.length === 0 && (
-        <Empty className="mt-10" description="Không có dữ liệu" />
+        <Empty className="mt-10" description="Không có thông báo" />
       )}
       <ConfigProvider
         theme={{
@@ -175,7 +200,7 @@ const NotificationPage = () => {
         }}
       >
         {notiList?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className=" flex justify-center px-12 mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

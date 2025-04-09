@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 const InvitationComponent = () => {
   const [listInvitation, setListInvitation] = useState<Invitation[]>([]);
-  const pageSize = 1;
+  const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [isLoadingImage, setIsLoadingImage] = useState<boolean>(true);
@@ -68,7 +68,7 @@ const InvitationComponent = () => {
                 </span>
               </div>
               <div>
-                Thời gian: {new Date(item.time).toLocaleString("sv-SE")}
+                Thời gian: {new Date(item.time).toLocaleString("vi-VN")}
               </div>
             </div>
             <div className="bg-primary-color w-32 h-16 relative">
@@ -99,7 +99,7 @@ const InvitationComponent = () => {
         }}
       >
         {listInvitation?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className="flex justify-center mx-auto px-12 mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

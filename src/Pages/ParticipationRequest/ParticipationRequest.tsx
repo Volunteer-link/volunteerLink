@@ -9,12 +9,12 @@ import Loading from "../Components/Loading";
 import ErrorSolving from "../../Common/ErrorSolving";
 import ErrorCards from "../Components/ErrorCards";
 
-const pageSize = 4;
+const pageSize = 10;
 const ParticipationRequest = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dataRequest, setDataRequest] = useState<volunteerProps[]>([]);
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [nameEvent, setNameEvent] = useState<string>("");
   const [resetState, setResetState] = useState<number>(0);
@@ -23,9 +23,9 @@ const ParticipationRequest = () => {
   const { nameEventState } = location.state || { nameEventState: "" };
 
   const { id } = useParams<{ id: string }>();
-  useEffect(() => {
-    setupInterceptors(setErrCode);
-  }, []);
+  // useEffect(() => {
+  //   setupInterceptors(setErrCode);
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,9 +60,9 @@ const ParticipationRequest = () => {
   console.log(dataRequest);
 
   return (
-    <div className="container mx-auto px-32 py-8">
+    <div className="px-32 py-8">
       {isLoading && <Loading color="green" />}
-      <ErrorCards errCode={errCode} />
+      {/* <ErrorCards errCode={errCode} /> */}
       <Breadcrumb
         className=""
         items={[
@@ -94,7 +94,9 @@ const ParticipationRequest = () => {
           setResetState={setResetState}
         />
       ))}
-      {dataRequest.length === 0 && <Empty description="Không có dữ liệu" />}
+      {dataRequest.length === 0 && (
+        <Empty description="Không có yêu cầu tham gia" />
+      )}
       <ConfigProvider
         theme={{
           components: {
@@ -108,7 +110,7 @@ const ParticipationRequest = () => {
         }}
       >
         {dataRequest?.length !== 0 && (
-          <div className="container flex justify-center mx-auto px-12 mb-8">
+          <div className="flex justify-center mb-8">
             <Pagination
               defaultCurrent={1}
               current={currentPage}

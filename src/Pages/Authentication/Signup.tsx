@@ -24,16 +24,18 @@ const Signup = () => {
   };
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [listCertificates, setListCertificates] = useState<string[]>([]);
   const location = useLocation();
   const [loading, setLoading] = React.useState(false);
   const { message } = AntdApp.useApp();
   const [organization, setOrganization] = React.useState(false);
+  
+
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
+      let listCertificates: string[] | undefined = [];
       if (organization) {
-        await handleUpload();
+        listCertificates = await handleUpload();
       }
       if (!values?.date) {
         const today = dayjs();
@@ -52,19 +54,19 @@ const Signup = () => {
         isOrganization: organization,
         name: trimmedValues.name,
         dateOfBirth: trimmedValues.date,
-        listCertificates: listCertificates
+        listCertificates: listCertificates,
       });
       // Nếu gọi thành công => hiển thị thông báo
-      message.success("signup successful!");
-      console.log("Login Response:", response);
+      message.success("Đăng ký thành công!");
       navigate("/authentication/signin");
     } catch (error) {
       console.error(error);
-      message.error("signup failed!");
+      message.error("Đăng ký thất bại !");
     } finally {
       setLoading(false);
     }
   };
+   
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Submit thất bại:", errorInfo);
@@ -97,10 +99,7 @@ const Signup = () => {
         });
       });
 
-      const downloadURLs = await Promise.all(promises);
-      console.log(downloadURLs)
-      setListCertificates(() => [...downloadURLs])
-      console.log(listCertificates);
+      return await Promise.all(promises);
     } catch (error) {
       console.error(error);
     } finally {
@@ -153,15 +152,17 @@ const Signup = () => {
             {!location.state ? (
               <div>
                 <p>
-                  Bạn cần xác thực Email trước khi đăng ký. {""}
-                  <a
-                    onClick={() => {
-                      navigate("/authentication/verify-email");
-                    }}
-                    className="text-[#3BA769]"
-                  >
-                    Xác thực Email
-                  </a>
+                  Bạn cần xác thực Email trước khi đăng ký.
+                  <div className="text-center">
+                    <a
+                      onClick={() => {
+                        navigate("/authentication/verify-email");
+                      }}
+                      className="text-[#3BA769]"
+                    >
+                      Xác thực Email
+                    </a>
+                  </div>
                   <NavLink to={"/"}>
                     <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
                   </NavLink>

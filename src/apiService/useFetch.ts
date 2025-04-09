@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { getCookie } from "../ultils/cookie";
+import { getCookie, setCookie } from "../ultils/cookie";
 
 const devURL = process.env.REACT_APP_URL_DEV;
 const prodURL = process.env.REACT_APP_URL_PRO;
@@ -9,6 +9,8 @@ const environment = process.env.REACT_APP_ENVIRONMENT;
 // Lựa chọn baseURL dựa trên ENVIRONMENT
 const baseURL = environment === "development" ? devURL : prodURL;
 
+const language = localStorage.getItem("language") || "vi";
+
 const api: AxiosInstance = axios.create({
   baseURL: baseURL, // Thay URL này thành endpoint gốc (baseURL) của bạn
   timeout: 10000, // Thời gian chờ (timeout) cho mỗi request (ms)
@@ -16,6 +18,7 @@ const api: AxiosInstance = axios.create({
     accept: "application/json",
     "Content-Type": "application/json",
     "X-Access-Key": accessKey,
+    "Accept-Language": language,
   },
 });
 
@@ -31,19 +34,82 @@ api.interceptors.request.use(
   }
 );
 
-// Thêm Interceptors cho response (nếu cần)
+async function refreshToken() {
+  const response = await axios.post('https://dev.api.volunteer-link.site/refresh-token');
+
+  return response.data.data;
+}
+
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (response) => {
-    // Bạn có thể xử lý dữ liệu trả về ở đây trước khi component nhận
     return response;
   },
-  (error) => {
+  async (error) => {
+
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry ) {
+      originalRequest._retry = true;
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = 'Bearer ' + token;
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+      isRefreshing = true;
+      try {
+        const data = await refreshToken();
+        const newAccessToken = data?.accessToken;
+        setCookie("accessToken", newAccessToken);
+        api.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken;
+        processQueue(null, newAccessToken);
+
+        originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+         window.location.href = '/unauthorized';
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+    if (error.response?.status === 404) {
+      window.location.href = "/not-found"; // Chuyển trang khi lỗi 401
+    }
+    if (error.response?.status === 403) {
+      window.location.href = "/forbidden"; // Chuyển trang khi lỗi 403
+    }
+    if (error.response?.status === 500) {
+      window.location.href = "/server-error"; // Chuyển trang khi lỗi 500
+    }
     return Promise.reject(error);
   }
 );
 
 export const setupInterceptors = (
-  setError?: (message: number) => void,
+  // setError?: (message: number) => void,
   setPageNumber?: (message: number) => void,
   setTotalItems?: (message: number) => void,
   setCheckPagination?: (message: number) => void
@@ -58,9 +124,9 @@ export const setupInterceptors = (
       return response;
     },
     (error) => {
-      setError?.(error.response?.status || 500);
-      setError?.(error.response?.status || 401);
-      setError?.(error.response?.status || 403);
+      // setError?.(error.response?.status || 500);
+      // setError?.(error.response?.status || 401);
+      // setError?.(error.response?.status || 403);
       return Promise.reject(error);
     }
   );

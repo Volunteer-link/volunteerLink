@@ -9,7 +9,7 @@ import ErrorSolving from "../../Common/ErrorSolving";
 
 const AccountComponent: React.FC<{}> = () => {
   const [modeAccount, setModeAccount] = useState<string>("org");
-  const [errCode, setErrCode] = useState<number>(0);
+  // const [errCode, setErrCode] = useState<number>(0);
   const [totalItems, setTotalItems] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -186,7 +186,7 @@ const AccountComponent: React.FC<{}> = () => {
 
   useEffect(() => {
     setupInterceptors(
-      setErrCode,
+      // setErrCode,
       setPageNumber,
       setTotalItems,
       setCheckPagination
@@ -343,7 +343,7 @@ const AccountComponent: React.FC<{}> = () => {
               <Spin size="large" fullscreen />
             </Flex>
           )}
-          <ErrorSolving errCode={errCode} />
+          {/* <ErrorSolving errCode={errCode} /> */}
           <Modal
             title="Xác nhận"
             open={openModal}

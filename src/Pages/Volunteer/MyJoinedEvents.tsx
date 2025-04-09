@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import EventCard from '../Components/EventCard';
+import React, { useCallback, useEffect, useState } from "react";
+import EventCard from "../Components/EventCard";
 import {
   Col,
   ConfigProvider,
@@ -9,12 +9,13 @@ import {
   Spin,
   Tabs,
   Tooltip,
-} from 'antd';
-import { RiInformation2Fill } from 'react-icons/ri';
-import api from '../../apiService/useFetch';
-import { TabsProps } from 'antd/lib';
-import { useNavigate } from 'react-router-dom';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
+} from "antd";
+import { RiInformation2Fill } from "react-icons/ri";
+import api from "../../apiService/useFetch";
+import { TabsProps } from "antd/lib";
+import { useNavigate } from "react-router-dom";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
 
 const MyJoinedEvents = () => {
   const [PageNumber, setPageNumber] = React.useState<number>(1);
@@ -27,22 +28,27 @@ const MyJoinedEvents = () => {
     setStatus(parseInt(key));
   };
 
-  const items: TabsProps['items'] = [
+  useEffect(() => {
+    const user = decodedCookie(getCookie("accessToken"));
+    if (!user) {
+      window.location.href = "/unauthorized";
+    } else if (user?.role !== "Volunteer") {
+      window.location.href = "/forbidden";
+    }
+  }, []);
+
+  const items: TabsProps["items"] = [
     {
-      key: '0',
-      label: 'Đang diễn ra',
+      key: "0",
+      label: "Đang diễn ra",
     },
     {
-      key: '1',
-      label: 'Đã diễn ra',
+      key: "1",
+      label: "Đã diễn ra",
     },
     {
-      key: '-1',
-      label: 'Chưa bắt đầu',
-    },
-    {
-      key: '2',
-      label: 'Chưa xuất bản',
+      key: "-1",
+      label: "Chưa bắt đầu",
     },
   ];
 
@@ -72,7 +78,7 @@ const MyJoinedEvents = () => {
   };
 
   return (
-    <div className="container mx-auto lg:mt-8 mt-16 px-12 lg:ml-auto">
+    <div className="lg:mt-8 mt-16">
       <div className="flex items-center gap-2 mb-10">
         <div className="inline-block my-2 font-medium text-lg text-primary-color before:w-full before:h-[0.125rem] before:absolute relative before:-bottom-2 before:bg-primary-color">
           Sự kiện bạn đã tham gia
@@ -94,14 +100,14 @@ const MyJoinedEvents = () => {
         ) : (
           <>
             {eventList.length === 0 ? (
-              <Empty />
+              <Empty description="Không có dữ liệu sự kiện" />
             ) : (
               <div>
-                <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
+                <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
                   {eventList.map((item: EventCardType) => {
                     return (
-                      <Col key={item.id} span={6}>
-                        <EventCard eventObject={item} showOption={true} />
+                      <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
+                        <EventCard eventObject={item} showOption={false} />
                       </Col>
                     );
                   })}

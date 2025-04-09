@@ -62,33 +62,7 @@ export const dateRules: Rule[] = [
 ];
 
 export const dateRulesEvent: Rule[] = [
-  {
-    required: true,
-    message: 'Bạn cần chọn khoảng thời gian!',
-  },
-  {
-    validator: async (_, value: [Dayjs, Dayjs]) => {
-      if (!value || value.length < 2) {
-        return Promise.reject('Hãy chọn cả ngày bắt đầu và ngày kết thúc!');
-      }
-
-      const [startDate, endDate] = value;
-      const currentDate = dayjs();
-      const minStartDate = currentDate.add(1, 'day'); // Thêm 1 ngày vào ngày hiện tại
-      if (startDate.isBefore(minStartDate, 'day')) {
-        return Promise.reject('Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 1 ngày!');
-      }
-      if (endDate.isBefore(currentDate, 'day')) {
-        return Promise.reject('Ngày kết thúc phải sau ngày hiện tại!');
-      }
-
-      if (endDate.isBefore(startDate)) {
-        return Promise.reject('Ngày kết thúc phải sau ngày bắt đầu!');
-      }
-
-      return Promise.resolve();
-    },
-  },
+ 
 ];
 
 export const timePublishedRulesEvent: Rule[] = [

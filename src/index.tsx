@@ -1,6 +1,6 @@
 // index.tsx
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { ConfigProvider, App as AntdApp } from 'antd';
 import './index.css';
@@ -26,25 +26,52 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 dayjs.locale('vi');
-const currentLang = i18n.language;
-const antdLocale = currentLang === 'vi' ? viVN : enUS;
+
+interface LanguageProviderProps {
+  children: React.ReactNode;
+}
+const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  const [lang, setLang] = useState(localStorage.getItem('language') || 'vi');
+
+  useEffect(() => {
+    const handleLanguageChange = (lng: string) => {
+      setLang(lng);
+      dayjs.locale(lng);
+      localStorage.setItem('language', lng);
+    };
+
+    i18n.on('languageChanged', handleLanguageChange);
+    i18n.changeLanguage(lang);
+
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, [lang]);
+
+  const antdLocale = lang === 'vi' ? viVN : enUS;
+  return (
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#3BA769',
+        },
+      }}
+      locale={antdLocale}
+    >
+      {children}
+    </ConfigProvider>
+  );
+};
 
 root.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
-        <ConfigProvider
-          locale={antdLocale}
-          theme={{
-            token: {
-              colorPrimary: '#3BA769',
-            },
-          }}
-        >
-          <AntdApp>
+        <AntdApp>
+          <LanguageProvider>
             <App />
-          </AntdApp>
-        </ConfigProvider>
+          </LanguageProvider>
+        </AntdApp>
       </Provider>
     </I18nextProvider>
   </React.StrictMode>

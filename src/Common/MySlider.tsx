@@ -1,20 +1,11 @@
 import { Carousel } from "antd";
-import { FaChevronLeft } from "react-icons/fa6";
-import { FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+
 const MySlider: React.FC<{
   listItem?: string[];
   className: string;
   size: string;
 }> = ({ listItem, className, size }) => {
-  const settings = {
-    className: `center`,
-    centerMode: true,
-    centerPadding: "60px",
-    slidesToShow: 1,
-    speed: 500,
-    infinite: true,
-  };
-
   const CustomPrevArrow = (props: any) => {
     const { onClick } = props;
     return (
@@ -42,10 +33,19 @@ const MySlider: React.FC<{
   return (
     <div className={className}>
       <Carousel
-        arrows
-        {...settings}
-        prevArrow={<CustomPrevArrow />}
-        nextArrow={<CustomNextArrow />}
+        className="center"
+        centerMode
+        centerPadding="60px"
+        slidesToShow={1}
+        speed={500}
+        infinite
+        arrows={listItem && listItem.length > 1}
+        {...(listItem && listItem.length > 1
+          ? {
+              prevArrow: <CustomPrevArrow />,
+              nextArrow: <CustomNextArrow />,
+            }
+          : {})}
       >
         {listItem?.map((item, index) => (
           <div

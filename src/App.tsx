@@ -20,7 +20,6 @@ import VolunteerProfile from "./Pages/Profile/VolunteerProfile";
 import OrganizationsDetail from "./Pages/Organizations/OrganizationsDetail";
 import EventParticipated from "./Pages/Event/EventParticipated";
 import Organizations from "./Pages/Organizations";
-import Chat from "./Pages/ShowEvents/Chat";
 import ParticipationRequest from "./Pages/ParticipationRequest/ParticipationRequest";
 import useWebSocket from "./Hook/useWebSocket";
 import { WebsocketProvider } from "./ultils/WebsocketContext";
@@ -34,6 +33,17 @@ import { decodedCookie, getCookie } from "./ultils/cookie";
 import { setUser } from "./redux/slice";
 import MyInvitation from "./Pages/Profile/MyInvitation";
 import ListSentRequest from "./Pages/Organizations/ListSentRequest";
+import RatingManagement from "./Pages/Volunteer/RatingManagement";
+import AttendanceUI from "./Pages/Attendance";
+import Unauthorized from "./Pages/ErrorPages/Unauthorized";
+import Forbidden from "./Pages/ErrorPages/Forbidden";
+import ServerError from "./Pages/ErrorPages/ServerError";
+import Bill from "./Pages/Bill/Bill";
+import HistoryOrganization from "./Pages/History/HistoryOrganization";
+import HistoryVolunteer from "./Pages/History/HistoryVolunteer";
+import NotFound from "./Pages/ErrorPages/NotFound";
+import Volunteers from "./Pages/Volunteers/Volunteers";
+import DonativeEvents from "./Pages/DonativeEvents/DonativeEvents";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +69,14 @@ const router = createBrowserRouter([
       {
         path: "organizations",
         element: <Organizations />,
+      },
+      {
+        path: "/volunteers",
+        element: <Volunteers />,
+      },
+      {
+        path: "/donative-events",
+        element: <DonativeEvents />,
       },
       {
         path: "organizations/profile/:id",
@@ -113,6 +131,10 @@ const router = createBrowserRouter([
         element: <EventParticipated />,
       },
       {
+        path: "/event/attendance/:id",
+        element: <AttendanceUI />,
+      },
+      {
         path: "detail-event/:id/participation-request",
         element: <ParticipationRequest />,
       },
@@ -132,6 +154,22 @@ const router = createBrowserRouter([
         path: "detail-event/:id/sent-invitation",
         element: <ListSentRequest />,
       },
+      {
+        path: "/rating-management",
+        element: <RatingManagement />,
+      },
+      {
+        path: "/donation-result",
+        element: <Bill />,
+      },
+      {
+        path: "/transaction-tracking/organization",
+        element: <HistoryOrganization />,
+      },
+      {
+        path: "/transaction-tracking/volunteer",
+        element: <HistoryVolunteer />,
+      },
     ],
   },
   {
@@ -147,8 +185,20 @@ const router = createBrowserRouter([
     element: <VerifyEmail />,
   },
   {
-    path: "/test-chat",
-    element: <Chat />,
+    path: "/unauthorized",
+    element: <Unauthorized />,
+  },
+  {
+    path: "/not-found",
+    element: <NotFound />,
+  },
+  {
+    path: "/forbidden",
+    element: <Forbidden />,
+  },
+  {
+    path: "/server-error",
+    element: <ServerError />,
   },
 ]);
 
