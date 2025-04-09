@@ -1,7 +1,7 @@
-import { IoLocation } from 'react-icons/io5';
-import EventCard from '../Components/EventCard';
-import LineSpacing from '../Components/LineSpacing';
-import { useEffect, useRef, useState } from 'react';
+import { IoLocation } from "react-icons/io5";
+import EventCard from "../Components/EventCard";
+import LineSpacing from "../Components/LineSpacing";
+import { useEffect, useRef, useState } from "react";
 import {
   ConfigProvider,
   Empty,
@@ -10,17 +10,17 @@ import {
   Select,
   Switch,
   Tooltip,
-} from 'antd';
-import api from '../../apiService/useFetch';
-import { Field } from '../../model/ShowEventModel/Field';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import { RiEmotionSadLine } from 'react-icons/ri';
-import Loading from '../Components/Loading';
-import { decodedCookie, getCookie } from '../../ultils/cookie';
-import MapBox from '../Components/MapBox';
-import { MarkerPosition } from '../../model/MapBoxModel/MarkerPosition';
-import useWebSocket from '../../Hook/useWebSocket';
-import { WiStars } from 'react-icons/wi';
+} from "antd";
+import api from "../../apiService/useFetch";
+import { Field } from "../../model/ShowEventModel/Field";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { RiEmotionSadLine } from "react-icons/ri";
+import Loading from "../Components/Loading";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
+import MapBox from "../Components/MapBox";
+import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
+import useWebSocket from "../../Hook/useWebSocket";
+import { WiStars } from "react-icons/wi";
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -35,11 +35,11 @@ const ShowEvent = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSearch, setCurrentPageSearch] = useState<number>(1);
   const [currentPageRelevant, setCurrentPageRelevant] = useState<number>(1);
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string>("");
 
   const [total, setTotal] = useState<number>(0);
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
-  const [searchKey, setSearchKey] = useState<string>('');
+  const [searchKey, setSearchKey] = useState<string>("");
 
   const [totalSearch, setTotalSearch] = useState<number>(0);
   const [totalRelevant, setTotalRelevant] = useState<number>(0);
@@ -52,9 +52,9 @@ const ShowEvent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const refSearch = useRef<HTMLInputElement>(null);
 
-  const user = decodedCookie(getCookie('accessToken'));
+  const user = decodedCookie(getCookie("accessToken"));
   const { messages, sendMessage, isConnected } = useWebSocket({
-    url: 'wss://dev.api.volunteer-link.site/ws/',
+    url: "wss://dev.api.volunteer-link.site/ws/",
   });
   useEffect(() => {
     const fetchField = async () => {
@@ -84,9 +84,9 @@ const ShowEvent = () => {
   useEffect(() => {
     const fetchCommonEvent = async () => {
       try {
-        const str = currentField.join(',');
+        const str = currentField.join(",");
         const url = `/common/get-events?${
-          currentField.length !== 0 ? `Fields=${str}` : ''
+          currentField.length !== 0 ? `Fields=${str}` : ""
         }&PageNumber=${currentPage}&PageSize=${pageSize}`;
 
         const { data } = await api.get(url);
@@ -100,7 +100,7 @@ const ShowEvent = () => {
   }, [currentField, currentPage]);
 
   useEffect(() => {
-    if (user?.role === 'Volunteer' && isPublish) {
+    if (user?.role === "Volunteer" && isPublish) {
       setShowRelevent(true);
     }
   }, [isPublish]);
@@ -126,11 +126,11 @@ const ShowEvent = () => {
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
-        const { data } = await api.get('/profile/check-publish-profile');
+        const { data } = await api.get("/profile/check-publish-profile");
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
-    if (user && user?.role !== 'Admin') {
+    if (user && user?.role !== "Admin") {
       fetchCheckPublish();
     }
   }, [user]);
@@ -153,8 +153,8 @@ const ShowEvent = () => {
     try {
       if (!AISearch) {
         const url = `/common/get-events?PageNumber=${pageNumber}&PageSize=${pageSize}${
-          searchKey ? `&SearchKey=${searchKey}` : ''
-        }${marker ? `&Location=${location}` : ''}`;
+          searchKey ? `&SearchKey=${searchKey}` : ""
+        }${marker ? `&Location=${location}` : ""}`;
 
         const { data } = await api.get(url);
 
@@ -163,7 +163,7 @@ const ShowEvent = () => {
       }
       if (AISearch && searchKey) {
         const url = `/ai/advanced-search-event?PageNumber=${pageNumber}&PageSize=${pageSize}${
-          searchKey ? `&SearchKey=${searchKey}` : ''
+          searchKey ? `&SearchKey=${searchKey}` : ""
         }`;
 
         const { data } = await api.get(url);
@@ -209,7 +209,7 @@ const ShowEvent = () => {
   };
 
   const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleClickSearch();
     }
   };
@@ -257,7 +257,7 @@ const ShowEvent = () => {
             />
             <div className="flex pr-2 items-center gap-4 select-none">
               {!AISearch && (
-                <Tooltip open={!!address} title={address} color={'#3BA769'}>
+                <Tooltip open={!!address} title={address} color={"#3BA769"}>
                   <IoLocation
                     onClick={showModal}
                     className="text-2xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
@@ -273,7 +273,7 @@ const ShowEvent = () => {
               </div>
             </div>
           </div>
-          {user?.role === 'Volunteer' && (
+          {user?.role === "Volunteer" && (
             <div className="bg-white rounded-full py-3 px-5 flex items-center gap-3">
               <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" />
               <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
@@ -312,10 +312,10 @@ const ShowEvent = () => {
                 theme={{
                   components: {
                     Pagination: {
-                      itemActiveBg: '#3BA769',
-                      colorPrimary: 'white',
-                      colorPrimaryHover: 'white',
-                      colorPrimaryBorder: 'white',
+                      itemActiveBg: "#3BA769",
+                      colorPrimary: "white",
+                      colorPrimaryHover: "white",
+                      colorPrimaryBorder: "white",
                     },
                   },
                 }}
@@ -348,7 +348,7 @@ const ShowEvent = () => {
         <>
           <div className="items-center gap-1 justify-center text-2xl flex mt-10 mb-6">
             <div>Sự kiện</div>
-            <div className="text-primary-color">phù hợp</div>
+            <div className="text-primary-color">gợi ý</div>
           </div>
           <div className="">
             {listEventCardRelevant?.length === 0 && (
@@ -372,10 +372,10 @@ const ShowEvent = () => {
             theme={{
               components: {
                 Pagination: {
-                  itemActiveBg: '#3BA769',
-                  colorPrimary: 'white',
-                  colorPrimaryHover: 'white',
-                  colorPrimaryBorder: 'white',
+                  itemActiveBg: "#3BA769",
+                  colorPrimary: "white",
+                  colorPrimaryHover: "white",
+                  colorPrimaryBorder: "white",
                 },
               },
             }}
@@ -412,6 +412,7 @@ const ShowEvent = () => {
             <Select
               mode="tags"
               // defaultValue="Tất cả các lĩnh vực"
+              placeholder="Tất cả lĩnh vực"
               style={{ minWidth: 200 }}
               onChange={handleChangeField}
               options={[
@@ -436,7 +437,7 @@ const ShowEvent = () => {
             ))}
           </div>
         )} */}
-        <div className="w-full lg:col-span-6 col-span-1 gap-10 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
+        <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           {listEventCard?.map((item, index) => (
             <EventCard key={item.id} eventObject={item} showOption={false} />
           ))}
@@ -446,10 +447,10 @@ const ShowEvent = () => {
         theme={{
           components: {
             Pagination: {
-              itemActiveBg: '#3BA769',
-              colorPrimary: 'white',
-              colorPrimaryHover: 'white',
-              colorPrimaryBorder: 'white',
+              itemActiveBg: "#3BA769",
+              colorPrimary: "white",
+              colorPrimaryHover: "white",
+              colorPrimaryBorder: "white",
             },
           },
         }}
