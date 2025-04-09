@@ -236,6 +236,14 @@ export default function RootLayout() {
       >
         <Outlet />
       </main>
+      {shouldHideImage && (
+        <div className="">
+          <img
+            src="/materials/z6488142294205_3ca0412548688435a3727a2293aea9fc.jpg"
+            alt=""
+          />
+        </div>
+      )}
       {!hideHeader && <Footer />}
     </div>
   );

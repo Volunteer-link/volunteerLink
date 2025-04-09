@@ -61,6 +61,7 @@ const Home: React.FC<{}> = () => {
               </div>
             </div>
           </div>
+          <LineSpacing />
         </div>
       </div>
     </div>
