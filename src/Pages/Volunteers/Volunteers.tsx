@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import api from "../../apiService/useFetch";
 import Loading from "../Components/Loading";
 import SmallLoading from "../Components/SmallLoading";
+import LineSpacing from "../Components/LineSpacing";
 
 const Volunteers = () => {
   const pageSize = 9;
@@ -69,8 +70,17 @@ const Volunteers = () => {
   return (
     <div>
       {isLoading && <Loading color="green" />}
-      <div className="text-primary-color font-medium text-lg my-6">
-        Các tình nguyện viên của chúng tôi
+      <div>
+        <img
+          src="/materials/team-volunteers-stacking-hands_53876-20900.jpg"
+          className="w-full h-72 object-cover mb-8"
+          alt=""
+        />
+      </div>
+      <LineSpacing />
+      <div className="items-center gap-1 justify-center text-2xl flex my-10">
+        <div className=" text-shadow-md">Các tình nguyện viên </div>
+        <div className="text-primary-color">của chúng tôi</div>
       </div>
       <div className="my-4">
         <div className="flex items-center justify-center gap-2">

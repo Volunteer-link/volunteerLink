@@ -297,55 +297,71 @@ export default function RootLayout() {
               alt=""
             />
             <div className="absolute flex gap-20 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
-              <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
-                <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
-                  Tổ chức
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                // viewport={{ once: true, amount: 0.3 }}
+              >
+                <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
+                  <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
+                    Tổ chức
+                  </div>
+                  <div className="w-40 h-1 bg-gradient-to-r from-[#3BA769] to-[#62ff00] rounded-lg mt-2"></div>
+                  <div className="text-base">
+                    <span className="my-4 inline-block">
+                      Trong hệ thống của chúng tôi, mỗi tổ chức là một mảnh ghép
+                      quan trọng tạo nên mạng lưới kết nối mạnh mẽ giữa cộng
+                      đồng và những giá trị nhân văn.{" "}
+                    </span>
+                    <span>
+                      Từ những nhóm tình nguyện nhỏ đến các tổ chức xã hội lớn,
+                      tất cả đều chung một mục tiêu: lan tỏa yêu thương, sẻ chia
+                      trách nhiệm và tạo ra tác động tích cực đến từng hoàn
+                      cảnh, từng cuộc đời
+                    </span>
+                  </div>
+                  <div
+                    onClick={handleClickOrg}
+                    className="bg-primary-color px-8 py-4 inline-flex text-lg gap-1 text-white rounded-md mt-4 hover:bg-white hover:text-primary-color border-2 hover:border-primary-color hover:scale-105 transition-all cursor-pointer items-center"
+                  >
+                    Khám phá
+                    <FaArrowRight />
+                  </div>
                 </div>
-                <div className="text-base">
-                  <span className="my-4 inline-block">
-                    Trong hệ thống của chúng tôi, mỗi tổ chức là một mảnh ghép
-                    quan trọng tạo nên mạng lưới kết nối mạnh mẽ giữa cộng đồng
-                    và những giá trị nhân văn.{" "}
-                  </span>
-                  <span>
-                    Từ những nhóm tình nguyện nhỏ đến các tổ chức xã hội lớn,
-                    tất cả đều chung một mục tiêu: lan tỏa yêu thương, sẻ chia
-                    trách nhiệm và tạo ra tác động tích cực đến từng hoàn cảnh,
-                    từng cuộc đời
-                  </span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                // viewport={{ once: true, amount: 0.3 }}
+              >
+                <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
+                  <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
+                    Sự kiện
+                  </div>
+                  <div className="w-40 h-1 bg-gradient-to-r from-[#3BA769] to-[#62ff00] rounded-lg mt-2"></div>
+                  <div className="text-base">
+                    <span className="my-4 inline-block">
+                      Mỗi sự kiện là một hành trình – nơi bạn có thể kết nối với
+                      những người cùng chí hướng, và quan trọng nhất là cùng
+                      nhau tạo ra những điều thật sự có ý nghĩa.
+                    </span>
+                    <span>
+                      Từ workshop truyền cảm hứng, hoạt động thiện nguyện, đến
+                      các chiến dịch cộng đồng… mỗi khoảnh khắc đều đáng giá và
+                      để lại dấu ấn riêng
+                    </span>
+                  </div>
+                  <div
+                    onClick={handleClickEvent}
+                    className="bg-primary-color px-8 py-4 inline-flex text-lg gap-1 text-white rounded-md mt-4 hover:bg-white hover:text-primary-color border-2 hover:border-primary-color hover:scale-105 transition-all cursor-pointer items-center"
+                  >
+                    Khám phá
+                    <FaArrowRight />
+                  </div>
                 </div>
-                <div
-                  onClick={handleClickOrg}
-                  className="bg-primary-color px-8 py-4 inline-flex text-lg gap-1 text-white rounded-md mt-4 hover:bg-white hover:text-primary-color border-2 hover:border-primary-color hover:scale-105 transition-all cursor-pointer items-center"
-                >
-                  Khám phá
-                  <FaArrowRight />
-                </div>
-              </div>
-              <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
-                <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
-                  Sự kiện
-                </div>
-                <div className="text-base">
-                  <span className="my-4 inline-block">
-                    Mỗi sự kiện là một hành trình – nơi bạn có thể kết nối với
-                    những người cùng chí hướng, và quan trọng nhất là cùng nhau
-                    tạo ra những điều thật sự có ý nghĩa.
-                  </span>
-                  <span>
-                    Từ workshop truyền cảm hứng, hoạt động thiện nguyện, đến các
-                    chiến dịch cộng đồng… mỗi khoảnh khắc đều đáng giá và để lại
-                    dấu ấn riêng
-                  </span>
-                </div>
-                <div
-                  onClick={handleClickEvent}
-                  className="bg-primary-color px-8 py-4 inline-flex text-lg gap-1 text-white rounded-md mt-4 hover:bg-white hover:text-primary-color border-2 hover:border-primary-color hover:scale-105 transition-all cursor-pointer items-center"
-                >
-                  Khám phá
-                  <FaArrowRight />
-                </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

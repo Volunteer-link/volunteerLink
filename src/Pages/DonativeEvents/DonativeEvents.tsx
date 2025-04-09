@@ -5,6 +5,7 @@ import { data } from "react-router-dom";
 import EventCard from "../Components/EventCard";
 import { ConfigProvider, Empty, Pagination } from "antd";
 import Loading from "../Components/Loading";
+import LineSpacing from "../Components/LineSpacing";
 
 const DonativeEvents = () => {
   const pageSize = 8;
@@ -52,6 +53,18 @@ const DonativeEvents = () => {
   return (
     <div>
       {isLoading && <Loading color="green" />}
+      <div>
+        <img
+          src="/materials/close-up-people-volunteer-teamwork-join-hands-togetherstack-handsunity-teamwork-volunteering-conceptual_640221-318.jpg"
+          className="w-full h-72 object-cover mb-8"
+          alt=""
+        />
+      </div>
+      <LineSpacing />
+      <div className="items-center gap-1 justify-center text-2xl flex mb-8">
+        <div>Sự kiện có thể</div>
+        <div className="text-primary-color">ủng hộ</div>
+      </div>
       <div className="my-4">
         <div className="flex items-center justify-center gap-2">
           <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">
