@@ -9,6 +9,7 @@ import {
   Pagination,
   Select,
   Switch,
+  Tabs,
   Tooltip,
 } from 'antd';
 import api from '../../apiService/useFetch';
@@ -21,6 +22,7 @@ import MapBox from '../Components/MapBox';
 import { MarkerPosition } from '../../model/MapBoxModel/MarkerPosition';
 import useWebSocket from '../../Hook/useWebSocket';
 import { WiStars } from 'react-icons/wi';
+import { TabsProps } from 'antd/lib';
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -48,6 +50,7 @@ const ShowEvent = () => {
 
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [AISearch, setAISearch] = useState<boolean>(false);
+  const [status, setStatus] = useState<number>(0);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const refSearch = useRef<HTMLInputElement>(null);
@@ -87,7 +90,7 @@ const ShowEvent = () => {
         const str = currentField.join(',');
         const url = `/common/get-events?${
           currentField.length !== 0 ? `Fields=${str}` : ''
-        }&PageNumber=${currentPage}&PageSize=${pageSize}`;
+        }&PageNumber=${currentPage}&PageSize=${pageSize}&Status=${status}`;
 
         const { data } = await api.get(url);
         setListEventCard(data.data.items);
@@ -97,7 +100,7 @@ const ShowEvent = () => {
       }
     };
     fetchCommonEvent();
-  }, [currentField, currentPage]);
+  }, [currentField, currentPage,status]);
 
   useEffect(() => {
     if (user?.role === 'Volunteer' && isPublish) {
@@ -223,6 +226,23 @@ const ShowEvent = () => {
   const onChangeSwitchAIMode = (checked: boolean) => {
     setAISearch(checked);
   };
+
+
+   const items: TabsProps['items'] = [
+      {
+        key: '0',
+        label: 'Đang diễn ra',
+      },
+      {
+        key: '-1',
+        label: 'Sắp diễn ra',
+      },
+    ];
+
+    const onChange = (key: string) => {
+      setStatus(parseInt(key));
+      setCurrentPage(1);
+    };
 
   return (
     <div className="">
@@ -424,6 +444,7 @@ const ShowEvent = () => {
             />
           </div>
         </div>
+        <Tabs defaultActiveKey="0" items={items} onChange={onChange} />
         {listEventCard?.length === 0 && (
           <Empty description="Không có dữ liệu sự kiện" />
         )}

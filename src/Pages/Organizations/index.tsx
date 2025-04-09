@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Input,
   Col,
@@ -8,15 +8,15 @@ import {
   Tooltip,
   Pagination,
   Spin,
-} from "antd";
-import OrganizationsItem from "./OrganizationsItem";
-import { Empty, SelectProps } from "antd";
-import api from "../../apiService/useFetch";
-import { SearchProps } from "antd/es/input";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useDebounce } from "../../ultils/useDebounce";
+} from 'antd';
+import OrganizationsItem from './OrganizationsItem';
+import { Empty, SelectProps } from 'antd';
+import api from '../../apiService/useFetch';
+import { SearchProps } from 'antd/es/input';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useDebounce } from '../../ultils/useDebounce';
 const { Search } = Input;
-const options: SelectProps["options"] = [];
+const options: SelectProps['options'] = [];
 
 for (let i = 10; i < 36; i++) {
   options.push({
@@ -33,17 +33,19 @@ const Organizations = () => {
   >([]);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const pageFromUrl = searchParams.get("page");
-  const searchNameFromUrl = searchParams.get("name");
+  const pageFromUrl = searchParams.get('page');
+  const searchNameFromUrl = searchParams.get('name');
   const initialPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
   const [organizationsList, setOrganizationsList] = useState([]);
+  const [organizationsTopList, setOrganizationsTopList] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [PageNumber, setPageNumber] = React.useState<number>(initialPage);
   const [searchName, setSearchName] = React.useState<string>(
-    searchNameFromUrl || ""
+    searchNameFromUrl || ''
   );
   const searchDebounce = useDebounce<string>(searchName, 500);
-  const [fields, setFields] = React.useState<string>("");
+  const [fields, setFields] = React.useState<string>('');
   const [totalPage, setTotalPage] = React.useState<number>();
   useEffect(() => {
     const fetchField = async () => {
@@ -75,7 +77,7 @@ const Organizations = () => {
           PageSize: 9,
         },
       });
-      setTotalPage(data.totalItems);
+      setTotalPage(data.data.totalItems);
       setOrganizationsList(data.data.items);
       setLoading(false);
     } catch (e: any) {
@@ -88,9 +90,21 @@ const Organizations = () => {
     fetchField();
   }, [PageNumber, fields, searchDebounce]);
 
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const { data } = await api.get(`/common/top-rated-organization`);
+        setOrganizationsTopList(data.data);
+      } catch (e: any) {
+      } finally {
+      }
+    };
+    fetch();
+  }, []);
+
   const handleChange = (value: string[]) => {
     setPageNumber(1);
-    setFields(value.join(", "));
+    setFields(value.join(', '));
   };
 
   const handlePageChange = (page: number) => {
@@ -109,6 +123,42 @@ const Organizations = () => {
   };
   return (
     <div className="flex flex-col">
+      {organizationsTopList.length > 0 && (
+        <div className='mb-6'>
+          <div className="items-center gap-1 justify-center text-2xl flex mt-10 mb-6">
+            <div>Tổ chức </div>
+            <div className="text-primary-color">hàng đầu</div>
+          </div>
+          <div>
+          <Row gutter={16} className={``}>
+              {organizationsTopList.map((item: any) => {
+                return (
+                  <Col
+                    onClick={() => {
+                      navigate(`/organizations/profile/${item.accountId}`);
+                    }}
+                    className="cursor-pointer"
+                    key={item.id + "toprate"}
+                    xs={24}
+                    sm={8}
+                    md={8}
+                  >
+                    <OrganizationsItem
+                      image={item.urlImage}
+                      name={item.name}
+                      field={item.fields
+                        .map((field: any) => field.name)
+                        .join(', ')}
+                    />
+                  </Col>
+                );
+              })}
+            </Row>
+          </div>
+
+        </div>
+      )}
+
       <div className="flex justify-center mb-6 items-center w-full">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">
           <input
@@ -135,20 +185,20 @@ const Organizations = () => {
         )}
         <Row>
           <Col span={24}>
-            <Typography.Text>Lĩnh vực:{"  "}</Typography.Text>
+            <Typography.Text>Lĩnh vực:{'  '}</Typography.Text>
             <Select
               className="max-w-[200px] mb-4 cursor-pointer"
               maxTagCount="responsive"
               mode="multiple"
-              size={"middle"}
+              size={'middle'}
               placeholder="Vui lòng chọn lĩnh vực"
               onChange={handleChange}
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               options={listFieldState}
               maxTagPlaceholder={(omittedValues) => (
                 <Tooltip
-                  styles={{ root: { pointerEvents: "none" } }}
-                  title={omittedValues.map(({ label }) => label).join(", ")}
+                  styles={{ root: { pointerEvents: 'none' } }}
+                  title={omittedValues.map(({ label }) => label).join(', ')}
                 >
                   <span>+ {omittedValues.length}</span>
                 </Tooltip>
@@ -160,7 +210,7 @@ const Organizations = () => {
           <Empty description="Không có dữ liệu tổ chức" />
         ) : (
           <>
-            <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
+            <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
               {organizationsList.map((item: any) => {
                 return (
                   <Col
@@ -168,17 +218,18 @@ const Organizations = () => {
                       navigate(`/organizations/profile/${item.accountId}`);
                     }}
                     className="cursor-pointer"
-                    key={item.id}
+                    key={item.id + "organization"}
                     xs={24}
                     sm={8}
                     md={8}
                   >
+
                     <OrganizationsItem
                       image={item.urlImage}
                       name={item.name}
                       field={item.fields
                         .map((field: any) => field.name)
-                        .join(", ")}
+                        .join(', ')}
                     />
                   </Col>
                 );
