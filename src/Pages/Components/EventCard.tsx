@@ -8,6 +8,7 @@ import { EventCardType } from "../../model/ShowEventModel/EventCardType";
 import { useState } from "react";
 import Loading from "./Loading";
 import SmallLoading from "./SmallLoading";
+import { RxEnter } from "react-icons/rx";
 
 const EventCard: React.FC<{
   eventObject: EventCardType;
@@ -44,7 +45,7 @@ const EventCard: React.FC<{
       onClick={() => handleClickEventCard(eventObject.id)}
       className="select-none"
     >
-      <div className="cursor-pointer hover:scale-[1.02] transition-all relative">
+      <div className="relative cursor-pointer group hover:scale-[1.02] transition-all">
         {showOption && (
           <Dropdown
             menu={{ items }}
@@ -56,24 +57,20 @@ const EventCard: React.FC<{
           >
             <div
               onClick={handleClickOption}
-              className="absolute right-2 top-2 z-10 bg-primary-color rounded-full p-1"
+              className="absolute right-2 top-2 z-20 bg-primary-color rounded-full p-1"
             >
               <SlOptions className="text-lg text-white hover:cursor-pointer cursor-pointer scale-105" />
             </div>
           </Dropdown>
         )}
-        {/* <div
-          className={`py-4 ${
-            isLoading ? "opacity-50" : ""
-          } bg-primary-color relative rounded-t-xl mt-4`}
-        > */}
-        <div
-          className={`py-4 bg-primary-color relative rounded-t-xl mt-4 overflow-hidden`}
-        >
+
+        {/* Image wrapper with overlay */}
+        <div className="relative rounded-t-xl mt-4 overflow-hidden py-4 bg-primary-color">
           {isLoading && <SmallLoading size="large" />}
+          {/* Ảnh */}
           <img
             src={eventObject.thumbnail}
-            className={`w-full h-[11.25rem] object-cover`}
+            className="w-full h-[11.25rem] object-cover"
             alt=""
             loading="lazy"
             onLoad={() => setIsLoading(false)}
@@ -81,22 +78,29 @@ const EventCard: React.FC<{
               (e.currentTarget.src = "/materials/placeholder-image.jpg")
             }
           />
+
+          {/* Overlay mờ xuất hiện khi hover toàn thẻ */}
+          <div className="absolute inset-0 flex items-center justify-center bg-primary-color opacity-0 group-hover:opacity-60 transition-all duration-300 z-10 pointer-events-none">
+            <RxEnter className="text-[44px] text-white" />
+          </div>
         </div>
+
         <div className="border-2 border-primary-color bg-white rounded-b-xl py-2 px-4">
+          {/* phần nội dung bên dưới */}
           <div className="my-2 text-base font-medium max-w-full truncate">
             {eventObject.name}
           </div>
           <div className="text-xs">
-            <div className="my-2 flex items-center justify-between">
+            <div className="my-2 flex flex-wrap items-center justify-between">
               <div className="flex items-center gap-1">
                 <HiUsers className="text-sm" />
-                <div className="truncate max-w-32">
+                <div className="truncate max-w-28">
                   {eventObject.organizationName}
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <FaCalendarAlt className="text-sm" />
-                <div className="truncate max-w-32">
+                <div className="truncate max-w-28">
                   {new Date(eventObject.startTime).toLocaleDateString("vi-VN", {
                     day: "2-digit",
                     month: "2-digit",
@@ -105,7 +109,7 @@ const EventCard: React.FC<{
                 </div>
               </div>
             </div>
-            <div className="my-2 flex items-center justify-between">
+            <div className="my-2 flex flex-wrap items-center justify-between">
               <div className="flex items-baseline gap-1 truncate max-w-32">
                 <div className="text-xs font-medium">
                   {eventObject.numberVolunteer}

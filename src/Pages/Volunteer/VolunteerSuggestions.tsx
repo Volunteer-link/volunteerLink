@@ -13,7 +13,7 @@ import { FaUsers } from "react-icons/fa";
 const VolunteerSuggestions = () => {
   const [searchParams] = useSearchParams();
   const { id } = useParams();
-  const pageSizeAI = 5;
+  const pageSizeAI = 10;
   const pageSizeAll = 10;
   const pageFromUrl = searchParams.get("page");
   const [PageNumber, setPageNumber] = React.useState<number>(1);
@@ -129,7 +129,7 @@ const VolunteerSuggestions = () => {
 
   useEffect(() => {
     fetchAllVolunteer();
-  }, []);
+  }, [resetStateAll]);
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
@@ -190,8 +190,8 @@ const VolunteerSuggestions = () => {
               <span className="text-primary-color">được gợi ý</span>
             </div>
             <img
-              src="/materials/AI.png"
-              className="select-none w-6 h-6 my-2 mx-auto"
+              src="/materials/VTLAI_blackbrain_transparentbg.png"
+              className="w-40 mx-auto"
               alt=""
             />
           </div>

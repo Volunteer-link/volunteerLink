@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
           gmail: email,
           name: name,
         });
-        message.success("Login successful!");
+        message.success("Đăng nhập thành công!");
         const token = response.data.data.accessToken;
 
         handleAfterLogin(token);
@@ -59,7 +59,7 @@ const SignIn: React.FC = () => {
       }
     },
     onError: () => {
-      console.log("Error khi đăng nhập");
+      console.log("Lỗi khi đăng nhập");
     },
   });
 
@@ -74,7 +74,7 @@ const SignIn: React.FC = () => {
         }
       );
       if (!response.ok) {
-        message.error("Login failed!");
+        message.error("Đăng nhập thất bại!");
       }
       const data = await response.json();
       return data;
@@ -92,7 +92,7 @@ const SignIn: React.FC = () => {
         password,
       };
       const response = await api.post("/login-using-password", dataToSend);
-      message.success("Login successful!");
+      message.success("Đăng nhập thành công!");
 
       const token = response.data.data.accessToken;
 

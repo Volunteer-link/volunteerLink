@@ -2,17 +2,27 @@ import { IoLocation } from "react-icons/io5";
 import EventCard from "../Components/EventCard";
 import LineSpacing from "../Components/LineSpacing";
 import { useEffect, useRef, useState } from "react";
-import { ConfigProvider, Empty, Modal, Pagination, Select, Switch } from "antd";
-import api from "../../apiService/useFetch";
-import { Field } from "../../model/ShowEventModel/Field";
-import { EventCardType } from "../../model/ShowEventModel/EventCardType";
-import { RiEmotionSadLine } from "react-icons/ri";
-import Loading from "../Components/Loading";
-import { decodedCookie, getCookie } from "../../ultils/cookie";
-import MapBox from "../Components/MapBox";
-import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
-import useWebSocket from "../../Hook/useWebSocket";
-import { WiStars } from "react-icons/wi";
+import {
+  ConfigProvider,
+  Empty,
+  Modal,
+  Pagination,
+  Select,
+  Switch,
+  Tabs,
+  Tooltip,
+} from 'antd';
+import api from '../../apiService/useFetch';
+import { Field } from '../../model/ShowEventModel/Field';
+import { EventCardType } from '../../model/ShowEventModel/EventCardType';
+import { RiEmotionSadLine } from 'react-icons/ri';
+import Loading from '../Components/Loading';
+import { decodedCookie, getCookie } from '../../ultils/cookie';
+import MapBox from '../Components/MapBox';
+import { MarkerPosition } from '../../model/MapBoxModel/MarkerPosition';
+import useWebSocket from '../../Hook/useWebSocket';
+import { WiStars } from 'react-icons/wi';
+import { TabsProps } from 'antd/lib';
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -27,6 +37,7 @@ const ShowEvent = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSearch, setCurrentPageSearch] = useState<number>(1);
   const [currentPageRelevant, setCurrentPageRelevant] = useState<number>(1);
+  const [address, setAddress] = useState<string>("");
 
   const [total, setTotal] = useState<number>(0);
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
@@ -39,6 +50,7 @@ const ShowEvent = () => {
 
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [AISearch, setAISearch] = useState<boolean>(false);
+  const [status, setStatus] = useState<number>(0);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const refSearch = useRef<HTMLInputElement>(null);
@@ -60,12 +72,25 @@ const ShowEvent = () => {
   }, []);
 
   useEffect(() => {
+    const fetchAddress = async () => {
+      const data = await api.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${marker?.latitude}&lon=${marker?.longitude}&format=json`
+      );
+      setAddress(data.data.display_name);
+    };
+
+    if (marker?.latitude && marker?.longitude) {
+      fetchAddress();
+    }
+  }, [marker]);
+
+  useEffect(() => {
     const fetchCommonEvent = async () => {
       try {
         const str = currentField.join(",");
         const url = `/common/get-events?${
-          currentField.length !== 0 ? `Fields=${str}` : ""
-        }&PageNumber=${currentPage}&PageSize=${pageSize}`;
+          currentField.length !== 0 ? `Fields=${str}` : ''
+        }&PageNumber=${currentPage}&PageSize=${pageSize}&Status=${status}`;
 
         const { data } = await api.get(url);
         setListEventCard(data.data.items);
@@ -75,7 +100,7 @@ const ShowEvent = () => {
       }
     };
     fetchCommonEvent();
-  }, [currentField, currentPage]);
+  }, [currentField, currentPage,status]);
 
   useEffect(() => {
     if (user?.role === "Volunteer" && isPublish) {
@@ -202,6 +227,23 @@ const ShowEvent = () => {
     setAISearch(checked);
   };
 
+
+   const items: TabsProps['items'] = [
+      {
+        key: '0',
+        label: 'Đang diễn ra',
+      },
+      {
+        key: '-1',
+        label: 'Sắp diễn ra',
+      },
+    ];
+
+    const onChange = (key: string) => {
+      setStatus(parseInt(key));
+      setCurrentPage(1);
+    };
+
   return (
     <div className="">
       {/* {isLoading && <Loading />} */}
@@ -235,10 +277,12 @@ const ShowEvent = () => {
             />
             <div className="flex pr-2 items-center gap-4 select-none">
               {!AISearch && (
-                <IoLocation
-                  onClick={showModal}
-                  className="text-2xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
-                />
+                <Tooltip open={!!address} title={address} color={"#3BA769"}>
+                  <IoLocation
+                    onClick={showModal}
+                    className="text-2xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+                  />
+                </Tooltip>
               )}
 
               <div
@@ -324,7 +368,14 @@ const ShowEvent = () => {
         <>
           <div className="items-center gap-1 justify-center text-2xl flex mt-10 mb-6">
             <div>Sự kiện</div>
-            <div className="text-primary-color">phù hợp</div>
+            <div className="text-primary-color">gợi ý</div>
+            <div>
+              <img
+                src="/materials/VTLAI_blackbrain_transparentbg.png"
+                className="w-40"
+                alt=""
+              />
+            </div>
           </div>
           <div className="">
             {listEventCardRelevant?.length === 0 && (
@@ -388,6 +439,7 @@ const ShowEvent = () => {
             <Select
               mode="tags"
               // defaultValue="Tất cả các lĩnh vực"
+              placeholder="Tất cả lĩnh vực"
               style={{ minWidth: 200 }}
               onChange={handleChangeField}
               options={[
@@ -400,6 +452,7 @@ const ShowEvent = () => {
             />
           </div>
         </div>
+        <Tabs defaultActiveKey="0" items={items} onChange={onChange} />
         {listEventCard?.length === 0 && (
           <Empty description="Không có dữ liệu sự kiện" />
         )}
@@ -412,7 +465,7 @@ const ShowEvent = () => {
             ))}
           </div>
         )} */}
-        <div className="w-full lg:col-span-6 col-span-1 gap-10 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
+        <div className="w-full lg:col-span-6 col-span-1 gap-4 grid md:grid-cols-2 lg:grid-cols-4 mb-4">
           {listEventCard?.map((item, index) => (
             <EventCard key={item.id} eventObject={item} showOption={false} />
           ))}

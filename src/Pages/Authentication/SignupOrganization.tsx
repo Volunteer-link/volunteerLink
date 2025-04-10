@@ -73,7 +73,7 @@ const SignupOrganization: React.FC<SignupOrganizationProps> = ({
             {
               validator(_: any, value: string) {
                 if (!fileList.length) {
-                  return Promise.reject("Bạn cần upload ảnh");
+                  return Promise.reject("Bạn cần tải lên giấy chứng nhận!");
                 }
                 return Promise.resolve();
               },

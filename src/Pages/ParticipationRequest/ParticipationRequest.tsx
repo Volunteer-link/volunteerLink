@@ -9,7 +9,7 @@ import Loading from "../Components/Loading";
 import ErrorSolving from "../../Common/ErrorSolving";
 import ErrorCards from "../Components/ErrorCards";
 
-const pageSize = 4;
+const pageSize = 10;
 const ParticipationRequest = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);

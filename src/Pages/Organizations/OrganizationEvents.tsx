@@ -7,6 +7,7 @@ import EventCard from "../Components/EventCard";
 import { TabsProps } from "antd/lib";
 import { useDebounce } from "../../ultils/useDebounce";
 import { FaPlus } from "react-icons/fa";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
 
 const OrganizationEvents = () => {
   const { id } = useParams();
@@ -34,7 +35,7 @@ const OrganizationEvents = () => {
     },
     {
       key: "-1",
-      label: "Chưa bắt đầu",
+      label: "Sắp diễn ra",
     },
     {
       key: "2",
@@ -45,16 +46,24 @@ const OrganizationEvents = () => {
   const fetchField = useCallback(async () => {
     try {
       setLoading(true);
+
+      const { data: acc } = await api.get(`/profile/organization`, {
+        params: {
+          Id: decodedCookie(getCookie("accessToken"))?.AccId,
+        },
+      });
+
+      console.log(acc);
+
       const { data } = await api.get(`/common/get-events-of-organization`, {
         params: {
           SearchName: searchDebounce,
-          OrganizationId: 1,
+          OrganizationId: acc?.data.id,
           EventStatus: status,
           PageNumber: PageNumber,
           PageSize: 8,
         },
       });
-      console.log(data);
       setTotalPage(data.data.totalItems);
       setEventList(data.data.items);
       setLoading(false);

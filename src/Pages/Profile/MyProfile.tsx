@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   ConfigProvider,
   DatePicker,
   Flex,
@@ -14,26 +15,26 @@ import {
   Select,
   Spin,
   Upload,
-} from "antd";
-import { useEffect, useRef, useState } from "react";
-import { decodedCookie, getCookie } from "../../ultils/cookie";
-import api, { setupInterceptors } from "../../apiService/useFetch";
-import axios from "axios";
-import ErrorSolving from "../../Common/ErrorSolving";
-import ErrorCards from "../Components/ErrorCards";
-import Loading from "../Components/Loading";
+} from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import { decodedCookie, getCookie } from '../../ultils/cookie';
+import api, { setupInterceptors } from '../../apiService/useFetch';
+import axios from 'axios';
+import ErrorSolving from '../../Common/ErrorSolving';
+import ErrorCards from '../Components/ErrorCards';
+import Loading from '../Components/Loading';
 import {
   getDownloadURL,
   ref,
   uploadBytes,
   uploadBytesResumable,
-} from "firebase/storage";
-import dayjs from "dayjs";
-import { storage } from "../../ultils/firebase";
-import type { UploadFile, UploadProps } from "antd/es/upload/interface";
-import utc from "dayjs/plugin/utc";
-import { data } from "react-router-dom";
-import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
+} from 'firebase/storage';
+import dayjs from 'dayjs';
+import { storage } from '../../ultils/firebase';
+import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
+import utc from 'dayjs/plugin/utc';
+import { data } from 'react-router-dom';
+import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
 dayjs.extend(utc);
 
 interface ProfileState {
@@ -65,7 +66,18 @@ interface FormValuesVolunteer {
   phone: string;
   skill: string;
   fields: number[];
+  availableTimes: number[];
 }
+
+const dayOptions = [
+  { label: 'Sunday', value: 0 },
+  { label: 'Monday', value: 1 },
+  { label: 'Tuesday', value: 2 },
+  { label: 'Wednesday', value: 3 },
+  { label: 'Thursday', value: 4 },
+  { label: 'Friday', value: 5 },
+  { label: 'Saturday', value: 6 },
+];
 
 const MyProfile = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -73,17 +85,17 @@ const MyProfile = () => {
   const [radioState, setRadioState] = useState<number>(-2);
   // const [errCode, setErrCode] = useState<number>(0);
 
-  const token = getCookie("accessToken");
+  const token = getCookie('accessToken');
   const user = decodedCookie(token);
 
   const formRef = useRef<FormInstance>(null);
   const [profileState, setProfileState] = useState<ProfileState>();
   const [listFile, setListFile] = useState<UploadFile[]>([]);
   const [listUploadFile, setListUploadFile] = useState<UploadFile>();
-  const [errorName, setErrorName] = useState<string>("");
-  const [errorSkill, setErrorSkill] = useState<string>("");
-  const [errorDob, setErrorDob] = useState<string>("");
-  const [errorPhone, setErrorPhone] = useState<string>("");
+  const [errorName, setErrorName] = useState<string>('');
+  const [errorSkill, setErrorSkill] = useState<string>('');
+  const [errorDob, setErrorDob] = useState<string>('');
+  const [errorPhone, setErrorPhone] = useState<string>('');
   const [errorAddress, setErrorAddress] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [errorField, setErrorField] = useState<boolean>(false);
@@ -91,9 +103,8 @@ const MyProfile = () => {
   const [updateState, setUpdateState] = useState<number>(0);
   const [addressState, setAddressState] = useState<string[]>([]);
   const [checkProfile, setCheckProfile] = useState<boolean>(true);
-
+  const [availableTimes, setAvailableTimes] = useState<number[]>([]);
   const [checkLoadDistrict, setCheckLoadDistrict] = useState<boolean>(false);
-
   const [listProvinces, setListProvinces] = useState<
     {
       id: number;
@@ -142,7 +153,7 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
-        const { data } = await api.get("/profile/check-publish-profile");
+        const { data } = await api.get('/profile/check-publish-profile');
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
@@ -150,8 +161,6 @@ const MyProfile = () => {
       fetchCheckPublish();
     }
   }, [user]);
-
-  console.log(isPublish);
 
   useEffect(() => {
     const fetchCheckStatus = async () => {
@@ -172,7 +181,7 @@ const MyProfile = () => {
     const fetchProvince = async () => {
       try {
         const data = await axios.get(
-          "https://open.oapi.vn/location/provinces?page=0&size=1000"
+          'https://open.oapi.vn/location/provinces?page=0&size=1000'
         );
         setListProvinces(data.data.data);
       } catch (e: any) {
@@ -199,14 +208,13 @@ const MyProfile = () => {
         const res = await api.get(`/profile/volunteer`);
 
         const data = res.data.data;
-        console.log(data);
 
         setProfileState((prev) => ({
           ...(prev ?? {}),
           ...data,
           dateOfBirth: new Date(data.dateOfBirth),
         }));
-
+        setAvailableTimes(data.availableTimes);
         setRadioState(data.sex);
         const selectedFields: number[] = (data?.fields ?? []).map(
           (item: any, index: number) => item.id
@@ -214,7 +222,7 @@ const MyProfile = () => {
 
         setListSelectedField(selectedFields);
 
-        setAddressState(data.address.split(", "));
+        setAddressState(data.address.split(', '));
 
         handleAvt(data.urlImage);
       } catch (err: any) {
@@ -225,9 +233,9 @@ const MyProfile = () => {
     const handleAvt = (url?: string) => {
       setListFile((prev) => [
         {
-          uid: url ? "-1" : "s-20052003",
-          name: "avatar.png",
-          status: "done",
+          uid: url ? '-1' : 's-20052003',
+          name: 'avatar.png',
+          status: 'done',
           url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
         },
       ]);
@@ -249,6 +257,7 @@ const MyProfile = () => {
         ward: addressState[0],
         phone: profileState.phoneNumber,
         skill: profileState.skill,
+        availableTimes: availableTimes,
       });
     }
   }, [profileState, form]);
@@ -281,12 +290,14 @@ const MyProfile = () => {
   };
 
   const handleSubmit = async (values: FormValuesVolunteer) => {
+    const availableTimes = values.availableTimes;
+
     if (listSelectedField.length === 0) {
       setErrorField(true);
       messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
     } else {
       setErrorField(false);
-      if (listFile[0]?.uid === "s-20052003") {
+      if (listFile[0]?.uid === 's-20052003') {
         messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
       } else {
         try {
@@ -304,12 +315,12 @@ const MyProfile = () => {
             Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
           }
           const { province, district, ward, email, ...sendObject } = values;
-          sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
+          sendObject.dob = dayjs(sendObject.dob).format('YYYY-MM-DD');
 
           Object.assign(sendObject, { fields: listSelectedField });
           // console.log(listSelectedField);
           let urlNewAvt: string[] | undefined;
-          if (listFile[0]?.uid !== "-1") {
+          if (listFile[0]?.uid !== '-1') {
             urlNewAvt = await uploadFilesToFirebase(listFile);
           }
           Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
@@ -319,7 +330,6 @@ const MyProfile = () => {
             dateOfBirth: sendObject.dob,
             phoneNumber: sendObject.phone,
           };
-
           //UPDATE
           try {
             const { data } = await api.put(`/profile/volunteer`, updatedData);
@@ -327,7 +337,7 @@ const MyProfile = () => {
             console.log(e);
           } finally {
             messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             setUpdateState((prev) => ++prev);
           }
@@ -375,9 +385,12 @@ const MyProfile = () => {
     }
   };
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    console.log(newFileList.length);
+
     let newArray = newFileList as Array<UploadFile>;
-    setListFile([newArray[1]]);
+
+    setListFile([newArray[newFileList.length === 1 ? 0 : 1]]);
   };
 
   const publicProfile = async (value: boolean) => {
@@ -402,9 +415,9 @@ const MyProfile = () => {
     messageApi.success(
       isPublish
         ? `Hồ sơ của bạn đã hủy xuất bản!`
-        : "Hồ sơ của bạn đã được xuất bản thành công"
+        : 'Hồ sơ của bạn đã được xuất bản thành công'
     );
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setOpenModal(false);
     setIsPublish((prev) => !prev);
     setUpdateState((prev) => ++prev);
@@ -456,14 +469,14 @@ const MyProfile = () => {
           <div className="lg:flex items-end mt-4">
             <span className="mr-1">Trạng thái:</span>
             <span className="font-medium text-base text-primary-color">
-              {profileState?.isAvailable && "Đã xuất bản"}
+              {profileState?.isAvailable && 'Đã xuất bản'}
             </span>
             <span className="font-medium text-base text-red-500">
-              {!profileState?.isAvailable && "Chưa xuất bản"}
+              {!profileState?.isAvailable && 'Chưa xuất bản'}
             </span>
           </div>
           <Image
-            wrapperStyle={{ display: "none" }}
+            wrapperStyle={{ display: 'none' }}
             preview={{
               visible: previewOpen,
               onVisibleChange: (visible) => setPreviewOpen(visible),
@@ -504,20 +517,20 @@ const MyProfile = () => {
               <Form.Item
                 name="name"
                 rules={[
-                  { required: true, message: "Vui lòng nhập họ và tên!" },
+                  { required: true, message: 'Vui lòng nhập họ và tên!' },
                   {
                     pattern:
                       /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
                     message:
-                      "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
+                      'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
                   },
                 ]}
               >
                 <Input
                   className={`border-[0.1rem] text-base ${
-                    errorName !== ""
-                      ? "border-2 border-red-500"
-                      : "border-stone-300"
+                    errorName !== ''
+                      ? 'border-2 border-red-500'
+                      : 'border-stone-300'
                   } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
                 />
               </Form.Item>
@@ -533,13 +546,13 @@ const MyProfile = () => {
               <Form.Item
                 name="dob"
                 rules={[
-                  { required: true, message: "Vui lòng chọn ngày sinh!" },
+                  { required: true, message: 'Vui lòng chọn ngày sinh!' },
                 ]}
               >
                 <DatePicker
                   format="YYYY-MM-DD"
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 ${
-                    errorDob !== "" ? "border-red-500" : "border-stone-300"
+                    errorDob !== '' ? 'border-red-500' : 'border-stone-300'
                   }`}
                 />
               </Form.Item>
@@ -555,7 +568,7 @@ const MyProfile = () => {
               <Form.Item
                 name="sex"
                 rules={[
-                  { required: true, message: "Vui lòng chọn giới tính!" },
+                  { required: true, message: 'Vui lòng chọn giới tính!' },
                 ]}
               >
                 <Radio.Group
@@ -583,7 +596,7 @@ const MyProfile = () => {
               <Form.Item
                 name="province"
                 rules={[
-                  { required: true, message: "Vui lòng chọn tỉnh/thành phố!" },
+                  { required: true, message: 'Vui lòng chọn tỉnh/thành phố!' },
                 ]}
               >
                 <Select
@@ -609,7 +622,7 @@ const MyProfile = () => {
               <Form.Item
                 name="district"
                 rules={[
-                  { required: true, message: "Vui lòng chọn quận/huyện!" },
+                  { required: true, message: 'Vui lòng chọn quận/huyện!' },
                 ]}
               >
                 <Select
@@ -633,7 +646,7 @@ const MyProfile = () => {
               <Form.Item
                 name="ward"
                 rules={[
-                  { required: true, message: "Vui lòng chọn phường/xã!" },
+                  { required: true, message: 'Vui lòng chọn phường/xã!' },
                 ]}
               >
                 <Select
@@ -661,17 +674,17 @@ const MyProfile = () => {
               <Form.Item
                 name="phone"
                 rules={[
-                  { required: true, message: "Vui lòng nhập số điện thoại!" },
+                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
                   {
                     pattern: /^[0-9]{10,15}$/,
-                    message: "Số điện thoại không hợp lệ!",
+                    message: 'Số điện thoại không hợp lệ!',
                   },
                 ]}
               >
                 <Input
                   type="number"
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 no-spinner ${
-                    errorPhone !== "" ? "border-red-500" : "border-stone-300"
+                    errorPhone !== '' ? 'border-red-500' : 'border-stone-300'
                   }`}
                   maxLength={15}
                   onInput={(e) => {
@@ -693,16 +706,39 @@ const MyProfile = () => {
               <Form.Item
                 name="skill"
                 rules={[
-                  { required: true, message: "Vui lòng nhập kỹ năng của bạn!" },
+                  { required: true, message: 'Vui lòng nhập kỹ năng của bạn!' },
                 ]}
               >
                 <Input.TextArea
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 ${
-                    errorSkill !== "" ? "border-red-500" : "border-stone-300"
+                    errorSkill !== '' ? 'border-red-500' : 'border-stone-300'
                   }`}
                   placeholder="Nhập kỹ năng của bạn..."
                   autoSize={{ minRows: 3, maxRows: 10 }}
                 />
+              </Form.Item>
+            </div>
+            <div className="my-4">
+              <div className="flex items-center gap-1 mb-2">
+                <span className="text-red-500 inline-block text-lg">*</span>
+                <div className="text-base font-medium text-primary-color">
+                  Thời gian hoạt động
+                </div>
+                <div className="w-20 h-[0.07rem] bg-primary-color"></div>
+              </div>
+              <Form.Item
+                name="availableTimes"
+                initialValue={availableTimes}
+                rules={[
+                  {
+                    type: 'array',
+                    required: true,
+                    min: 1,
+                    message: 'Vui lòng chọn ít nhất một ngày!',
+                  },
+                ]}
+              >
+                <Checkbox.Group options={dayOptions} />
               </Form.Item>
             </div>
             <div className="my-4">
@@ -715,7 +751,7 @@ const MyProfile = () => {
               </div>
               <div
                 className={`bg-stone-100 border-[0.05rem] rounded-md  ${
-                  errorField ? "border-red-500" : "border-primary-color"
+                  errorField ? 'border-red-500' : 'border-primary-color'
                 } overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
               >
                 {listFieldState.map((item, index) => (
@@ -763,7 +799,7 @@ const MyProfile = () => {
               onClick={handleChangePublic}
               className="bg-primary-color text-white py-2 px-4 rounded-md cursor-pointer hover:scale-105 duration-300"
             >
-              {isPublish ? "Hủy xuất bản hồ sơ" : "Xuất bản hồ sơ"}
+              {isPublish ? 'Hủy xuất bản hồ sơ' : 'Xuất bản hồ sơ'}
             </div>
           )}
         </div>
@@ -771,14 +807,14 @@ const MyProfile = () => {
           theme={{
             components: {
               Table: {
-                headerBg: "#3BA769",
-                headerColor: "white",
+                headerBg: '#3BA769',
+                headerColor: 'white',
               },
               Pagination: {
-                itemActiveBg: "#3BA769",
-                colorPrimary: "white",
-                colorPrimaryHover: "white",
-                colorPrimaryBorder: "white",
+                itemActiveBg: '#3BA769',
+                colorPrimary: 'white',
+                colorPrimaryHover: 'white',
+                colorPrimaryBorder: 'white',
               },
             },
           }}
