@@ -301,7 +301,7 @@ export default function RootLayout() {
                 initial={{ opacity: 0, x: -100 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                // viewport={{ once: true, amount: 0.3 }}
+                viewport={{ amount: 0.6 }}
               >
                 <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
                   <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
@@ -334,7 +334,7 @@ export default function RootLayout() {
                 initial={{ opacity: 0, x: 100 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                // viewport={{ once: true, amount: 0.3 }}
+                viewport={{ amount: 0.6 }}
               >
                 <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
                   <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
