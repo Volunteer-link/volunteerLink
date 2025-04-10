@@ -217,6 +217,12 @@ const DetailEvent = () => {
         accept: value === "yes" ? true : false,
       });
     } catch (e: any) {
+      if (
+        e.response.data.Message ===
+        "Event has to start after 0.5 day to join this event or this event has not been published"
+      ) {
+        messageApi.error("Lời mời tham gia đã quá hạn!");
+      }
     } finally {
       if (user?.role === "Volunteer") {
         fetchStatus();
@@ -692,7 +698,7 @@ const DetailEvent = () => {
                 )} */}
               {/* Volunteer sight */}
 
-              {statusEvent === 3 && (
+              {/* {statusEvent === 3 && (
                 <div
                   onClick={handleCancelRequest}
                   className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
@@ -701,7 +707,7 @@ const DetailEvent = () => {
                     Đã gửi yêu cầu...
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* {dataState?.startTime &&
                 new Date() < new Date(dataState?.startTime) &&
@@ -779,6 +785,16 @@ const DetailEvent = () => {
                       </div>
                     </div>
                   )}
+                {statusEvent === 3 && (
+                  <div
+                    onClick={handleCancelRequest}
+                    className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0"
+                  >
+                    <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium cursor-pointer">
+                      Đã gửi yêu cầu...
+                    </div>
+                  </div>
+                )}
                 {dataState?.hasDonate && user?.role !== "Organization" && (
                   <div className="flex items-center gap-1 font-medium">
                     <div
