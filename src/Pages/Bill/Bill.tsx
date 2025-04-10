@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import api from "../../apiService/useFetch";
+import { FaCircleXmark } from "react-icons/fa6";
 
 const Bill = () => {
   const location = useLocation();
@@ -9,10 +10,11 @@ const Bill = () => {
 
   const amount = queryParams.get("vnp_Amount");
   const orderInfo = queryParams.get("vnp_OrderInfo");
-  const responseCode = queryParams.get("vnp_ResponseCode");
 
   const [eventName, setEventName] = useState<string>("");
   const orderInfoDecoded = orderInfo ? JSON.parse(atob(orderInfo)) : null;
+
+  const statusTransaction = queryParams.get("vnp_TransactionStatus");
 
   console.log(amount);
 
@@ -24,10 +26,6 @@ const Bill = () => {
         );
 
         setEventName(data.data.name);
-
-        if (responseCode) {
-          throw new Error("Có lỗi giao dịch");
-        }
       } catch (e: any) {
         console.log(e);
       } finally {
@@ -38,24 +36,42 @@ const Bill = () => {
 
   return (
     <div>
-      <div className="flex justify-center my-8">
-        <FaCheckCircle className=" text-primary-color text-9xl" />
-      </div>
-      <div className="text-xl">
-        <div className="text-center">
-          Bạn đã ủng hộ thành công{" "}
-          <span className="text-primary-color">
-            {new Intl.NumberFormat("vi-VN").format(Number(amount) / 100)} VND
-          </span>{" "}
-          cho sự kiện
+      {statusTransaction === "00" && (
+        <div>
+          <div className="flex justify-center my-8">
+            <FaCheckCircle className=" text-primary-color text-9xl" />
+          </div>
+          <div className="text-xl">
+            <div className="text-center">
+              Bạn đã ủng hộ thành công{" "}
+              <span className="text-primary-color">
+                {new Intl.NumberFormat("vi-VN").format(Number(amount) / 100)}{" "}
+                VND
+              </span>{" "}
+              cho sự kiện
+            </div>
+            <div className="text-center text-primary-color mt-2 mb-8">
+              {eventName}
+            </div>
+            <div className="text-center text-base mt-2">
+              Cảm ơn bạn đã ủng hộ cho sự kiện! 🤗😘🥰
+            </div>
+          </div>
         </div>
-        <div className="text-center text-primary-color mt-2 mb-8">
-          {eventName}
+      )}
+      {statusTransaction !== "00" && (
+        <div>
+          <div className="flex justify-center my-8">
+            <FaCircleXmark className=" text-red-500 text-9xl" />
+          </div>
+          <div className="text-xl">
+            <div className="text-center mb-4">Lỗi giao dịch</div>
+            <div className="text-base text-center text-stone-500">
+              Vui lòng thử lại sau
+            </div>
+          </div>
         </div>
-        <div className="text-center text-base mt-2">
-          Cảm ơn bạn đã ủng hộ cho sự kiện! 🤗😘🥰
-        </div>
-      </div>
+      )}
     </div>
   );
 };
