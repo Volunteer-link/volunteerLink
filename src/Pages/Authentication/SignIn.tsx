@@ -250,7 +250,9 @@ const SignIn: React.FC = () => {
             preview={false}
             placeholder={true}
             alt="logo"
-            src={"/materials/environmentalists-stacking-hands_13339-160020.jpg"}
+            src={
+              "https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fenvironmentalists-stacking-hands_13339-160020.jpg?alt=media&token=4f72ef27-6bdd-430d-9c64-ebe464f61b31"
+            }
             style={{ height: "100vh", width: "100%" }}
           />
         </Col>
