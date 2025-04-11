@@ -264,7 +264,7 @@ export default function RootLayout() {
                 className="w-32 mx-auto my-8"
                 alt=""
               />
-              <div className="font-quicksand text-lg">
+              <div className="font-quicksand text-lg text-center">
                 <span>
                   Chúng tôi tin rằng, mỗi hành động nhỏ, khi được cộng hưởng, sẽ
                   trở thành sức mạnh to lớn để thay đổi cuộc đời của ai đó.
