@@ -184,15 +184,19 @@ const Header: React.FC<{}> = () => {
           },
         ]
       : []),
-    {
-      key: "5",
-      label: (
-        <NavLink className="flex items-center gap-1" to={"/my-profile"}>
-          <IoSettingsOutline />
-          <span>Thông tin tài khoản</span>
-        </NavLink>
-      ),
-    },
+    ...(user?.role !== "Admin"
+      ? [
+          {
+            key: "5",
+            label: (
+              <NavLink className="flex items-center gap-1" to={"/my-profile"}>
+                <IoSettingsOutline />
+                <span>Thông tin tài khoản</span>
+              </NavLink>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const { t, i18n } = useTranslation();
@@ -291,7 +295,7 @@ const Header: React.FC<{}> = () => {
               Tổ chức
             </NavLink>
           </li>
-          {user && (
+          {user && user?.role !== "Admin" && (
             <li className="hover:scale-110 hover:font-medium transition-transform cursor-pointer">
               <NavLink
                 to="/volunteers"

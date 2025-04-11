@@ -66,8 +66,7 @@ const Volunteer: React.FC<{
         requestId: objectVolunteer.requestId,
         accept: type === "yes" ? true : false,
       });
-    } catch (e: any) {
-    } finally {
+
       messageApi.success(
         type === "yes"
           ? "Yêu cầu của tình nguyện viên đã được chấp nhận!"
@@ -83,6 +82,17 @@ const Volunteer: React.FC<{
           setResetStateAll((prev) => ++prev);
         }
       }, 1000);
+    } catch (e: any) {
+      if (
+        e.response.data.Message ===
+        "Event has to start after 0.5 days to adding more people or this event has not been published"
+      ) {
+        messageApi.error(
+          "Không thể xử lý yêu cầu vì sự kiện còn ít hơn 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+        );
+      }
+      setIsLoading(false);
+    } finally {
     }
   };
 
@@ -93,8 +103,7 @@ const Volunteer: React.FC<{
         eventId: eventId,
         volunteerId: objectVolunteer.id,
       });
-    } catch (e: any) {
-    } finally {
+
       messageApi.success("Lời mời của bạn đã được gửi!");
       setTimeout(() => {
         if (setResetState) {
@@ -106,6 +115,17 @@ const Volunteer: React.FC<{
         }
         setIsLoading(false);
       }, 1000);
+    } catch (e: any) {
+      if (
+        e.response.data.Message ===
+        "Start time has to greater than now 1 day to invite anyone or this event has not been published"
+      ) {
+        messageApi.error(
+          "Không thể mời tình nguyện viên vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+        );
+      }
+      setIsLoading(false);
+    } finally {
     }
   };
 
@@ -117,15 +137,24 @@ const Volunteer: React.FC<{
           idRecord: objectVolunteer.id,
         },
       });
-    } catch (e: any) {
-    } finally {
       messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
+    } catch (e: any) {
+      if (
+        e.response.data.Message ===
+        "Event will start after 1 day or this event has not been published. Can't remove volunteer."
+      ) {
+        messageApi.error(
+          "Không thể xóa tình nguyện viên vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra!"
+        );
+      }
+      setIsLoading(false);
+    } finally {
       setTimeout(() => {
         if (setResetState) {
           setResetState((prev) => ++prev);
         }
         setIsLoading(false);
-      }, 1000);
+      }, 1500);
     }
   };
 

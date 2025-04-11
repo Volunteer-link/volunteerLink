@@ -367,9 +367,9 @@ const UpdateEvent = () => {
         </div>
 
         <div className="mt-6">
-          <Tag className="mb-2 p-1" color="warning">
-            Lưu ý: Trước thời gian bắt đầu diễn ra sự kiện 1 ngày, các tình
-            nguyện viên sẽ không thể yêu cầu tham gia sự kiện
+          <Tag className="mb-2 p-1"  color="warning">
+            Ghi chú: Tình nguyện viên chỉ có thể đăng ký trước khi sự kiện diễn
+            ra 24h
           </Tag>
           <Radio.Group
             style={style}

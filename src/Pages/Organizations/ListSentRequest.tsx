@@ -62,9 +62,6 @@ const ListSentRequest = () => {
       const { data } = await api.post(`/event/cancle-invite`, {
         inviteId: inviteId,
       });
-      console.log(data);
-    } catch (e: any) {
-    } finally {
       messageApi.success("Lời mời đã được xóa!");
 
       setTimeout(() => {
@@ -72,6 +69,8 @@ const ListSentRequest = () => {
         setIsLoading(false);
         setCurrentPage(1);
       }, 1000);
+    } catch (e: any) {
+    } finally {
     }
   };
   return (
