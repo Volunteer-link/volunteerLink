@@ -211,7 +211,7 @@ const VerifyEmail = () => {
             placeholder={true}
             alt="logo"
             src={
-              "/materials/environment-volunteer-concept-with-group-persons.jpg"
+              "https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fenvironment-volunteer-concept-with-group-persons.jpg?alt=media&token=f36979bf-d6ac-4516-b9b0-ba7000ef1276"
             }
             style={{ height: "100vh", width: "100%" }}
           />

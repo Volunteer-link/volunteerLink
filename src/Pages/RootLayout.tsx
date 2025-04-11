@@ -24,7 +24,7 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
       }}
     >
       <img
-        src="/materials/z6488268178733_f3b0a8de88ffd77c7cb4489b2cbe0774.jpg"
+        src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fz6488268178733_f3b0a8de88ffd77c7cb4489b2cbe0774.jpg?alt=media&token=fe58b350-dd7c-48e8-9f4f-07aaa202860e"
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
@@ -81,7 +81,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
       }}
     >
       <img
-        src="/materials/close-up-people-volunteer-teamwork-putting-finger-star-shapehands-togetherstack-handsunity-teamwork-world-environment-day.jpg"
+        src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fclose-up-people-volunteer-teamwork-putting-finger-star-shapehands-togetherstack-handsunity-teamwork-world-environment-day.jpg?alt=media&token=e7c19c90-3154-4707-8036-4b603570165d"
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
@@ -150,7 +150,7 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
       }}
     >
       <img
-        src="/materials/medium-shot-people-hugging_23-2149181996.png"
+        src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fmedium-shot-people-hugging_23-2149181996.png?alt=media&token=9f6028de-7504-452b-b832-e457811e163e"
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
@@ -253,14 +253,14 @@ export default function RootLayout() {
       {shouldHideImage && (
         <div className="relative">
           <img
-            src="/materials/z6488142294205_3ca0412548688435a3727a2293aea9fc.jpg"
+            src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fz6488142294205_3ca0412548688435a3727a2293aea9fc.jpg?alt=media&token=41abadbd-5bdf-4cf4-b41d-ff87ec75edeb"
             className="w-full h-[600px] object-cover object-bottom"
             alt=""
           />
           <div className="absolute top-1/2 -translate-y-1/2 right-[10%]">
             <div className=" bg-white shadow-2xl rounded-xl py-4 px-12 w-96">
               <img
-                src="/materials/donate-icon-vector_946691-933.png"
+                src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fdonate-icon-vector_946691-933.png?alt=media&token=7ed1c73d-5bc4-48bd-b515-1bd6c93a6966"
                 className="w-32 mx-auto my-8"
                 alt=""
               />
@@ -292,7 +292,7 @@ export default function RootLayout() {
         <div className="font-quicksand">
           <div className="relative">
             <img
-              src="/materials/group-different-people-volunteering-foodbank-poor-people_23-2149012208.jpg"
+              src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fgroup-different-people-volunteering-foodbank-poor-people_23-2149012208.jpg?alt=media&token=29a625f4-ba28-4846-9a9d-62649fff225d"
               className="w-full h-[600px] object-cover blur-[2px]"
               alt=""
             />

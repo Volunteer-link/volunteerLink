@@ -72,7 +72,7 @@ const Volunteers = () => {
       {isLoading && <Loading color="green" />}
       <div>
         <img
-          src="/materials/team-volunteers-stacking-hands_53876-20900.jpg"
+          src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fteam-volunteers-stacking-hands_53876-20900.jpg?alt=media&token=3ee32692-2da1-4f73-b5f2-ed56b7f93bc3"
           className="w-full h-72 object-cover mb-8"
           alt=""
         />

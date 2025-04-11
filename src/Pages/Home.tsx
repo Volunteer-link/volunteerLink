@@ -15,7 +15,7 @@ const Home: React.FC<{}> = () => {
             <div className="cursor-pointer hover:scale-105 transition-all hover:shadow-custom-green bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md m-auto lg:m-0">
               <div className=" w-full h-44">
                 <img
-                  src="/materials/community.png"
+                  src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fcommunity.png?alt=media&token=3639f32f-fcfb-4334-96c2-44a610bd2a3f"
                   alt=""
                   className="w-52 pt-2 m-auto "
                 />
@@ -31,7 +31,7 @@ const Home: React.FC<{}> = () => {
             <div className="cursor-pointer hover:scale-105 transition-all hover:shadow-custom-green bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md m-auto lg:m-0">
               <div className=" w-full h-44">
                 <img
-                  src="/materials/vecteezy_hands-support-gesture_ 1.png"
+                  src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fvecteezy_hands-support-gesture_%201.png?alt=media&token=ffb94de9-843d-4180-8f55-ded38db91346"
                   alt=""
                   className="w-40 pt-2 m-auto "
                 />
@@ -47,7 +47,7 @@ const Home: React.FC<{}> = () => {
             <div className="cursor-pointer hover:scale-105 transition-all hover:shadow-custom-green bg-white w-80 my-2 lg:my-0 rounded-xl border-2 border-primary-color shadow-md m-auto lg:m-0">
               <div className=" w-full h-44">
                 <img
-                  src="/materials/Screenshot 2025-01-17 082557 1.png"
+                  src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2FScreenshot%202025-01-17%20082557%201.png?alt=media&token=78475dcf-5af1-4ab2-8f8f-b7a9a28646dc"
                   alt=""
                   className="w-40 pt-2 m-auto "
                 />
