@@ -43,24 +43,24 @@ jobs:
         docker push ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
 
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: build
 
     steps:
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
       with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Convert repository name to lowercase
-      run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
+        ssh-private-key: ${{ secrets.SSH_KEY }}
 
     - name: Deploy to VPS
       run: |
-          docker pull ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
+        ssh -o StrictHostKeyChecking=no anhnbh@103.167.89.225 << 'EOF'
+          docker pull hoanganh23072/front-end-container:${{ github.sha }}
           docker stop frontend || true
           docker rm frontend || true
-          docker run -d -p 3000:80 --name frontend ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
+          cd deploy/frontend/prod &&
+          docker run -d -p 3000:80 --name frontend hoanganh23072/front-end-container:${{ github.sha }}
+        EOF
