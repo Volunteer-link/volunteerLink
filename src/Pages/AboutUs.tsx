@@ -8,7 +8,7 @@ const AboutUs = () => {
         </div>
         <div className="mt-8 flex items-center flex-wrap lg:flex-nowrap text-end lg:pr-8">
           <img
-            src="/materials/istockphoto-1426874794-612x612.jpg"
+            src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fistockphoto-1426874794-612x612.jpg?alt=media&token=abc84318-864a-42d6-80d3-953b09a3b260"
             alt=""
             className="lg:[clip-path:polygon(0_0,100%_0,70%_100%,0_100%)] lg:w-3/5 w-full m-auto lg:m-0 mb-2 lg:mb-0"
           />

@@ -11,18 +11,18 @@ import {
   Switch,
   Tabs,
   Tooltip,
-} from 'antd';
-import api from '../../apiService/useFetch';
-import { Field } from '../../model/ShowEventModel/Field';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import { RiEmotionSadLine } from 'react-icons/ri';
-import Loading from '../Components/Loading';
-import { decodedCookie, getCookie } from '../../ultils/cookie';
-import MapBox from '../Components/MapBox';
-import { MarkerPosition } from '../../model/MapBoxModel/MarkerPosition';
-import useWebSocket from '../../Hook/useWebSocket';
-import { WiStars } from 'react-icons/wi';
-import { TabsProps } from 'antd/lib';
+} from "antd";
+import api from "../../apiService/useFetch";
+import { Field } from "../../model/ShowEventModel/Field";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { RiEmotionSadLine } from "react-icons/ri";
+import Loading from "../Components/Loading";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
+import MapBox from "../Components/MapBox";
+import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
+import useWebSocket from "../../Hook/useWebSocket";
+import { WiStars } from "react-icons/wi";
+import { TabsProps } from "antd/lib";
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -89,7 +89,7 @@ const ShowEvent = () => {
       try {
         const str = currentField.join(",");
         const url = `/common/get-events?${
-          currentField.length !== 0 ? `Fields=${str}` : ''
+          currentField.length !== 0 ? `Fields=${str}` : ""
         }&PageNumber=${currentPage}&PageSize=${pageSize}&Status=${status}`;
 
         const { data } = await api.get(url);
@@ -100,7 +100,7 @@ const ShowEvent = () => {
       }
     };
     fetchCommonEvent();
-  }, [currentField, currentPage,status]);
+  }, [currentField, currentPage, status]);
 
   useEffect(() => {
     if (user?.role === "Volunteer" && isPublish) {
@@ -227,22 +227,21 @@ const ShowEvent = () => {
     setAISearch(checked);
   };
 
+  const items: TabsProps["items"] = [
+    {
+      key: "0",
+      label: "Đang diễn ra",
+    },
+    {
+      key: "-1",
+      label: "Sắp diễn ra",
+    },
+  ];
 
-   const items: TabsProps['items'] = [
-      {
-        key: '0',
-        label: 'Đang diễn ra',
-      },
-      {
-        key: '-1',
-        label: 'Sắp diễn ra',
-      },
-    ];
-
-    const onChange = (key: string) => {
-      setStatus(parseInt(key));
-      setCurrentPage(1);
-    };
+  const onChange = (key: string) => {
+    setStatus(parseInt(key));
+    setCurrentPage(1);
+  };
 
   return (
     <div className="">
@@ -260,7 +259,7 @@ const ShowEvent = () => {
 
       <div className="w-full relative">
         <img
-          src="/materials/image 4.png"
+          src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fimage%204.png?alt=media&token=a2d8c965-2b47-4445-afa1-bedd2578fd14"
           alt=""
           className="w-full lg:scale-110 mb-6 h-56 object-cover"
         />

@@ -127,7 +127,7 @@ const Organizations = () => {
     <div className="flex flex-col">
       <div>
         <img
-          src="/materials/environmentalist-volunteers-planting-new-tree-handshaking_931309-4332.jpg"
+          src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fenvironmentalist-volunteers-planting-new-tree-handshaking_931309-4332.jpg?alt=media&token=f2b222a9-652e-4005-8b60-df63a310c5a2"
           className="w-full h-72 object-cover mb-8"
           alt=""
         />
@@ -171,7 +171,7 @@ const Organizations = () => {
       <LineSpacing />
       <div>
         <img
-          src="/materials/volunteers-helping-with-food-donations-giving-thumbs-up.jpg"
+          src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fvolunteers-helping-with-food-donations-giving-thumbs-up.jpg?alt=media&token=835d9fae-0a4b-454e-b9fb-f89cf7c082de"
           className="w-full h-72 object-cover mb-8"
           alt=""
         />

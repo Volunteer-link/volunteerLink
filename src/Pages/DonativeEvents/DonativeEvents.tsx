@@ -55,7 +55,7 @@ const DonativeEvents = () => {
       {isLoading && <Loading color="green" />}
       <div>
         <img
-          src="/materials/close-up-people-volunteer-teamwork-join-hands-togetherstack-handsunity-teamwork-volunteering-conceptual_640221-318.jpg"
+          src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fclose-up-people-volunteer-teamwork-join-hands-togetherstack-handsunity-teamwork-volunteering-conceptual_640221-318.jpg?alt=media&token=ebf4583e-7abc-46c0-83bd-1558a3d67c64"
           className="w-full h-72 object-cover mb-8"
           alt=""
         />
