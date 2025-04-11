@@ -221,7 +221,9 @@ const DetailEvent = () => {
         e.response.data.Message ===
         "Event has to start after 0.5 day to join this event or this event has not been published"
       ) {
-        messageApi.error("Lời mời tham gia đã quá hạn!");
+        messageApi.error(
+          "Không thể xử lý lời mời vì sự kiện còn ít hơn 12 tiếng nữa sẽ diễn ra!"
+        );
       }
     } finally {
       if (user?.role === "Volunteer") {
@@ -237,6 +239,16 @@ const DetailEvent = () => {
       });
       console.log(data);
     } catch (e: any) {
+      console.log(e);
+      if (
+        e.response.data.Message ===
+        "Event will start after 1 day or this event has not been published. Can't leave event"
+      ) {
+        messageApi.error(
+          "Không thể rời vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra!"
+        );
+      }
+      setIsLoading(false);
     } finally {
       setStateModalJoin(false);
       if (user?.role === "Volunteer") {
