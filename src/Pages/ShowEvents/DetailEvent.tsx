@@ -6,30 +6,32 @@ import {
   Modal,
   Pagination,
   Rate,
-} from "antd";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { decodedCookie, getCookie } from "../../ultils/cookie";
-import { FiUsers } from "react-icons/fi";
-import { FaCalendarAlt, FaHandshake, FaStar, FaUsers } from "react-icons/fa";
-import { FaLocationDot, FaXmark } from "react-icons/fa6";
-import { FaDotCircle } from "react-icons/fa";
-import MySlider from "../../Common/MySlider";
-import { FaCheck } from "react-icons/fa6";
-import type { TextAreaRef } from "antd/es/input/TextArea";
-import { useContext, useEffect, useRef, useState } from "react";
-import api from "../../apiService/useFetch";
-import { EventCardType } from "../../model/ShowEventModel/EventCardType";
-import Loading from "../Components/Loading";
-import { DetailEventType } from "../../model/ShowEventModel/DetailEventType";
-import { TbTilde } from "react-icons/tb";
-import WebsocketContext from "../../ultils/WebsocketContext";
-import { IoIosSend } from "react-icons/io";
-import { AiFillLike } from "react-icons/ai";
-import { Input } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import { CiStar } from "react-icons/ci";
-import { RatingType } from "../../model/ShowEventModel/RatingType";
+} from 'antd';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { decodedCookie, getCookie } from '../../ultils/cookie';
+import { FiUsers } from 'react-icons/fi';
+import { FaCalendarAlt, FaHandshake, FaStar, FaUsers } from 'react-icons/fa';
+import { FaLocationDot, FaXmark } from 'react-icons/fa6';
+import { FaDotCircle } from 'react-icons/fa';
+import MySlider from '../../Common/MySlider';
+import { FaCheck } from 'react-icons/fa6';
+import type { TextAreaRef } from 'antd/es/input/TextArea';
+import { useContext, useEffect, useRef, useState } from 'react';
+import api from '../../apiService/useFetch';
+import { EventCardType } from '../../model/ShowEventModel/EventCardType';
+import Loading from '../Components/Loading';
+import { DetailEventType } from '../../model/ShowEventModel/DetailEventType';
+import { TbTilde } from 'react-icons/tb';
+import WebsocketContext from '../../ultils/WebsocketContext';
+import { IoIosSend } from 'react-icons/io';
+import { AiFillLike } from 'react-icons/ai';
+import { Input } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import { CiStar } from 'react-icons/ci';
+import { RatingType } from '../../model/ShowEventModel/RatingType';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 // const { TextArea } = Input;
 const DetailEvent = () => {
   const location = useLocation();
@@ -49,8 +51,8 @@ const DetailEvent = () => {
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [OpenModalSummary, setOpenModalSummary] = useState<boolean>(false);
   const [isRated, setIsRated] = useState<boolean>(false);
-  const [from, setFrom] = useState<string>("");
-  const [fromTitle, setFromTitle] = useState<string>("");
+  const [from, setFrom] = useState<string>('');
+  const [fromTitle, setFromTitle] = useState<string>('');
 
   const [listRating, setListRating] = useState<RatingType[]>([]);
 
@@ -63,13 +65,13 @@ const DetailEvent = () => {
 
   const { id } = useParams();
 
-  const token = getCookie("accessToken");
+  const token = getCookie('accessToken');
   const user = decodedCookie(token);
-  const [summaryValue, setSummaryValue] = useState("");
+  const [summaryValue, setSummaryValue] = useState('');
   useEffect(() => {
-    if (dataStateNoti?.from === "noti") {
-      setFrom("/notification");
-      setFromTitle("Thông báo");
+    if (dataStateNoti?.from === 'noti') {
+      setFrom('/notification');
+      setFromTitle('Thông báo');
     }
   }, []);
   useEffect(() => {
@@ -100,7 +102,7 @@ const DetailEvent = () => {
   };
 
   useEffect(() => {
-    if (user?.role === "Volunteer") {
+    if (user?.role === 'Volunteer') {
       fetchStatus();
     }
   }, []);
@@ -124,7 +126,7 @@ const DetailEvent = () => {
     setStateModalRate(false);
   };
   const handleViewOrganization = (id: number) => {
-    window.open(`/organizations/profile/${id}`, "_blank");
+    window.open(`/organizations/profile/${id}`, '_blank');
   };
   const handleRating = (value: number) => {
     setRatingValue(value);
@@ -133,14 +135,14 @@ const DetailEvent = () => {
   const socket = useContext(WebsocketContext);
   useEffect(() => {
     if (socket) {
-      socket.addEventListener("message", (event) => {
+      socket.addEventListener('message', (event) => {
         const parsedData = JSON.parse(event.data);
         if (
-          parsedData.Message === "New Notification" &&
-          parsedData.message !== "Connected" &&
+          parsedData.Message === 'New Notification' &&
+          parsedData.message !== 'Connected' &&
           socket.readyState === WebSocket.OPEN
         ) {
-          if (user?.role === "Volunteer") {
+          if (user?.role === 'Volunteer') {
             fetchStatus();
           }
         }
@@ -156,8 +158,8 @@ const DetailEvent = () => {
     } catch (e: any) {
       // console.log(e);
     } finally {
-      messageApi.success("Yêu cầu tham gia của bạn đã được gửi!");
-      if (user?.role === "Volunteer") {
+      messageApi.success('Yêu cầu tham gia của bạn đã được gửi!');
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -171,8 +173,8 @@ const DetailEvent = () => {
     } catch (e: any) {
       // console.log(e);
     } finally {
-      messageApi.success("Bạn đã hủy yêu cầu tham gia sự kiện này!");
-      if (user?.role === "Volunteer") {
+      messageApi.success('Bạn đã hủy yêu cầu tham gia sự kiện này!');
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -181,7 +183,7 @@ const DetailEvent = () => {
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
-        const { data } = await api.get("/profile/check-publish-profile");
+        const { data } = await api.get('/profile/check-publish-profile');
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
@@ -189,7 +191,6 @@ const DetailEvent = () => {
       fetchCheckPublish();
     }
   }, [user]);
-  const summaryRef = useRef<TextAreaRef>(null);
   const handleViewParticipationRequest = () => {
     navigate(`participation-request`, {
       state: { nameEvent: dataState?.name },
@@ -214,19 +215,19 @@ const DetailEvent = () => {
     try {
       const { data } = await api.post(`/event/handle-invite`, {
         inviteId: idRequest,
-        accept: value === "yes" ? true : false,
+        accept: value === 'yes' ? true : false,
       });
     } catch (e: any) {
       if (
         e.response.data.Message ===
-        "Event has to start after 0.5 day to join this event or this event has not been published"
+        'Event has to start after 0.5 day to join this event or this event has not been published'
       ) {
         messageApi.error(
-          "Không thể xử lý lời mời vì sự kiện còn ít hơn 12 tiếng nữa sẽ diễn ra!"
+          'Không thể xử lý lời mời vì sự kiện còn ít hơn 12 tiếng nữa sẽ diễn ra!'
         );
       }
     } finally {
-      if (user?.role === "Volunteer") {
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -245,13 +246,13 @@ const DetailEvent = () => {
         "Event will start after 1 day or this event has not been published. Can't leave event"
       ) {
         messageApi.error(
-          "Không thể rời vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra!"
+          'Không thể rời vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra!'
         );
       }
       setIsLoading(false);
     } finally {
       setStateModalJoin(false);
-      if (user?.role === "Volunteer") {
+      if (user?.role === 'Volunteer') {
         fetchStatus();
       }
     }
@@ -259,12 +260,12 @@ const DetailEvent = () => {
 
   const handleVolRateEvent = async () => {
     if (ratingValue === 0) {
-      messageApi.error("Vui lòng đánh giá số sao trước khi gửi nhận xét!");
+      messageApi.error('Vui lòng đánh giá số sao trước khi gửi nhận xét!');
     } else {
       try {
         setIsLoading(true);
         const comment =
-          textAreaRef.current?.resizableTextArea?.textArea.value || "";
+          textAreaRef.current?.resizableTextArea?.textArea.value || '';
         const { data } = await api.post(
           `/feedback/feedback-event-of-volunteer`,
           {
@@ -273,13 +274,13 @@ const DetailEvent = () => {
             feedback: comment,
           }
         );
-        messageApi.success("Bạn đã đánh giá sự kiện thành công!");
+        messageApi.success('Bạn đã đánh giá sự kiện thành công!');
         setIsLoading(false);
         setStateModalRate(false);
         setResetKey((prev) => ++prev);
       } catch (e: any) {
-        if (e.response.data.Message === "Feedback time is over") {
-          messageApi.error("Quá hạn đánh giá sự kiện!");
+        if (e.response.data.Message === 'Feedback time is over') {
+          messageApi.error('Quá hạn đánh giá sự kiện!');
         }
       } finally {
         setIsLoading(false);
@@ -288,7 +289,7 @@ const DetailEvent = () => {
   };
 
   const handleSummaryOpen = () => {
-    setSummaryValue(dataState?.summary?.content || "");
+    setSummaryValue(dataState?.summary?.content || '');
     setOpenModalSummary(true);
   };
 
@@ -298,28 +299,28 @@ const DetailEvent = () => {
   };
 
   const handleCreateSummary = async () => {
-    const value = summaryRef.current?.resizableTextArea?.textArea?.value;
-    if (!value || value.trim() === "") {
-      messageApi.warning("Tổng kết sự kiện không được để trống!");
+    const value = summaryValue;
+    if (!value || value.trim() === '') {
+      messageApi.warning('Tổng kết sự kiện không được để trống!');
       return;
     }
     try {
       if (dataState?.summary) {
-        await api.put("/report/get-reports-of-event", {
-          reportId: dataState.summary.id,
+        await api.put('/report/get-reports-of-event', {
+          reportId: dataState?.summary.id,
           content: value,
         });
-        messageApi.success("Cập nhật tổng kết sự kiện thành công");
+        messageApi.success('Cập nhật tổng kết sự kiện thành công');
       } else {
-        await api.post("/report/create-report-of-event", {
+        await api.post('/report/create-report-of-event', {
           eventId: id,
           content: value,
         });
-        messageApi.success("Thêm tổng kết sự kiện thành công");
+        messageApi.success('Thêm tổng kết sự kiện thành công');
       }
       setOpenModalSummary(false);
     } catch (err) {
-      messageApi.error("Có lỗi xảy ra khi gửi tổng kết!");
+      messageApi.error('Có lỗi xảy ra khi gửi tổng kết!');
     }
   };
 
@@ -362,13 +363,13 @@ const DetailEvent = () => {
       } finally {
       }
     };
-    if (user?.role === "Volunteer") {
+    if (user?.role === 'Volunteer') {
       checkRated();
     }
   }, [resetKey]);
 
   const handleClickAttendance = () => {
-    window.open(`/event/attendance/${id}`, "_blank");
+    window.open(`/event/attendance/${id}`, '_blank');
     // navigate(`/event/attendance/${id}`);
   };
 
@@ -394,10 +395,13 @@ const DetailEvent = () => {
         setIsLoading(false);
       }
     } else {
-      messageApi.error("Số tiền phải nằm trong khoảng 5.000 - 1.000.000 VNĐ");
+      messageApi.error('Số tiền phải nằm trong khoảng 5.000 - 1.000.000 VNĐ');
     }
   };
-  console.log(dataState);
+
+  const handleChange = (value: string) => {
+    setSummaryValue((value) => value); // cập nhật state, để ReactQuill nhận giá trị mới
+  };
 
   return (
     <div>
@@ -417,7 +421,7 @@ const DetailEvent = () => {
                   {
                     title: (
                       <span className="text-primary-color font-medium">
-                        {dataState?.name || "Tên sự kiện"}
+                        {dataState?.name || 'Tên sự kiện'}
                       </span>
                     ),
                   },
@@ -426,15 +430,15 @@ const DetailEvent = () => {
             )}
             {!fromTitle && (
               <div>
-                Sự kiện:{" "}
+                Sự kiện:{' '}
                 <span className="text-primary-color font-medium">
-                  {dataState?.name || "Tên sự kiện"}
+                  {dataState?.name || 'Tên sự kiện'}
                 </span>
               </div>
             )}
 
             {/* Organization sight */}
-            {user?.role === "Organization" &&
+            {user?.role === 'Organization' &&
               new Date() > new Date(dataState?.timePublish || 0) &&
               new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
               Number(user?.AccId) === dataState?.orgAccountId && (
@@ -462,36 +466,36 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
-            {user?.role === "Organization" &&
+            {user?.role === 'Organization' &&
               new Date() < new Date(dataState?.timePublish || 0) &&
               new Date() < new Date(dataState?.startTime || 0) && //chưa bắt đầu
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
-                  Thời gian xuất bản:{" "}
+                  Thời gian xuất bản:{' '}
                   <span className="text-primary-color">
                     {dataState?.timePublish
                       ? `${new Date(dataState.timePublish).getFullYear()}-${(
                           new Date(dataState.timePublish).getMonth() + 1
                         )
                           .toString()
-                          .padStart(2, "0")}-${new Date(dataState.timePublish)
+                          .padStart(2, '0')}-${new Date(dataState.timePublish)
                           .getDate()
                           .toString()
-                          .padStart(2, "0")} ${new Date(dataState.timePublish)
+                          .padStart(2, '0')} ${new Date(dataState.timePublish)
                           .getHours()
                           .toString()
-                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .padStart(2, '0')}:${new Date(dataState.timePublish)
                           .getMinutes()
                           .toString()
-                          .padStart(2, "0")}:${new Date(dataState.timePublish)
+                          .padStart(2, '0')}:${new Date(dataState.timePublish)
                           .getSeconds()
                           .toString()
-                          .padStart(2, "0")}`
-                      : ""}
+                          .padStart(2, '0')}`
+                      : ''}
                   </span>
                 </div>
               )}
-            {user?.role === "Organization" &&
+            {user?.role === 'Organization' &&
               new Date() > new Date(dataState?.endTime || 0) && //đã kết thúc
               Number(user?.AccId) === dataState?.orgAccountId && (
                 <div className="lg:flex lg:gap-2">
@@ -500,26 +504,24 @@ const DetailEvent = () => {
                     onClick={handleSummaryOpen}
                   >
                     {dataState.summary
-                      ? "Cập nhật tổng kết sự kiện"
-                      : "Viết tổng kết sự kiện"}
+                      ? 'Cập nhật tổng kết sự kiện'
+                      : 'Viết tổng kết sự kiện'}
                     <Modal
                       title={
                         dataState.summary
-                          ? "Cập nhật tổng kết sự kiện"
-                          : "Tạo tổng kết sự kiện"
+                          ? 'Cập nhật tổng kết sự kiện'
+                          : 'Tạo tổng kết sự kiện'
                       }
                       open={OpenModalSummary}
                       onOk={handleCreateSummary}
                       onCancel={handleSummaryCancel}
                     >
-                      <TextArea
-                        ref={summaryRef}
-                        defaultValue={summaryValue}
-                        className="mb-4"
-                        showCount
-                        maxLength={1000}
+                      <ReactQuill
+                        theme="snow"       
+                        value={summaryValue}               
+                        onChange={handleChange}
                         placeholder="Tổng kết sự kiện..."
-                        style={{ height: 300, resize: "none" }}
+                        style={{ height: 250 }}
                       />
                     </Modal>
                   </div>
@@ -532,7 +534,7 @@ const DetailEvent = () => {
                 </div>
               )}
 
-            {user?.role === "Volunteer" &&
+            {user?.role === 'Volunteer' &&
               new Date(dataState?.endTime || 0) < new Date() && (
                 <div className="lg:flex lg:gap-2">
                   <div
@@ -546,24 +548,24 @@ const DetailEvent = () => {
                       onCancel={handleSummaryCancel}
                       footer={() => null}
                     >
-                      <p>{summaryValue}</p>
+                      <p dangerouslySetInnerHTML={{ __html: summaryValue }}></p>
                     </Modal>
                   </div>
                 </div>
               )}
-            {user?.role === "Volunteer" &&
+            {user?.role === 'Volunteer' &&
               statusEvent === 2 &&
               new Date() < new Date(dataState?.startTime || 0) && (
                 <div className="lg:flex lg:gap-2">
                   <div
-                    onClick={() => handleInvitation("yes")}
+                    onClick={() => handleInvitation('yes')}
                     className="gap-2 cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-primary-color rounded-xl text-white lg:w-auto w-full my-1 flex items-center justify-center"
                   >
                     <span>Chấp nhận lời mời</span>
                     <FaCheck />
                   </div>
                   <div
-                    onClick={() => handleInvitation("no")}
+                    onClick={() => handleInvitation('no')}
                     className="flex items-center justify-center gap-2 cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 border-2 border-primary-color rounded-xl px-6 py-2 bg-white text-primary-color font-medium lg:w-auto w-full text-center my-1"
                   >
                     <span>Từ chối lời mời</span>
@@ -573,14 +575,14 @@ const DetailEvent = () => {
               )}
             {dataState?.startTime &&
               new Date() < new Date(dataState?.startTime) &&
-              user?.role !== "Organization" && (
+              user?.role !== 'Organization' && (
                 <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                   <div className="text-primary-color inline-block py-2 px-12 rounded-full font-medium">
                     Sự kiện chưa diễn ra...
                   </div>
                 </div>
               )}
-            {user?.role !== "Organization" &&
+            {user?.role !== 'Organization' &&
               dataState?.startTime &&
               dataState?.endTime &&
               new Date() >= new Date(dataState?.startTime) &&
@@ -591,7 +593,7 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
-            {user?.role !== "Organization" &&
+            {user?.role !== 'Organization' &&
               dataState?.endTime &&
               new Date() > new Date(dataState?.endTime) && (
                 <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
@@ -600,7 +602,7 @@ const DetailEvent = () => {
                   </div>
                 </div>
               )}
-            {user?.role !== "Volunteer" &&
+            {user?.role !== 'Volunteer' &&
               dataState?.endTime &&
               new Date() > new Date(dataState?.endTime) && (
                 <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
@@ -611,7 +613,7 @@ const DetailEvent = () => {
               )}
             {/* Organization sight */}
             {/* Volunteer event end */}
-            {user?.role === "Volunteer" &&
+            {user?.role === 'Volunteer' &&
               statusEvent === 1 && //có join
               dataState?.endTime && //hết sự kiện
               !isRated &&
@@ -635,7 +637,7 @@ const DetailEvent = () => {
               className="w-full lg:h-60 h-20 object-cover bg-primary-color"
               onLoad={() => setIsLoading(false)}
               onError={(e) =>
-                (e.currentTarget.src = "/materials/placeholder-image.jpg")
+                (e.currentTarget.src = '/materials/placeholder-image.jpg')
               }
             />
             <div className="w-full lg:grid lg:grid-cols-10 bg-primary-color">
@@ -655,7 +657,7 @@ const DetailEvent = () => {
                     <img
                       src={
                         !dataState?.organizationAvatar
-                          ? "/materials/blank-profile-picture-973460_1280.png"
+                          ? '/materials/blank-profile-picture-973460_1280.png'
                           : dataState.organizationAvatar
                       }
                       className="w-10 h-10 rounded-full"
@@ -732,9 +734,9 @@ const DetailEvent = () => {
                   </div>
                 )} */}
               {dataState?.startTime &&
-                user?.role === "Organization" &&
+                user?.role === 'Organization' &&
                 new Date() < new Date(dataState?.startTime) &&
-                user?.role === "Organization" && (
+                user?.role === 'Organization' && (
                   <div className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
                       Sự kiện chưa diễn ra
@@ -743,7 +745,7 @@ const DetailEvent = () => {
                 )}
 
               {dataState?.startTime &&
-                user?.role === "Organization" &&
+                user?.role === 'Organization' &&
                 dataState?.endTime &&
                 new Date() >= new Date(dataState?.startTime) &&
                 new Date() <= new Date(dataState?.endTime) && (
@@ -755,7 +757,7 @@ const DetailEvent = () => {
                 )}
 
               {dataState?.endTime &&
-                user?.role === "Organization" &&
+                user?.role === 'Organization' &&
                 new Date() >= new Date(dataState?.endTime) && (
                   <div className="lg:col-span-4 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
                     <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium opacity-65">
@@ -766,7 +768,7 @@ const DetailEvent = () => {
 
               {/* Volunteer already sign */}
               <div className="lg:col-span-4 px-4 flex lg:items-center lg:justify-end mb-6 lg:mb-0 pb-6 lg:pb-0 gap-4">
-                {user?.role === "Volunteer" &&
+                {user?.role === 'Volunteer' &&
                   statusEvent === 1 &&
                   dataState?.startTime &&
                   new Date() <= new Date(dataState?.startTime) && (
@@ -778,7 +780,7 @@ const DetailEvent = () => {
                       <FaCheck />
                     </div>
                   )}
-                {user?.role === "Volunteer" &&
+                {user?.role === 'Volunteer' &&
                   statusEvent === 0 &&
                   dataState?.startTime &&
                   new Date() <
@@ -807,7 +809,7 @@ const DetailEvent = () => {
                     </div>
                   </div>
                 )}
-                {dataState?.hasDonate && user?.role !== "Organization" && (
+                {dataState?.hasDonate && user?.role !== 'Organization' && (
                   <div className="flex items-center gap-1 font-medium">
                     <div
                       onClick={handleOpenDonation}
@@ -876,25 +878,25 @@ const DetailEvent = () => {
                         <div>
                           {new Date(
                             dataState?.startTime || new Date()
-                          ).toLocaleString("vi-VN", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
+                          ).toLocaleString('vi-VN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
                             hour12: false, // 24h format, bỏ nếu mày thích AM/PM
                           })}
                           <TbTilde className="inline-block mx-2" />
                           {new Date(
                             dataState?.endTime || new Date()
-                          ).toLocaleString("vi-VN", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
+                          ).toLocaleString('vi-VN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
                             hour12: false,
                           })}
                         </div>
@@ -924,12 +926,12 @@ const DetailEvent = () => {
                   className="hidden lg:block"
                   // listItem={listItem}
                   listItem={dataState?.images}
-                  size={"big"}
+                  size={'big'}
                 />
                 <MySlider
                   className="block lg:hidden"
                   listItem={dataState?.images}
-                  size={"small"}
+                  size={'small'}
                 />
               </div>
               <div></div>
@@ -955,7 +957,7 @@ const DetailEvent = () => {
                     <div
                       key={index}
                       className={`p-2 flex items-start gap-4 select-none ${
-                        index !== listRating.length - 1 ? "mb-6" : ""
+                        index !== listRating.length - 1 ? 'mb-6' : ''
                       } `}
                     >
                       <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -987,13 +989,13 @@ const DetailEvent = () => {
                         </div>
                         <div className="mb-2">{item.feedback}</div>
                         <div className="text-stone-500">
-                          {new Date(item.time).toLocaleString("en-US", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
+                          {new Date(item.time).toLocaleString('en-US', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
                             hour12: false,
                           })}
                         </div>
@@ -1040,10 +1042,10 @@ const DetailEvent = () => {
         theme={{
           components: {
             Pagination: {
-              itemActiveBg: "#3BA769",
-              colorPrimary: "white",
-              colorPrimaryHover: "white",
-              colorPrimaryBorder: "white",
+              itemActiveBg: '#3BA769',
+              colorPrimary: 'white',
+              colorPrimaryHover: 'white',
+              colorPrimaryBorder: 'white',
             },
           },
         }}
@@ -1087,7 +1089,7 @@ const DetailEvent = () => {
             min={10000}
           />
           <div>
-            Tối thiểu: 10.000{" "}
+            Tối thiểu: 10.000{' '}
             <span className="text-primary-color font-medium">VND</span>
           </div>
         </Modal>
