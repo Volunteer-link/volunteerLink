@@ -247,8 +247,11 @@ const VolunteerSuggestions = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white border-2 border-primary-color rounded-full py-3 px-5 flex items-center gap-3">
-            <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" />
+          <div className="bg-white border-2 border-primary-color rounded-full py-3 px-5 flex items-center gap-3 text-base font-medium">
+            <span>
+              <span>Tìm kiếm</span>
+              <span className="text-primary-color"> AI</span>:
+            </span>
             <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
           </div>
         </div>
