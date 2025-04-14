@@ -269,7 +269,7 @@ const Header: React.FC<{}> = () => {
       </div>
       <div className="col-span-3 hidden md:block">
         <ul className="flex gap-8 text-white text-sm h-full items-center">
-          <li className="hover:scale-110 transition-all cursor-pointer">
+          <li className="hover:scale-110 transition-all cursor-pointer text-base">
             <NavLink
               to="/home"
               className={({ isActive }) =>

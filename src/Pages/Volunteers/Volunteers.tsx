@@ -78,9 +78,11 @@ const Volunteers = () => {
         />
       </div>
       <LineSpacing />
-      <div className="items-center gap-1 justify-center text-2xl flex my-10">
-        <div className=" text-shadow-md">Các tình nguyện viên </div>
-        <div className="text-primary-color">của chúng tôi</div>
+      <div className="items-center gap-1 justify-center text-2xl flex my-10 font-medium">
+        <div className="">
+          Các <span className="text-primary-color">tình nguyện viên</span>{" "}
+        </div>
+        <div className="">của chúng tôi</div>
       </div>
       <div className="my-4">
         <div className="flex items-center justify-center gap-2">

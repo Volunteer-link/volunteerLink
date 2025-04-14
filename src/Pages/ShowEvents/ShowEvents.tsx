@@ -1,4 +1,4 @@
-import { IoLocation } from "react-icons/io5";
+import { IoFilter, IoLocation } from "react-icons/io5";
 import EventCard from "../Components/EventCard";
 import LineSpacing from "../Components/LineSpacing";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +23,8 @@ import { MarkerPosition } from "../../model/MapBoxModel/MarkerPosition";
 import useWebSocket from "../../Hook/useWebSocket";
 import { WiStars } from "react-icons/wi";
 import { TabsProps } from "antd/lib";
+import { BsFilterLeft } from "react-icons/bs";
+import { HiLightBulb } from "react-icons/hi2";
 const pageSize: number = 8;
 const ShowEvent = () => {
   const [listField, setListField] = useState<Field[]>();
@@ -259,52 +261,77 @@ const ShowEvent = () => {
 
       <div className="w-full relative">
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fimage%204.png?alt=media&token=a2d8c965-2b47-4445-afa1-bedd2578fd14"
+          src="https://img.freepik.com/free-photo/group-teenagers-bedroom-putting-their-hands-together-community-temwork-concept_53876-30659.jpg?t=st=1744620404~exp=1744624004~hmac=a0b09aa686038e1fec5ef07c4acbce0b6ff6eec89d55531872a8b88dc1f4472c&w=1380"
           alt=""
-          className="w-full lg:scale-110 mb-6 h-56 object-cover"
+          className="w-full lg:scale-110 mb-8 h-80 object-cover"
         />
         {/* Search */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
-          <div className="lg:w-[36rem] w-4/5 bg-white rounded-full flex items-center justify-between">
+        <div className="absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
+          <div className="w-full rounded-full flex items-center bg-white shadow-custom-green justify-between">
             <input
               ref={refSearch}
               type="text"
               placeholder="Tìm kiếm theo tên sự kiện..."
-              className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
+              className="w-2/3 outline-none py-4 px-8 rounded-full relative text-base"
               onKeyDown={handleEnterKey}
               onChange={handleChangeInput}
             />
-            <div className="flex pr-2 items-center gap-4 select-none">
+            <div className="flex pr-2 items-center gap-8 select-none">
               {!AISearch && (
                 <Tooltip open={!!address} title={address} color={"#3BA769"}>
-                  <IoLocation
-                    onClick={showModal}
-                    className="text-2xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
-                  />
+                  <div className="flex gap-2 items-center">
+                    <IoLocation
+                      onClick={showModal}
+                      className="text-3xl text-primary-color cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+                    />
+                    <span className="font-medium text-primary-color">
+                      Địa điểm
+                    </span>
+                  </div>
                 </Tooltip>
               )}
 
               <div
                 onClick={handleClickSearch}
-                className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+                className="bg-primary-color text-white lg:px-10 text-nowrap px-8 py-2 lg:py-2 lg:text-base rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all font-medium"
               >
                 Tìm kiếm
               </div>
             </div>
           </div>
           {user?.role === "Volunteer" && (
-            <div className="bg-white rounded-full py-3 px-5 flex items-center gap-3">
-              <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" />
+            <div className="bg-white rounded-full py-3 px-5 flex items-center gap-3 shadow-custom-green">
+              {/* <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" /> */}
+              <span className="text-nowrap">
+                <span className="font-medium">Tìm kiếm </span>
+                <span className="font-medium text-primary-color text-xl">
+                  {" "}
+                  AI
+                </span>
+                <span>:</span>
+              </span>
               <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
             </div>
           )}
         </div>
         {/* Search */}
       </div>
+      {user?.role === "Volunteer" && (
+        <div>
+          <div className="flex items-center gap-2 bg-green-200 px-2 py-1 rounded-full text-primary-color border-[1px] border-primary-color">
+            <HiLightBulb />
+            <div>
+              <span className="font-medium">Gợi ý:</span> Bạn có thể tìm kiếm
+              thông minh với chế độ "Tìm kiếm AI"
+            </div>
+          </div>
+        </div>
+      )}
+
       {checkSearch && (
         <>
           <div className="">
-            <div className="lg:col-span-2 col-span-7">
+            <div className="lg:col-span-2 mt-2 col-span-7">
               <div className="inline-block mr-1 text-sm">Kết quả:</div>
               <div className="inline-block text-base font-medium text-primary-color">
                 {totalSearch} sự kiện
@@ -365,13 +392,15 @@ const ShowEvent = () => {
       </div> */}
       {showRelevent && (
         <>
-          <div className="items-center gap-1 justify-center text-2xl flex mt-10 mb-6">
+          <div className="items-center gap-1 text-lg flex justify-center my-6 font-medium">
             <div>Sự kiện</div>
-            <div className="text-primary-color">gợi ý</div>
+            <div className="text-primary-color">gợi ý</div>{" "}
+            <span> cho bạn</span>
+            <div className="w-[2px] bg-stone-400 h-8 mx-1"></div>
             <div>
               <img
                 src="/materials/VTLAI_blackbrain_transparentbg.png"
-                className="w-40"
+                className="w-40 select-none"
                 alt=""
               />
             </div>
@@ -433,6 +462,7 @@ const ShowEvent = () => {
       </div> */}
       <div className="">
         <div className="lg:col-span-6 flex items-center gap-1 py-2">
+          <BsFilterLeft className="text-primary-color font-bold text-2xl" />
           <div className="text-primary-color font-medium">Lĩnh vực:</div>
           <div>
             <Select

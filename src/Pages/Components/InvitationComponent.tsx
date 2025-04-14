@@ -49,7 +49,7 @@ const InvitationComponent = () => {
         <Empty className="mt-10" description="Bạn chưa có lời mời nào" />
       )}
       {listInvitation?.map((item, index) => (
-        <div key={index} className="container mx-auto">
+        <div key={index} className="container mx-auto text-base">
           <div
             onClick={() => handleClickInvitation(item.eventId)}
             className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
