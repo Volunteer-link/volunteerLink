@@ -134,8 +134,10 @@ const NotificationPage = () => {
           className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
         >
           <div className="lg:max-w-96 max-w-52">
-            <div className="">{item.content}</div>
-            <div>Thời gian: {new Date(item.time).toLocaleString("sv-SE")}</div>
+            <div className="text-base">{item.content}</div>
+            <div className="text-stone-500">
+              Thời gian: {new Date(item.time).toLocaleString("sv-SE")}
+            </div>
           </div>
           {(item.type === 0 ||
             item.type === 8 ||
