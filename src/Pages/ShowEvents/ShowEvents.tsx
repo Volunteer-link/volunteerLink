@@ -261,7 +261,7 @@ const ShowEvent = () => {
 
       <div className="w-full relative">
         <img
-          src="https://img.freepik.com/free-photo/group-teenagers-bedroom-putting-their-hands-together-community-temwork-concept_53876-30659.jpg?t=st=1744620404~exp=1744624004~hmac=a0b09aa686038e1fec5ef07c4acbce0b6ff6eec89d55531872a8b88dc1f4472c&w=1380"
+          src="/materials/cover.jpg"
           alt=""
           className="w-full lg:scale-110 mb-8 h-80 object-cover"
         />
