@@ -849,6 +849,7 @@ const DetailEvent = () => {
                     )}
                   {dataState?.hasDonate &&
                     user?.role !== "Organization" &&
+                    user?.role !== "Admin" &&
                     new Date() < new Date(dataState.startTime) && (
                       <div className="flex items-center gap-1 font-medium">
                         <div

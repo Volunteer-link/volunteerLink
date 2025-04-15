@@ -366,14 +366,17 @@ const Header: React.FC<{}> = () => {
         )}
         {user && (
           <div className="flex gap-10 items-center justify-center h-full">
-            <Badge dot={notiStatus}>
-              <div
-                onClick={handleNotification}
-                className="cursor-pointer hover:scale-110 transition-transform"
-              >
-                <VscBell className="text-2xl text-white" />
-              </div>
-            </Badge>
+            {user?.role !== "Admin" && (
+              <Badge dot={notiStatus}>
+                <div
+                  onClick={handleNotification}
+                  className="cursor-pointer hover:scale-110 transition-transform"
+                >
+                  <VscBell className="text-2xl text-white" />
+                </div>
+              </Badge>
+            )}
+
             {/* <div className="cursor-pointer hover:scale-110 transition-transform">
               <VscBellDot className="text-2xl text-white" />
             </div> */}
