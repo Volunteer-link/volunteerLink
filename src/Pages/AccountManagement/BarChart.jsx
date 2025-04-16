@@ -15,7 +15,7 @@ const BarChart = ({ chartData }) => {
   const data = {
     labels: chartData.map(item => item.month),
     datasets: [{
-      label: 'Tổng tiền donate (VNĐ)',
+      label: 'Tổng tiền ủng hộ (VNĐ)',
       data: chartData.map(item => item.money),
       backgroundColor: '#36A2EB'
     }]
@@ -26,7 +26,7 @@ const BarChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Donate theo tháng (Bar Chart)'
+        text: 'Ủng hộ theo tháng'
       }
     }
   };

@@ -88,7 +88,7 @@ const Volunteer: React.FC<{
         "Event has to start after 0.5 days to adding more people or this event has not been published"
       ) {
         messageApi.error(
-          "Không thể xử lý yêu cầu vì sự kiện còn ít hơn 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+          "Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
       }
       setIsLoading(false);
@@ -121,7 +121,7 @@ const Volunteer: React.FC<{
         "Start time has to greater than now 1 day to invite anyone or this event has not been published"
       ) {
         messageApi.error(
-          "Không thể mời tình nguyện viên vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+          "Không thể mời tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
       }
       setIsLoading(false);
@@ -144,7 +144,7 @@ const Volunteer: React.FC<{
         "Event will start after 1 day or this event has not been published. Can't remove volunteer."
       ) {
         messageApi.error(
-          "Không thể xóa tình nguyện viên vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra!"
+          "Không thể xóa tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra!"
         );
       }
       setIsLoading(false);

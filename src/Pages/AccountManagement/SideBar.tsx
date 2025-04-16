@@ -60,7 +60,7 @@ const SideBar: React.FC<{
         >
           {mode === "finance" && <FaChevronRight />}
           <MdAttachMoney className="" />
-          Quản lý tài chính
+          Thống kê tài chính
         </div>
         <div
           onClick={() => handleChangeMode("create")}

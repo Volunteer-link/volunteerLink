@@ -4,4 +4,5 @@ export interface RequestType {
   pictureProfile: string;
   requestId: number;
   time: Date | string;
+  isOverdue: boolean;
 }

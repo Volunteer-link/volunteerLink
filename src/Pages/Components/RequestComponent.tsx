@@ -48,7 +48,7 @@ const RequestComponent = () => {
         <Empty className="mt-10" description="Bạn chưa có lời mời nào" />
       )}
       {listRequest?.map((item, index) => (
-        <div key={index} className="">
+        <div key={index} className="text-base">
           <div
             onClick={() => handleClickInvitation(item.eventId)}
             className="bg-white w-full border-2 border-primary-color rounded-lg my-4 py-2 px-4 hover:scale-105 transition-all cursor-pointer hover:shadow-2xl flex items-center justify-between"
@@ -67,8 +67,14 @@ const RequestComponent = () => {
               </div>
               <div>
                 Trạng thái:{" "}
-                <span className="text-primary-color font-medium">
-                  Đang chờ xác nhận
+                <span
+                  className={` font-medium ${
+                    item.isOverdue ? "text-red-500" : "text-primary-color"
+                  }`}
+                >
+                  {item.isOverdue
+                    ? "Lời mời không được phê duyệt"
+                    : "Đang chờ xác nhận"}
                 </span>
               </div>
             </div>
