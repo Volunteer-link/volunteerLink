@@ -319,8 +319,8 @@ const DetailEvent = () => {
         messageApi.success('Thêm tổng kết sự kiện thành công');
       }
       setOpenModalSummary(false);
-    } catch (err) {
-      messageApi.error('Có lỗi xảy ra khi gửi tổng kết!');
+    } catch (err: any) {
+      if (err.status == 400) messageApi.error(`${err.response.data.Message}`);
     }
   };
 

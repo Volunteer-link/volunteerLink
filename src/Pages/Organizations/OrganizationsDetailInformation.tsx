@@ -19,10 +19,10 @@ const OrganizationsDetailInformation = ({
       <div className="max-w-[800px] mx-auto w-full">
         <div className="flex py-4 flex-col gap-2">
           <Typography.Text>
-            Hotline: {organization?.phoneNumber || "Không có thông tin"}
+            Số điện thoại: {organization?.phoneNumber || "Không có thông tin"}
           </Typography.Text>
           <Typography.Link target="_blank">
-            Facebook:{" "}
+          Mạng xã hội:{" "}
             <a
               href={organization?.urlFacebook ?? "#"}
               target="_blank"

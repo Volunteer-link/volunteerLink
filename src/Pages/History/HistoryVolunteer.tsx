@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import api from "../../apiService/useFetch";
-import { Table } from "antd";
+import { useEffect, useRef, useState } from 'react';
+import api from '../../apiService/useFetch';
+import { Button, message, Table } from 'antd';
 
 const HistoryVolunteer = () => {
   const refSearch = useRef<HTMLInputElement>(null);
@@ -20,7 +20,8 @@ const HistoryVolunteer = () => {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [searchKey, setSearchKey] = useState<string>("");
+  const [searchKey, setSearchKey] = useState<string>('');
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,37 +37,37 @@ const HistoryVolunteer = () => {
 
   const columns = [
     {
-      title: "Mã giao dịch",
-      dataIndex: "transactionId",
-      key: "money",
+      title: 'Mã giao dịch',
+      dataIndex: 'transactionId',
+      key: 'money',
       render: (value: number) => (
         <span className="text-stone-500">#{value}</span>
       ),
     },
     {
-      title: "Số tiền quyên góp",
-      dataIndex: "money",
-      key: "money",
+      title: 'Số tiền quyên góp',
+      dataIndex: 'money',
+      key: 'money',
       render: (value: number) =>
-        `${new Intl.NumberFormat("vi-VN").format(value)} VND`,
+        `${new Intl.NumberFormat('vi-VN').format(value)} VND`,
     },
     {
-      title: "Ngày quyên góp",
-      dataIndex: "createdDate",
-      key: "createdDate",
+      title: 'Ngày quyên góp',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
       render: (value: string) =>
-        new Date(value).toLocaleString("vi-VN", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
+        new Date(value).toLocaleString('vi-VN', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         }),
     },
     {
-      title: "Sự kiện",
-      dataIndex: "eventName",
-      key: "eventName",
+      title: 'Sự kiện',
+      dataIndex: 'eventName',
+      key: 'eventName',
       render: (text: string, record: any) => (
         <a
           href={`/detail-event/${record.eventId}`}
@@ -85,15 +86,33 @@ const HistoryVolunteer = () => {
     setCurrentPage(1);
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleClickSearch();
     }
   };
+
+  const handleExportToExcel = async () => {
+    try {
+      const { data } = await api.get('/donate/export-excel-history');
+      messageApi.success('Xuất file thành công');
+    } catch (error) {
+      messageApi.success('Xuất file thất bại');
+    }
+  };
+
   return (
     <div>
-      <div className="text-primary-color text-lg font-medium my-4">
-        Lịch sử giao dịch
+      <div className="flex justify-between">
+        <div className="text-primary-color text-lg font-medium my-4">
+          Lịch sử giao dịch
+        </div>
+        {!!stateTransaction.length && (
+          <Button onClick={handleExportToExcel} type="primary">
+            Xuất thành file Excel
+          </Button>
+        )}
       </div>
+
       <div className="my-4">
         <div className="flex items-center justify-center gap-2">
           <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">

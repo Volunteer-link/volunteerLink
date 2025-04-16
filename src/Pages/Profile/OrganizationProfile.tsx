@@ -376,7 +376,7 @@ const OrganizationProfile = () => {
             name="urlFacebook"
             initialValue={organization?.urlFacebook}
             key={organization?.urlFacebook}
-            rules={[{ required: true, message: 'Vui lòng nhập link facebook' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập đường dẫn mạng xã hội' }]}
             className="mb-4 mt-3 max-w-80"
           >
             <Input />
