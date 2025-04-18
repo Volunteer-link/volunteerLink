@@ -243,7 +243,7 @@ const Volunteer: React.FC<{
   };
 
   return (
-    <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
+    <div className="bg-white px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
       {contextHolder}
       <div className="flex gap-8 items-center">
         <div className="relative rounded-full overflow-hidden">

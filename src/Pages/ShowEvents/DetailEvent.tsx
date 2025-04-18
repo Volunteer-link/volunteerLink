@@ -415,8 +415,8 @@ const DetailEvent = () => {
           <div className="flex items-center gap-2 bg-green-200 px-2 py-1 rounded-full text-primary-color border-[1px] border-primary-color">
             <HiLightBulb />
             <div>
-              <span className="font-medium">Gợi ý:</span> Bạn chỉ có thể gửi yêu
-              cầu tham gia trước khi sự kiện bắt đầu 1 ngày
+              <span className="font-medium">Ghi chú:</span> Bạn chỉ có thể gửi
+              yêu cầu tham gia trước khi sự kiện bắt đầu 1 ngày
             </div>
           </div>
         )}
@@ -424,7 +424,7 @@ const DetailEvent = () => {
           <div className="flex items-center gap-2 bg-green-200 px-2 py-1 rounded-full text-primary-color border-[1px] border-primary-color">
             <HiLightBulb />
             <div>
-              <span className="font-medium">Gợi ý:</span> Bạn chỉ có thể mời
+              <span className="font-medium">Ghi chú:</span> Bạn chỉ có thể mời
               tình nguyện viên tham gia trước khi sự kiện bắt đầu 1 ngày
             </div>
           </div>
@@ -828,7 +828,7 @@ const DetailEvent = () => {
                         onClick={handleJoinRequest}
                       >
                         <div className="bg-white text-primary-color inline-block py-2 px-12 rounded-full font-medium lg:hover:opacity-95 lg:hover:scale-105 duration-300 cursor-pointer">
-                          Tham gia sự kiện
+                          Yêu cầu tham gia sự kiện
                         </div>
                       </div>
                     )}

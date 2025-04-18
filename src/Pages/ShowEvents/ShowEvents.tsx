@@ -303,7 +303,7 @@ const ShowEvent = () => {
             <div className="bg-white rounded-full py-3 px-5 flex items-center gap-3 shadow-custom-green">
               {/* <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" /> */}
               <span className="text-nowrap">
-                <span className="font-medium">Tìm kiếm </span>
+                <span className="font-medium">Tìm kiếm bằng</span>
                 <span className="font-medium text-primary-color text-xl">
                   {" "}
                   AI
@@ -321,7 +321,7 @@ const ShowEvent = () => {
           <div className="flex items-center gap-2 bg-green-200 px-2 py-1 rounded-full text-primary-color border-[1px] border-primary-color">
             <HiLightBulb />
             <div>
-              <span className="font-medium">Gợi ý:</span> Bạn có thể tìm kiếm
+              <span className="font-medium">Ghi chú:</span> Bạn có thể tìm kiếm
               thông minh với chế độ "Tìm kiếm AI"
             </div>
           </div>
