@@ -460,11 +460,11 @@ const DetailEvent = () => {
               />
             )} */}
               {/* {!fromTitle && ( */}
-              <div>
-                Sự kiện:{" "}
-                <span className="text-primary-color text-lg font-medium">
+              <div className="">
+                <div className="inline-block font-medium">Sự kiện</div>
+                <div className="text-primary-color text-lg font-medium w-96 ">
                   {dataState?.name || "Tên sự kiện"}
-                </span>
+                </div>
               </div>
               {/* )} */}
 
