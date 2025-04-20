@@ -29,7 +29,7 @@ const TopDonatedEventsChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Top Sự Kiện Được Ủng Hộ Nhiều Nhất',
+        text: 'Những Sự Kiện Được Ủng Hộ Nhiều Nhất',
         font: {
           size: 12,
         },

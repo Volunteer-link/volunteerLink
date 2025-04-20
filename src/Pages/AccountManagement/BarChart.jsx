@@ -15,8 +15,8 @@ const BarChart = ({ chartData }) => {
   const data = {
     labels: chartData.map(item => item.month),
     datasets: [{
-      label: 'Tổng tiền ủng hộ (VNĐ)',
-      data: chartData.map(item => item.money),
+      label: 'Tổng số tiền ủng hộ (VNĐ)',
+      data: chartData.map(item => item.money), 
       backgroundColor: '#36A2EB'
     }]
   };

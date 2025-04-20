@@ -30,7 +30,7 @@ const TopDonorsBarChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Top người ủng hộ nhiều nhất',
+        text: 'Những người ủng hộ nhiều nhất',
         font: {
           size: 12
         }
