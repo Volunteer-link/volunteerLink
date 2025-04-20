@@ -83,6 +83,8 @@ const Volunteer: React.FC<{
         }
       }, 1000);
     } catch (e: any) {
+      console.log(e);
+
       if (
         e.response.data.Message ===
         "Event has to start after 0.5 days to adding more people or this event has not been published"
@@ -90,6 +92,20 @@ const Volunteer: React.FC<{
         messageApi.error(
           "Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
+      }
+
+      if (e.response.data.Message === "Request is not exist") {
+        messageApi.error("Yêu cầu tham gia không tồn tại!");
+        setTimeout(() => {
+          if (setResetState) {
+            setIsLoading(false);
+            setResetState((prev) => ++prev);
+          }
+          if (setResetStateAll) {
+            setIsLoading(false);
+            setResetStateAll((prev) => ++prev);
+          }
+        }, 1000);
       }
       setIsLoading(false);
     } finally {
