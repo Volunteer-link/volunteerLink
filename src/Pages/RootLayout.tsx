@@ -301,7 +301,7 @@ export default function RootLayout() {
           </div>
         </div>
       )}
-      <LineSpacing />
+      {shouldHideImage && <LineSpacing />}
       {shouldHideImage && (
         <div className="font-quicksand">
           <div className="relative">

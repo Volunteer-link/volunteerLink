@@ -70,6 +70,12 @@ const ListSentRequest = () => {
         setCurrentPage(1);
       }, 1000);
     } catch (e: any) {
+      messageApi.error(e.response.data.Message);
+      setTimeout(() => {
+        fetchInvite();
+        setIsLoading(false);
+        setCurrentPage(1);
+      }, 1000);
     } finally {
     }
   };

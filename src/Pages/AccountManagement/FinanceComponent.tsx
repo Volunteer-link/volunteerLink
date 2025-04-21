@@ -80,25 +80,25 @@ const FinanceComponent = () => {
       <div className="space-y-8">
         {/* Biểu đồ donate theo tháng */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <div className="text-lg font-semibold text-gray-700 mb-4">Tổng tiền ủng hộ theo tháng</div>
+          <div className="text-lg font-semibold text-gray-700 mb-4">Tổng số tiền ủng hộ theo tháng</div>
           <BarChart chartData={barChartData} />
         </div>
 
         {/* Biểu đồ donate theo ngày */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <div className="text-lg font-semibold text-gray-700 mb-4">Tổng tiền ủng hộ theo ngày</div>
+          <div className="text-lg font-semibold text-gray-700 mb-4">Tổng số tiền ủng hộ theo ngày</div>
           <DonateChart chartData={lineChartData} />
         </div>
 
         {/* Biểu đồ top người donate */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <div className="text-lg font-semibold text-gray-700 mb-4">Top người ủng hộ nhiều nhất</div>
+          <div className="text-lg font-semibold text-gray-700 mb-4">Những người ủng hộ nhiều nhất</div>
           <TopDonorsBarChart chartData={donorChartData} />
         </div>
 
         {/* Biểu đồ top sự kiện donate */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <div className="text-lg font-semibold text-gray-700 mb-4">Top sự kiện được ủng hộ nhiều nhất</div>
+          <div className="text-lg font-semibold text-gray-700 mb-4">Những sự kiện được ủng hộ nhiều nhất</div>
           <TopDonatedEventsChart chartData={eventDonationData} /> {/* Sử dụng component top sự kiện donate */}
         </div>
       </div>
