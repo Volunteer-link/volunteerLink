@@ -40,7 +40,7 @@ const EventCard: React.FC<{
     e.stopPropagation();
     try {
       const { data } = await api.delete(
-        `event/remove-an-event??EventId=${eventObject.id}`
+        `/event/remove-an-event?EventId=${eventObject.id}`
       );
       setShowRemove(true);
     } catch (error: any) {

@@ -154,7 +154,6 @@ const MyProfile = () => {
     const fetchData = async () => {
       try {
         const res = await api.get(`/profile/volunteer`);
-
         const data = res.data.data;
         console.log(data);
 
