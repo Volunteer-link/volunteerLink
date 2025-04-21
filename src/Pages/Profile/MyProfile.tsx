@@ -15,27 +15,27 @@ import {
   Select,
   Spin,
   Upload,
-} from 'antd';
-import { useEffect, useRef, useState } from 'react';
-import { decodedCookie, getCookie } from '../../ultils/cookie';
-import api, { setupInterceptors } from '../../apiService/useFetch';
-import axios from 'axios';
-import ErrorSolving from '../../Common/ErrorSolving';
-import ErrorCards from '../Components/ErrorCards';
-import Loading from '../Components/Loading';
+} from "antd";
+import { useEffect, useRef, useState } from "react";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
+import api, { setupInterceptors } from "../../apiService/useFetch";
+import axios from "axios";
+import ErrorSolving from "../../Common/ErrorSolving";
+import ErrorCards from "../Components/ErrorCards";
+import Loading from "../Components/Loading";
 import {
   getDownloadURL,
   ref,
   uploadBytes,
   uploadBytesResumable,
-} from 'firebase/storage';
-import dayjs from 'dayjs';
-import { storage } from '../../ultils/firebase';
-import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
-import utc from 'dayjs/plugin/utc';
-import { data } from 'react-router-dom';
-import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
-import MapBox from '../Components/MapBox';
+} from "firebase/storage";
+import dayjs from "dayjs";
+import { storage } from "../../ultils/firebase";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
+import utc from "dayjs/plugin/utc";
+import { data } from "react-router-dom";
+import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
+import MapBox from "../Components/MapBox";
 dayjs.extend(utc);
 interface MarkerPosition {
   longitude: number;
@@ -78,21 +78,22 @@ const MyProfile = () => {
   const [radioState, setRadioState] = useState<number>(-2);
   // const [errCode, setErrCode] = useState<number>(0);
 
-  const token = getCookie('accessToken');
+  const token = getCookie("accessToken");
   const user = decodedCookie(token);
 
   const formRef = useRef<FormInstance>(null);
   const [profileState, setProfileState] = useState<ProfileState>();
   const [listFile, setListFile] = useState<UploadFile[]>([]);
   const [listUploadFile, setListUploadFile] = useState<UploadFile>();
-  const [errorName, setErrorName] = useState<string>('');
-  const [errorSkill, setErrorSkill] = useState<string>('');
-  const [errorDob, setErrorDob] = useState<string>('');
-  const [errorPhone, setErrorPhone] = useState<string>('');
+  const [errorName, setErrorName] = useState<string>("");
+  const [errorSkill, setErrorSkill] = useState<string>("");
+  const [errorDob, setErrorDob] = useState<string>("");
+  const [errorPhone, setErrorPhone] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [errorField, setErrorField] = useState<boolean>(false);
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<number>(0);
+  const [stateKey, setStateKey] = useState<number>(0);
   const [addressState, setAddressState] = useState<string[]>([]);
   const [checkProfile, setCheckProfile] = useState<boolean>(true);
   const [listFieldState, setListFieldState] = useState<
@@ -107,13 +108,13 @@ const MyProfile = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
-        const { data } = await api.get('/profile/check-publish-profile');
+        const { data } = await api.get("/profile/check-publish-profile");
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
@@ -135,10 +136,9 @@ const MyProfile = () => {
     if (user) {
       fetchCheckStatus();
     }
-  }, []);
+  }, [stateKey]);
 
   useEffect(() => {
-
     const fetchField = async () => {
       try {
         const { data } = await api.get(`/common/get-fields`);
@@ -163,13 +163,13 @@ const MyProfile = () => {
           dateOfBirth: new Date(data.dateOfBirth),
         }));
         setAddress(data.address);
-        if(data?.location){
+        if (data?.location) {
           setMarker({
-            longitude: Number(data?.location?.split(';')[1]),
-            latitude: Number(data?.location?.split(';')[0]),
-          })
+            longitude: Number(data?.location?.split(";")[1]),
+            latitude: Number(data?.location?.split(";")[0]),
+          });
         }
-      
+
         setRadioState(data.sex);
         const selectedFields: number[] = (data?.fields ?? []).map(
           (item: any, index: number) => item.id
@@ -177,7 +177,7 @@ const MyProfile = () => {
 
         setListSelectedField(selectedFields);
 
-        setAddressState(data.address.split(', '));
+        setAddressState(data.address.split(", "));
 
         handleAvt(data.urlImage);
       } catch (err: any) {
@@ -188,9 +188,9 @@ const MyProfile = () => {
     const handleAvt = (url?: string) => {
       setListFile((prev) => [
         {
-          uid: url ? '-1' : 's-20052003',
-          name: 'avatar.png',
-          status: 'done',
+          uid: url ? "-1" : "s-20052003",
+          name: "avatar.png",
+          status: "done",
           url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
         },
       ]);
@@ -216,8 +216,6 @@ const MyProfile = () => {
     }
   }, [profileState, form]);
 
-
-
   const handlePreview = async (file: UploadFile) => {
     setPreviewOpen(true);
   };
@@ -228,7 +226,7 @@ const MyProfile = () => {
       messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
     } else {
       setErrorField(false);
-      if (listFile[0]?.uid === 's-20052003') {
+      if (listFile[0]?.uid === "s-20052003") {
         messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
       } else {
         try {
@@ -242,12 +240,12 @@ const MyProfile = () => {
             Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
           }
           const { province, district, ward, email, ...sendObject } = values;
-          sendObject.dob = dayjs(sendObject.dob).format('YYYY-MM-DD');
+          sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
 
           Object.assign(sendObject, { fields: listSelectedField });
           // console.log(listSelectedField);
           let urlNewAvt: string[] | undefined;
-          if (listFile[0]?.uid !== '-1') {
+          if (listFile[0]?.uid !== "-1") {
             urlNewAvt = await uploadFilesToFirebase(listFile);
           }
           Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
@@ -264,13 +262,14 @@ const MyProfile = () => {
             console.log(e);
           } finally {
             messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: "smooth" });
 
             setUpdateState((prev) => ++prev);
           }
         } catch (e: any) {
         } finally {
           setIsLoading(false);
+          setStateKey((prev) => ++prev);
         }
       }
     }
@@ -285,7 +284,7 @@ const MyProfile = () => {
     messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
   };
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     console.log(newFileList.length);
 
     let newArray = newFileList as Array<UploadFile>;
@@ -313,9 +312,9 @@ const MyProfile = () => {
     messageApi.success(
       isPublish
         ? `Hồ sơ của bạn đã hủy xuất bản!`
-        : 'Hồ sơ của bạn đã được xuất bản thành công'
+        : "Hồ sơ của bạn đã được xuất bản thành công"
     );
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setOpenModal(false);
     setIsPublish((prev) => !prev);
     setUpdateState((prev) => ++prev);
@@ -325,7 +324,6 @@ const MyProfile = () => {
     setOpenModal(false);
   };
 
- 
   useEffect(() => {
     const fetchAddress = async () => {
       const data = await api.get(
@@ -391,14 +389,14 @@ const MyProfile = () => {
           <div className="lg:flex items-end mt-4">
             <span className="mr-1">Trạng thái:</span>
             <span className="font-medium text-base text-primary-color">
-              {profileState?.isAvailable && 'Đã xuất bản'}
+              {profileState?.isAvailable && "Đã xuất bản"}
             </span>
             <span className="font-medium text-base text-red-500">
-              {!profileState?.isAvailable && 'Chưa xuất bản'}
+              {!profileState?.isAvailable && "Chưa xuất bản"}
             </span>
           </div>
           <Image
-            wrapperStyle={{ display: 'none' }}
+            wrapperStyle={{ display: "none" }}
             preview={{
               visible: previewOpen,
               onVisibleChange: (visible) => setPreviewOpen(visible),
@@ -439,20 +437,20 @@ const MyProfile = () => {
               <Form.Item
                 name="name"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập họ và tên!' },
+                  { required: true, message: "Vui lòng nhập họ và tên!" },
                   {
                     pattern:
                       /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
                     message:
-                      'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
+                      "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
                   },
                 ]}
               >
                 <Input
                   className={`border-[0.1rem] text-base ${
-                    errorName !== ''
-                      ? 'border-2 border-red-500'
-                      : 'border-stone-300'
+                    errorName !== ""
+                      ? "border-2 border-red-500"
+                      : "border-stone-300"
                   } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
                 />
               </Form.Item>
@@ -468,13 +466,13 @@ const MyProfile = () => {
               <Form.Item
                 name="dob"
                 rules={[
-                  { required: true, message: 'Vui lòng chọn ngày sinh!' },
+                  { required: true, message: "Vui lòng chọn ngày sinh!" },
                 ]}
               >
                 <DatePicker
                   format="YYYY-MM-DD"
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 ${
-                    errorDob !== '' ? 'border-red-500' : 'border-stone-300'
+                    errorDob !== "" ? "border-red-500" : "border-stone-300"
                   }`}
                 />
               </Form.Item>
@@ -490,7 +488,7 @@ const MyProfile = () => {
               <Form.Item
                 name="sex"
                 rules={[
-                  { required: true, message: 'Vui lòng chọn giới tính!' },
+                  { required: true, message: "Vui lòng chọn giới tính!" },
                 ]}
               >
                 <Radio.Group
@@ -552,7 +550,7 @@ const MyProfile = () => {
                 <Form.Item
                   name="address"
                   className=""
-                  rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+                  rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
                 >
                   <Input hidden />
                 </Form.Item>
@@ -570,17 +568,17 @@ const MyProfile = () => {
               <Form.Item
                 name="phone"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                  { required: true, message: "Vui lòng nhập số điện thoại!" },
                   {
                     pattern: /^[0-9]{10,15}$/,
-                    message: 'Số điện thoại không hợp lệ!',
+                    message: "Số điện thoại không hợp lệ!",
                   },
                 ]}
               >
                 <Input
                   type="number"
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 no-spinner ${
-                    errorPhone !== '' ? 'border-red-500' : 'border-stone-300'
+                    errorPhone !== "" ? "border-red-500" : "border-stone-300"
                   }`}
                   maxLength={15}
                   onInput={(e) => {
@@ -602,12 +600,12 @@ const MyProfile = () => {
               <Form.Item
                 name="skill"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập kỹ năng của bạn!' },
+                  { required: true, message: "Vui lòng nhập kỹ năng của bạn!" },
                 ]}
               >
                 <Input.TextArea
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 ${
-                    errorSkill !== '' ? 'border-red-500' : 'border-stone-300'
+                    errorSkill !== "" ? "border-red-500" : "border-stone-300"
                   }`}
                   placeholder="Nhập kỹ năng của bạn..."
                   autoSize={{ minRows: 3, maxRows: 10 }}
@@ -624,7 +622,7 @@ const MyProfile = () => {
               </div>
               <div
                 className={`bg-stone-100 border-[0.05rem] rounded-md  ${
-                  errorField ? 'border-red-500' : 'border-primary-color'
+                  errorField ? "border-red-500" : "border-primary-color"
                 } overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
               >
                 {listFieldState.map((item, index) => (
@@ -672,7 +670,7 @@ const MyProfile = () => {
               onClick={handleChangePublic}
               className="bg-primary-color text-white py-2 px-4 rounded-md cursor-pointer hover:scale-105 duration-300"
             >
-              {isPublish ? 'Hủy xuất bản hồ sơ' : 'Xuất bản hồ sơ'}
+              {isPublish ? "Hủy xuất bản hồ sơ" : "Xuất bản hồ sơ"}
             </div>
           )}
         </div>
@@ -680,14 +678,14 @@ const MyProfile = () => {
           theme={{
             components: {
               Table: {
-                headerBg: '#3BA769',
-                headerColor: 'white',
+                headerBg: "#3BA769",
+                headerColor: "white",
               },
               Pagination: {
-                itemActiveBg: '#3BA769',
-                colorPrimary: 'white',
-                colorPrimaryHover: 'white',
-                colorPrimaryBorder: 'white',
+                itemActiveBg: "#3BA769",
+                colorPrimary: "white",
+                colorPrimaryHover: "white",
+                colorPrimaryBorder: "white",
               },
             },
           }}
