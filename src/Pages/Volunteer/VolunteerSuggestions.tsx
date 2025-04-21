@@ -31,10 +31,20 @@ const VolunteerSuggestions = () => {
   const refSearch = useRef<HTMLInputElement>(null);
   const [AISearch, setAISearch] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState<string>("");
+  const [status, setStatus] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   setupInterceptors(setErrCode);
-  // }, []);
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await api.get(`/event/check-owner?eventId=${id}`);
+        setStatus(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStatus();
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +60,9 @@ const VolunteerSuggestions = () => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    if (status) {
+      fetchData();
+    }
   }, []);
 
   useEffect(() => {
@@ -79,8 +91,9 @@ const VolunteerSuggestions = () => {
         setIsLoading(false);
       }
     };
-
-    fetchVolunteer();
+    if (status) {
+      fetchVolunteer();
+    }
   }, [PageNumber, resetState]);
 
   const fetchAllVolunteer = async (page?: number) => {
@@ -128,7 +141,9 @@ const VolunteerSuggestions = () => {
   };
 
   useEffect(() => {
-    fetchAllVolunteer();
+    if (status) {
+      fetchAllVolunteer();
+    }
   }, [resetStateAll]);
 
   const handlePageChange = (page: number) => {
