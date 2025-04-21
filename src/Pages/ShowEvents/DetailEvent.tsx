@@ -322,8 +322,8 @@ const DetailEvent = () => {
         messageApi.success("Thêm tổng kết sự kiện thành công");
       }
       setOpenModalSummary(false);
-    } catch (err) {
-      messageApi.error("Có lỗi xảy ra khi gửi tổng kết!");
+    } catch (err: any) {
+      if (err.status == 400) messageApi.error(`${err.response.data.Message}`);
     }
   };
 
@@ -460,11 +460,11 @@ const DetailEvent = () => {
               />
             )} */}
               {/* {!fromTitle && ( */}
-              <div>
-                Sự kiện:{" "}
-                <span className="text-primary-color text-lg font-medium">
+              <div className="">
+                <div className="inline-block font-medium">Sự kiện</div>
+                <div className="text-primary-color text-lg font-medium w-96 ">
                   {dataState?.name || "Tên sự kiện"}
-                </span>
+                </div>
               </div>
               {/* )} */}
 
@@ -849,6 +849,7 @@ const DetailEvent = () => {
                     )}
                   {dataState?.hasDonate &&
                     user?.role !== "Organization" &&
+                    user?.role !== "Admin" &&
                     new Date() < new Date(dataState.startTime) && (
                       <div className="flex items-center gap-1 font-medium">
                         <div
