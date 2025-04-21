@@ -35,7 +35,9 @@ api.interceptors.request.use(
 );
 
 async function refreshToken() {
-  const response = await axios.post('https://dev.api.volunteer-link.site/refresh-token');
+  const response = await axios.post(
+    "https://dev.api.volunteer-link.site/refresh-token"
+  );
 
   return response.data.data;
 }
@@ -60,17 +62,16 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
-            originalRequest.headers.Authorization = 'Bearer ' + token;
+            originalRequest.headers.Authorization = "Bearer " + token;
             return api(originalRequest);
           })
           .catch((err) => {
@@ -82,14 +83,15 @@ api.interceptors.response.use(
         const data = await refreshToken();
         const newAccessToken = data?.accessToken;
         setCookie("accessToken", newAccessToken);
-        api.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken;
+        api.defaults.headers.common["Authorization"] =
+          "Bearer " + newAccessToken;
         processQueue(null, newAccessToken);
 
-        originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        originalRequest.headers.Authorization = "Bearer " + newAccessToken;
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
-         window.location.href = '/unauthorized';
+        window.location.href = "/unauthorized";
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

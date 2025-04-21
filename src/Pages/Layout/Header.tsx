@@ -262,8 +262,8 @@ const Header: React.FC<{}> = () => {
       <div></div>
       <div className="bg-primary-color w-16 h-16 m-auto my-2 rounded-full overflow-hidden lg:my-0">
         <img
-          src="/materials/logo.jfif"
-          className="w-full h-full object-contain"
+          src="/materials/with bg.png"
+          className="w-full h-full object-contain scale-125"
           alt=""
         />
       </div>
