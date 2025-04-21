@@ -1,6 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import api from '../../apiService/useFetch';
-import { Avatar, Button, message, Pagination, Select, Table } from 'antd';
+import {
+  Avatar,
+  Button,
+  message,
+  Pagination,
+  Select,
+  Table,
+  App as AntdApp,
+} from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Loading from '../Components/Loading';
@@ -20,8 +28,7 @@ const HistoryOrganization = () => {
   );
   const [searchTransaction, setTransaction] = React.useState<string>('');
   const searchDebounce = useDebounce<string>(searchTransaction, 500);
-  const [messageApi, contextHolder] = message.useMessage();
-
+  const { message: messageApi } = AntdApp.useApp();
   const [stateTransaction, setStateTransaction] = useState<
     {
       accountVolunteerId: number;
@@ -129,7 +136,20 @@ const HistoryOrganization = () => {
   };
   const handleExportToExcel = async () => {
     try {
-      const { data } = await api.get('/donate/export-excel-history');
+      const { data } = await api.get('/donate/export-excel-organization',{
+         responseType: 'blob',
+      }
+      );
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'data.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+  
+      // Xoá URL sau khi dùng
+      window.URL.revokeObjectURL(url);
       messageApi.success('Xuất file thành công');
     } catch (error) {
       messageApi.success('Xuất file thất bại');

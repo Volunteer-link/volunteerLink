@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import api from '../../apiService/useFetch';
-import { Button, message, Table } from 'antd';
+import { Button, message, Table, App as AntdApp } from 'antd';
 
 const HistoryVolunteer = () => {
   const refSearch = useRef<HTMLInputElement>(null);
@@ -21,8 +21,7 @@ const HistoryVolunteer = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [searchKey, setSearchKey] = useState<string>('');
-  const [messageApi, contextHolder] = message.useMessage();
-
+  const { message: messageApi } = AntdApp.useApp();
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await api.get(
@@ -93,7 +92,19 @@ const HistoryVolunteer = () => {
 
   const handleExportToExcel = async () => {
     try {
-      const { data } = await api.get('/donate/export-excel-history');
+      const { data } = await api.get('donate/export-excel-volunteer', {
+         responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'data.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+  
+      // Xoá URL sau khi dùng
+      window.URL.revokeObjectURL(url);
       messageApi.success('Xuất file thành công');
     } catch (error) {
       messageApi.success('Xuất file thất bại');
