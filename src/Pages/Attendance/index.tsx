@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Checkbox,
@@ -10,13 +10,13 @@ import {
   App as AntdApp,
   Spin,
   Empty,
-} from 'antd';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import api from '../../apiService/useFetch';
+} from "antd";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import api from "../../apiService/useFetch";
 const AttendanceUI: React.FC = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
-  const page = searchParams.get('page');
+  const page = searchParams.get("page");
 
   const [listUser, setListUser] = useState<any[]>([]);
   const [totalPage, setTotalPage] = React.useState<number>();
@@ -29,6 +29,7 @@ const AttendanceUI: React.FC = () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [interact, setInteract] = useState(false);
   const navigate = useNavigate();
+  const [status, setStatus] = useState<boolean>(false);
 
   const handleCheck = (checked: boolean, recordId: number): void => {
     const newList = listUser.map((user) =>
@@ -37,7 +38,18 @@ const AttendanceUI: React.FC = () => {
     setInteract(true);
     setListUser(newList);
   };
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await api.get(`/event/check-owner?eventId=${id}`);
+        setStatus(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    fetchStatus();
+  });
   useEffect(() => {
     const fetchField = async () => {
       try {
@@ -57,7 +69,9 @@ const AttendanceUI: React.FC = () => {
       } finally {
       }
     };
-    fetchField();
+    if (status) {
+      fetchField();
+    }
   }, [PageNumber]);
 
   const handleSave = async () => {
@@ -69,7 +83,7 @@ const AttendanceUI: React.FC = () => {
       .filter((id) => id !== null);
     try {
       setLoadingSubmit(true);
-      const { data } = await api.post('/attendance/check-attendance-of-event', {
+      const { data } = await api.post("/attendance/check-attendance-of-event", {
         eventId: id,
         listVolunteerId: checkedUsers,
       });
@@ -85,8 +99,8 @@ const AttendanceUI: React.FC = () => {
   const handlePageChange = (page: number) => {
     if (interact) {
       modal.confirm({
-        title: 'Bạn có chắc chắn muốn chuyển trang?',
-        content: 'Bạn sẽ mất tất cả các thay đổi chưa lưu nếu chuyển trang.',
+        title: "Bạn có chắc chắn muốn chuyển trang?",
+        content: "Bạn sẽ mất tất cả các thay đổi chưa lưu nếu chuyển trang.",
         onOk: () => {
           setPageNumber(page);
           navigate(`/event/attendance/${id}?page=${page}`, { replace: true });
@@ -101,15 +115,15 @@ const AttendanceUI: React.FC = () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: '10%',
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      width: "10%",
     },
     {
-      title: 'Ảnh',
-      dataIndex: 'avatarUrl',
-      key: 'avatarUrl',
+      title: "Ảnh",
+      dataIndex: "avatarUrl",
+      key: "avatarUrl",
       render: (value: any, record: any) => {
         return (
           <Avatar
@@ -122,15 +136,15 @@ const AttendanceUI: React.FC = () => {
       },
     },
     {
-      title: 'Họ và Tên',
-      dataIndex: 'name',
-      key: 'name',
-      width: '50%',
+      title: "Họ và Tên",
+      dataIndex: "name",
+      key: "name",
+      width: "50%",
     },
     {
-      title: 'Điểm Danh',
-      dataIndex: 'isChecked',
-      key: 'isChecked',
+      title: "Điểm Danh",
+      dataIndex: "isChecked",
+      key: "isChecked",
       render: (value: boolean, record: any) => (
         <Checkbox
           checked={record.attendance}
@@ -150,7 +164,7 @@ const AttendanceUI: React.FC = () => {
         Điểm danh tình nguyện viên
       </h2>
 
-      <div className={`relative ${loading && 'min-h-[200px]'}`}>
+      <div className={`relative ${loading && "min-h-[200px]"}`}>
         {loading ? (
           <div className="flex absolute z-10 inset-0 justify-center items-center">
             <Spin size="large" />
@@ -161,7 +175,7 @@ const AttendanceUI: React.FC = () => {
               <Empty description="Không có tình nguyện viên" />
             ) : (
               <>
-                {' '}
+                {" "}
                 <Table
                   rowKey="id"
                   columns={columns}
