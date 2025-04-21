@@ -1,6 +1,6 @@
-import { Form, Input, Button, ConfigProvider, DatePicker } from "antd";
-import { useNavigate } from "react-router";
-import type { Rule, FormInstance } from "antd/es/form";
+import { Form, Input, Button, ConfigProvider, DatePicker } from 'antd';
+import { useNavigate } from 'react-router';
+import type { Rule, FormInstance } from 'antd/es/form';
 
 interface SignupVolunterProps {
   onFinish?: (values: any) => void;
@@ -47,7 +47,7 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
         <Form.Item
           name="confirmPassword"
           className="mb-4"
-          dependencies={["password"]}
+          dependencies={['password']}
           rules={confirmPasswordRules(form)}
         >
           <Input.Password placeholder="Xác nhận mật khẩu..." />
@@ -55,15 +55,26 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
 
         <Form.Item name="date" className="mb-4" rules={dateRules}>
           <DatePicker
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             placeholder="Ngày sinh của bạn..."
+            format="DD/MM/YYYY"
           />
+          <p
+            style={{
+              fontSize: '12px',
+              color: '#888',
+              marginTop: '4px',
+              marginBottom: 0,
+            }}
+          >
+            Định dạng: DD/MM/YYYY
+          </p>
         </Form.Item>
 
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#3BA769",
+              colorPrimary: '#3BA769',
             },
           }}
         >
@@ -75,10 +86,10 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
         </ConfigProvider>
 
         <p className="text-[14px] text-center">
-          Bạn đã có tài khoản?{" "}
+          Bạn đã có tài khoản?{' '}
           <a
             onClick={() => {
-              navigate("/authentication/signin");
+              navigate('/authentication/signin');
             }}
             className="text-[#3BA769]"
           >

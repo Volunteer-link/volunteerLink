@@ -278,7 +278,7 @@ const ShowEvent = () => {
             />
             <div className="flex pr-2 items-center gap-8 select-none">
               {!AISearch && (
-                <Tooltip open={!!address} title={address} color={"#3BA769"}>
+                <Tooltip open={!!address && !isModalOpen} title={address} color={"#3BA769"}>
                   <div className="flex gap-2 items-center">
                     <IoLocation
                       onClick={showModal}

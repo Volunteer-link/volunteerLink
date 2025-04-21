@@ -131,7 +131,7 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="px-4 md:px-0">
       <Row className="w-full h-screen">
         <Col span={16}>
           <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">

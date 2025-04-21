@@ -139,6 +139,7 @@ const UpdateEvent = () => {
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
+    form.setFieldValue('timePublish',null)
   };
 
   const [listFieldState, setListFieldState] = useState<
@@ -377,7 +378,6 @@ const UpdateEvent = () => {
             value={value}
             defaultValue={value}
             options={[
-              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
               { value: 2, label: 'Xuất bản sự kiện theo lịch' },
             ]}
           />

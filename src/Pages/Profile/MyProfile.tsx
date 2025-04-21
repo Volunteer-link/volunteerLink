@@ -35,8 +35,12 @@ import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
 import utc from 'dayjs/plugin/utc';
 import { data } from 'react-router-dom';
 import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
+import MapBox from '../Components/MapBox';
 dayjs.extend(utc);
-
+interface MarkerPosition {
+  longitude: number;
+  latitude: number;
+}
 interface ProfileState {
   $type: string;
   accountId: number;
@@ -66,18 +70,7 @@ interface FormValuesVolunteer {
   phone: string;
   skill: string;
   fields: number[];
-  availableTimes: number[];
 }
-
-const dayOptions = [
-  { label: 'Sunday', value: 0 },
-  { label: 'Monday', value: 1 },
-  { label: 'Tuesday', value: 2 },
-  { label: 'Wednesday', value: 3 },
-  { label: 'Thursday', value: 4 },
-  { label: 'Friday', value: 5 },
-  { label: 'Saturday', value: 6 },
-];
 
 const MyProfile = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -96,33 +89,12 @@ const MyProfile = () => {
   const [errorSkill, setErrorSkill] = useState<string>('');
   const [errorDob, setErrorDob] = useState<string>('');
   const [errorPhone, setErrorPhone] = useState<string>('');
-  const [errorAddress, setErrorAddress] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [errorField, setErrorField] = useState<boolean>(false);
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<number>(0);
   const [addressState, setAddressState] = useState<string[]>([]);
   const [checkProfile, setCheckProfile] = useState<boolean>(true);
-  const [availableTimes, setAvailableTimes] = useState<number[]>([]);
-  const [checkLoadDistrict, setCheckLoadDistrict] = useState<boolean>(false);
-  const [listProvinces, setListProvinces] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
-  const [listDistrict, setListDistrict] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
-  const [listWard, setListWard] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
   const [listFieldState, setListFieldState] = useState<
     {
       id: number;
@@ -131,24 +103,12 @@ const MyProfile = () => {
   >([]);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
 
-  // const listField = [
-  //   "Email",
-  //   "Họ và tên",
-  //   "Ngày sinh",
-  //   "Giới tính",
-  //   "Địa chỉ",
-  //   "Vị trí",
-  //   "Số điện thoại",
-  //   "Kĩ năng",
-  //   "Lĩnh vực quan tâm",
-  // ];
-
   const [form] = Form.useForm();
 
   const [messageApi, contextHolder] = message.useMessage();
-  // useEffect(() => {
-  //   setupInterceptors(setErrCode);
-  // }, []);
+  const [marker, setMarker] = useState<MarkerPosition | null>(null);
+  const [address, setAddress] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
@@ -178,16 +138,6 @@ const MyProfile = () => {
   }, []);
 
   useEffect(() => {
-    const fetchProvince = async () => {
-      try {
-        const data = await axios.get(
-          'https://open.oapi.vn/location/provinces?page=0&size=1000'
-        );
-        setListProvinces(data.data.data);
-      } catch (e: any) {
-      } finally {
-      }
-    };
 
     const fetchField = async () => {
       try {
@@ -197,8 +147,6 @@ const MyProfile = () => {
       } finally {
       }
     };
-
-    fetchProvince();
     fetchField();
   }, []);
 
@@ -208,13 +156,21 @@ const MyProfile = () => {
         const res = await api.get(`/profile/volunteer`);
 
         const data = res.data.data;
+        console.log(data);
 
         setProfileState((prev) => ({
           ...(prev ?? {}),
           ...data,
           dateOfBirth: new Date(data.dateOfBirth),
         }));
-        setAvailableTimes(data.availableTimes);
+        setAddress(data.address);
+        if(data?.location){
+          setMarker({
+            longitude: Number(data?.location?.split(';')[1]),
+            latitude: Number(data?.location?.split(';')[0]),
+          })
+        }
+      
         setRadioState(data.sex);
         const selectedFields: number[] = (data?.fields ?? []).map(
           (item: any, index: number) => item.id
@@ -257,41 +213,17 @@ const MyProfile = () => {
         ward: addressState[0],
         phone: profileState.phoneNumber,
         skill: profileState.skill,
-        availableTimes: availableTimes,
       });
     }
   }, [profileState, form]);
 
-  const fetchDistrict = async (idProvince: number) => {
-    try {
-      const data = await axios.get(
-        `https://open.oapi.vn/location/districts/${idProvince}?page=0&size=1000`
-      );
-      setListDistrict(data.data.data);
-      setCheckLoadDistrict(true);
-    } catch (e: any) {
-    } finally {
-    }
-  };
 
-  const fetchWard = async (idProvince: number) => {
-    try {
-      const data = await axios.get(
-        `https://open.oapi.vn/location/wards/${idProvince}?page=0&size=1000`
-      );
-      setListWard(data.data.data);
-    } catch (e: any) {
-    } finally {
-    }
-  };
 
   const handlePreview = async (file: UploadFile) => {
     setPreviewOpen(true);
   };
 
   const handleSubmit = async (values: FormValuesVolunteer) => {
-    const availableTimes = values.availableTimes;
-
     if (listSelectedField.length === 0) {
       setErrorField(true);
       messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
@@ -302,14 +234,10 @@ const MyProfile = () => {
       } else {
         try {
           setIsLoading(true);
-          const address = `${values.ward}, ${values.district}, ${values.province}`;
           Object.assign(values, { address });
-          let location = await getCoordinates(address); // Gọi hàm lấy tọa độ
-          console.log(location);
-
-          if (location) {
+          if (marker) {
             Object.assign(values, {
-              location: `${location.lat};${location.lon}`,
+              location: `${marker.latitude};${marker.longitude}`,
             });
           } else {
             Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
@@ -358,33 +286,6 @@ const MyProfile = () => {
     messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
   };
 
-  const handleSelectProvinces = (value: string, option: any) => {
-    fetchDistrict(Number(option.id));
-  };
-
-  const handleSelectDistricts = (value: string, option: any) => {
-    fetchWard(Number(option.id));
-  };
-
-  const getCoordinates = async (address: string) => {
-    const encodedAddress = encodeURIComponent(address);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data.length > 0) {
-        const { lat, lon } = data[0];
-        return { lat, lon };
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
-  };
-
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     console.log(newFileList.length);
 
@@ -409,9 +310,7 @@ const MyProfile = () => {
   };
 
   const handleOk = async () => {
-    console.log(isPublish);
     await publicProfile(!isPublish);
-    console.log(isPublish);
     messageApi.success(
       isPublish
         ? `Hồ sơ của bạn đã hủy xuất bản!`
@@ -425,6 +324,30 @@ const MyProfile = () => {
 
   const closeModal = () => {
     setOpenModal(false);
+  };
+
+ 
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const data = await api.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${marker?.latitude}&lon=${marker?.longitude}&format=json`
+      );
+      setAddress(data.data.display_name);
+      form.setFieldsValue({
+        address: data.data.display_name,
+      });
+    };
+
+    if (marker?.latitude && marker?.longitude) {
+      fetchAddress();
+    }
+  }, [marker]);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -589,79 +512,53 @@ const MyProfile = () => {
                 </div>
                 <div className="w-20 h-[0.07rem] bg-primary-color"></div>
               </div>
-              <div className="text-base font-medium text-primary-color my-4">
-                Tỉnh/Thành phố
+              <div className="mapbox">
+                <Modal
+                  maskClosable={true}
+                  footer={null}
+                  onCancel={handleClose}
+                  title="Chọn địa điểm"
+                  centered
+                  open={isModalOpen}
+                >
+                  <MapBox marker={marker} setMarker={setMarker} />
+                </Modal>
+                <div
+                  onClick={showModal}
+                  className="px-3 cursor-pointer hover:opacity-80 py-2 mt-3 rounded-lg border inline-block border-[#515151]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="20"
+                    viewBox="0 0 16 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M1 7.92285C1 12.7747 5.24448 16.7869 7.12319 18.3252C7.39206 18.5454 7.52811 18.6568 7.72871 18.7132C7.88491 18.7572 8.1148 18.7572 8.271 18.7132C8.47197 18.6567 8.60707 18.5463 8.87695 18.3254C10.7557 16.7871 14.9999 12.7751 14.9999 7.9233C14.9999 6.08718 14.2625 4.32605 12.9497 3.02772C11.637 1.72939 9.8566 1 8.00008 1C6.14357 1 4.36301 1.7295 3.05025 3.02783C1.7375 4.32616 1 6.08674 1 7.92285Z"
+                      stroke="#3BA769"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M6 7C6 8.10457 6.89543 9 8 9C9.10457 9 10 8.10457 10 7C10 5.89543 9.10457 5 8 5C6.89543 5 6 5.89543 6 7Z"
+                      stroke="#3BA769"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <Form.Item
+                  name="address"
+                  className=""
+                  rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+                >
+                  <Input hidden />
+                </Form.Item>
+                {address && <p className="">Địa chỉ: {address}</p>}
               </div>
-
-              <Form.Item
-                name="province"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn tỉnh/thành phố!' },
-                ]}
-              >
-                <Select
-                  style={{ width: 300 }}
-                  onChange={(value, option) =>
-                    handleSelectProvinces(value, option)
-                  }
-                  options={[
-                    ...listProvinces.map((province) => ({
-                      value: province.name,
-                      label: province.name,
-                      id: province.id,
-                    })),
-                  ]}
-                  placeholder="Chọn tỉnh/thành phố"
-                />
-              </Form.Item>
-
-              <div className="text-base font-medium text-primary-color my-4">
-                Quận/Huyện
-              </div>
-
-              <Form.Item
-                name="district"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn quận/huyện!' },
-                ]}
-              >
-                <Select
-                  disabled={!checkLoadDistrict}
-                  style={{ width: 300 }}
-                  onChange={handleSelectDistricts}
-                  options={[
-                    ...listDistrict.map((district) => ({
-                      value: district.name,
-                      label: district.name,
-                      id: district.id,
-                    })),
-                  ]}
-                  placeholder="Chọn quận/huyện"
-                />
-              </Form.Item>
-
-              <div className="text-base font-medium text-primary-color my-4">
-                Phường/Xã
-              </div>
-              <Form.Item
-                name="ward"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn phường/xã!' },
-                ]}
-              >
-                <Select
-                  disabled={!checkLoadDistrict}
-                  style={{ width: 300 }}
-                  options={[
-                    ...listWard.map((ward) => ({
-                      value: ward.name,
-                      label: ward.name,
-                      id: ward.id,
-                    })),
-                  ]}
-                  placeholder="Chọn phường/xã"
-                />
-              </Form.Item>
             </div>
             <div className="my-4">
               <div className="flex items-center gap-1 mb-2">
@@ -716,29 +613,6 @@ const MyProfile = () => {
                   placeholder="Nhập kỹ năng của bạn..."
                   autoSize={{ minRows: 3, maxRows: 10 }}
                 />
-              </Form.Item>
-            </div>
-            <div className="my-4">
-              <div className="flex items-center gap-1 mb-2">
-                <span className="text-red-500 inline-block text-lg">*</span>
-                <div className="text-base font-medium text-primary-color">
-                  Thời gian hoạt động
-                </div>
-                <div className="w-20 h-[0.07rem] bg-primary-color"></div>
-              </div>
-              <Form.Item
-                name="availableTimes"
-                initialValue={availableTimes}
-                rules={[
-                  {
-                    type: 'array',
-                    required: true,
-                    min: 1,
-                    message: 'Vui lòng chọn ít nhất một ngày!',
-                  },
-                ]}
-              >
-                <Checkbox.Group options={dayOptions} />
               </Form.Item>
             </div>
             <div className="my-4">
