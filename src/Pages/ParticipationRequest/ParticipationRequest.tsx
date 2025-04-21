@@ -23,6 +23,19 @@ const ParticipationRequest = () => {
   const { nameEventState } = location.state || { nameEventState: "" };
 
   const { id } = useParams<{ id: string }>();
+  const [status, setStatus] = useState<boolean>(false);
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await api.get(`/event/check-owner?eventId=${id}`);
+        setStatus(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStatus();
+  });
   // useEffect(() => {
   //   setupInterceptors(setErrCode);
   // }, []);
@@ -51,7 +64,9 @@ const ParticipationRequest = () => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    if (status) {
+      fetchData();
+    }
   }, [currentPage, resetState]);
 
   const handleChangePageSearch = (page: number) => {

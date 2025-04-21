@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Col, Row, ConfigProvider, Image, Tabs, App as AntdApp } from "antd";
 import type { TabsProps, UploadFile } from "antd";
-import logo from "../../image/signup_banner.jpg";
 import SignupOrganization from "./SignupOrganization";
 import SignupVolunter from "./SignupVolunteer";
 import {
@@ -28,7 +27,6 @@ const Signup = () => {
   const [loading, setLoading] = React.useState(false);
   const { message } = AntdApp.useApp();
   const [organization, setOrganization] = React.useState(false);
-  
 
   const onFinish = async (values: any) => {
     try {
@@ -66,7 +64,6 @@ const Signup = () => {
       setLoading(false);
     }
   };
-   
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Submit thất bại:", errorInfo);
@@ -143,7 +140,7 @@ const Signup = () => {
   return (
     <div>
       <Row className="w-full h-screen">
-        <Col span={18}>
+        <Col span={16}>
           <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">
             <h4 className="text-[#3BA769] text-[20px] text-center">
               Xin chào! Rất vui được gặp bạn
@@ -189,13 +186,13 @@ const Signup = () => {
             )}
           </div>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Image
-            className="w-full h-screen"
+            className="w-full h-screen object-cover"
             preview={false}
             placeholder={true}
             alt="logo"
-            src={logo}
+            src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fenvironment-volunteer-concept-with-group-persons.jpg?alt=media&token=f36979bf-d6ac-4516-b9b0-ba7000ef1276"
             style={{ height: "100vh", width: "100%" }}
           />
         </Col>
