@@ -99,7 +99,7 @@ const ListSentRequest = () => {
     }
   };
   return (
-    <div className="px-32 py-8">
+    <div className="xl:px-32 px-6 py-8">
       {isLoading && <Loading color="green" />}
       {contextHolder}
       <ErrorCards errCode={errCode} />

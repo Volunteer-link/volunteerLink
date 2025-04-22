@@ -126,7 +126,7 @@ const Volunteers = () => {
             <div
               key={item.accountId}
               onClick={() => handleClickProfile(item.accountId)}
-              className="border-2 border-primary-color p-4 flex gap-4 lg:col-span-4 col-span-6 rounded-lg select-none cursor-pointer hover:scale-105 transition-all"
+              className="border-2 border-primary-color p-4 flex gap-4 lg:col-span-6 col-span-12 xl:col-span-4 rounded-lg select-none cursor-pointer hover:scale-105 transition-all"
             >
               <div className="relative rounded-full overflow-hidden shrink-0 w-16 h-16">
                 {loadPic && <SmallLoading size="small" />}

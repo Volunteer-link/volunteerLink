@@ -267,7 +267,7 @@ const Header: React.FC<{}> = () => {
           alt=""
         />
       </div>
-      <div className="col-span-3 flex flex-wrap flex-row md:block">
+      <div className="col-span-3 flex flex-wrap flex-row md:block justify-center">
         <ul className="flex md:gap-8 gap-4 text-white flex-wrap justify-center md:flex-nowrap text-sm h-full items-center">
           <li className="hover:scale-110 transition-all cursor-pointer text-base">
             <NavLink

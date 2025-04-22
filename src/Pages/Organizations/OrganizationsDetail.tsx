@@ -77,7 +77,7 @@ const OrganizationsDetail = () => {
           />
         </div>
 
-        <div className="flex-1 self-end">
+        <div className="flex-1 lg:self-end">
           <Typography.Title level={3}>{organization?.name}</Typography.Title>
           <Rate
             disabled
