@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import api from '../../apiService/useFetch';
-import { Button, message, Table, App as AntdApp } from 'antd';
+import { useEffect, useRef, useState } from "react";
+import api from "../../apiService/useFetch";
+import { Button, message, Table, App as AntdApp } from "antd";
 
 const HistoryVolunteer = () => {
   const refSearch = useRef<HTMLInputElement>(null);
@@ -20,53 +20,59 @@ const HistoryVolunteer = () => {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [searchKey, setSearchKey] = useState<string>('');
+  const [searchKey, setSearchKey] = useState<string>("");
   const { message: messageApi } = AntdApp.useApp();
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await api.get(
-        `/donate/volunteer-history?TransactionId=${searchKey}&PageNumber=${currentPage}&PageSize=${pageSize}`
-      );
-
-      setTotal(data.data.transactions.totalItems);
-      setStateTransaction(data.data.transactions.items);
+      try {
+        const { data } = await api.get(
+          `/donate/volunteer-history?TransactionId=${searchKey}&PageNumber=${currentPage}&PageSize=${pageSize}`
+        );
+        setTotal(data.data.transactions.totalItems);
+        setStateTransaction(data.data.transactions.items);
+      } catch (error: any) {
+        console.log(error);
+        if (error.response.data.Message === "Input validation error") {
+          messageApi.error("Mã giao dịch phải là số!");
+        }
+      }
     };
     fetchData();
   }, [currentPage, searchKey]);
 
   const columns = [
     {
-      title: 'Mã giao dịch',
-      dataIndex: 'transactionId',
-      key: 'money',
+      title: "Mã giao dịch",
+      dataIndex: "transactionId",
+      key: "money",
       render: (value: number) => (
         <span className="text-stone-500">#{value}</span>
       ),
     },
     {
-      title: 'Số tiền quyên góp',
-      dataIndex: 'money',
-      key: 'money',
+      title: "Số tiền quyên góp",
+      dataIndex: "money",
+      key: "money",
       render: (value: number) =>
-        `${new Intl.NumberFormat('vi-VN').format(value)} VND`,
+        `${new Intl.NumberFormat("vi-VN").format(value)} VND`,
     },
     {
-      title: 'Ngày quyên góp',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
+      title: "Ngày quyên góp",
+      dataIndex: "createdDate",
+      key: "createdDate",
       render: (value: string) =>
-        new Date(value).toLocaleString('vi-VN', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
+        new Date(value).toLocaleString("vi-VN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
         }),
     },
     {
-      title: 'Sự kiện',
-      dataIndex: 'eventName',
-      key: 'eventName',
+      title: "Sự kiện",
+      dataIndex: "eventName",
+      key: "eventName",
       render: (text: string, record: any) => (
         <a
           href={`/detail-event/${record.eventId}`}
@@ -81,33 +87,37 @@ const HistoryVolunteer = () => {
   ];
 
   const handleClickSearch = async () => {
-    setSearchKey(refSearch?.current!.value);
-    setCurrentPage(1);
+    if (Number(refSearch?.current!.value)) {
+      setSearchKey(refSearch?.current!.value);
+      setCurrentPage(1);
+    } else {
+      messageApi.error("Mã giao dịch phải là số!");
+    }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleClickSearch();
     }
   };
 
   const handleExportToExcel = async () => {
     try {
-      const { data } = await api.get('donate/export-excel-volunteer', {
-         responseType: 'blob',
+      const { data } = await api.get("donate/export-excel-volunteer", {
+        responseType: "blob",
       });
       const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'data.xlsx');
+      link.setAttribute("download", "data.xlsx");
       document.body.appendChild(link);
       link.click();
       link.remove();
-  
+
       // Xoá URL sau khi dùng
       window.URL.revokeObjectURL(url);
-      messageApi.success('Xuất file thành công');
+      messageApi.success("Xuất file thành công");
     } catch (error) {
-      messageApi.success('Xuất file thất bại');
+      messageApi.success("Xuất file thất bại");
     }
   };
 

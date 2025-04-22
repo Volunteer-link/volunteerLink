@@ -36,15 +36,18 @@ const VolunteerSuggestions = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +66,7 @@ const VolunteerSuggestions = () => {
     if (status) {
       fetchData();
     }
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     const fetchVolunteer = async () => {
@@ -94,7 +97,7 @@ const VolunteerSuggestions = () => {
     if (status) {
       fetchVolunteer();
     }
-  }, [PageNumber, resetState]);
+  }, [PageNumber, resetState, status]);
 
   const fetchAllVolunteer = async (page?: number) => {
     try {
@@ -144,7 +147,7 @@ const VolunteerSuggestions = () => {
     if (status) {
       fetchAllVolunteer();
     }
-  }, [resetStateAll]);
+  }, [resetStateAll, status]);
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
