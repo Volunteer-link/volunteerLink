@@ -152,52 +152,60 @@ const MyProfile = () => {
     fetchField();
   }, []);
 
+  const handleAvt = (url?: string) => {
+    setListFile((prev) => [
+      {
+        uid: url ? "-1" : "s-20052003",
+        name: "avatar.png",
+        status: "done",
+        url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
+      },
+    ]);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await api.get(`/profile/volunteer`);
         const data = res.data.data;
-        console.log(data);
-
-        setProfileState((prev) => ({
-          ...(prev ?? {}),
-          ...data,
-          dateOfBirth: new Date(data.dateOfBirth),
-        }));
-        setAddress(data.address);
-        if (data?.location) {
-        if (data?.location) {
-          setMarker({
-            longitude: Number(data?.location?.split(';')[1]),
-            latitude: Number(data?.location?.split(';')[0]),
-          });
+  
+        // Kiểm tra nếu data có tồn tại trước khi thao tác
+        if (data) {
+          setProfileState((prev) => ({
+            ...(prev ?? {}),
+            ...data,
+            dateOfBirth: new Date(data.dateOfBirth), // chuyển đổi ngày sinh
+          }));
+          setAddress(data.address);
+  
+          // Kiểm tra data.location và chia location nếu có
+          if (data?.location) {
+            const [latitude, longitude] = data.location.split(";").map(Number);
+            setMarker({
+              longitude,
+              latitude,
+            });
+          }
+  
+          setRadioState(data.sex);
+          
+          // Mã hóa danh sách các trường
+          const selectedFields: number[] = (data?.fields ?? []).map((item: any) => item.id);
+          setListSelectedField(selectedFields);
+  
+          // Kiểm tra và xử lý địa chỉ, chia tách nếu có
+          if (data.address) {
+            setAddressState(data.address.split(", "));
+          }
+  
+          // Xử lý ảnh đại diện
+          handleAvt(data.urlImage);
         }
-
-
-        setRadioState(data.sex);
-        const selectedFields: number[] = (data?.fields ?? []).map(
-          (item: any, index: number) => item.id
-        );
-
-        setListSelectedField(selectedFields);
-
-        setAddressState(data.address.split(", "));
-
-        handleAvt(data.urlImage);
       } catch (err: any) {
+        console.error("Error fetching data:", err); // Log lỗi để debug
       } finally {
+        // Thực thi các hành động nếu cần thiết sau khi fetch
       }
-    };
-
-    const handleAvt = (url?: string) => {
-      setListFile((prev) => [
-        {
-          uid: url ? "-1" : "s-20052003",
-          name: "avatar.png",
-          status: "done",
-          url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
-        },
-      ]);
     };
     fetchData();
   }, [updateState]);
