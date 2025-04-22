@@ -31,10 +31,20 @@ const VolunteerSuggestions = () => {
   const refSearch = useRef<HTMLInputElement>(null);
   const [AISearch, setAISearch] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState<string>("");
+  const [status, setStatus] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   setupInterceptors(setErrCode);
-  // }, []);
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await api.get(`/event/check-owner?eventId=${id}`);
+        setStatus(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStatus();
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +60,9 @@ const VolunteerSuggestions = () => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    if (status) {
+      fetchData();
+    }
   }, []);
 
   useEffect(() => {
@@ -79,8 +91,9 @@ const VolunteerSuggestions = () => {
         setIsLoading(false);
       }
     };
-
-    fetchVolunteer();
+    if (status) {
+      fetchVolunteer();
+    }
   }, [PageNumber, resetState]);
 
   const fetchAllVolunteer = async (page?: number) => {
@@ -128,7 +141,9 @@ const VolunteerSuggestions = () => {
   };
 
   useEffect(() => {
-    fetchAllVolunteer();
+    if (status) {
+      fetchAllVolunteer();
+    }
   }, [resetStateAll]);
 
   const handlePageChange = (page: number) => {
@@ -182,16 +197,15 @@ const VolunteerSuggestions = () => {
             },
           ]}
         />
-        <div>
-          <LineSpacing />
-          <div className="text-xl mb-8 text-center">
+        <div className="bg-stone-100 shadow-custom-green rounded-xl py-10 mt-8">
+          <div className="text-xl mb-8 text-center font-medium">
             <div>
               Tình nguyện viên{" "}
               <span className="text-primary-color">được gợi ý</span>
             </div>
             <img
               src="/materials/VTLAI_blackbrain_transparentbg.png"
-              className="w-40 mx-auto"
+              className="w-40 mx-auto mt-2"
               alt=""
             />
           </div>
@@ -211,72 +225,80 @@ const VolunteerSuggestions = () => {
               description="Không có tình nguyện viên được gợi ý"
             />
           )}
+          {total !== 0 && (
+            <Pagination
+              className="mt-4"
+              defaultCurrent={1}
+              onChange={handlePageChange}
+              total={total}
+              pageSize={pageSizeAI}
+              current={PageNumber}
+            />
+          )}
         </div>
-        {total !== 0 && (
-          <Pagination
-            className="mt-4"
-            defaultCurrent={1}
-            onChange={handlePageChange}
-            total={total}
-            pageSize={pageSizeAI}
-            current={PageNumber}
-          />
-        )}
       </div>
       <div>
         <LineSpacing />
-        <div className="text-xl text-center mb-8">
-          <span className="text-primary-color">Tất cả</span> tình nguyện viên
-        </div>
-        <div className="flex items-center justify-center gap-2">
-          <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">
-            <input
-              ref={refSearch}
-              type="text"
-              placeholder="Tìm kiếm theo tên tình nguyện viên..."
-              className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
-              onKeyDown={handleEnterKey}
-              onChange={handleChangeInput}
-            />
-            <div className="flex pr-2 items-center gap-4 select-none">
-              <div
-                onClick={handleClickSearch}
-                className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
-              >
-                Tìm kiếm
+        <div className="bg-stone-100 shadow-custom-green rounded-xl py-10">
+          <div className="text-xl text-center mb-8">
+            <span className="font-medium">
+              <span className="text-primary-color">Tất cả</span> tình nguyện
+              viên
+            </span>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">
+              <input
+                ref={refSearch}
+                type="text"
+                placeholder="Tìm kiếm theo tên tình nguyện viên..."
+                className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
+                onKeyDown={handleEnterKey}
+                onChange={handleChangeInput}
+              />
+              <div className="flex pr-2 items-center gap-4 select-none">
+                <div
+                  onClick={handleClickSearch}
+                  className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+                >
+                  Tìm kiếm
+                </div>
               </div>
             </div>
+            <div className="bg-white border-2 border-primary-color rounded-full py-3 px-5 flex items-center gap-3 text-base font-medium">
+              <span>
+                <span>Tìm kiếm bằng</span>
+                <span className="text-primary-color"> AI</span>:
+              </span>
+              <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
+            </div>
           </div>
-          <div className="bg-white border-2 border-primary-color rounded-full py-3 px-5 flex items-center gap-3">
-            <img src="/materials/AI.png" className="w-6 h-6 mb-1" alt="" />
-            <Switch defaultChecked={false} onChange={onChangeSwitchAIMode} />
-          </div>
+          {listVolunteerAll?.map((item, index) => (
+            <Volunteer
+              key={item.accountId + "volunteer"}
+              objectVolunteer={item}
+              eventId={Number(id)}
+              setResetState={setResetState}
+              setResetStateAll={setResetStateAll}
+            />
+          ))}
+          {listVolunteerAll?.length === 0 && (
+            <Empty
+              className="mt-4"
+              description="Không có dữ liệu tình nguyện viên"
+            />
+          )}
+          {totalAll !== 0 && (
+            <Pagination
+              className="mt-4"
+              defaultCurrent={1}
+              onChange={handlePageChangeAll}
+              total={totalAll}
+              pageSize={pageSizeAll}
+              current={currentPageAll}
+            />
+          )}
         </div>
-        {listVolunteerAll?.map((item, index) => (
-          <Volunteer
-            key={item.accountId + "volunteer"}
-            objectVolunteer={item}
-            eventId={Number(id)}
-            setResetState={setResetState}
-            setResetStateAll={setResetStateAll}
-          />
-        ))}
-        {listVolunteerAll?.length === 0 && (
-          <Empty
-            className="mt-4"
-            description="Không có dữ liệu tình nguyện viên"
-          />
-        )}
-        {totalAll !== 0 && (
-          <Pagination
-            className="mt-4"
-            defaultCurrent={1}
-            onChange={handlePageChangeAll}
-            total={totalAll}
-            pageSize={pageSizeAll}
-            current={currentPageAll}
-          />
-        )}
       </div>
     </div>
   );

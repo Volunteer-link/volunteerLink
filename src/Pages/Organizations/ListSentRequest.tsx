@@ -29,6 +29,20 @@ const ListSentRequest = () => {
     }[]
   >([]);
   const { id } = useParams<{ id: string }>();
+  const [status, setStatus] = useState<boolean>(false);
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await api.get(`/event/check-owner?eventId=${id}`);
+        setStatus(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStatus();
+  });
+
   const fetchInvite = async () => {
     try {
       setIsLoading(true);
@@ -44,7 +58,9 @@ const ListSentRequest = () => {
     }
   };
   useEffect(() => {
-    fetchInvite();
+    if (status) {
+      fetchInvite();
+    }
   }, [currentPage]);
   console.log(listInvitation);
 
@@ -70,6 +86,12 @@ const ListSentRequest = () => {
         setCurrentPage(1);
       }, 1000);
     } catch (e: any) {
+      messageApi.error(e.response.data.Message);
+      setTimeout(() => {
+        fetchInvite();
+        setIsLoading(false);
+        setCurrentPage(1);
+      }, 1000);
     } finally {
     }
   };

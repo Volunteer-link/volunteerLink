@@ -8,6 +8,17 @@ const OrganizationsDetailInformation = ({
 }: {
   organization: Organization | undefined;
 }) => {
+  console.log(organization?.urlFacebook);
+
+  const isValidUrl = (url: string) => {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch (err) {
+      return false;
+    }
+  };
+
   return (
     <>
       <div className="flex items-center gap-4">
@@ -19,18 +30,24 @@ const OrganizationsDetailInformation = ({
       <div className="max-w-[800px] mx-auto w-full">
         <div className="flex py-4 flex-col gap-2">
           <Typography.Text>
-            Hotline: {organization?.phoneNumber || "Không có thông tin"}
+            Số điện thoại: {organization?.phoneNumber || "Không có thông tin"}
           </Typography.Text>
-          <Typography.Link target="_blank">
-            Facebook:{" "}
+          <Typography.Text>
+            Mạng xã hội:{" "}
             <a
               href={organization?.urlFacebook ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => {
+                const url = organization?.urlFacebook;
+                if (!url || !isValidUrl(url)) {
+                  e.preventDefault();
+                }
+              }}
             >
               {organization?.urlFacebook}
             </a>
-          </Typography.Link>
+          </Typography.Text>
           <Typography.Text>Email: {organization?.gmail}</Typography.Text>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../../apiService/useFetch";
-import { Table } from "antd";
+import { Button, message, Table, App as AntdApp } from "antd";
 
 const HistoryVolunteer = () => {
   const refSearch = useRef<HTMLInputElement>(null);
@@ -21,15 +21,21 @@ const HistoryVolunteer = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [searchKey, setSearchKey] = useState<string>("");
-
+  const { message: messageApi } = AntdApp.useApp();
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await api.get(
-        `/donate/volunteer-history?TransactionId=${searchKey}&PageNumber=${currentPage}&PageSize=${pageSize}`
-      );
-
-      setTotal(data.data.transactions.totalItems);
-      setStateTransaction(data.data.transactions.items);
+      try {
+        const { data } = await api.get(
+          `/donate/volunteer-history?TransactionId=${searchKey}&PageNumber=${currentPage}&PageSize=${pageSize}`
+        );
+        setTotal(data.data.transactions.totalItems);
+        setStateTransaction(data.data.transactions.items);
+      } catch (error: any) {
+        console.log(error);
+        if (error.response.data.Message === "Input validation error") {
+          messageApi.error("Mã giao dịch phải là số!");
+        }
+      }
     };
     fetchData();
   }, [currentPage, searchKey]);
@@ -81,19 +87,53 @@ const HistoryVolunteer = () => {
   ];
 
   const handleClickSearch = async () => {
-    setSearchKey(refSearch?.current!.value);
-    setCurrentPage(1);
+    if (Number(refSearch?.current!.value)) {
+      setSearchKey(refSearch?.current!.value);
+      setCurrentPage(1);
+    } else {
+      messageApi.error("Mã giao dịch phải là số!");
+    }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleClickSearch();
     }
   };
+
+  const handleExportToExcel = async () => {
+    try {
+      const { data } = await api.get("donate/export-excel-volunteer", {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "data.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      // Xoá URL sau khi dùng
+      window.URL.revokeObjectURL(url);
+      messageApi.success("Xuất file thành công");
+    } catch (error) {
+      messageApi.success("Xuất file thất bại");
+    }
+  };
+
   return (
     <div>
-      <div className="text-primary-color text-lg font-medium my-4">
-        Lịch sử giao dịch
+      <div className="flex justify-between">
+        <div className="text-primary-color text-lg font-medium my-4">
+          Lịch sử giao dịch
+        </div>
+        {!!stateTransaction.length && (
+          <Button onClick={handleExportToExcel} type="primary">
+            Xuất thành file Excel
+          </Button>
+        )}
       </div>
+
       <div className="my-4">
         <div className="flex items-center justify-center gap-2">
           <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">

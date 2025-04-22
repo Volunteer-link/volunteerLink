@@ -1,14 +1,16 @@
-import { IoLocation } from "react-icons/io5";
-import { HiUsers } from "react-icons/hi2";
-import { FaCalendarAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { SlOptions } from "react-icons/sl";
-import { Dropdown, MenuProps } from "antd";
-import { EventCardType } from "../../model/ShowEventModel/EventCardType";
-import { useState } from "react";
-import Loading from "./Loading";
-import SmallLoading from "./SmallLoading";
-import { RxEnter } from "react-icons/rx";
+import { IoLocation } from 'react-icons/io5';
+import { HiUsers } from 'react-icons/hi2';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { SlOptions } from 'react-icons/sl';
+import { Dropdown, MenuProps, message } from 'antd';
+import { EventCardType } from '../../model/ShowEventModel/EventCardType';
+import { useState } from 'react';
+import Loading from './Loading';
+import SmallLoading from './SmallLoading';
+import { RxEnter } from 'react-icons/rx';
+import dayjs from 'dayjs';
+import api from '../../apiService/useFetch';
 
 const EventCard: React.FC<{
   eventObject: EventCardType;
@@ -16,19 +18,40 @@ const EventCard: React.FC<{
 }> = ({ eventObject, showOption }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showRemove, setShowRemove] = useState<boolean>(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
       label: (
         <div onClick={(e) => handleClickMenuItem(e)}>Cập nhật sự kiện</div>
       ),
-      key: "0",
+      key: '0',
+    },
+    {
+      label: dayjs().isAfter(dayjs(eventObject.timePublish)) ? null : (
+        <div onClick={(e) => handleRemoveEventCard(e)}>Xoá sự kiện</div>
+      ),
+      key: '1',
     },
   ];
 
+  const handleRemoveEventCard = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const { data } = await api.delete(
+        `/event/remove-an-event?EventId=${eventObject.id}`
+      );
+      setShowRemove(true);
+    } catch (error: any) {
+      if (error.status == 400)
+        messageApi.error(`${error.response.data.Message}`);
+    }
+  };
+
   const handleClickEventCard = (id: number) => {
     // navigate(`/detail-event/${id}`);
-    window.open(`/detail-event/${id}`, "_blank");
+    window.open(`/detail-event/${id}`, '_blank');
   };
 
   const handleClickOption = (e: React.MouseEvent) => {
@@ -40,6 +63,9 @@ const EventCard: React.FC<{
     navigate(`/update-event/${eventObject.id}`);
   };
 
+  if (showRemove) {
+    return null;
+  }
   return (
     <div
       onClick={() => handleClickEventCard(eventObject.id)}
@@ -49,7 +75,7 @@ const EventCard: React.FC<{
         {showOption && (
           <Dropdown
             menu={{ items }}
-            trigger={["click"]}
+            trigger={['click']}
             placement="bottomRight"
             getPopupContainer={(trigger) =>
               trigger.parentElement || document.body
@@ -75,7 +101,7 @@ const EventCard: React.FC<{
             loading="lazy"
             onLoad={() => setIsLoading(false)}
             onError={(e) =>
-              (e.currentTarget.src = "/materials/placeholder-image.jpg")
+              (e.currentTarget.src = '/materials/placeholder-image.jpg')
             }
           />
 
@@ -101,10 +127,10 @@ const EventCard: React.FC<{
               <div className="flex items-center gap-1">
                 <FaCalendarAlt className="text-sm" />
                 <div className="truncate max-w-28">
-                  {new Date(eventObject.startTime).toLocaleDateString("vi-VN", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
+                  {new Date(eventObject.startTime).toLocaleDateString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
                   })}
                 </div>
               </div>

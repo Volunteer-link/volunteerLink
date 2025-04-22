@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import Header from "./Layout/Header";
-import Footer from "./Layout/Footer";
-import ScrollToTop from "../Common/ScrollToTop";
-import { Carousel } from "antd";
-import { motion } from "framer-motion";
-import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
-import LineSpacing from "./Components/LineSpacing";
-import { FaArrowRight } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import Header from './Layout/Header';
+import Footer from './Layout/Footer';
+import ScrollToTop from '../Common/ScrollToTop';
+import { Carousel } from 'antd';
+import { motion } from 'framer-motion';
+import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
+import LineSpacing from './Components/LineSpacing';
+import { FaArrowRight } from 'react-icons/fa';
 
 interface SlideOneProps {
   isActive: boolean;
+  isMobile?: boolean;
 }
 
-const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
+const SlideOne: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   return (
     <div
       style={{
-        height: "600px",
-        position: "relative",
-        background: "white",
+        height: '600px',
+        position: 'relative',
+        background: 'white',
       }}
     >
       <img
@@ -28,22 +29,22 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: "cover",
-          objectPosition: "center",
+          objectFit: 'cover',
+          objectPosition: 'center',
         }}
       />
       {isActive && (
         <motion.div
           key="slide-2-animate"
-          initial={{ opacity: 0, x: 0 }}
-          animate={{ opacity: 1, x: -300 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          initial={isMobile ? false : { opacity: 0, x: 0 }}
+          animate={isMobile ? {} : { opacity: 1, x: -300 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
           className="absolute text-white right-10 top-1/4 max-w-[600px]"
         >
           <div className="scale-110 text-end">
             <div className="mb-12">
               <span className="text-2xl font-quicksand font-light text-shadow-lg">
-                Bạn không thể làm{" "}
+                Bạn không thể làm{' '}
               </span>
               <div className="bg-white opacity-80 inline-block py-2 px-4 rounded-tr-3xl">
                 <span className="text-5xl text-primary-color font-merriweather">
@@ -56,7 +57,7 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
             </div>
             <div>
               <span className="text-2xl font-quicksand font-light text-shadow-lg">
-                Bạn có thể làm{" "}
+                Bạn có thể làm{' '}
               </span>
               <div className="bg-white opacity-80 inline-block py-4 px-4 rounded-br-3xl">
                 <span className="text-5xl text-primary-color font-merriweather">
@@ -71,13 +72,13 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive }) => {
   );
 };
 
-const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
+const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   return (
     <div
       style={{
-        height: "600px",
-        position: "relative",
-        background: "white",
+        height: '600px',
+        position: 'relative',
+        background: 'white',
       }}
     >
       <img
@@ -85,8 +86,8 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: "cover",
-          objectPosition: "center",
+          objectFit: 'cover',
+          objectPosition: 'center',
         }}
       />
       {isActive && (
@@ -94,9 +95,9 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
           {/* Bên trái bay vô */}
           <motion.div
             key="slide-left"
-            initial={{ opacity: 0, x: -200 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            initial={isMobile ? false : { opacity: 0, x: -200 }}
+            animate={isMobile ? {} : { opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
             className="text-white text-right mb-20"
           >
             <div className="flex">
@@ -106,7 +107,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
                   Một hành động
                 </span>
                 <span className="text-primary-color bg-white rounded-bl-3xl opacity-90 py-3 font-thin px-6 text-7xl mt-4 inline-block font-merriweather">
-                  {" "}
+                  {' '}
                   nhỏ
                 </span>
               </div>
@@ -116,9 +117,9 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
           {/* Bên phải bay vô */}
           <motion.div
             key="slide-right"
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            initial={isMobile ? false : { opacity: 0, x: 200 }}
+            animate={isMobile ? {} : { opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
             className="text-white text-left mt-20"
           >
             <div className="flex">
@@ -127,7 +128,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
                   một trái tim
                 </span>
                 <span className="text-primary-color bg-white rounded-br-3xl opacity-90 py-3 font-thin px-6 text-7xl mt-4 inline-block font-merriweather">
-                  {" "}
+                  {' '}
                   lớn
                 </span>
               </div>
@@ -140,13 +141,13 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive }) => {
   );
 };
 
-const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
+const SlideThree: React.FC<SlideOneProps> = ({ isActive,isMobile }) => {
   return (
     <div
       style={{
-        height: "600px",
-        position: "relative",
-        background: "white",
+        height: '600px',
+        position: 'relative',
+        background: 'white',
       }}
     >
       <img
@@ -154,30 +155,30 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: "cover",
-          objectPosition: "center",
+          objectFit: 'cover',
+          objectPosition: 'center',
         }}
       />
       {isActive && (
         <motion.div
           key="slide-2-animate"
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="absolute text-white right-[10%] top-1/3"
+          initial={isMobile? false : { opacity: 0, y: 100 }}
+          animate={isMobile? false : { opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+          className="absolute text-white md:right-[10%] top-1/3"
         >
           <div className="text-end">
             <div className="flex gap-2 items-center bg-white px-8 py-4 rounded-full opacity-80">
               <RiDoubleQuotesL className="text-stone-700 text-4xl" />
               <span>
                 <span className="text-3xl text-stone-700 font-quicksand font-light">
-                  Tình nguyện là{" "}
+                  Tình nguyện là{' '}
                 </span>
                 <span className="text-5xl font-merriweather text-primary-color">
-                  ngôn ngữ{" "}
+                  ngôn ngữ{' '}
                 </span>
                 <span className="text-3xl text-stone-700 font-quicksand font-light">
-                  của{" "}
+                  của{' '}
                 </span>
                 <span className="text-5xl font-merriweather text-primary-color">
                   trái tim
@@ -195,10 +196,10 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive }) => {
 export default function RootLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const hideHeader = location.pathname.startsWith("/admin");
-  const hideFooter = location.pathname.startsWith("/admin");
+  const hideHeader = location.pathname.startsWith('/admin');
+  const hideFooter = location.pathname.startsWith('/admin');
   const shouldHideImage =
-    location.pathname === "/" || location.pathname === "/home";
+    location.pathname === '/' || location.pathname === '/home';
   const [currentSlide, setCurrentSlide] = useState(0);
   useEffect(() => {
     if (shouldHideImage) {
@@ -207,14 +208,27 @@ export default function RootLayout() {
   }, [location.pathname]);
 
   const handleClickDonate = () => {
-    navigate("/donative-events");
+    navigate('/donative-events');
   };
   const handleClickOrg = () => {
-    navigate("/organizations");
+    navigate('/organizations');
   };
   const handleClickEvent = () => {
-    navigate("/events");
+    navigate('/events');
   };
+
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile(); // check ban đầu
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="relative">
@@ -226,26 +240,26 @@ export default function RootLayout() {
           afterChange={(current) => setCurrentSlide(current)}
           infinite
           pauseOnFocus
-          autoplay={{ dotDuration: true }}
-          autoplaySpeed={3000}
+          // autoplay={{ dotDuration: true }}
+          // autoplaySpeed={3000}
           arrows
         >
           <div>
-            <SlideOne isActive={currentSlide === 0} />
+            <SlideOne isMobile={isMobile} isActive={currentSlide === 0} />
           </div>
           <div>
-            <SlideTwo isActive={currentSlide === 1} />
+            <SlideTwo isMobile={isMobile} isActive={currentSlide === 1} />
           </div>
           <div>
-            <SlideThree isActive={currentSlide === 2} />
+            <SlideThree isMobile={isMobile} isActive={currentSlide === 2} />
           </div>
         </Carousel>
       )}
       <main
         className={
           hideFooter
-            ? ""
-            : `my-3 lg:my-8` + "container mx-auto px-4 lg:px-0 lg:w-3/4"
+            ? ''
+            : `my-3 lg:my-8` + 'container mx-auto px-4 lg:px-0 lg:w-3/4'
         }
       >
         <Outlet />
@@ -257,8 +271,8 @@ export default function RootLayout() {
             className="w-full h-[600px] object-cover object-bottom"
             alt=""
           />
-          <div className="absolute top-1/2 -translate-y-1/2 right-[10%]">
-            <div className=" bg-white shadow-2xl rounded-xl py-4 px-12 w-96">
+          <div className="absolute w-full sm:w-fit top-1/2 -translate-y-1/2 md:right-[10%]">
+            <div className=" bg-white shadow-2xl rounded-xl py-4 px-12 mx-auto w-96">
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fdonate-icon-vector_946691-933.png?alt=media&token=7ed1c73d-5bc4-48bd-b515-1bd6c93a6966"
                 className="w-32 mx-auto my-8"
@@ -287,23 +301,23 @@ export default function RootLayout() {
           </div>
         </div>
       )}
-      <LineSpacing />
+      {shouldHideImage && <LineSpacing />}
       {shouldHideImage && (
         <div className="font-quicksand">
           <div className="relative">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fgroup-different-people-volunteering-foodbank-poor-people_23-2149012208.jpg?alt=media&token=29a625f4-ba28-4846-9a9d-62649fff225d"
-              className="w-full h-[600px] object-cover blur-[2px]"
+              className="w-full md:block hidden h-[600px] object-cover blur-[2px]"
               alt=""
             />
-            <div className="absolute flex gap-20 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
+            <div className=" flex-col md:flex-row md:absolute flex gap-20 md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2">
               <motion.div
-                initial={{ opacity: 0, x: -100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial={isMobile ? false : { opacity: 0, x: -100 }}
+                whileInView={isMobile ? {} : { opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
                 viewport={{ amount: 0.6 }}
               >
-                <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
+                <div className="md:w-[600px] w-full bg-white py-10 px-12 rounded-md shadow-lg">
                   <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
                     Tổ chức
                   </div>
@@ -312,7 +326,7 @@ export default function RootLayout() {
                     <span className="my-4 inline-block">
                       Trong hệ thống của chúng tôi, mỗi tổ chức là một mảnh ghép
                       quan trọng tạo nên mạng lưới kết nối mạnh mẽ giữa cộng
-                      đồng và những giá trị nhân văn.{" "}
+                      đồng và những giá trị nhân văn.{' '}
                     </span>
                     <span>
                       Từ những nhóm tình nguyện nhỏ đến các tổ chức xã hội lớn,
@@ -331,12 +345,12 @@ export default function RootLayout() {
                 </div>
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial={isMobile ? false : { opacity: 0, x: 100 }}
+                whileInView={isMobile ? {} : { opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
                 viewport={{ amount: 0.6 }}
               >
-                <div className="w-[600px] bg-white py-10 px-12 rounded-md shadow-lg">
+                <div className="md:w-[600px] w-full bg-white py-10 px-12 rounded-md shadow-lg">
                   <div className="text-4xl bg-gradient-to-r font-bold from-[#3BA769] to-[#ddff00] bg-clip-text text-transparent">
                     Sự kiện
                   </div>

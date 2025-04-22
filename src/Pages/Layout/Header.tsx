@@ -262,14 +262,14 @@ const Header: React.FC<{}> = () => {
       <div></div>
       <div className="bg-primary-color w-16 h-16 m-auto my-2 rounded-full overflow-hidden lg:my-0">
         <img
-          src="/materials/logo.jfif"
-          className="w-full h-full object-contain"
+          src="/materials/with bg.png"
+          className="w-full h-full object-contain scale-125"
           alt=""
         />
       </div>
       <div className="col-span-3 hidden md:block">
         <ul className="flex gap-8 text-white text-sm h-full items-center">
-          <li className="hover:scale-110 transition-all cursor-pointer">
+          <li className="hover:scale-110 transition-all cursor-pointer text-base">
             <NavLink
               to="/home"
               className={({ isActive }) =>
@@ -366,14 +366,17 @@ const Header: React.FC<{}> = () => {
         )}
         {user && (
           <div className="flex gap-10 items-center justify-center h-full">
-            <Badge dot={notiStatus}>
-              <div
-                onClick={handleNotification}
-                className="cursor-pointer hover:scale-110 transition-transform"
-              >
-                <VscBell className="text-2xl text-white" />
-              </div>
-            </Badge>
+            {user?.role !== "Admin" && (
+              <Badge dot={notiStatus}>
+                <div
+                  onClick={handleNotification}
+                  className="cursor-pointer hover:scale-110 transition-transform"
+                >
+                  <VscBell className="text-2xl text-white" />
+                </div>
+              </Badge>
+            )}
+
             {/* <div className="cursor-pointer hover:scale-110 transition-transform">
               <VscBellDot className="text-2xl text-white" />
             </div> */}

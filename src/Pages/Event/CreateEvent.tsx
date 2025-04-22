@@ -64,6 +64,7 @@ const CreateEvent = () => {
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
+    form.setFieldValue('timePublish', null);
   };
 
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
@@ -196,9 +197,13 @@ const CreateEvent = () => {
     setTimePublish(value);
   };
   const disabledDate = (current: any) => {
-    if (!timePublish) return false;
-    const minDate = timePublish.add(2, 'days');
-    return current.isBefore(minDate,"day");
+    if (value === 1) {
+      return current.isBefore(dayjs().add(2,"days"), 'day');
+    } else if (value === 2) {
+      if (!timePublish) return false;
+      const minDate = timePublish.add(2, 'days');
+      return current.isBefore(minDate, 'day');
+    }
   };
 
   return (
@@ -302,7 +307,8 @@ const CreateEvent = () => {
         </div>
         <div className="mt-6">
           <Tag className="mb-2 p-1" color="warning">
-            Ghi chú: Tình nguyện viên chỉ có thể đăng ký trước khi sự kiện diễn ra 24h
+            Ghi chú: Tình nguyện viên chỉ có thể đăng ký trước khi sự kiện diễn
+            ra 24h
           </Tag>
           <Radio.Group
             style={style}
@@ -360,7 +366,10 @@ const CreateEvent = () => {
                   const timePublish = form.getFieldValue('timePublish');
                   const currentDate = dayjs();
                   const minStartDate = currentDate.add(2, 'day');
-                  if (timePublish && startDate.isBefore(timePublish.add(2, 'day'))) {
+                  if (
+                    timePublish &&
+                    startDate.isBefore(timePublish.add(2, 'day'))
+                  ) {
                     return Promise.reject(
                       'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
                     );

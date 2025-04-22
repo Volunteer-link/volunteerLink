@@ -49,13 +49,14 @@ const ListEventsOrganization = ({
       label: 'Đang diễn ra',
     },
     {
-      key: '1',
-      label: 'Đã diễn ra',
-    },
-    {
       key: '-1',
       label: 'Sắp diễn ra',
     },
+    {
+      key: '1',
+      label: 'Đã diễn ra',
+    },
+   
   ];
 
   const onChange = (key: string) => {

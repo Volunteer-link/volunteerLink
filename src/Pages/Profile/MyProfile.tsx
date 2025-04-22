@@ -15,28 +15,32 @@ import {
   Select,
   Spin,
   Upload,
-} from 'antd';
-import { useEffect, useRef, useState } from 'react';
-import { decodedCookie, getCookie } from '../../ultils/cookie';
-import api, { setupInterceptors } from '../../apiService/useFetch';
-import axios from 'axios';
-import ErrorSolving from '../../Common/ErrorSolving';
-import ErrorCards from '../Components/ErrorCards';
-import Loading from '../Components/Loading';
+} from "antd";
+import { useEffect, useRef, useState } from "react";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
+import api, { setupInterceptors } from "../../apiService/useFetch";
+import axios from "axios";
+import ErrorSolving from "../../Common/ErrorSolving";
+import ErrorCards from "../Components/ErrorCards";
+import Loading from "../Components/Loading";
 import {
   getDownloadURL,
   ref,
   uploadBytes,
   uploadBytesResumable,
-} from 'firebase/storage';
-import dayjs from 'dayjs';
-import { storage } from '../../ultils/firebase';
-import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
-import utc from 'dayjs/plugin/utc';
-import { data } from 'react-router-dom';
-import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
+} from "firebase/storage";
+import dayjs from "dayjs";
+import { storage } from "../../ultils/firebase";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
+import utc from "dayjs/plugin/utc";
+import { data } from "react-router-dom";
+import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
+import MapBox from "../Components/MapBox";
 dayjs.extend(utc);
-
+interface MarkerPosition {
+  longitude: number;
+  latitude: number;
+}
 interface ProfileState {
   $type: string;
   accountId: number;
@@ -66,18 +70,7 @@ interface FormValuesVolunteer {
   phone: string;
   skill: string;
   fields: number[];
-  availableTimes: number[];
 }
-
-const dayOptions = [
-  { label: 'Sunday', value: 0 },
-  { label: 'Monday', value: 1 },
-  { label: 'Tuesday', value: 2 },
-  { label: 'Wednesday', value: 3 },
-  { label: 'Thursday', value: 4 },
-  { label: 'Friday', value: 5 },
-  { label: 'Saturday', value: 6 },
-];
 
 const MyProfile = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -85,44 +78,24 @@ const MyProfile = () => {
   const [radioState, setRadioState] = useState<number>(-2);
   // const [errCode, setErrCode] = useState<number>(0);
 
-  const token = getCookie('accessToken');
+  const token = getCookie("accessToken");
   const user = decodedCookie(token);
 
   const formRef = useRef<FormInstance>(null);
   const [profileState, setProfileState] = useState<ProfileState>();
   const [listFile, setListFile] = useState<UploadFile[]>([]);
   const [listUploadFile, setListUploadFile] = useState<UploadFile>();
-  const [errorName, setErrorName] = useState<string>('');
-  const [errorSkill, setErrorSkill] = useState<string>('');
-  const [errorDob, setErrorDob] = useState<string>('');
-  const [errorPhone, setErrorPhone] = useState<string>('');
-  const [errorAddress, setErrorAddress] = useState<boolean>(false);
+  const [errorName, setErrorName] = useState<string>("");
+  const [errorSkill, setErrorSkill] = useState<string>("");
+  const [errorDob, setErrorDob] = useState<string>("");
+  const [errorPhone, setErrorPhone] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [errorField, setErrorField] = useState<boolean>(false);
   const [isPublish, setIsPublish] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<number>(0);
+  const [stateKey, setStateKey] = useState<number>(0);
   const [addressState, setAddressState] = useState<string[]>([]);
   const [checkProfile, setCheckProfile] = useState<boolean>(true);
-  const [availableTimes, setAvailableTimes] = useState<number[]>([]);
-  const [checkLoadDistrict, setCheckLoadDistrict] = useState<boolean>(false);
-  const [listProvinces, setListProvinces] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
-  const [listDistrict, setListDistrict] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
-  const [listWard, setListWard] = useState<
-    {
-      id: number;
-      name: string;
-    }[]
-  >([]);
   const [listFieldState, setListFieldState] = useState<
     {
       id: number;
@@ -131,29 +104,17 @@ const MyProfile = () => {
   >([]);
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
 
-  // const listField = [
-  //   "Email",
-  //   "Họ và tên",
-  //   "Ngày sinh",
-  //   "Giới tính",
-  //   "Địa chỉ",
-  //   "Vị trí",
-  //   "Số điện thoại",
-  //   "Kĩ năng",
-  //   "Lĩnh vực quan tâm",
-  // ];
-
   const [form] = Form.useForm();
 
   const [messageApi, contextHolder] = message.useMessage();
-  // useEffect(() => {
-  //   setupInterceptors(setErrCode);
-  // }, []);
+  const [marker, setMarker] = useState<MarkerPosition | null>(null);
+  const [address, setAddress] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
       try {
-        const { data } = await api.get('/profile/check-publish-profile');
+        const { data } = await api.get("/profile/check-publish-profile");
         setIsPublish(data.data.success);
       } catch (e: any) {}
     };
@@ -175,20 +136,9 @@ const MyProfile = () => {
     if (user) {
       fetchCheckStatus();
     }
-  }, []);
+  }, [stateKey]);
 
   useEffect(() => {
-    const fetchProvince = async () => {
-      try {
-        const data = await axios.get(
-          'https://open.oapi.vn/location/provinces?page=0&size=1000'
-        );
-        setListProvinces(data.data.data);
-      } catch (e: any) {
-      } finally {
-      }
-    };
-
     const fetchField = async () => {
       try {
         const { data } = await api.get(`/common/get-fields`);
@@ -197,8 +147,6 @@ const MyProfile = () => {
       } finally {
       }
     };
-
-    fetchProvince();
     fetchField();
   }, []);
 
@@ -206,15 +154,22 @@ const MyProfile = () => {
     const fetchData = async () => {
       try {
         const res = await api.get(`/profile/volunteer`);
-
         const data = res.data.data;
+        console.log(data);
 
         setProfileState((prev) => ({
           ...(prev ?? {}),
           ...data,
           dateOfBirth: new Date(data.dateOfBirth),
         }));
-        setAvailableTimes(data.availableTimes);
+        setAddress(data.address);
+        if (data?.location) {
+          setMarker({
+            longitude: Number(data?.location?.split(";")[1]),
+            latitude: Number(data?.location?.split(";")[0]),
+          });
+        }
+
         setRadioState(data.sex);
         const selectedFields: number[] = (data?.fields ?? []).map(
           (item: any, index: number) => item.id
@@ -222,7 +177,7 @@ const MyProfile = () => {
 
         setListSelectedField(selectedFields);
 
-        setAddressState(data.address.split(', '));
+        setAddressState(data.address.split(", "));
 
         handleAvt(data.urlImage);
       } catch (err: any) {
@@ -233,9 +188,9 @@ const MyProfile = () => {
     const handleAvt = (url?: string) => {
       setListFile((prev) => [
         {
-          uid: url ? '-1' : 's-20052003',
-          name: 'avatar.png',
-          status: 'done',
+          uid: url ? "-1" : "s-20052003",
+          name: "avatar.png",
+          status: "done",
           url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
         },
       ]);
@@ -257,70 +212,40 @@ const MyProfile = () => {
         ward: addressState[0],
         phone: profileState.phoneNumber,
         skill: profileState.skill,
-        availableTimes: availableTimes,
       });
     }
   }, [profileState, form]);
-
-  const fetchDistrict = async (idProvince: number) => {
-    try {
-      const data = await axios.get(
-        `https://open.oapi.vn/location/districts/${idProvince}?page=0&size=1000`
-      );
-      setListDistrict(data.data.data);
-      setCheckLoadDistrict(true);
-    } catch (e: any) {
-    } finally {
-    }
-  };
-
-  const fetchWard = async (idProvince: number) => {
-    try {
-      const data = await axios.get(
-        `https://open.oapi.vn/location/wards/${idProvince}?page=0&size=1000`
-      );
-      setListWard(data.data.data);
-    } catch (e: any) {
-    } finally {
-    }
-  };
 
   const handlePreview = async (file: UploadFile) => {
     setPreviewOpen(true);
   };
 
   const handleSubmit = async (values: FormValuesVolunteer) => {
-    const availableTimes = values.availableTimes;
-
     if (listSelectedField.length === 0) {
       setErrorField(true);
       messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
     } else {
       setErrorField(false);
-      if (listFile[0]?.uid === 's-20052003') {
+      if (listFile[0]?.uid === "s-20052003") {
         messageApi.error(`Hồ sơ của bạn cần ảnh đại diện!`);
       } else {
         try {
           setIsLoading(true);
-          const address = `${values.ward}, ${values.district}, ${values.province}`;
           Object.assign(values, { address });
-          let location = await getCoordinates(address); // Gọi hàm lấy tọa độ
-          console.log(location);
-
-          if (location) {
+          if (marker) {
             Object.assign(values, {
-              location: `${location.lat};${location.lon}`,
+              location: `${marker.latitude};${marker.longitude}`,
             });
           } else {
             Object.assign(values, { location: null }); // Gán giá trị mặc định nếu không lấy được tọa độ
           }
           const { province, district, ward, email, ...sendObject } = values;
-          sendObject.dob = dayjs(sendObject.dob).format('YYYY-MM-DD');
+          sendObject.dob = dayjs(sendObject.dob).format("YYYY-MM-DD");
 
           Object.assign(sendObject, { fields: listSelectedField });
           // console.log(listSelectedField);
           let urlNewAvt: string[] | undefined;
-          if (listFile[0]?.uid !== '-1') {
+          if (listFile[0]?.uid !== "-1") {
             urlNewAvt = await uploadFilesToFirebase(listFile);
           }
           Object.assign(sendObject, { imageUrl: urlNewAvt?.[0] });
@@ -337,13 +262,14 @@ const MyProfile = () => {
             console.log(e);
           } finally {
             messageApi.success(`Hồ sơ của bạn đã được lưu thành công!`);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: "smooth" });
 
             setUpdateState((prev) => ++prev);
           }
         } catch (e: any) {
         } finally {
           setIsLoading(false);
+          setStateKey((prev) => ++prev);
         }
       }
     }
@@ -358,34 +284,7 @@ const MyProfile = () => {
     messageApi.error(`Hồ sơ của bạn cần đầy đủ thông tin để lưu!`);
   };
 
-  const handleSelectProvinces = (value: string, option: any) => {
-    fetchDistrict(Number(option.id));
-  };
-
-  const handleSelectDistricts = (value: string, option: any) => {
-    fetchWard(Number(option.id));
-  };
-
-  const getCoordinates = async (address: string) => {
-    const encodedAddress = encodeURIComponent(address);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data.length > 0) {
-        const { lat, lon } = data[0];
-        return { lat, lon };
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
-  };
-
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     console.log(newFileList.length);
 
     let newArray = newFileList as Array<UploadFile>;
@@ -409,15 +308,13 @@ const MyProfile = () => {
   };
 
   const handleOk = async () => {
-    console.log(isPublish);
     await publicProfile(!isPublish);
-    console.log(isPublish);
     messageApi.success(
       isPublish
         ? `Hồ sơ của bạn đã hủy xuất bản!`
-        : 'Hồ sơ của bạn đã được xuất bản thành công'
+        : "Hồ sơ của bạn đã được xuất bản thành công"
     );
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setOpenModal(false);
     setIsPublish((prev) => !prev);
     setUpdateState((prev) => ++prev);
@@ -425,6 +322,29 @@ const MyProfile = () => {
 
   const closeModal = () => {
     setOpenModal(false);
+  };
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const data = await api.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${marker?.latitude}&lon=${marker?.longitude}&format=json`
+      );
+      setAddress(data.data.display_name);
+      form.setFieldsValue({
+        address: data.data.display_name,
+      });
+    };
+
+    if (marker?.latitude && marker?.longitude) {
+      fetchAddress();
+    }
+  }, [marker]);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -469,14 +389,14 @@ const MyProfile = () => {
           <div className="lg:flex items-end mt-4">
             <span className="mr-1">Trạng thái:</span>
             <span className="font-medium text-base text-primary-color">
-              {profileState?.isAvailable && 'Đã xuất bản'}
+              {profileState?.isAvailable && "Đã xuất bản"}
             </span>
             <span className="font-medium text-base text-red-500">
-              {!profileState?.isAvailable && 'Chưa xuất bản'}
+              {!profileState?.isAvailable && "Chưa xuất bản"}
             </span>
           </div>
           <Image
-            wrapperStyle={{ display: 'none' }}
+            wrapperStyle={{ display: "none" }}
             preview={{
               visible: previewOpen,
               onVisibleChange: (visible) => setPreviewOpen(visible),
@@ -517,20 +437,20 @@ const MyProfile = () => {
               <Form.Item
                 name="name"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập họ và tên!' },
+                  { required: true, message: "Vui lòng nhập họ và tên!" },
                   {
                     pattern:
                       /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
                     message:
-                      'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
+                      "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
                   },
                 ]}
               >
                 <Input
                   className={`border-[0.1rem] text-base ${
-                    errorName !== ''
-                      ? 'border-2 border-red-500'
-                      : 'border-stone-300'
+                    errorName !== ""
+                      ? "border-2 border-red-500"
+                      : "border-stone-300"
                   } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
                 />
               </Form.Item>
@@ -546,13 +466,13 @@ const MyProfile = () => {
               <Form.Item
                 name="dob"
                 rules={[
-                  { required: true, message: 'Vui lòng chọn ngày sinh!' },
+                  { required: true, message: "Vui lòng chọn ngày sinh!" },
                 ]}
               >
                 <DatePicker
                   format="YYYY-MM-DD"
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 ${
-                    errorDob !== '' ? 'border-red-500' : 'border-stone-300'
+                    errorDob !== "" ? "border-red-500" : "border-stone-300"
                   }`}
                 />
               </Form.Item>
@@ -568,7 +488,7 @@ const MyProfile = () => {
               <Form.Item
                 name="sex"
                 rules={[
-                  { required: true, message: 'Vui lòng chọn giới tính!' },
+                  { required: true, message: "Vui lòng chọn giới tính!" },
                 ]}
               >
                 <Radio.Group
@@ -589,79 +509,53 @@ const MyProfile = () => {
                 </div>
                 <div className="w-20 h-[0.07rem] bg-primary-color"></div>
               </div>
-              <div className="text-base font-medium text-primary-color my-4">
-                Tỉnh/Thành phố
+              <div className="mapbox">
+                <Modal
+                  maskClosable={true}
+                  footer={null}
+                  onCancel={handleClose}
+                  title="Chọn địa điểm"
+                  centered
+                  open={isModalOpen}
+                >
+                  <MapBox marker={marker} setMarker={setMarker} />
+                </Modal>
+                <div
+                  onClick={showModal}
+                  className="px-3 cursor-pointer hover:opacity-80 py-2 mt-3 rounded-lg border inline-block border-[#515151]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="20"
+                    viewBox="0 0 16 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M1 7.92285C1 12.7747 5.24448 16.7869 7.12319 18.3252C7.39206 18.5454 7.52811 18.6568 7.72871 18.7132C7.88491 18.7572 8.1148 18.7572 8.271 18.7132C8.47197 18.6567 8.60707 18.5463 8.87695 18.3254C10.7557 16.7871 14.9999 12.7751 14.9999 7.9233C14.9999 6.08718 14.2625 4.32605 12.9497 3.02772C11.637 1.72939 9.8566 1 8.00008 1C6.14357 1 4.36301 1.7295 3.05025 3.02783C1.7375 4.32616 1 6.08674 1 7.92285Z"
+                      stroke="#3BA769"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M6 7C6 8.10457 6.89543 9 8 9C9.10457 9 10 8.10457 10 7C10 5.89543 9.10457 5 8 5C6.89543 5 6 5.89543 6 7Z"
+                      stroke="#3BA769"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <Form.Item
+                  name="address"
+                  className=""
+                  rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+                >
+                  <Input hidden />
+                </Form.Item>
+                {address && <p className="">Địa chỉ: {address}</p>}
               </div>
-
-              <Form.Item
-                name="province"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn tỉnh/thành phố!' },
-                ]}
-              >
-                <Select
-                  style={{ width: 300 }}
-                  onChange={(value, option) =>
-                    handleSelectProvinces(value, option)
-                  }
-                  options={[
-                    ...listProvinces.map((province) => ({
-                      value: province.name,
-                      label: province.name,
-                      id: province.id,
-                    })),
-                  ]}
-                  placeholder="Chọn tỉnh/thành phố"
-                />
-              </Form.Item>
-
-              <div className="text-base font-medium text-primary-color my-4">
-                Quận/Huyện
-              </div>
-
-              <Form.Item
-                name="district"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn quận/huyện!' },
-                ]}
-              >
-                <Select
-                  disabled={!checkLoadDistrict}
-                  style={{ width: 300 }}
-                  onChange={handleSelectDistricts}
-                  options={[
-                    ...listDistrict.map((district) => ({
-                      value: district.name,
-                      label: district.name,
-                      id: district.id,
-                    })),
-                  ]}
-                  placeholder="Chọn quận/huyện"
-                />
-              </Form.Item>
-
-              <div className="text-base font-medium text-primary-color my-4">
-                Phường/Xã
-              </div>
-              <Form.Item
-                name="ward"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn phường/xã!' },
-                ]}
-              >
-                <Select
-                  disabled={!checkLoadDistrict}
-                  style={{ width: 300 }}
-                  options={[
-                    ...listWard.map((ward) => ({
-                      value: ward.name,
-                      label: ward.name,
-                      id: ward.id,
-                    })),
-                  ]}
-                  placeholder="Chọn phường/xã"
-                />
-              </Form.Item>
             </div>
             <div className="my-4">
               <div className="flex items-center gap-1 mb-2">
@@ -674,17 +568,17 @@ const MyProfile = () => {
               <Form.Item
                 name="phone"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                  { required: true, message: "Vui lòng nhập số điện thoại!" },
                   {
                     pattern: /^[0-9]{10,15}$/,
-                    message: 'Số điện thoại không hợp lệ!',
+                    message: "Số điện thoại không hợp lệ!",
                   },
                 ]}
               >
                 <Input
                   type="number"
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 no-spinner ${
-                    errorPhone !== '' ? 'border-red-500' : 'border-stone-300'
+                    errorPhone !== "" ? "border-red-500" : "border-stone-300"
                   }`}
                   maxLength={15}
                   onInput={(e) => {
@@ -706,39 +600,16 @@ const MyProfile = () => {
               <Form.Item
                 name="skill"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập kỹ năng của bạn!' },
+                  { required: true, message: "Vui lòng nhập kỹ năng của bạn!" },
                 ]}
               >
                 <Input.TextArea
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 ${
-                    errorSkill !== '' ? 'border-red-500' : 'border-stone-300'
+                    errorSkill !== "" ? "border-red-500" : "border-stone-300"
                   }`}
                   placeholder="Nhập kỹ năng của bạn..."
                   autoSize={{ minRows: 3, maxRows: 10 }}
                 />
-              </Form.Item>
-            </div>
-            <div className="my-4">
-              <div className="flex items-center gap-1 mb-2">
-                <span className="text-red-500 inline-block text-lg">*</span>
-                <div className="text-base font-medium text-primary-color">
-                  Thời gian hoạt động
-                </div>
-                <div className="w-20 h-[0.07rem] bg-primary-color"></div>
-              </div>
-              <Form.Item
-                name="availableTimes"
-                initialValue={availableTimes}
-                rules={[
-                  {
-                    type: 'array',
-                    required: true,
-                    min: 1,
-                    message: 'Vui lòng chọn ít nhất một ngày!',
-                  },
-                ]}
-              >
-                <Checkbox.Group options={dayOptions} />
               </Form.Item>
             </div>
             <div className="my-4">
@@ -751,7 +622,7 @@ const MyProfile = () => {
               </div>
               <div
                 className={`bg-stone-100 border-[0.05rem] rounded-md  ${
-                  errorField ? 'border-red-500' : 'border-primary-color'
+                  errorField ? "border-red-500" : "border-primary-color"
                 } overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
               >
                 {listFieldState.map((item, index) => (
@@ -799,7 +670,7 @@ const MyProfile = () => {
               onClick={handleChangePublic}
               className="bg-primary-color text-white py-2 px-4 rounded-md cursor-pointer hover:scale-105 duration-300"
             >
-              {isPublish ? 'Hủy xuất bản hồ sơ' : 'Xuất bản hồ sơ'}
+              {isPublish ? "Hủy xuất bản hồ sơ" : "Xuất bản hồ sơ"}
             </div>
           )}
         </div>
@@ -807,14 +678,14 @@ const MyProfile = () => {
           theme={{
             components: {
               Table: {
-                headerBg: '#3BA769',
-                headerColor: 'white',
+                headerBg: "#3BA769",
+                headerColor: "white",
               },
               Pagination: {
-                itemActiveBg: '#3BA769',
-                colorPrimary: 'white',
-                colorPrimaryHover: 'white',
-                colorPrimaryBorder: 'white',
+                itemActiveBg: "#3BA769",
+                colorPrimary: "white",
+                colorPrimaryHover: "white",
+                colorPrimaryBorder: "white",
               },
             },
           }}

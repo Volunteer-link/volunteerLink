@@ -19,6 +19,7 @@ import api from '../../apiService/useFetch';
 import { decodedCookie, getCookie } from '../../ultils/cookie';
 import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
 import { PullRequestOutlined } from '@ant-design/icons';
+import { FaPencilAlt } from 'react-icons/fa';
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
@@ -244,8 +245,8 @@ const OrganizationProfile = () => {
               okButtonProps={{ loading: confirmLoading }}
               onCancel={handleCancel}
             >
-              <PullRequestOutlined
-                className="bg-primary-color rounded-lg p-2 text-white"
+              <FaPencilAlt
+                className="w-4 h-4 text-primary-color cursor-pointer"
                 onClick={showPopconfirm}
               />
             </Popconfirm>
@@ -264,7 +265,7 @@ const OrganizationProfile = () => {
             className="mb-4 mt-3 "
             initialValue={organization?.description}
             key={organization?.description}
-            rules={[{ required: true, message: 'Vui lòng nhập mo ta' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
           >
             <TextArea className="mt-3 w-full" rows={5} />
           </Form.Item>
@@ -376,7 +377,7 @@ const OrganizationProfile = () => {
             name="urlFacebook"
             initialValue={organization?.urlFacebook}
             key={organization?.urlFacebook}
-            rules={[{ required: true, message: 'Vui lòng nhập link facebook' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập đường dẫn mạng xã hội' }]}
             className="mb-4 mt-3 max-w-80"
           >
             <Input />

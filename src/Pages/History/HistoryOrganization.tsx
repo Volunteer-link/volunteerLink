@@ -1,6 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import api from '../../apiService/useFetch';
-import { Avatar, Pagination, Select, Table } from 'antd';
+import {
+  Avatar,
+  Button,
+  message,
+  Pagination,
+  Select,
+  Table,
+  App as AntdApp,
+} from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Loading from '../Components/Loading';
@@ -20,7 +28,7 @@ const HistoryOrganization = () => {
   );
   const [searchTransaction, setTransaction] = React.useState<string>('');
   const searchDebounce = useDebounce<string>(searchTransaction, 500);
-
+  const { message: messageApi } = AntdApp.useApp();
   const [stateTransaction, setStateTransaction] = useState<
     {
       accountVolunteerId: number;
@@ -73,26 +81,47 @@ const HistoryOrganization = () => {
       ),
     },
     {
-      title: 'Tên',
-      dataIndex: 'volunteerName',
-      key: 'volunteerName',
+      title: 'Mã giao dịch',
+      dataIndex: 'transactionId',
+      key: 'money',
+      render: (value: number) => (
+        <span className="text-stone-500">#{value}</span>
+      ),
+    },
+    {
+      title: 'Số tiền quyên góp',
+      dataIndex: 'money',
+      key: 'money',
+      render: (value: number) =>
+        `${new Intl.NumberFormat('vi-VN').format(value)} VND`,
+    },
+    {
+      title: 'Ngày quyên góp',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+      render: (value: string) =>
+        new Date(value).toLocaleString('vi-VN', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
     },
     {
       title: 'Sự kiện',
       dataIndex: 'eventName',
       key: 'eventName',
-    },
-    {
-      title: 'Thời gian',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      render: (date: string) => dayjs(date).format('DD/MM/YYYY HH:mm'),
-    },
-    {
-      title: 'Tiền',
-      dataIndex: 'money',
-      key: 'money',
-      render: (money: number) => money.toLocaleString('vi-VN') + ' VND',
+      render: (text: string, record: any) => (
+        <a
+          href={`/detail-event/${record.eventId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          {text}
+        </a>
+      ),
     },
   ];
 
@@ -105,11 +134,39 @@ const HistoryOrganization = () => {
     fetchData();
     setPageNumber(1);
   };
+  const handleExportToExcel = async () => {
+    try {
+      const { data } = await api.get('/donate/export-excel-organization',{
+         responseType: 'blob',
+      }
+      );
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'data.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+  
+      // Xoá URL sau khi dùng
+      window.URL.revokeObjectURL(url);
+      messageApi.success('Xuất file thành công');
+    } catch (error) {
+      messageApi.success('Xuất file thất bại');
+    }
+  };
 
   return (
     <div>
-      <div className="text-primary-color text-xl font-medium">
-        Lịch sử giao dịch
+      <div className="flex justify-between">
+        <div className="text-primary-color text-xl font-medium">
+          Lịch sử giao dịch
+        </div>
+        {!!stateTransaction.length && (
+          <Button onClick={handleExportToExcel} type="primary">
+            Xuất thành file Excel
+          </Button>
+        )}
       </div>
 
       <div className="flex justify-center mb-6 items-center w-full">

@@ -30,13 +30,13 @@ const OrganizationEvents = () => {
       label: "Đang diễn ra",
     },
     {
-      key: "1",
-      label: "Đã diễn ra",
-    },
-    {
       key: "-1",
       label: "Sắp diễn ra",
     },
+    {
+      key: "1",
+      label: "Đã diễn ra",
+    }, 
     {
       key: "2",
       label: "Chưa xuất bản",

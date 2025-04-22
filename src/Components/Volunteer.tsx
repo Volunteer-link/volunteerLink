@@ -83,13 +83,29 @@ const Volunteer: React.FC<{
         }
       }, 1000);
     } catch (e: any) {
+      console.log(e);
+
       if (
         e.response.data.Message ===
         "Event has to start after 0.5 days to adding more people or this event has not been published"
       ) {
         messageApi.error(
-          "Không thể xử lý yêu cầu vì sự kiện còn ít hơn 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+          "Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
+      }
+
+      if (e.response.data.Message === "Request is not exist") {
+        messageApi.error("Yêu cầu tham gia không tồn tại!");
+        setTimeout(() => {
+          if (setResetState) {
+            setIsLoading(false);
+            setResetState((prev) => ++prev);
+          }
+          if (setResetStateAll) {
+            setIsLoading(false);
+            setResetStateAll((prev) => ++prev);
+          }
+        }, 1000);
       }
       setIsLoading(false);
     } finally {
@@ -121,7 +137,7 @@ const Volunteer: React.FC<{
         "Start time has to greater than now 1 day to invite anyone or this event has not been published"
       ) {
         messageApi.error(
-          "Không thể mời tình nguyện viên vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+          "Không thể mời tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
       }
       setIsLoading(false);
@@ -144,7 +160,7 @@ const Volunteer: React.FC<{
         "Event will start after 1 day or this event has not been published. Can't remove volunteer."
       ) {
         messageApi.error(
-          "Không thể xóa tình nguyện viên vì sự kiện còn ít hơn 24 tiếng nữa sẽ diễn ra!"
+          "Không thể xóa tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra!"
         );
       }
       setIsLoading(false);
@@ -243,7 +259,7 @@ const Volunteer: React.FC<{
   };
 
   return (
-    <div className="px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
+    <div className="bg-white px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
       {contextHolder}
       <div className="flex gap-8 items-center">
         <div className="relative rounded-full overflow-hidden">

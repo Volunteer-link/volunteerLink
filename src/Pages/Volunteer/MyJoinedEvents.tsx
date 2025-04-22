@@ -48,7 +48,7 @@ const MyJoinedEvents = () => {
     },
     {
       key: "-1",
-      label: "Chưa bắt đầu",
+      label: "Chưa xuất bản",
     },
   ];
 

@@ -16,7 +16,7 @@ const TopDonorsBarChart = ({ chartData }) => {
     labels: chartData.map(item => item.accountName),
     datasets: [
       {
-        label: 'Tổng số tiền donate (VNĐ)',
+        label: 'Tổng số tiền ủng hộ (VNĐ)',
         data: chartData.map(item => item.money),
         backgroundColor: 'rgba(255, 159, 64, 0.7)',
         borderRadius: 10,
@@ -30,9 +30,9 @@ const TopDonorsBarChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Top Người Donate Nhiều Nhất',
+        text: 'Những người ủng hộ nhiều nhất',
         font: {
-          size: 18
+          size: 12
         }
       },
       legend: {

@@ -135,7 +135,7 @@ const Organizations = () => {
       <LineSpacing />
       {organizationsTopList.length > 0 && (
         <div className="mb-6">
-          <div className="items-center gap-1 justify-center text-2xl flex mb-6 text-shadow-md">
+          <div className="items-center gap-1 justify-center text-2xl flex mb-6 font-medium">
             <FaMedal className="text-primary-color" />
             <div className="">Tổ chức </div>
             <div className="text-primary-color">hàng đầu</div>
@@ -177,7 +177,7 @@ const Organizations = () => {
         />
       </div>
       <LineSpacing />
-      <div className="items-center gap-1 justify-center text-2xl flex mb-6 text-shadow-md">
+      <div className="items-center gap-1 justify-center text-2xl flex mb-6 font-medium">
         <FaUsers className="text-primary-color" />
         <div className="">Tổ chức </div>
         <div className="text-primary-color">trong hệ thống</div>
