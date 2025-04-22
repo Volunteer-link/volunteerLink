@@ -1,113 +1,100 @@
-import { FaUser } from "react-icons/fa";
-import { MdAttachMoney } from "react-icons/md";
-import { IoDocumentText } from "react-icons/io5";
-import { FaChevronRight } from "react-icons/fa";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { FaHome } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import { TiMinus } from "react-icons/ti";
-import { useLogout } from "../../ultils/logout";
+import { useState } from 'react';
+import { Layout, Menu } from 'antd';
+import type { MenuProps } from 'antd';
+import {
+  HomeOutlined,
+  UserOutlined,
+  DollarOutlined,
+  FileTextOutlined,
+  LogoutOutlined,
+  MinusOutlined,
+} from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { useLogout } from '../../ultils/logout';
 
-const SideBar: React.FC<{
+const { Sider } = Layout;
+
+interface SideBarProps {
   mode: string;
   setMode: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ mode, setMode }) => {
-  const [showSub, setShowSub] = useState(false);
+}
+
+const SideBar: React.FC<SideBarProps> = ({ mode, setMode }) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
   const logout = useLogout();
 
-  const navigate = useNavigate();
+  /* --------- Khai báo item menu ---------- */
+  const items: MenuProps['items'] = [
+    {
+      key: 'home',
+      icon: <HomeOutlined />,
+      label: 'Về trang chủ',
+      onClick: () => navigate('/home'),
+    },
+    {
+      key: 'account',
+      icon: <UserOutlined />,
+      label: 'Quản lý tài khoản',
+      onClick: () => setMode('account'),
+    },
+    {
+      key: 'finance',
+      icon: <DollarOutlined />,
+      label: 'Thống kê tài chính',
+      onClick: () => setMode('finance'),
+    },
+    {
+      key: 'request',          // key “mẹ” bao 2 option con
+      icon: <FileTextOutlined />,
+      label: 'Thông tin tổ chức',
+      children: [
+        {
+          key: 'create',
+          icon: <MinusOutlined />,
+          label: 'Yêu cầu tạo tài khoản',
+          onClick: () => setMode('create'),
+        },
+        {
+          key: 'change',
+          icon: <MinusOutlined />,
+          label: 'Yêu cầu đổi tên',
+          onClick: () => setMode('change'),
+        },
+      ],
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Đăng xuất',
+      onClick: logout,
+    },
+  ];
 
-  const handleChangeMode = (mode: string) => {
-    setMode(mode);
-    if (mode === "create" || mode === "change") {
-      setShowSub(true);
-    } else {
-      setShowSub(false);
-    }
-  };
-
-  const goHome = () => {
-    navigate("/home");
-  };
-
-  const handleLogout = () => {
-    logout();
-  };
+  /* Highlight item đang chọn.
+     detailCreate được quy về create để menu bật dấu ▸ đúng */
+  const selected = mode === 'detailCreate' ? 'create' : mode;
 
   return (
-    <div className="bg-primary-color hidden lg:min-h-screen lg:block lg:p-10 lg:w-72 select-none">
-      <div className="text-base text-white text-shadow-lg">
-        <div
-          onClick={() => goHome()}
-          className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
-        >
-          <FaHome />
-          Về trang chủ
-        </div>
-        <div
-          onClick={() => handleChangeMode("account")}
-          className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
-        >
-          {mode === "account" && <FaChevronRight />}
-          <FaUser />
-          Quản lý tài khoản
-        </div>
-        <div
-          onClick={() => handleChangeMode("finance")}
-          className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
-        >
-          {mode === "finance" && <FaChevronRight />}
-          <MdAttachMoney className="" />
-          Thống kê tài chính
-        </div>
-        <div
-          onClick={() => handleChangeMode("create")}
-          className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
-        >
-          {mode === "request" && <FaChevronRight />}
-          <IoDocumentText />
-          Thông tin tổ chức
-        </div>
-        {showSub && (
-          <motion.div
-            initial={{ maxHeight: 0, opacity: 0 }}
-            animate={
-              showSub
-                ? { maxHeight: 200, opacity: 1 }
-                : { maxHeight: 0, opacity: 0 }
-            }
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className="ml-6 text-sm">
-              <div
-                onClick={() => handleChangeMode("create")}
-                className="mb-4 hover:scale-105 transition-all cursor-pointer hover:opacity-90 flex items-center gap-2"
-              >
-                {(mode === "create" || mode === "detailCreate") && <TiMinus />}
-                Yêu cầu tạo tài khoản
-              </div>
-              <div
-                onClick={() => handleChangeMode("change")}
-                className="my-4 hover:scale-105 transition-all cursor-pointer hover:opacity-90 flex items-center gap-2"
-              >
-                {mode === "change" && <TiMinus />}
-                Yêu cầu đổi tên
-              </div>
-            </div>
-          </motion.div>
-        )}
-        <div
-          onClick={handleLogout}
-          className="my-6 hover:scale-110 transition-all cursor-pointer origin-left hover:opacity-90 flex items-center gap-2"
-        >
-          <MdLogout />
-          Đăng xuất
-        </div>
-      </div>
-    </div>
+    <Sider
+      breakpoint="lg"         // < 992px sẽ tự collapsed
+      collapsedWidth={0}      // 0 = ẩn hoàn toàn
+      collapsible
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      width={280}
+      className="min-h-screen bg-primary-color"
+      style={{ background: '#3BA769' }}  // giữ màu thương hiệu
+    >
+      <Menu
+        theme="dark"
+        mode="inline"
+        selectedKeys={[selected]}
+        defaultOpenKeys={['request']} // luôn mở nhóm “Thông tin tổ chức”
+        items={items}
+        style={{ height: '100%', borderInlineEnd: 0 , background: '#3BA769'  }}
+      />
+    </Sider>
   );
 };
 

@@ -64,3 +64,7 @@ code {
   height: 250px !important;
   object-position: center;
 } */
+ .ant-menu-sub.ant-menu,.ant-layout-sider-zero-width-trigger.ant-layout-sider-zero-width-trigger-left{
+  background-color: #3BA769 !important;
+
+ }

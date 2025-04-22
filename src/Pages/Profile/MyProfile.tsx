@@ -33,9 +33,10 @@ import dayjs from 'dayjs';
 import { storage } from '../../ultils/firebase';
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
 import utc from 'dayjs/plugin/utc';
-import { data } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
 import MapBox from '../Components/MapBox';
+import { FaPencilAlt } from 'react-icons/fa';
 dayjs.extend(utc);
 interface MarkerPosition {
   longitude: number;
@@ -109,6 +110,7 @@ const MyProfile = () => {
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
   const [address, setAddress] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openModalEditName, setOpenModalEditName] = useState(false);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
@@ -138,7 +140,6 @@ const MyProfile = () => {
   }, []);
 
   useEffect(() => {
-
     const fetchField = async () => {
       try {
         const { data } = await api.get(`/common/get-fields`);
@@ -163,13 +164,13 @@ const MyProfile = () => {
           dateOfBirth: new Date(data.dateOfBirth),
         }));
         setAddress(data.address);
-        if(data?.location){
+        if (data?.location) {
           setMarker({
             longitude: Number(data?.location?.split(';')[1]),
             latitude: Number(data?.location?.split(';')[0]),
-          })
+          });
         }
-      
+
         setRadioState(data.sex);
         const selectedFields: number[] = (data?.fields ?? []).map(
           (item: any, index: number) => item.id
@@ -215,8 +216,6 @@ const MyProfile = () => {
       });
     }
   }, [profileState, form]);
-
-
 
   const handlePreview = async (file: UploadFile) => {
     setPreviewOpen(true);
@@ -325,7 +324,6 @@ const MyProfile = () => {
     setOpenModal(false);
   };
 
- 
   useEffect(() => {
     const fetchAddress = async () => {
       const data = await api.get(
@@ -349,6 +347,32 @@ const MyProfile = () => {
     setIsModalOpen(false);
   };
 
+  const ShowModalEditName = () => {
+    setOpenModalEditName(true);
+  };
+
+  const handleCloseEditName = () => {
+    setOpenModalEditName(false);
+  };
+
+  const [formChangeName] = Form.useForm();
+
+  const handleSubmitChangeName = async (values: any) => {
+    const { name, password } = values;
+
+    try {
+      const response = await api.put('/profile/volunteer-edit-name', {
+        newName: name,
+        password: password,
+      });
+      form.setFieldValue('name', name);
+      setOpenModalEditName(false);
+      message.success('Đổi tên thành công!');
+    } catch (error: any) {
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
+    }
+  };
+  const navigate = useNavigate();
   return (
     <div className=" py-4 relative">
       {isLoading && <Loading color="green" />}
@@ -436,26 +460,90 @@ const MyProfile = () => {
                 </div>
                 <div className="w-20 h-[0.07rem] bg-primary-color"></div>
               </div>
-              <Form.Item
-                name="name"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập họ và tên!' },
-                  {
-                    pattern:
-                      /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
-                    message:
-                      'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
-                  },
-                ]}
-              >
-                <Input
-                  className={`border-[0.1rem] text-base ${
-                    errorName !== ''
-                      ? 'border-2 border-red-500'
-                      : 'border-stone-300'
-                  } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
+              <div className="flex items-center gap-5 justify-between ">
+                <Form.Item
+                  name="name"
+                  className="flex-1 !mb-0"
+                  rules={[
+                    { required: true, message: 'Vui lòng nhập họ và tên!' },
+                    {
+                      pattern:
+                        /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
+                      message:
+                        'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
+                    },
+                  ]}
+                >
+                  <Input
+                    disabled
+                    className={`border-[0.1rem] text-base ${
+                      errorName !== ''
+                        ? 'border-2 border-red-500'
+                        : 'border-stone-300'
+                    } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
+                  />
+                </Form.Item>
+                <FaPencilAlt
+                  className="w-4 h-4 text-primary-color cursor-pointer"
+                  onClick={ShowModalEditName}
                 />
-              </Form.Item>
+                <Modal
+                  maskClosable={true}
+                  footer={null}
+                  onCancel={handleCloseEditName}
+                  title="Thay đổi tên"
+                  centered
+                  open={openModalEditName}
+                >
+                  <Form
+                    form={formChangeName}
+                    onFinish={handleSubmitChangeName}
+                    layout="vertical"
+                  >
+                    <Form.Item
+                      name="name"
+                      label="Họ Và Tên"
+                      rules={[
+                        { required: true, message: 'Vui lòng nhập họ và tên!' },
+                        {
+                          pattern:
+                            /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
+                          message:
+                            'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="password"
+                      label="Mật khẩu"
+                      rules={[
+                        { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                      ]}
+                    >
+                      <Input.Password />
+                    </Form.Item>
+                    <div className="flex items-center justify-between">
+                      <Button type="primary" htmlType="submit">
+                        Đổi tên
+                      </Button>
+                      <a
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate('/authentication/verify-email', {
+                            state: 'FORGOT_PASSWORD',
+                          });
+                        }}
+                        className="block text-center text-[#3BA769] mt-2"
+                        href=""
+                      >
+                        Quên mật khẩu?
+                      </a>
+                    </div>
+                  </Form>
+                </Modal>
+              </div>
             </div>
             <div className="my-4">
               <div className="flex items-center gap-1 mb-2">

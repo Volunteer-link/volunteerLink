@@ -108,6 +108,9 @@ const CreateEvent = () => {
     if (marker) {
       location = marker.latitude + ';' + marker.longitude;
     }
+    if (!values.timePublish) {
+      values.timePublish = dayjs();
+    }
     const [startMoment, endMoment] = values.date || [];
     const { images, thumbnails } = await upLoadFileToCloud();
     const dataEvent: createEvent = {
@@ -117,10 +120,8 @@ const CreateEvent = () => {
       startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
-      timePublish:
-        toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
-        toISOLocal(dayjs().add(120, 'second').toDate()),
-      hasDonate: true,
+      timePublish: toISOLocal(dayjs(values.timePublish).toDate()),
+      hasDonate: values.donate,
       imagesEvent: images,
       thumbnail: thumbnails[0],
       fieldsEvent: listSelectedField,
@@ -198,7 +199,7 @@ const CreateEvent = () => {
   };
   const disabledDate = (current: any) => {
     if (value === 1) {
-      return current.isBefore(dayjs().add(2,"days"), 'day');
+      return current.isBefore(dayjs().add(2, 'days'), 'day');
     } else if (value === 2) {
       if (!timePublish) return false;
       const minDate = timePublish.add(2, 'days');
@@ -535,6 +536,24 @@ const CreateEvent = () => {
               }}
               maxCount={10}
             />
+          </Form.Item>
+        </div>
+
+        <div className="mt-6 ">
+          <div className="flex justify-start items-center gap-1">
+            <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
+               Kêu gọi ủng hộ
+            </h4>
+            <div className="bg-[#3BA769] w-6 h-[1px]"></div>
+          </div>
+
+          <Form.Item
+            name="donate"
+            valuePropName="checked" // Quy định checkbox khi form được submit
+            initialValue={true} 
+            className='mt-2'// Giá trị mặc định của checkbox
+          >
+            <Checkbox></Checkbox>
           </Form.Item>
         </div>
 

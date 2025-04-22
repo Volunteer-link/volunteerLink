@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   DatePicker,
@@ -14,20 +14,20 @@ import {
   DatePickerProps,
   RadioChangeEvent,
   Tag,
-} from "antd";
-import api from "../../apiService/useFetch";
-import { createEvent } from "../../model/Request/CreateEvent";
-import { RangePickerProps } from "antd/es/date-picker";
-import extendUploadFilesToFirebase from "../../ultils/extendUploadFilesToFirebase";
-import { dateRulesEvent, nameRules } from "../../ultils/validationRules";
-import MapBox from "../Components/MapBox";
-import FormAddress from "../Components/FormAddress";
-import TextArea from "antd/es/input/TextArea";
-import PreviewImageUpload from "../Components/PreviewImageUpload";
-import dayjs, { Dayjs } from "dayjs";
-import { toISOLocal } from "../../ultils/toISOLocal";
-import ErrorSolving from "../../Common/ErrorSolving";
-import { decodedCookie, getCookie } from "../../ultils/cookie";
+} from 'antd';
+import api from '../../apiService/useFetch';
+import { createEvent } from '../../model/Request/CreateEvent';
+import { RangePickerProps } from 'antd/es/date-picker';
+import extendUploadFilesToFirebase from '../../ultils/extendUploadFilesToFirebase';
+import { dateRulesEvent, nameRules } from '../../ultils/validationRules';
+import MapBox from '../Components/MapBox';
+import FormAddress from '../Components/FormAddress';
+import TextArea from 'antd/es/input/TextArea';
+import PreviewImageUpload from '../Components/PreviewImageUpload';
+import dayjs, { Dayjs } from 'dayjs';
+import { toISOLocal } from '../../ultils/toISOLocal';
+import ErrorSolving from '../../Common/ErrorSolving';
+import { decodedCookie, getCookie } from '../../ultils/cookie';
 
 interface UploadFileExtend {
   file: UploadFile[] | undefined;
@@ -40,8 +40,8 @@ interface MarkerPosition {
 }
 
 const style: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
+  display: 'flex',
+  flexDirection: 'column',
   gap: 8,
 };
 const UpdateEvent = () => {
@@ -51,8 +51,9 @@ const UpdateEvent = () => {
   const { message } = AntdApp.useApp();
   const [event, setEvent] = React.useState<any>();
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
-  const [address, setAddress] = useState<string>("");
+  const [address, setAddress] = useState<string>('');
   const [status, setStatus] = useState<boolean>(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -68,11 +69,11 @@ const UpdateEvent = () => {
   });
 
   useEffect(() => {
-    const user = decodedCookie(getCookie("accessToken"));
+    const user = decodedCookie(getCookie('accessToken'));
     if (!user) {
-      window.location.href = "/unauthorized";
-    } else if (user?.role !== "Organization") {
-      window.location.href = "/forbidden";
+      window.location.href = '/unauthorized';
+    } else if (user?.role !== 'Organization') {
+      window.location.href = '/forbidden';
     }
   }, []);
 
@@ -100,7 +101,7 @@ const UpdateEvent = () => {
         });
         console.log(data.data);
         const [latitude, longitude] = data.data.location
-          .split(";")
+          .split(';')
           .map((part: string) => part.trim());
         setMarker({
           longitude: parseFloat(longitude),
@@ -111,9 +112,9 @@ const UpdateEvent = () => {
             ...prev,
             file: [
               {
-                uid: "-1",
-                name: "imageThumbnail",
-                status: "done",
+                uid: '-1',
+                name: 'imageThumbnail',
+                status: 'done',
                 url: `${data.data?.thumbnail}`,
               },
             ],
@@ -124,8 +125,8 @@ const UpdateEvent = () => {
             ...prev,
             file: data.data.images.map((item: string, index: number) => ({
               uid: index.toString(),
-              name: "imageThumbnail",
-              status: "done",
+              name: 'imageThumbnail',
+              status: 'done',
               url: item,
             })),
           };
@@ -133,6 +134,7 @@ const UpdateEvent = () => {
         setListSelectedField(
           data.data.fields?.map((field: any, index: number) => field.id)
         );
+        form.setFieldValue("donate", data.data.hasDonate);
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -144,20 +146,19 @@ const UpdateEvent = () => {
   }, []);
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
-    type: "thumbnail",
+    type: 'thumbnail',
   });
   const [fileListImage, setFileListImage] = useState<UploadFileExtend>({
     file: [],
-    type: "image",
+    type: 'image',
   });
-  const [form] = Form.useForm();
   const [value, setValue] = useState(2);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
-    form.setFieldValue('timePublish',null)
+    form.setFieldValue('timePublish', null);
   };
 
   const [listFieldState, setListFieldState] = useState<
@@ -170,7 +171,7 @@ const UpdateEvent = () => {
     setLoading(true);
     let location: string | null = null;
     if (marker) {
-      location = marker.latitude + ";" + marker.longitude;
+      location = marker.latitude + ';' + marker.longitude;
     }
     const [startMoment, endMoment] = values.date || [];
     const { images, thumbnails } = await upLoadFileToCloud();
@@ -180,13 +181,11 @@ const UpdateEvent = () => {
       name: values.nameEvent,
       location: location,
       address: address || event.address,
-      startTime: toISOLocal(dayjs(startMoment).add(60, "second").toDate()),
-      endTime: toISOLocal(dayjs(endMoment).add(60, "second").toDate()),
+      startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
+      endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
-      timePublish:
-        toISOLocal(dayjs(values.timePublish).add(60, "second").toDate()) ||
-        toISOLocal(dayjs().add(120, "second").toDate()),
-      hasDonate: false,
+      timePublish: toISOLocal(dayjs(values.timePublish).toDate()),
+      hasDonate: values.donate,
       imagesEvent: images.length > 0 ? images : event.images,
       thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
@@ -194,10 +193,10 @@ const UpdateEvent = () => {
     try {
       const { data } = await api.put(`/event/update-an-event`, dataEvent);
       console.log(data);
-      message.success("Cập nhật sự kiện thành công!");
-      navigate("/organizations/events");
+      message.success('Cập nhật sự kiện thành công!');
+      navigate('/organizations/events');
     } catch (e: any) {
-      message.error("Cập nhật sự kiện thất bại!");
+      message.error('Cập nhật sự kiện thất bại!');
       console.log(e);
     } finally {
       setLoading(false);
@@ -205,9 +204,9 @@ const UpdateEvent = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Submit thất bại:", errorInfo);
+    console.log('Submit thất bại:', errorInfo);
     message.error(
-      "Có một số lỗi trong form của bạn. Vui lòng kiểm tra lại các trường  và sửa lỗi!"
+      'Có một số lỗi trong form của bạn. Vui lòng kiểm tra lại các trường  và sửa lỗi!'
     );
   };
 
@@ -226,11 +225,11 @@ const UpdateEvent = () => {
     const listFileUrls = await Promise.all(allPromises);
 
     const images = listFileUrls
-      .filter((item) => item.url && item.type === "image")
+      .filter((item) => item.url && item.type === 'image')
       .map((item) => item.url);
 
     const thumbnails = listFileUrls
-      .filter((item) => item.url && item.type === "thumbnail")
+      .filter((item) => item.url && item.type === 'thumbnail')
       .map((item) => item.url);
 
     return { images, thumbnails };
@@ -244,7 +243,7 @@ const UpdateEvent = () => {
   };
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {};
 
   useEffect(() => {
@@ -258,10 +257,10 @@ const UpdateEvent = () => {
     };
     fetchField();
   }, []);
-  const currentDateMinusOneDay = dayjs().subtract(1, "day");
+  const currentDateMinusOneDay = dayjs().subtract(1, 'day');
   const isBeforeOneDay = dayjs(event?.startTime).isBefore(
     currentDateMinusOneDay,
-    "day"
+    'day'
   );
   // if (event  && isBeforeOneDay  ) {
   //   return <ErrorSolving errCode={300} />;
@@ -274,8 +273,8 @@ const UpdateEvent = () => {
   };
   const disabledDate = (current: any) => {
     if (!timePublish) return false;
-    const minDate = timePublish.add(2, "days");
-    return current.isBefore(minDate, "day");
+    const minDate = timePublish.add(2, 'days');
+    return current.isBefore(minDate, 'day');
   };
   if (!event) {
     return <ErrorSolving errCode={404} />;
@@ -285,11 +284,11 @@ const UpdateEvent = () => {
       <Breadcrumb
         items={[
           {
-            title: "Quản lý sự kiện",
-            href: "/organizations/events",
+            title: 'Quản lý sự kiện',
+            href: '/organizations/events',
           },
           {
-            title: "Cập nhật sự kiện",
+            title: 'Cập nhật sự kiện',
           },
         ]}
       />
@@ -321,7 +320,7 @@ const UpdateEvent = () => {
             name="nameEvent"
             initialValue={event?.name}
             className="mb-4 mt-3"
-            rules={[{ required: true, message: "Vui lòng nhập tên" }]}
+            rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
           >
             <Input />
           </Form.Item>
@@ -378,7 +377,7 @@ const UpdateEvent = () => {
           <Form.Item
             name="address"
             className=""
-            rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
           >
             <Input hidden />
           </Form.Item>
@@ -395,9 +394,7 @@ const UpdateEvent = () => {
             onChange={onChange}
             value={value}
             defaultValue={value}
-            options={[
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
-            ]}
+            options={[{ value: 2, label: 'Xuất bản sự kiện theo lịch' }]}
           />
 
           {value === 2 && (
@@ -406,11 +403,11 @@ const UpdateEvent = () => {
               className="mb-4 mt-3"
               initialValue={dayjs(event.timePublish)}
               rules={[
-                { required: true, message: "Vui lòng chọn ngày công bố!" },
+                { required: true, message: 'Vui lòng chọn ngày công bố!' },
               ]}
             >
               <DatePicker
-                showTime={{ format: "HH:mm" }}
+                showTime={{ format: 'HH:mm' }}
                 format="YYYY-MM-DD HH:mm"
                 placeholder="Chọn ngày công bố"
                 onChange={handleTimePublishChange}
@@ -434,42 +431,42 @@ const UpdateEvent = () => {
             rules={[
               {
                 required: true,
-                message: "Bạn cần chọn khoảng thời gian!",
+                message: 'Bạn cần chọn khoảng thời gian!',
               },
               {
                 validator: async (_, value: [Dayjs, Dayjs]) => {
                   if (!value || value.length < 2) {
                     return Promise.reject(
-                      "Hãy chọn cả ngày bắt đầu và ngày kết thúc!"
+                      'Hãy chọn cả ngày bắt đầu và ngày kết thúc!'
                     );
                   }
 
                   const [startDate, endDate] = value;
-                  const timePublish = form.getFieldValue("timePublish");
+                  const timePublish = form.getFieldValue('timePublish');
                   const currentDate = dayjs();
-                  const minStartDate = currentDate.add(2, "day");
+                  const minStartDate = currentDate.add(2, 'day');
                   if (
                     timePublish &&
-                    startDate.isBefore(timePublish.add(2, "day"))
+                    startDate.isBefore(timePublish.add(2, 'day'))
                   ) {
                     return Promise.reject(
-                      "Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!"
+                      'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
                     );
                   }
-                  if (startDate.isBefore(minStartDate, "day")) {
+                  if (startDate.isBefore(minStartDate, 'day')) {
                     return Promise.reject(
-                      "Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!"
+                      'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!'
                     );
                   }
-                  if (endDate.isBefore(currentDate, "day")) {
+                  if (endDate.isBefore(currentDate, 'day')) {
                     return Promise.reject(
-                      "Ngày kết thúc phải sau ngày hiện tại!"
+                      'Ngày kết thúc phải sau ngày hiện tại!'
                     );
                   }
 
                   if (endDate.isBefore(startDate)) {
                     return Promise.reject(
-                      "Ngày kết thúc phải sau ngày bắt đầu!"
+                      'Ngày kết thúc phải sau ngày bắt đầu!'
                     );
                   }
 
@@ -479,7 +476,7 @@ const UpdateEvent = () => {
             ]}
           >
             <DatePicker.RangePicker
-              showTime={{ format: "HH:mm" }}
+              showTime={{ format: 'HH:mm' }}
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
               disabledDate={disabledDate}
@@ -499,7 +496,7 @@ const UpdateEvent = () => {
             name="description"
             className="mb-4 mt-3 "
             initialValue={event?.description}
-            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
           >
             <TextArea className="mt-3 w-full" rows={5} />
           </Form.Item>
@@ -513,7 +510,7 @@ const UpdateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
           <div
-            className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${"border-primary-color"} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
+            className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${'border-primary-color'} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
           >
             {listFieldState.map((item, index) => (
               <div
@@ -544,7 +541,7 @@ const UpdateEvent = () => {
                 validator: (_, value) => {
                   if (listSelectedField.length === 0) {
                     return Promise.reject(
-                      new Error("Vui lòng chọn ít nhất 1 lĩnh vực.")
+                      new Error('Vui lòng chọn ít nhất 1 lĩnh vực.')
                     );
                   }
                   return Promise.resolve();
@@ -571,7 +568,7 @@ const UpdateEvent = () => {
               {
                 validator(_: any, value: string) {
                   if (!fileListThumbnail?.file?.length) {
-                    return Promise.reject("Bạn cần upload ảnh");
+                    return Promise.reject('Bạn cần upload ảnh');
                   }
                   return Promise.resolve();
                 },
@@ -581,7 +578,7 @@ const UpdateEvent = () => {
             <PreviewImageUpload
               fileList={fileListThumbnail.file}
               setFileList={(fileList) => {
-                setFileListThumbnail({ file: fileList, type: "thumbnail" });
+                setFileListThumbnail({ file: fileList, type: 'thumbnail' });
               }}
             />
           </Form.Item>
@@ -602,7 +599,7 @@ const UpdateEvent = () => {
               {
                 validator(_: any, value: string) {
                   if (!fileListImage?.file?.length) {
-                    return Promise.reject("Bạn cần upload ảnh");
+                    return Promise.reject('Bạn cần upload ảnh');
                   }
                   return Promise.resolve();
                 },
@@ -613,10 +610,28 @@ const UpdateEvent = () => {
               multiple={true}
               fileList={fileListImage.file}
               setFileList={(fileList) => {
-                setFileListImage({ file: fileList, type: "image" });
+                setFileListImage({ file: fileList, type: 'image' });
               }}
               maxCount={10}
             />
+          </Form.Item>
+        </div>
+
+        <div className="mt-6 ">
+          <div className="flex justify-start items-center gap-1">
+            <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
+              Kêu gọi ủng hộ
+            </h4>
+            <div className="bg-[#3BA769] w-6 h-[1px]"></div>
+          </div>
+
+          <Form.Item
+            name="donate"
+            valuePropName="checked" // Quy định checkbox khi form được submit
+            initialValue={true}
+            className="mt-2" // Giá trị mặc định của checkbox
+          >
+            <Checkbox></Checkbox>
           </Form.Item>
         </div>
 

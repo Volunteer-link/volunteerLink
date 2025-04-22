@@ -47,7 +47,7 @@ const HistoryOrganization = () => {
       const { data } = await api.get(`/donate/organization-history`, {
         params: {
           EventId: eventId,
-          TransactionId: null,
+          TransactionId: searchDebounce,
           PageNumber: pageNumber,
           PageSize: 5,
         },
@@ -59,6 +59,8 @@ const HistoryOrganization = () => {
           ? data.data.transactions.items
           : []
       );
+      console.log(searchDebounce)
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -68,6 +70,7 @@ const HistoryOrganization = () => {
   }, [pageNumber, eventId, searchDebounce]);
 
   useEffect(() => {
+    console.log(searchDebounce)
     fetchData();
   }, [pageNumber, eventId, searchDebounce]);
 
@@ -169,7 +172,7 @@ const HistoryOrganization = () => {
         )}
       </div>
 
-      <div className="flex justify-center mb-6 items-center w-full">
+      <div className="flex justify-center  my-6 items-center w-full">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">
           <input
             type="text"
