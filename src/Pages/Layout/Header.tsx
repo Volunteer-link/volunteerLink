@@ -267,13 +267,13 @@ const Header: React.FC<{}> = () => {
           alt=""
         />
       </div>
-      <div className="col-span-3 hidden md:block">
-        <ul className="flex gap-8 text-white text-sm h-full items-center">
+      <div className="col-span-3 flex flex-wrap flex-row md:block">
+        <ul className="flex md:gap-8 gap-4 text-white flex-wrap justify-center md:flex-nowrap text-sm h-full items-center">
           <li className="hover:scale-110 transition-all cursor-pointer text-base">
             <NavLink
               to="/home"
               className={({ isActive }) =>
-                `text-white hover:text-white ${
+                `text-white whitespace-nowrap hover:text-white ${
                   isActive || location.pathname === "/"
                     ? "font-bold border-b-2 pb-1 border-white"
                     : ""
@@ -287,7 +287,7 @@ const Header: React.FC<{}> = () => {
             <NavLink
               to="/organizations"
               className={({ isActive }) =>
-                `text-white hover:text-white ${
+                `text-white whitespace-nowrap hover:text-white ${
                   isActive ? "font-bold border-b-2 pb-1 border-white" : ""
                 }`
               }
@@ -300,7 +300,7 @@ const Header: React.FC<{}> = () => {
               <NavLink
                 to="/volunteers"
                 className={({ isActive }) =>
-                  `text-white hover:text-white ${
+                  `text-white whitespace-nowrap hover:text-white ${
                     isActive ? "font-bold border-b-2 pb-1 border-white" : ""
                   }`
                 }
@@ -313,7 +313,7 @@ const Header: React.FC<{}> = () => {
             <NavLink
               to="/events"
               className={({ isActive }) =>
-                `text-white hover:text-white ${
+                `text-white whitespace-nowrap hover:text-white ${
                   isActive ? "font-bold border-b-2 pb-1 border-white" : ""
                 }`
               }
@@ -325,7 +325,7 @@ const Header: React.FC<{}> = () => {
             <NavLink
               to="/donative-events"
               className={({ isActive }) =>
-                `text-white hover:text-white ${
+                `text-white whitespace-nowrap hover:text-white ${
                   isActive ? "font-bold border-b-2 pb-1 border-white" : ""
                 }`
               }
@@ -337,7 +337,7 @@ const Header: React.FC<{}> = () => {
             <NavLink
               to={`/aboutus`}
               className={({ isActive }) =>
-                `text-white hover:text-white ${
+                `text-white whitespace-nowrap hover:text-white ${
                   isActive ? "font-bold border-b-2 pb-1 border-white" : ""
                 }`
               }
