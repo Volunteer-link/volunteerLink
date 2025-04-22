@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   BarElement,
@@ -6,8 +6,8 @@ import {
   LinearScale,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
+  Legend,
+} from "chart.js";
 
 ChartJS.register(
   BarElement,
@@ -20,16 +20,16 @@ ChartJS.register(
 
 const DonateChart = ({ chartData }) => {
   const data = {
-    labels: chartData.map(item => item.date), // ví dụ: '2025-04-01'
+    labels: chartData?.map((item) => item.date), // ví dụ: '2025-04-01'
     datasets: [
       {
-        label: 'Tổng tiền ủng hộ (VNĐ)',
-        data: chartData.map(item => item.money), // ví dụ: 500000
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        borderColor: 'rgb(75, 192, 192)',
+        label: "Tổng tiền ủng hộ (VNĐ)",
+        data: chartData?.map((item) => item.money), // ví dụ: 500000
+        backgroundColor: "rgba(75, 192, 192, 0.5)",
+        borderColor: "rgb(75, 192, 192)",
         borderWidth: 1,
-      }
-    ]
+      },
+    ],
   };
 
   const options = {
@@ -37,18 +37,18 @@ const DonateChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Ủng hộ theo ngày',
+        text: "Ủng hộ theo ngày",
       },
       legend: {
         display: true,
-        position: 'top',
+        position: "top",
       },
     },
     scales: {
       y: {
-        beginAtZero: true
-      }
-    }
+        beginAtZero: true,
+      },
+    },
   };
 
   return <Bar data={data} options={options} />;

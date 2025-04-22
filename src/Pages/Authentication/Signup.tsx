@@ -71,7 +71,7 @@ const Signup = () => {
 
   const handleUpload = async () => {
     try {
-      const promises = fileList.map((item) => {
+      const promises = fileList?.map((item) => {
         const file = item.originFileObj as File;
 
         const storageRef = ref(storage, `file/${file.name}`);
@@ -138,7 +138,7 @@ const Signup = () => {
   ];
 
   return (
-    <div  className="px-4 md:px-0">
+    <div className="px-4 md:px-0">
       <Row className="w-full h-screen">
         <Col span={16}>
           <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">

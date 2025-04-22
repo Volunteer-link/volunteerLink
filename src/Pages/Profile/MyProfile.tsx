@@ -28,15 +28,15 @@ import {
   ref,
   uploadBytes,
   uploadBytesResumable,
-} from 'firebase/storage';
-import dayjs from 'dayjs';
-import { storage } from '../../ultils/firebase';
-import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
-import utc from 'dayjs/plugin/utc';
-import { data, useNavigate } from 'react-router-dom';
-import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
-import MapBox from '../Components/MapBox';
-import { FaPencilAlt } from 'react-icons/fa';
+} from "firebase/storage";
+import dayjs from "dayjs";
+import { storage } from "../../ultils/firebase";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
+import utc from "dayjs/plugin/utc";
+import { data, useNavigate } from "react-router-dom";
+import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
+import MapBox from "../Components/MapBox";
+import { FaPencilAlt } from "react-icons/fa";
 dayjs.extend(utc);
 interface MarkerPosition {
   longitude: number;
@@ -168,7 +168,7 @@ const MyProfile = () => {
       try {
         const res = await api.get(`/profile/volunteer`);
         const data = res.data.data;
-  
+
         // Kiểm tra nếu data có tồn tại trước khi thao tác
         if (data) {
           setProfileState((prev) => ({
@@ -177,7 +177,7 @@ const MyProfile = () => {
             dateOfBirth: new Date(data.dateOfBirth), // chuyển đổi ngày sinh
           }));
           setAddress(data.address);
-  
+
           // Kiểm tra data.location và chia location nếu có
           if (data?.location) {
             const [latitude, longitude] = data.location.split(";").map(Number);
@@ -186,18 +186,20 @@ const MyProfile = () => {
               latitude,
             });
           }
-  
+
           setRadioState(data.sex);
-          
+
           // Mã hóa danh sách các trường
-          const selectedFields: number[] = (data?.fields ?? []).map((item: any) => item.id);
+          const selectedFields: number[] = (data?.fields ?? []).map(
+            (item: any) => item.id
+          );
           setListSelectedField(selectedFields);
-  
+
           // Kiểm tra và xử lý địa chỉ, chia tách nếu có
           if (data.address) {
             setAddressState(data.address.split(", "));
           }
-  
+
           // Xử lý ảnh đại diện
           handleAvt(data.urlImage);
         }
@@ -336,7 +338,6 @@ const MyProfile = () => {
     setOpenModal(false);
   };
 
-
   useEffect(() => {
     const fetchAddress = async () => {
       const data = await api.get(
@@ -374,13 +375,13 @@ const MyProfile = () => {
     const { name, password } = values;
 
     try {
-      const response = await api.put('/profile/volunteer-edit-name', {
+      const response = await api.put("/profile/volunteer-edit-name", {
         newName: name,
         password: password,
       });
-      form.setFieldValue('name', name);
+      form.setFieldValue("name", name);
       setOpenModalEditName(false);
-      message.success('Đổi tên thành công!');
+      message.success("Đổi tên thành công!");
     } catch (error: any) {
       if (error.status == 400) message.error(`${error.response.data.Message}`);
     }
@@ -478,21 +479,21 @@ const MyProfile = () => {
                   name="name"
                   className="flex-1 !mb-0"
                   rules={[
-                    { required: true, message: 'Vui lòng nhập họ và tên!' },
+                    { required: true, message: "Vui lòng nhập họ và tên!" },
                     {
                       pattern:
                         /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
                       message:
-                        'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
+                        "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
                     },
                   ]}
                 >
                   <Input
                     disabled
                     className={`border-[0.1rem] text-base ${
-                      errorName !== ''
-                        ? 'border-2 border-red-500'
-                        : 'border-stone-300'
+                      errorName !== ""
+                        ? "border-2 border-red-500"
+                        : "border-stone-300"
                     } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
                   />
                 </Form.Item>
@@ -517,12 +518,12 @@ const MyProfile = () => {
                       name="name"
                       label="Họ Và Tên"
                       rules={[
-                        { required: true, message: 'Vui lòng nhập họ và tên!' },
+                        { required: true, message: "Vui lòng nhập họ và tên!" },
                         {
                           pattern:
                             /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
                           message:
-                            'Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]',
+                            "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
                         },
                       ]}
                     >
@@ -532,7 +533,7 @@ const MyProfile = () => {
                       name="password"
                       label="Mật khẩu"
                       rules={[
-                        { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                        { required: true, message: "Vui lòng nhập mật khẩu!" },
                       ]}
                     >
                       <Input.Password />
@@ -544,8 +545,8 @@ const MyProfile = () => {
                       <a
                         onClick={(e) => {
                           e.preventDefault();
-                          navigate('/authentication/verify-email', {
-                            state: 'FORGOT_PASSWORD',
+                          navigate("/authentication/verify-email", {
+                            state: "FORGOT_PASSWORD",
                           });
                         }}
                         className="block text-center text-[#3BA769] mt-2"
@@ -728,7 +729,7 @@ const MyProfile = () => {
                   errorField ? "border-red-500" : "border-primary-color"
                 } overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
               >
-                {listFieldState.map((item, index) => (
+                {listFieldState?.map((item, index) => (
                   <div
                     key={index}
                     className="px-1 py-1 flex items-center justify-between gap-1 hover:bg-stone-200 duration-150 hover:rounded-md select-none"

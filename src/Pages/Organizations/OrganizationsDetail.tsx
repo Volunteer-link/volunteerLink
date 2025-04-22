@@ -1,10 +1,10 @@
-import { Typography, Image, Tabs, Rate, Tag } from 'antd';
-import React, { useEffect } from 'react';
-import OrganizationsDetailInformation from './OrganizationsDetailInformation';
-import { useParams } from 'react-router-dom';
-import { Organization } from '../../model/OrganizationDetail/Organization';
-import api from '../../apiService/useFetch';
-import ListEventsOrganization from './ListEventsOrganization';
+import { Typography, Image, Tabs, Rate, Tag } from "antd";
+import React, { useEffect } from "react";
+import OrganizationsDetailInformation from "./OrganizationsDetailInformation";
+import { useParams } from "react-router-dom";
+import { Organization } from "../../model/OrganizationDetail/Organization";
+import api from "../../apiService/useFetch";
+import ListEventsOrganization from "./ListEventsOrganization";
 
 const OrganizationsDetail = () => {
   const { id } = useParams();
@@ -26,19 +26,19 @@ const OrganizationsDetail = () => {
   }, []);
 
   const tagColors = [
-    'green',
-    'blue',
-    'red',
-    'purple',
-    'orange',
-    'cyan',
-    'magenta',
-    'volcano',
-    'gold',
-    'lime',
-    'green',
-    'geekblue',
-    'purple',
+    "green",
+    "blue",
+    "red",
+    "purple",
+    "orange",
+    "cyan",
+    "magenta",
+    "volcano",
+    "gold",
+    "lime",
+    "green",
+    "geekblue",
+    "purple",
   ];
 
   const getRandomColor = () => {
@@ -48,13 +48,13 @@ const OrganizationsDetail = () => {
 
   const items = [
     {
-      label: 'Tổng quan',
-      key: 'overview',
+      label: "Tổng quan",
+      key: "overview",
       children: <OrganizationsDetailInformation organization={organization} />,
     },
     {
-      label: 'Sự kiện',
-      key: 'events',
+      label: "Sự kiện",
+      key: "events",
       children: <ListEventsOrganization organizationId={organization?.id} />,
     },
   ];
@@ -63,7 +63,7 @@ const OrganizationsDetail = () => {
       <div className="flex mt-4 justify-center flex-col md:flex-row items-start p-4 gap-4">
         <div className="w-[200px] h-[200px]  md:h-[200px]   md:w-[300px] shrink-0">
           <Image
-            style={{ objectFit: 'cover', height: '100%' }}
+            style={{ objectFit: "cover", height: "100%" }}
             preview={false}
             className="h-full"
             width={200}
@@ -71,7 +71,7 @@ const OrganizationsDetail = () => {
             alt="example"
             onError={(e) =>
               (e.currentTarget.src =
-                '/materials/blank-profile-picture-973460_1280.png')
+                "/materials/blank-profile-picture-973460_1280.png")
             }
             src={organization?.urlImage}
           />
@@ -87,12 +87,12 @@ const OrganizationsDetail = () => {
             defaultValue={organization?.star}
           />
           <div className="flex flex-wrap gap-2">
-              {organization?.fields.map((field) => (
-                <Tag key={field.id} color={getRandomColor()}>
-                  {field.name}
-                </Tag>
-              ))}
-            </div>
+            {organization?.fields?.map((field) => (
+              <Tag key={field.id} color={getRandomColor()}>
+                {field.name}
+              </Tag>
+            ))}
+          </div>
         </div>
       </div>
       <Tabs

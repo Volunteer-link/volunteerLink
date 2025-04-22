@@ -106,7 +106,7 @@ const Volunteers = () => {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-4">
-        {listVolunteer.map((item, index) => {
+        {listVolunteer?.map((item, index) => {
           const birthYear = new Date(item.dateOfBirth).getFullYear();
           const birthMonth = new Date(item.dateOfBirth).getMonth();
           const birthDay = new Date(item.dateOfBirth).getDate();

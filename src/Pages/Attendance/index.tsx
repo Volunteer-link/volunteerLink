@@ -32,7 +32,7 @@ const AttendanceUI: React.FC = () => {
   const [status, setStatus] = useState<boolean>(false);
 
   const handleCheck = (checked: boolean, recordId: number): void => {
-    const newList = listUser.map((user) =>
+    const newList = listUser?.map((user) =>
       user.id === recordId ? { ...user, attendance: checked } : user
     );
     setInteract(true);
@@ -80,7 +80,7 @@ const AttendanceUI: React.FC = () => {
 
   const handleSave = async () => {
     const checkedUsers = listUser
-      .map((user) => {
+      ?.map((user) => {
         if (user.attendance) return user.volunteerId;
         return null;
       })
@@ -212,7 +212,7 @@ const AttendanceUI: React.FC = () => {
                   <Button
                     onClick={() => {
                       setListUser((prev) =>
-                        prev.map((user) => ({ ...user, attendance: false }))
+                        prev?.map((user) => ({ ...user, attendance: false }))
                       );
                     }}
                   >

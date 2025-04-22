@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Breadcrumb,
   DatePicker,
@@ -11,30 +11,30 @@ import {
   Checkbox,
   App as AntdApp,
   Tag,
-} from 'antd';
+} from "antd";
 import {
   dateRulesEvent,
   nameRules,
   timePublishedRulesEvent,
-} from '../../ultils/validationRules';
-import type { RadioChangeEvent } from 'antd';
-import PreviewImageUpload from '../Components/PreviewImageUpload';
-import FormAddress from '../Components/FormAddress';
-import extendUploadFilesToFirebase from '../../ultils/extendUploadFilesToFirebase';
-import MapBox from '../Components/MapBox';
-import type { DatePickerProps, GetProps } from 'antd';
-import { createEvent } from '../../model/Request/CreateEvent';
-import api from '../../apiService/useFetch';
-import dayjs, { Dayjs } from 'dayjs';
-import { toISOLocal } from '../../ultils/toISOLocal';
-import { useNavigate } from 'react-router-dom';
-import { decodedCookie, getCookie } from '../../ultils/cookie';
+} from "../../ultils/validationRules";
+import type { RadioChangeEvent } from "antd";
+import PreviewImageUpload from "../Components/PreviewImageUpload";
+import FormAddress from "../Components/FormAddress";
+import extendUploadFilesToFirebase from "../../ultils/extendUploadFilesToFirebase";
+import MapBox from "../Components/MapBox";
+import type { DatePickerProps, GetProps } from "antd";
+import { createEvent } from "../../model/Request/CreateEvent";
+import api from "../../apiService/useFetch";
+import dayjs, { Dayjs } from "dayjs";
+import { toISOLocal } from "../../ultils/toISOLocal";
+import { useNavigate } from "react-router-dom";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
 const style: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
   gap: 8,
 };
 
@@ -51,11 +51,11 @@ const CreateEvent = () => {
   const navigate = useNavigate();
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
-    type: 'thumbnail',
+    type: "thumbnail",
   });
   const [fileListImage, setFileListImage] = useState<UploadFileExtend>({
     file: [],
-    type: 'image',
+    type: "image",
   });
   const [form] = Form.useForm();
   const [value, setValue] = useState(1);
@@ -64,18 +64,18 @@ const CreateEvent = () => {
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
-    form.setFieldValue('timePublish', null);
+    form.setFieldValue("timePublish", null);
   };
 
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string>("");
 
   useEffect(() => {
-    const user = decodedCookie(getCookie('accessToken'));
+    const user = decodedCookie(getCookie("accessToken"));
     if (!user) {
-      window.location.href = '/unauthorized';
-    } else if (user?.role !== 'Organization') {
-      window.location.href = '/forbidden';
+      window.location.href = "/unauthorized";
+    } else if (user?.role !== "Organization") {
+      window.location.href = "/forbidden";
     }
   }, []);
 
@@ -106,7 +106,7 @@ const CreateEvent = () => {
     setLoading(true);
     let location: string | null = null;
     if (marker) {
-      location = marker.latitude + ';' + marker.longitude;
+      location = marker.latitude + ";" + marker.longitude;
     }
     if (!values.timePublish) {
       values.timePublish = dayjs();
@@ -116,9 +116,9 @@ const CreateEvent = () => {
     const dataEvent: createEvent = {
       name: values.nameEvent,
       location: location,
-      address: address ?? '',
-      startTime: toISOLocal(dayjs(startMoment).add(60, 'second').toDate()),
-      endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
+      address: address ?? "",
+      startTime: toISOLocal(dayjs(startMoment).add(60, "second").toDate()),
+      endTime: toISOLocal(dayjs(endMoment).add(60, "second").toDate()),
       description: values.description,
       timePublish: toISOLocal(dayjs(values.timePublish).toDate()),
       hasDonate: values.donate,
@@ -129,10 +129,10 @@ const CreateEvent = () => {
     try {
       const { data } = await api.post(`/event/create-an-event`, dataEvent);
       console.log(data);
-      navigate('/organizations/events');
-      message.success('Tạo sự kiện thành công!');
+      navigate("/organizations/events");
+      message.success("Tạo sự kiện thành công!");
     } catch (e: any) {
-      message.error('Tạo sự kiện thất bại!');
+      message.error("Tạo sự kiện thất bại!");
       console.log(e);
     } finally {
       setLoading(false);
@@ -140,9 +140,9 @@ const CreateEvent = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Submit thất bại:', errorInfo);
+    console.log("Submit thất bại:", errorInfo);
     message.error(
-      'Có một số lỗi trong form của bạn. Vui lòng kiểm tra lại các trường  và sửa lỗi!'
+      "Có một số lỗi trong form của bạn. Vui lòng kiểm tra lại các trường  và sửa lỗi!"
     );
   };
 
@@ -161,12 +161,12 @@ const CreateEvent = () => {
     const listFileUrls = await Promise.all(allPromises);
 
     const images = listFileUrls
-      .filter((item) => item.url && item.type === 'image')
-      .map((item) => item.url);
+      .filter((item) => item.url && item.type === "image")
+      ?.map((item) => item.url);
 
     const thumbnails = listFileUrls
-      .filter((item) => item.url && item.type === 'thumbnail')
-      .map((item) => item.url);
+      .filter((item) => item.url && item.type === "thumbnail")
+      ?.map((item) => item.url);
 
     return { images, thumbnails };
   };
@@ -179,7 +179,7 @@ const CreateEvent = () => {
   };
 
   const onOk = (
-    value: DatePickerProps['value'] | RangePickerProps['value']
+    value: DatePickerProps["value"] | RangePickerProps["value"]
   ) => {};
 
   useEffect(() => {
@@ -199,11 +199,11 @@ const CreateEvent = () => {
   };
   const disabledDate = (current: any) => {
     if (value === 1) {
-      return current.isBefore(dayjs().add(2, 'days'), 'day');
+      return current.isBefore(dayjs().add(2, "days"), "day");
     } else if (value === 2) {
       if (!timePublish) return false;
-      const minDate = timePublish.add(2, 'days');
-      return current.isBefore(minDate, 'day');
+      const minDate = timePublish.add(2, "days");
+      return current.isBefore(minDate, "day");
     }
   };
 
@@ -212,11 +212,11 @@ const CreateEvent = () => {
       <Breadcrumb
         items={[
           {
-            title: 'Quản lý sự kiện',
-            href: '/organizations/events',
+            title: "Quản lý sự kiện",
+            href: "/organizations/events",
           },
           {
-            title: 'Tạo sự kiện mới',
+            title: "Tạo sự kiện mới",
           },
         ]}
       />
@@ -247,7 +247,7 @@ const CreateEvent = () => {
           <Form.Item
             name="nameEvent"
             className="mb-4 mt-3"
-            rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
+            rules={[{ required: true, message: "Vui lòng nhập tên" }]}
           >
             <Input />
           </Form.Item>
@@ -300,7 +300,7 @@ const CreateEvent = () => {
           <Form.Item
             name="address"
             className=""
-            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+            rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
           >
             <Input hidden />
           </Form.Item>
@@ -316,8 +316,8 @@ const CreateEvent = () => {
             onChange={onChange}
             value={value}
             options={[
-              { value: 1, label: 'Xuất bản sự kiện ngay lập tức' },
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
+              { value: 1, label: "Xuất bản sự kiện ngay lập tức" },
+              { value: 2, label: "Xuất bản sự kiện theo lịch" },
             ]}
           />
 
@@ -326,11 +326,11 @@ const CreateEvent = () => {
               name="timePublish"
               className="mb-4 mt-3"
               rules={[
-                { required: true, message: 'Vui lòng chọn ngày công bố!' },
+                { required: true, message: "Vui lòng chọn ngày công bố!" },
               ]}
             >
               <DatePicker
-                showTime={{ format: 'HH:mm' }}
+                showTime={{ format: "HH:mm" }}
                 format="YYYY-MM-DD HH:mm"
                 placeholder="Chọn ngày công bố"
                 onChange={handleTimePublishChange}
@@ -353,42 +353,42 @@ const CreateEvent = () => {
             rules={[
               {
                 required: true,
-                message: 'Bạn cần chọn khoảng thời gian!',
+                message: "Bạn cần chọn khoảng thời gian!",
               },
               {
                 validator: async (_, value: [Dayjs, Dayjs]) => {
                   if (!value || value.length < 2) {
                     return Promise.reject(
-                      'Hãy chọn cả ngày bắt đầu và ngày kết thúc!'
+                      "Hãy chọn cả ngày bắt đầu và ngày kết thúc!"
                     );
                   }
 
                   const [startDate, endDate] = value;
-                  const timePublish = form.getFieldValue('timePublish');
+                  const timePublish = form.getFieldValue("timePublish");
                   const currentDate = dayjs();
-                  const minStartDate = currentDate.add(2, 'day');
+                  const minStartDate = currentDate.add(2, "day");
                   if (
                     timePublish &&
-                    startDate.isBefore(timePublish.add(2, 'day'))
+                    startDate.isBefore(timePublish.add(2, "day"))
                   ) {
                     return Promise.reject(
-                      'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
+                      "Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!"
                     );
                   }
-                  if (startDate.isBefore(minStartDate, 'day')) {
+                  if (startDate.isBefore(minStartDate, "day")) {
                     return Promise.reject(
-                      'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!'
+                      "Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!"
                     );
                   }
-                  if (endDate.isBefore(currentDate, 'day')) {
+                  if (endDate.isBefore(currentDate, "day")) {
                     return Promise.reject(
-                      'Ngày kết thúc phải sau ngày hiện tại!'
+                      "Ngày kết thúc phải sau ngày hiện tại!"
                     );
                   }
 
                   if (endDate.isBefore(startDate)) {
                     return Promise.reject(
-                      'Ngày kết thúc phải sau ngày bắt đầu!'
+                      "Ngày kết thúc phải sau ngày bắt đầu!"
                     );
                   }
 
@@ -398,7 +398,7 @@ const CreateEvent = () => {
             ]}
           >
             <DatePicker.RangePicker
-              showTime={{ format: 'HH:mm' }}
+              showTime={{ format: "HH:mm" }}
               format="YYYY-MM-DD HH:mm"
               onOk={onOk}
               allowEmpty
@@ -418,7 +418,7 @@ const CreateEvent = () => {
           <Form.Item
             name="description"
             className="mb-4 mt-3 "
-            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
+            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
           >
             <TextArea className="mt-3 w-full" rows={5} />
           </Form.Item>
@@ -432,9 +432,9 @@ const CreateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
           <div
-            className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${'border-primary-color'} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
+            className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${"border-primary-color"} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
           >
-            {listFieldState.map((item, index) => (
+            {listFieldState?.map((item, index) => (
               <div
                 key={index}
                 className="px-1 py-1 flex items-center justify-between gap-1 hover:bg-stone-200 duration-150 hover:rounded-md select-none"
@@ -463,7 +463,7 @@ const CreateEvent = () => {
                 validator: (_, value) => {
                   if (listSelectedField.length === 0) {
                     return Promise.reject(
-                      new Error('Vui lòng chọn ít nhất 1 lĩnh vực')
+                      new Error("Vui lòng chọn ít nhất 1 lĩnh vực")
                     );
                   }
                   return Promise.resolve();
@@ -490,7 +490,7 @@ const CreateEvent = () => {
               {
                 validator(_: any, value: string) {
                   if (!fileListThumbnail?.file?.length) {
-                    return Promise.reject('Bạn cần upload ảnh');
+                    return Promise.reject("Bạn cần upload ảnh");
                   }
                   return Promise.resolve();
                 },
@@ -500,7 +500,7 @@ const CreateEvent = () => {
             <PreviewImageUpload
               fileList={fileListThumbnail.file}
               setFileList={(fileList) => {
-                setFileListThumbnail({ file: fileList, type: 'thumbnail' });
+                setFileListThumbnail({ file: fileList, type: "thumbnail" });
               }}
             />
           </Form.Item>
@@ -521,7 +521,7 @@ const CreateEvent = () => {
               {
                 validator(_: any, value: string) {
                   if (!fileListImage?.file?.length) {
-                    return Promise.reject('Bạn cần upload ảnh');
+                    return Promise.reject("Bạn cần upload ảnh");
                   }
                   return Promise.resolve();
                 },
@@ -532,7 +532,7 @@ const CreateEvent = () => {
               multiple={true}
               fileList={fileListImage.file}
               setFileList={(fileList) => {
-                setFileListImage({ file: fileList, type: 'image' });
+                setFileListImage({ file: fileList, type: "image" });
               }}
               maxCount={10}
             />
@@ -542,7 +542,7 @@ const CreateEvent = () => {
         <div className="mt-6 ">
           <div className="flex justify-start items-center gap-1">
             <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
-               Kêu gọi ủng hộ
+              Kêu gọi ủng hộ
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
@@ -550,8 +550,8 @@ const CreateEvent = () => {
           <Form.Item
             name="donate"
             valuePropName="checked" // Quy định checkbox khi form được submit
-            initialValue={true} 
-            className='mt-2'// Giá trị mặc định của checkbox
+            initialValue={true}
+            className="mt-2" // Giá trị mặc định của checkbox
           >
             <Checkbox></Checkbox>
           </Form.Item>

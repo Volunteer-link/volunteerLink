@@ -50,7 +50,7 @@ const ParticipationRequest = () => {
           `/event/participated-requests?EventId=${id}&PageNumber=${currentPage}&PageSize=${pageSize}`
         );
 
-        const dataArr: volunteerProps[] = data.data.items.map((item: any) => ({
+        const dataArr: volunteerProps[] = data.data.items?.map((item: any) => ({
           accId: item.accountId,
           requestId: item.requestId,
           name: item.volunteerName,
@@ -105,7 +105,7 @@ const ParticipationRequest = () => {
         ]}
       />
 
-      {dataRequest.map((item, index) => (
+      {dataRequest?.map((item, index) => (
         <Volunteer
           key={item.requestId}
           objectVolunteer={item}

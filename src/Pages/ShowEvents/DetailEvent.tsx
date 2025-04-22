@@ -890,7 +890,7 @@ const DetailEvent = () => {
                           <FaDotCircle />
                           <div className=" text-base font-medium">Lĩnh vực</div>
                         </div>
-                        {dataState?.fields.map((item, index) => (
+                        {dataState?.fields?.map((item, index) => (
                           <span
                             key={index}
                             className="italic text-primary-color mr-3"
@@ -996,7 +996,7 @@ const DetailEvent = () => {
                 </div>
                 {listRating.length !== 0 && (
                   <div className="rounded-md border-2 border-primary-color p-4 mb-4">
-                    {listRating.map((item, index) => (
+                    {listRating?.map((item, index) => (
                       <div
                         key={index}
                         className={`p-2 flex items-start gap-4 select-none ${

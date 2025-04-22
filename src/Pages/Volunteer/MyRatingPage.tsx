@@ -57,7 +57,7 @@ const MyRatingPage = () => {
       {/* <ErrorCards errCode={errCode} /> */}
       {listRating.length !== 0 && (
         <div className="rounded-md border-2 border-primary-color p-4 mb-4">
-          {listRating.map((item, index) => (
+          {listRating?.map((item, index) => (
             <MyRatingPageComponent
               setResetKey={setResetKey}
               setIsLoading={setIsLoading}

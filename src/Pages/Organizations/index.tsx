@@ -54,7 +54,7 @@ const Organizations = () => {
       try {
         const { data } = await api.get(`/common/get-fields`);
         setListFieldState(() => {
-          return data.data.map((item: any) => {
+          return data.data?.map((item: any) => {
             return {
               value: item.id,
               label: item.name,
@@ -133,41 +133,44 @@ const Organizations = () => {
         />
       </div>
       <LineSpacing />
-      {organizationsTopList.length > 0 && (
-        <div className="mb-6">
-          <div className="items-center gap-1 justify-center text-2xl flex mb-6 font-medium">
-            <FaMedal className="text-primary-color" />
-            <div className="">Tổ chức </div>
-            <div className="text-primary-color">hàng đầu</div>
-          </div>
-          <div>
-            <Row gutter={16} className={``}>
-              {organizationsTopList.map((item: any) => {
-                return (
-                  <Col
-                    onClick={() => {
-                      navigate(`/organizations/profile/${item.accountId}`);
-                    }}
-                    className="cursor-pointer"
-                    key={item.id + "toprate"}
-                    xs={24}
-                    sm={8}
-                    md={8}
-                  >
-                    <OrganizationsItem
-                      image={item.urlImage}
-                      name={item.name}
-                      field={item.fields
-                        .map((field: any) => field.name)
-                        .join(", ")}
-                    />
-                  </Col>
-                );
-              })}
-            </Row>
-          </div>
+      {/* {organizationsTopList.length > 0 && ( */}
+      <div className="mb-6">
+        <div className="items-center gap-1 justify-center text-2xl flex mb-6 font-medium">
+          <FaMedal className="text-primary-color" />
+          <div className="">Tổ chức </div>
+          <div className="text-primary-color">hàng đầu</div>
         </div>
-      )}
+        <div>
+          <Row gutter={16} className={``}>
+            {organizationsTopList?.map((item: any) => {
+              return (
+                <Col
+                  onClick={() => {
+                    navigate(`/organizations/profile/${item.accountId}`);
+                  }}
+                  className="cursor-pointer"
+                  key={item.id + "toprate"}
+                  xs={24}
+                  sm={8}
+                  md={8}
+                >
+                  <OrganizationsItem
+                    image={item.urlImage}
+                    name={item.name}
+                    field={item.fields
+                      ?.map((field: any) => field.name)
+                      .join(", ")}
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+          {organizationsTopList.length === 0 && (
+            <Empty description="Không có dữ liệu sự kiện" />
+          )}
+        </div>
+      </div>
+      {/* )} */}
       <LineSpacing />
       <div>
         <img
@@ -221,7 +224,7 @@ const Organizations = () => {
               maxTagPlaceholder={(omittedValues) => (
                 <Tooltip
                   styles={{ root: { pointerEvents: "none" } }}
-                  title={omittedValues.map(({ label }) => label).join(", ")}
+                  title={omittedValues?.map(({ label }) => label).join(", ")}
                 >
                   <span>+ {omittedValues.length}</span>
                 </Tooltip>
@@ -234,7 +237,7 @@ const Organizations = () => {
         ) : (
           <>
             <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
-              {organizationsList.map((item: any) => {
+              {organizationsList?.map((item: any) => {
                 return (
                   <Col
                     onClick={() => {
@@ -250,7 +253,7 @@ const Organizations = () => {
                       image={item.urlImage}
                       name={item.name}
                       field={item.fields
-                        .map((field: any) => field.name)
+                        ?.map((field: any) => field.name)
                         .join(", ")}
                     />
                   </Col>
