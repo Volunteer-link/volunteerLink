@@ -27,15 +27,18 @@ const ParticipationRequest = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
   // useEffect(() => {
   //   setupInterceptors(setErrCode);
   // }, []);
@@ -67,7 +70,7 @@ const ParticipationRequest = () => {
     if (status) {
       fetchData();
     }
-  }, [currentPage, resetState]);
+  }, [currentPage, resetState, status]);
 
   const handleChangePageSearch = (page: number) => {
     setCurrentPage(page);

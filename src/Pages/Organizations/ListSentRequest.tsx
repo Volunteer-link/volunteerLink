@@ -33,15 +33,18 @@ const ListSentRequest = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
 
   const fetchInvite = async () => {
     try {
@@ -61,7 +64,7 @@ const ListSentRequest = () => {
     if (status) {
       fetchInvite();
     }
-  }, [currentPage]);
+  }, [currentPage, status]);
   console.log(listInvitation);
 
   const handleChangePageSearch = (page: number) => {

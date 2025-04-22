@@ -57,15 +57,18 @@ const UpdateEvent = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
 
   useEffect(() => {
     const user = decodedCookie(getCookie("accessToken"));
@@ -141,7 +144,7 @@ const UpdateEvent = () => {
     if (status) {
       fetchEvent();
     }
-  }, []);
+  }, [status]);
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
     type: "thumbnail",
@@ -157,7 +160,7 @@ const UpdateEvent = () => {
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
-    form.setFieldValue('timePublish',null)
+    form.setFieldValue("timePublish", null);
   };
 
   const [listFieldState, setListFieldState] = useState<
@@ -395,9 +398,7 @@ const UpdateEvent = () => {
             onChange={onChange}
             value={value}
             defaultValue={value}
-            options={[
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
-            ]}
+            options={[{ value: 2, label: "Xuất bản sự kiện theo lịch" }]}
           />
 
           {value === 2 && (
