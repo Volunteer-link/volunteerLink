@@ -254,7 +254,11 @@ const VolunteerSuggestions = () => {
               <input
                 ref={refSearch}
                 type="text"
-                placeholder="Tìm kiếm theo tên tình nguyện viên..."
+                placeholder={
+                  !AISearch
+                    ? `Tìm kiếm theo tên tình nguyện viên...`
+                    : `Tìm kiếm tình nguyện viên bằng AI...`
+                }
                 className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
                 onKeyDown={handleEnterKey}
                 onChange={handleChangeInput}
