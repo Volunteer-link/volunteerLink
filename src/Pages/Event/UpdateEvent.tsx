@@ -595,6 +595,10 @@ const UpdateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
+           <Tag className="mb-2 p-1" color="warning">
+                      Ghi chú: Sự kiện chỉ cho tối đa 5 ảnh
+                    </Tag>
+
           <Form.Item
             className="mb-4 mt-3"
             name="imageThumbnail"
@@ -603,6 +607,9 @@ const UpdateEvent = () => {
                 validator(_: any, value: string) {
                   if (!fileListImage?.file?.length) {
                     return Promise.reject("Bạn cần upload ảnh");
+                  }
+                  if (fileListImage?.file?.length === 5) {
+                    return Promise.reject('Sự kiện chỉ được tối đa 5 ảnh');
                   }
                   return Promise.resolve();
                 },
