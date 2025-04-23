@@ -327,7 +327,17 @@ const CreateEvent = () => {
               name="timePublish"
               className="mb-4 mt-3"
               rules={[
-                { required: true, message: 'Vui lòng chọn ngày công bố!' },
+                { required: true, message: 'Vui lòng chọn ngày xuất bản!' },
+                {
+                  validator: (_, value) => {
+                    if (value && value.isBefore(dayjs())) {
+                      return Promise.reject(
+                        new Error('Ngày xuất bản phải lớn hơn ngày hiện tại!')
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <DatePicker

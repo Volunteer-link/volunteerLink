@@ -216,7 +216,7 @@ const AttendanceUI: React.FC = () => {
                       );
                     }}
                   >
-                    Reset
+                   Huỷ điểm danh toàn bộ 
                   </Button>
                 </Space>
               </>
