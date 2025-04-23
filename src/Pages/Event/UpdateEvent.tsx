@@ -406,7 +406,15 @@ const UpdateEvent = () => {
               className="mb-4 mt-3"
               initialValue={dayjs(event.timePublish)}
               rules={[
-                { required: true, message: "Vui lòng chọn ngày công bố!" },
+                { required: true, message: "Vui lòng chọn ngày xuất bản!" },
+                {
+                  validator: (_, value) => {
+                    if (value && value.isBefore(dayjs())) {
+                      return Promise.reject(new Error('Ngày xuất bản phải lớn hơn ngày hiện tại!'));
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <DatePicker
@@ -414,6 +422,7 @@ const UpdateEvent = () => {
                 format="YYYY-MM-DD HH:mm"
                 placeholder="Chọn ngày công bố"
                 onChange={handleTimePublishChange}
+         
               />
             </Form.Item>
           )}
@@ -595,6 +604,10 @@ const UpdateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
+           <Tag className="mb-2 p-1" color="warning">
+                      Ghi chú: Sự kiện chỉ cho tối đa 5 ảnh
+                    </Tag>
+
           <Form.Item
             className="mb-4 mt-3"
             name="imageThumbnail"
@@ -603,6 +616,9 @@ const UpdateEvent = () => {
                 validator(_: any, value: string) {
                   if (!fileListImage?.file?.length) {
                     return Promise.reject("Bạn cần upload ảnh");
+                  }
+                  if (fileListImage?.file?.length > 5) {
+                    return Promise.reject('Sự kiện chỉ được tối đa 5 ảnh');
                   }
                   return Promise.resolve();
                 },

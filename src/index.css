@@ -68,3 +68,15 @@ code {
   background-color: #3BA769 !important;
 
  }
+
+.ql-editor li{
+  list-style-type : unset !important;
+}
+
+ol, ul, menu{
+  list-style: none; 
+}
+
+.ql-editor ol,.ql-editor ul,.ql-editor menu {
+  list-style: initial  !important; 
+}
