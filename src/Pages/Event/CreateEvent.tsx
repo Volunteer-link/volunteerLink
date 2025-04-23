@@ -527,7 +527,7 @@ const CreateEvent = () => {
                   if (!fileListImage?.file?.length) {
                     return Promise.reject('Bạn cần upload ảnh');
                   }
-                  if (fileListImage?.file?.length === 5) {
+                  if (fileListImage?.file?.length > 5) {
                     return Promise.reject('Sự kiện chỉ được tối đa 5 ảnh');
                   }
                   return Promise.resolve();
