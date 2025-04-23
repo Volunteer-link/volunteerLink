@@ -50,7 +50,7 @@ const MySlider: React.FC<{
         {listItem?.map((item, index) => (
           <div
             key={index}
-            className={`w-full ${size === "big" ? "h-80" : "h-32"}`}
+            className={`w-full ${size === "big" ? "h-[600px]" : "h-32"}`}
           >
             <img className="object-cover h-full w-full" src={item} alt="" />
           </div>
