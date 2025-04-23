@@ -78,7 +78,7 @@ const Footer: React.FC<{}> = () => {
         <div></div>
       </div>
       <div className="text-center pt-8 pb-2">
-        Address: khu công nghệ cao Hòa Lạc – Km29, ĐCT08, Thạch Hoà, Thạch Thất,
+        Địa chỉ: khu công nghệ cao Hòa Lạc – Km29, ĐCT08, Thạch Hoà, Thạch Thất,
         Hà Nội 10000 , Hà Nội , Việt Nam
       </div>
     </div>

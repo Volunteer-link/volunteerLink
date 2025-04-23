@@ -402,7 +402,7 @@ const ShowEvent = () => {
             <div className="w-[2px] bg-stone-400 h-8 mx-1"></div>
             <div>
               <img
-                src="/materials/VTLAI_blackbrain_transparentbg.png"
+                src="/materials/VTLAI.png"
                 className="w-40 select-none"
                 alt=""
               />
@@ -476,7 +476,7 @@ const ShowEvent = () => {
               onChange={handleChangeField}
               options={[
                 // { value: 0, label: "Tất cả các lĩnh vực" },
-                ...(listField || []).map(({ id, name }) => ({
+                ...(listField || [])?.map(({ id, name }) => ({
                   value: id.toString(),
                   label: name,
                 })),

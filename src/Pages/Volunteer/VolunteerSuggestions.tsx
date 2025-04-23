@@ -36,15 +36,18 @@ const VolunteerSuggestions = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +66,7 @@ const VolunteerSuggestions = () => {
     if (status) {
       fetchData();
     }
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     const fetchVolunteer = async () => {
@@ -74,7 +77,7 @@ const VolunteerSuggestions = () => {
         );
 
         setListVolunteer(
-          data.data.items.map((item: any) =>
+          data.data.items?.map((item: any) =>
             Object.assign(item, {
               volunteerDisplayType: "SUGGESTION",
               pictureProfile: item.urlImage,
@@ -94,7 +97,7 @@ const VolunteerSuggestions = () => {
     if (status) {
       fetchVolunteer();
     }
-  }, [PageNumber, resetState]);
+  }, [PageNumber, resetState, status]);
 
   const fetchAllVolunteer = async (page?: number) => {
     try {
@@ -106,7 +109,7 @@ const VolunteerSuggestions = () => {
         );
 
         setListVolunteerAll(
-          data.data.items.map((item: any) =>
+          data.data.items?.map((item: any) =>
             Object.assign(item, {
               volunteerDisplayType: "SUGGESTION",
               pictureProfile: item.pictureImage,
@@ -122,7 +125,7 @@ const VolunteerSuggestions = () => {
         console.log(data);
 
         setListVolunteerAll(
-          data.data.items.map((item: any) =>
+          data.data.items?.map((item: any) =>
             Object.assign(item, {
               volunteerDisplayType: "SUGGESTION",
               pictureProfile: item.urlImage,
@@ -144,7 +147,7 @@ const VolunteerSuggestions = () => {
     if (status) {
       fetchAllVolunteer();
     }
-  }, [resetStateAll]);
+  }, [resetStateAll, status]);
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
@@ -197,14 +200,14 @@ const VolunteerSuggestions = () => {
             },
           ]}
         />
-        <div className="bg-stone-100 shadow-custom-green rounded-xl py-10 mt-8">
+        <div className="bg-white shadow-custom-green rounded-xl py-10 mt-8">
           <div className="text-xl mb-8 text-center font-medium">
             <div>
               Tình nguyện viên{" "}
               <span className="text-primary-color">được gợi ý</span>
             </div>
             <img
-              src="/materials/VTLAI_blackbrain_transparentbg.png"
+              src="/materials/VTLAI.png"
               className="w-40 mx-auto mt-2"
               alt=""
             />
@@ -239,7 +242,7 @@ const VolunteerSuggestions = () => {
       </div>
       <div>
         <LineSpacing />
-        <div className="bg-stone-100 shadow-custom-green rounded-xl py-10">
+        <div className="bg-white shadow-custom-green rounded-xl py-10">
           <div className="text-xl text-center mb-8">
             <span className="font-medium">
               <span className="text-primary-color">Tất cả</span> tình nguyện

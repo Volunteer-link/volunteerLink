@@ -33,9 +33,10 @@ import dayjs from "dayjs";
 import { storage } from "../../ultils/firebase";
 import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import utc from "dayjs/plugin/utc";
-import { data } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
 import MapBox from "../Components/MapBox";
+import { FaPencilAlt } from "react-icons/fa";
 dayjs.extend(utc);
 interface MarkerPosition {
   longitude: number;
@@ -110,6 +111,7 @@ const MyProfile = () => {
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
   const [address, setAddress] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openModalEditName, setOpenModalEditName] = useState(false);
 
   useEffect(() => {
     const fetchCheckPublish = async () => {
@@ -150,50 +152,62 @@ const MyProfile = () => {
     fetchField();
   }, []);
 
+  const handleAvt = (url?: string) => {
+    setListFile((prev) => [
+      {
+        uid: url ? "-1" : "s-20052003",
+        name: "avatar.png",
+        status: "done",
+        url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
+      },
+    ]);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await api.get(`/profile/volunteer`);
         const data = res.data.data;
-        console.log(data);
 
-        setProfileState((prev) => ({
-          ...(prev ?? {}),
-          ...data,
-          dateOfBirth: new Date(data.dateOfBirth),
-        }));
-        setAddress(data.address);
-        if (data?.location) {
-          setMarker({
-            longitude: Number(data?.location?.split(";")[1]),
-            latitude: Number(data?.location?.split(";")[0]),
-          });
+        // Kiểm tra nếu data có tồn tại trước khi thao tác
+        if (data) {
+          setProfileState((prev) => ({
+            ...(prev ?? {}),
+            ...data,
+            dateOfBirth: new Date(data.dateOfBirth), // chuyển đổi ngày sinh
+          }));
+          setAddress(data.address);
+
+          // Kiểm tra data.location và chia location nếu có
+          if (data?.location) {
+            const [latitude, longitude] = data.location.split(";").map(Number);
+            setMarker({
+              longitude,
+              latitude,
+            });
+          }
+
+          setRadioState(data.sex);
+
+          // Mã hóa danh sách các trường
+          const selectedFields: number[] = (data?.fields ?? []).map(
+            (item: any) => item.id
+          );
+          setListSelectedField(selectedFields);
+
+          // Kiểm tra và xử lý địa chỉ, chia tách nếu có
+          if (data.address) {
+            setAddressState(data.address.split(", "));
+          }
+
+          // Xử lý ảnh đại diện
+          handleAvt(data.urlImage);
         }
-
-        setRadioState(data.sex);
-        const selectedFields: number[] = (data?.fields ?? []).map(
-          (item: any, index: number) => item.id
-        );
-
-        setListSelectedField(selectedFields);
-
-        setAddressState(data.address.split(", "));
-
-        handleAvt(data.urlImage);
       } catch (err: any) {
+        console.error("Error fetching data:", err); // Log lỗi để debug
       } finally {
+        // Thực thi các hành động nếu cần thiết sau khi fetch
       }
-    };
-
-    const handleAvt = (url?: string) => {
-      setListFile((prev) => [
-        {
-          uid: url ? "-1" : "s-20052003",
-          name: "avatar.png",
-          status: "done",
-          url: url ? url : `/materials/blank-profile-picture-973460_1280.png`,
-        },
-      ]);
     };
     fetchData();
   }, [updateState]);
@@ -347,6 +361,32 @@ const MyProfile = () => {
     setIsModalOpen(false);
   };
 
+  const ShowModalEditName = () => {
+    setOpenModalEditName(true);
+  };
+
+  const handleCloseEditName = () => {
+    setOpenModalEditName(false);
+  };
+
+  const [formChangeName] = Form.useForm();
+
+  const handleSubmitChangeName = async (values: any) => {
+    const { name, password } = values;
+
+    try {
+      const response = await api.put("/profile/volunteer-edit-name", {
+        newName: name,
+        password: password,
+      });
+      form.setFieldValue("name", name);
+      setOpenModalEditName(false);
+      message.success("Đổi tên thành công!");
+    } catch (error: any) {
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
+    }
+  };
+  const navigate = useNavigate();
   return (
     <div className=" py-4 relative">
       {isLoading && <Loading color="green" />}
@@ -434,26 +474,90 @@ const MyProfile = () => {
                 </div>
                 <div className="w-20 h-[0.07rem] bg-primary-color"></div>
               </div>
-              <Form.Item
-                name="name"
-                rules={[
-                  { required: true, message: "Vui lòng nhập họ và tên!" },
-                  {
-                    pattern:
-                      /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
-                    message:
-                      "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
-                  },
-                ]}
-              >
-                <Input
-                  className={`border-[0.1rem] text-base ${
-                    errorName !== ""
-                      ? "border-2 border-red-500"
-                      : "border-stone-300"
-                  } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
+              <div className="flex items-center gap-5 justify-between ">
+                <Form.Item
+                  name="name"
+                  className="flex-1 !mb-0"
+                  rules={[
+                    { required: true, message: "Vui lòng nhập họ và tên!" },
+                    {
+                      pattern:
+                        /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
+                      message:
+                        "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
+                    },
+                  ]}
+                >
+                  <Input
+                    disabled
+                    className={`border-[0.1rem] text-base ${
+                      errorName !== ""
+                        ? "border-2 border-red-500"
+                        : "border-stone-300"
+                    } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
+                  />
+                </Form.Item>
+                <FaPencilAlt
+                  className="w-4 h-4 text-primary-color cursor-pointer"
+                  onClick={ShowModalEditName}
                 />
-              </Form.Item>
+                <Modal
+                  maskClosable={true}
+                  footer={null}
+                  onCancel={handleCloseEditName}
+                  title="Thay đổi tên"
+                  centered
+                  open={openModalEditName}
+                >
+                  <Form
+                    form={formChangeName}
+                    onFinish={handleSubmitChangeName}
+                    layout="vertical"
+                  >
+                    <Form.Item
+                      name="name"
+                      label="Họ Và Tên"
+                      rules={[
+                        { required: true, message: "Vui lòng nhập họ và tên!" },
+                        {
+                          pattern:
+                            /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
+                          message:
+                            "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="password"
+                      label="Mật khẩu"
+                      rules={[
+                        { required: true, message: "Vui lòng nhập mật khẩu!" },
+                      ]}
+                    >
+                      <Input.Password />
+                    </Form.Item>
+                    <div className="flex items-center justify-between">
+                      <Button type="primary" htmlType="submit">
+                        Đổi tên
+                      </Button>
+                      <a
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate("/authentication/verify-email", {
+                            state: "FORGOT_PASSWORD",
+                          });
+                        }}
+                        className="block text-center text-[#3BA769] mt-2"
+                        href=""
+                      >
+                        Quên mật khẩu?
+                      </a>
+                    </div>
+                  </Form>
+                </Modal>
+              </div>
             </div>
             <div className="my-4">
               <div className="flex items-center gap-1 mb-2">
@@ -625,7 +729,7 @@ const MyProfile = () => {
                   errorField ? "border-red-500" : "border-primary-color"
                 } overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
               >
-                {listFieldState.map((item, index) => (
+                {listFieldState?.map((item, index) => (
                   <div
                     key={index}
                     className="px-1 py-1 flex items-center justify-between gap-1 hover:bg-stone-200 duration-150 hover:rounded-md select-none"

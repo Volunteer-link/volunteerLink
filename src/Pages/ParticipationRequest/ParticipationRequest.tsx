@@ -27,15 +27,18 @@ const ParticipationRequest = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
   // useEffect(() => {
   //   setupInterceptors(setErrCode);
   // }, []);
@@ -47,7 +50,7 @@ const ParticipationRequest = () => {
           `/event/participated-requests?EventId=${id}&PageNumber=${currentPage}&PageSize=${pageSize}`
         );
 
-        const dataArr: volunteerProps[] = data.data.items.map((item: any) => ({
+        const dataArr: volunteerProps[] = data.data.items?.map((item: any) => ({
           accId: item.accountId,
           requestId: item.requestId,
           name: item.volunteerName,
@@ -67,7 +70,7 @@ const ParticipationRequest = () => {
     if (status) {
       fetchData();
     }
-  }, [currentPage, resetState]);
+  }, [currentPage, resetState, status]);
 
   const handleChangePageSearch = (page: number) => {
     setCurrentPage(page);
@@ -102,7 +105,7 @@ const ParticipationRequest = () => {
         ]}
       />
 
-      {dataRequest.map((item, index) => (
+      {dataRequest?.map((item, index) => (
         <Volunteer
           key={item.requestId}
           objectVolunteer={item}

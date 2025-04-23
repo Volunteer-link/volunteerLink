@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   BarElement,
@@ -6,19 +6,28 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-  Title
-} from 'chart.js';
+  Title,
+} from "chart.js";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title
+);
 
 const BarChart = ({ chartData }) => {
   const data = {
-    labels: chartData.map(item => item.month),
-    datasets: [{
-      label: 'Tổng số tiền ủng hộ (VNĐ)',
-      data: chartData.map(item => item.money), 
-      backgroundColor: '#36A2EB'
-    }]
+    labels: chartData?.map((item) => item.month),
+    datasets: [
+      {
+        label: "Tổng số tiền ủng hộ (VNĐ)",
+        data: chartData?.map((item) => item.money),
+        backgroundColor: "#36A2EB",
+      },
+    ],
   };
 
   const options = {
@@ -26,9 +35,9 @@ const BarChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Ủng hộ theo tháng'
-      }
-    }
+        text: "Ủng hộ theo tháng",
+      },
+    },
   };
 
   return <Bar data={data} options={options} />;

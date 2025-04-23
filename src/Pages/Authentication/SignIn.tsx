@@ -162,7 +162,7 @@ const SignIn: React.FC = () => {
               >
                 <Input.Password
                   className="max-w-[400px]"
-                  placeholder="Password......."
+                  placeholder="Mật Khẩu......."
                 />
               </Form.Item>
               <Flex className="w-full" justify="center" gap="middle" vertical>

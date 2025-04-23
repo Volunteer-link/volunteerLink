@@ -77,7 +77,7 @@ const ChangeRequestComponent: React.FC<{
       <div className="text-2xl mb-4 lg:mb-0">Yêu cầu đổi tên tổ chức</div>
       <div className="mt-8">
         {dataDisplay.length === 0 && <Empty description="Không có yêu cầu" />}
-        {dataDisplay.map((item, index) => (
+        {dataDisplay?.map((item, index) => (
           <div
             key={index}
             className="w-full border-2 border-primary-color rounded-md px-8 py-6 cursor-pointer flex select-none items-center justify-between my-4"

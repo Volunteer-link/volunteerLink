@@ -53,19 +53,23 @@ const UpdateEvent = () => {
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
   const [address, setAddress] = useState<string>("");
   const [status, setStatus] = useState<boolean>(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
 
   useEffect(() => {
     const user = decodedCookie(getCookie("accessToken"));
@@ -101,7 +105,7 @@ const UpdateEvent = () => {
         console.log(data.data);
         const [latitude, longitude] = data.data.location
           .split(";")
-          .map((part: string) => part.trim());
+          ?.map((part: string) => part.trim());
         setMarker({
           longitude: parseFloat(longitude),
           latitude: parseFloat(latitude),
@@ -122,7 +126,7 @@ const UpdateEvent = () => {
         setFileListImage((prev) => {
           return {
             ...prev,
-            file: data.data.images.map((item: string, index: number) => ({
+            file: data.data.images?.map((item: string, index: number) => ({
               uid: index.toString(),
               name: "imageThumbnail",
               status: "done",
@@ -133,6 +137,7 @@ const UpdateEvent = () => {
         setListSelectedField(
           data.data.fields?.map((field: any, index: number) => field.id)
         );
+        form.setFieldValue("donate", data.data.hasDonate);
         setEvent(data.data);
       } catch (e: any) {
         console.log(e);
@@ -141,7 +146,7 @@ const UpdateEvent = () => {
     if (status) {
       fetchEvent();
     }
-  }, []);
+  }, [status]);
   const [fileListThumbnail, setFileListThumbnail] = useState<UploadFileExtend>({
     file: [],
     type: "thumbnail",
@@ -150,14 +155,13 @@ const UpdateEvent = () => {
     file: [],
     type: "image",
   });
-  const [form] = Form.useForm();
   const [value, setValue] = useState(2);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
-    form.setFieldValue('timePublish',null)
+    form.setFieldValue("timePublish", null);
   };
 
   const [listFieldState, setListFieldState] = useState<
@@ -183,10 +187,8 @@ const UpdateEvent = () => {
       startTime: toISOLocal(dayjs(startMoment).add(60, "second").toDate()),
       endTime: toISOLocal(dayjs(endMoment).add(60, "second").toDate()),
       description: values.description,
-      timePublish:
-        toISOLocal(dayjs(values.timePublish).add(60, "second").toDate()) ||
-        toISOLocal(dayjs().add(120, "second").toDate()),
-      hasDonate: false,
+      timePublish: toISOLocal(dayjs(values.timePublish).toDate()),
+      hasDonate: values.donate,
       imagesEvent: images.length > 0 ? images : event.images,
       thumbnail: thumbnails.length > 0 ? thumbnails[0] : event.thumbnail,
       fieldsEvent: listSelectedField,
@@ -227,11 +229,11 @@ const UpdateEvent = () => {
 
     const images = listFileUrls
       .filter((item) => item.url && item.type === "image")
-      .map((item) => item.url);
+      ?.map((item) => item.url);
 
     const thumbnails = listFileUrls
       .filter((item) => item.url && item.type === "thumbnail")
-      .map((item) => item.url);
+      ?.map((item) => item.url);
 
     return { images, thumbnails };
   };
@@ -395,9 +397,7 @@ const UpdateEvent = () => {
             onChange={onChange}
             value={value}
             defaultValue={value}
-            options={[
-              { value: 2, label: 'Xuất bản sự kiện theo lịch' },
-            ]}
+            options={[{ value: 2, label: "Xuất bản sự kiện theo lịch" }]}
           />
 
           {value === 2 && (
@@ -515,7 +515,7 @@ const UpdateEvent = () => {
           <div
             className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${"border-primary-color"} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
           >
-            {listFieldState.map((item, index) => (
+            {listFieldState?.map((item, index) => (
               <div
                 key={index}
                 className="px-1 py-1 flex items-center justify-between gap-1 hover:bg-stone-200 duration-150 hover:rounded-md select-none"
@@ -617,6 +617,24 @@ const UpdateEvent = () => {
               }}
               maxCount={10}
             />
+          </Form.Item>
+        </div>
+
+        <div className="mt-6 ">
+          <div className="flex justify-start items-center gap-1">
+            <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
+              Kêu gọi ủng hộ
+            </h4>
+            <div className="bg-[#3BA769] w-6 h-[1px]"></div>
+          </div>
+
+          <Form.Item
+            name="donate"
+            valuePropName="checked" // Quy định checkbox khi form được submit
+            initialValue={true}
+            className="mt-2" // Giá trị mặc định của checkbox
+          >
+            <Checkbox></Checkbox>
           </Form.Item>
         </div>
 

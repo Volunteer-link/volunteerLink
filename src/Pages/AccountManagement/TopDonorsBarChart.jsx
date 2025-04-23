@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   BarElement,
@@ -6,54 +6,61 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-  Title
-} from 'chart.js';
+  Title,
+} from "chart.js";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title
+);
 
 const TopDonorsBarChart = ({ chartData }) => {
   const data = {
-    labels: chartData.map(item => item.accountName),
+    labels: chartData?.map((item) => item.accountName),
     datasets: [
       {
-        label: 'Tổng số tiền ủng hộ (VNĐ)',
-        data: chartData.map(item => item.money),
-        backgroundColor: 'rgba(255, 159, 64, 0.7)',
+        label: "Tổng số tiền ủng hộ (VNĐ)",
+        data: chartData?.map((item) => item.money),
+        backgroundColor: "rgba(255, 159, 64, 0.7)",
         borderRadius: 10,
-      }
-    ]
+      },
+    ],
   };
 
   const options = {
-    indexAxis: 'y', // Biểu đồ thanh ngang
+    indexAxis: "y", // Biểu đồ thanh ngang
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: 'Những người ủng hộ nhiều nhất',
+        text: "Những người ủng hộ nhiều nhất",
         font: {
-          size: 12
-        }
+          size: 12,
+        },
       },
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         callbacks: {
           label: (context) => {
-            const value = context.raw.toLocaleString('vi-VN') + ' VNĐ';
+            const value = context.raw.toLocaleString("vi-VN") + " VNĐ";
             return `💸 ${value}`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       x: {
         ticks: {
-          callback: (value) => `${value.toLocaleString('vi-VN')} VNĐ`
-        }
-      }
-    }
+          callback: (value) => `${value.toLocaleString("vi-VN")} VNĐ`,
+        },
+      },
+    },
   };
 
   return <Bar data={data} options={options} />;

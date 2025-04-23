@@ -33,7 +33,7 @@ const NotificationPage = () => {
         ) {
           const dataArr = JSON.parse(event.data).LatestNotifications;
 
-          const newArr = dataArr.map((item: any) => ({
+          const newArr = dataArr?.map((item: any) => ({
             accountId: item.AccountId,
             content: item.Content,
             id: item.Id,
@@ -127,7 +127,7 @@ const NotificationPage = () => {
           <div>Thời gian: {new Date(item.time).toLocaleString("sv-SE")}</div>
         </div>
       ))} */}
-      {notiList.map((item, index) => (
+      {notiList?.map((item, index) => (
         <div
           key={item.id + new Date().toString()}
           onClick={() => handleClickNoti(item)}

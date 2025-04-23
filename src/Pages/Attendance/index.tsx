@@ -32,7 +32,7 @@ const AttendanceUI: React.FC = () => {
   const [status, setStatus] = useState<boolean>(false);
 
   const handleCheck = (checked: boolean, recordId: number): void => {
-    const newList = listUser.map((user) =>
+    const newList = listUser?.map((user) =>
       user.id === recordId ? { ...user, attendance: checked } : user
     );
     setInteract(true);
@@ -41,15 +41,19 @@ const AttendanceUI: React.FC = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const data = await api.get(`/event/check-owner?eventId=${id}`);
-        setStatus(true);
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchStatus();
-  });
+  }, []);
+
   useEffect(() => {
     const fetchField = async () => {
       try {
@@ -72,11 +76,11 @@ const AttendanceUI: React.FC = () => {
     if (status) {
       fetchField();
     }
-  }, [PageNumber]);
+  }, [PageNumber, status]);
 
   const handleSave = async () => {
     const checkedUsers = listUser
-      .map((user) => {
+      ?.map((user) => {
         if (user.attendance) return user.volunteerId;
         return null;
       })
@@ -208,7 +212,7 @@ const AttendanceUI: React.FC = () => {
                   <Button
                     onClick={() => {
                       setListUser((prev) =>
-                        prev.map((user) => ({ ...user, attendance: false }))
+                        prev?.map((user) => ({ ...user, attendance: false }))
                       );
                     }}
                   >

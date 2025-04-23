@@ -141,7 +141,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   );
 };
 
-const SlideThree: React.FC<SlideOneProps> = ({ isActive,isMobile }) => {
+const SlideThree: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   return (
     <div
       style={{
@@ -162,8 +162,8 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive,isMobile }) => {
       {isActive && (
         <motion.div
           key="slide-2-animate"
-          initial={isMobile? false : { opacity: 0, y: 100 }}
-          animate={isMobile? false : { opacity: 1, y: 0 }}
+          initial={isMobile ? false : { opacity: 0, y: 100 }}
+          animate={isMobile ? false : { opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
           className="absolute text-white md:right-[10%] top-1/3"
         >
@@ -312,7 +312,9 @@ export default function RootLayout() {
             />
             <div className=" flex-col md:flex-row md:absolute flex gap-20 md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2">
               <motion.div
-                initial={isMobile ? false : { opacity: 0, x: -100 }}
+                initial={
+                  isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }
+                }
                 whileInView={isMobile ? {} : { opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
                 viewport={{ amount: 0.6 }}
@@ -345,8 +347,10 @@ export default function RootLayout() {
                 </div>
               </motion.div>
               <motion.div
-                initial={isMobile ? false : { opacity: 0, x: 100 }}
-                whileInView={isMobile ? {} : { opacity: 1, x: 0 }}
+                initial={
+                  isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }
+                }
+                whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
                 viewport={{ amount: 0.6 }}
               >
