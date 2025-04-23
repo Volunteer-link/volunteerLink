@@ -667,7 +667,7 @@ const DetailEvent = () => {
               <img
                 src={dataState?.thumbnail}
                 alt=""
-                className="w-full lg:h-96 h-20 object-cover bg-primary-color"
+                className="w-full lg:h-[600px] h-20 object-cover bg-primary-color"
                 onLoad={() => setIsLoading(false)}
                 onError={(e) =>
                   (e.currentTarget.src = "/materials/placeholder-image.jpg")
