@@ -376,7 +376,7 @@ const CreateEvent = () => {
                       'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
                     );
                   }
-                  if (startDate.isBefore(minStartDate, 'day')) {
+                  if (startDate.isBefore(minStartDate)) {
                     return Promise.reject(
                       'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!'
                     );
