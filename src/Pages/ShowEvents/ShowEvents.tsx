@@ -153,7 +153,6 @@ const ShowEvent = () => {
   const fetchSearch = async (page?: number) => {
     const pageNumber = page ?? 1;
     const location = `${marker?.latitude};${marker?.longitude}`;
-    console.log(searchKey);
 
     try {
       if (!AISearch) {
@@ -278,7 +277,11 @@ const ShowEvent = () => {
             />
             <div className="flex pr-2 items-center gap-8 select-none">
               {!AISearch && (
-                <Tooltip open={!!address} title={address} color={"#3BA769"}>
+                <Tooltip
+                  open={!!address && !isModalOpen}
+                  title={address}
+                  color={"#3BA769"}
+                >
                   <div className="flex gap-2 items-center">
                     <IoLocation
                       onClick={showModal}
@@ -399,7 +402,7 @@ const ShowEvent = () => {
             <div className="w-[2px] bg-stone-400 h-8 mx-1"></div>
             <div>
               <img
-                src="/materials/VTLAI_blackbrain_transparentbg.png"
+                src="/materials/VTLAI.png"
                 className="w-40 select-none"
                 alt=""
               />
@@ -473,7 +476,7 @@ const ShowEvent = () => {
               onChange={handleChangeField}
               options={[
                 // { value: 0, label: "Tất cả các lĩnh vực" },
-                ...(listField || []).map(({ id, name }) => ({
+                ...(listField || [])?.map(({ id, name }) => ({
                   value: id.toString(),
                   label: name,
                 })),

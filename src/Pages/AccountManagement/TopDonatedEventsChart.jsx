@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   BarElement,
@@ -6,19 +6,26 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-  Title
-} from 'chart.js';
+  Title,
+} from "chart.js";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title
+);
 
 const TopDonatedEventsChart = ({ chartData }) => {
   const data = {
-    labels: chartData.map((item) => item.eventName),
+    labels: chartData?.map((item) => item.eventName),
     datasets: [
       {
-        label: 'Tổng tiền ủng hộ (VNĐ)',
-        data: chartData.map((item) => item.money),
-        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        label: "Tổng tiền ủng hộ (VNĐ)",
+        data: chartData?.map((item) => item.money),
+        backgroundColor: "rgba(54, 162, 235, 0.7)",
         borderRadius: 10,
       },
     ],
@@ -29,7 +36,7 @@ const TopDonatedEventsChart = ({ chartData }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Những Sự Kiện Được Ủng Hộ Nhiều Nhất',
+        text: "Những Sự Kiện Được Ủng Hộ Nhiều Nhất",
         font: {
           size: 12,
         },
@@ -40,7 +47,7 @@ const TopDonatedEventsChart = ({ chartData }) => {
       tooltip: {
         callbacks: {
           label: (context) => {
-            const value = context.raw?.toLocaleString('vi-VN') + ' VNĐ';
+            const value = context.raw?.toLocaleString("vi-VN") + " VNĐ";
             return `💸 ${value}`;
           },
         },
@@ -50,7 +57,7 @@ const TopDonatedEventsChart = ({ chartData }) => {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: (value) => `${value.toLocaleString('vi-VN')} VNĐ`,
+          callback: (value) => `${value.toLocaleString("vi-VN")} VNĐ`,
         },
       },
     },

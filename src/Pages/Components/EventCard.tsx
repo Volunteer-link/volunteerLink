@@ -3,7 +3,7 @@ import { HiUsers } from 'react-icons/hi2';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { SlOptions } from 'react-icons/sl';
-import { Dropdown, MenuProps, message } from 'antd';
+import { Dropdown, MenuProps, message, Popconfirm } from 'antd';
 import { EventCardType } from '../../model/ShowEventModel/EventCardType';
 import { useState } from 'react';
 import Loading from './Loading';
@@ -20,6 +20,26 @@ const EventCard: React.FC<{
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showRemove, setShowRemove] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showPopconfirm = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenDeleteDialog(true);
+  };
+
+  const handleOk = async (e: any) => {
+    e.stopPropagation();
+    setConfirmLoading(true);
+    await handleRemoveEventCard();
+    setOpenDeleteDialog(false);
+    setConfirmLoading(false);
+  };
+
+  const handleCancel = (e: any) => {
+    e.stopPropagation();
+    setOpenDeleteDialog(false);
+  };
 
   const items: MenuProps['items'] = [
     {
@@ -30,19 +50,29 @@ const EventCard: React.FC<{
     },
     {
       label: dayjs().isAfter(dayjs(eventObject.timePublish)) ? null : (
-        <div onClick={(e) => handleRemoveEventCard(e)}>Xoá sự kiện</div>
+        <Popconfirm
+          onPopupClick={(e: any) => e.stopPropagation()}
+          title="Chú ý"
+          description="Bạn có chắc chắn muốn xoá sự kiện này không?"
+          open={openDeleteDialog}
+          onConfirm={handleOk}
+          okButtonProps={{ loading: confirmLoading }}
+          onCancel={handleCancel}
+        >
+          <div onClick={showPopconfirm}>Xoá sự kiện</div>
+        </Popconfirm>
       ),
       key: '1',
     },
   ];
 
-  const handleRemoveEventCard = async (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleRemoveEventCard = async () => {
     try {
       const { data } = await api.delete(
-        `event/remove-an-event??EventId=${eventObject.id}`
+        `/event/remove-an-event?EventId=${eventObject.id}`
       );
       setShowRemove(true);
+      messageApi.success('Xoá sự kiện thành công');
     } catch (error: any) {
       if (error.status == 400)
         messageApi.error(`${error.response.data.Message}`);
@@ -68,7 +98,10 @@ const EventCard: React.FC<{
   }
   return (
     <div
-      onClick={() => handleClickEventCard(eventObject.id)}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleClickEventCard(eventObject.id);
+      }}
       className="select-none"
     >
       <div className="relative cursor-pointer group hover:scale-[1.02] transition-all">

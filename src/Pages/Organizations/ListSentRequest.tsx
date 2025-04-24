@@ -29,6 +29,23 @@ const ListSentRequest = () => {
     }[]
   >([]);
   const { id } = useParams<{ id: string }>();
+  const [status, setStatus] = useState<boolean>(false);
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const { data } = await api.get(`/event/check-owner?eventId=${id}`);
+
+        if (data.data.success) {
+          setStatus(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStatus();
+  }, []);
+
   const fetchInvite = async () => {
     try {
       setIsLoading(true);
@@ -44,8 +61,10 @@ const ListSentRequest = () => {
     }
   };
   useEffect(() => {
-    fetchInvite();
-  }, [currentPage]);
+    if (status) {
+      fetchInvite();
+    }
+  }, [currentPage, status]);
   console.log(listInvitation);
 
   const handleChangePageSearch = (page: number) => {
@@ -80,7 +99,7 @@ const ListSentRequest = () => {
     }
   };
   return (
-    <div className="px-32 py-8">
+    <div className="xl:px-32 px-6 py-8">
       {isLoading && <Loading color="green" />}
       {contextHolder}
       <ErrorCards errCode={errCode} />

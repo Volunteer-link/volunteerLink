@@ -76,7 +76,7 @@ const DetailCreateRequestComponent: React.FC<{
         {dataDisplay?.name}
       </div>
       <div className="mt-4">Tài liệu liên quan:</div>
-      {dataDisplay?.listCertificates.map((item, index) => (
+      {dataDisplay?.listCertificates?.map((item, index) => (
         <div key={index}>
           <DownLoadFile fileUrl={item} />
         </div>

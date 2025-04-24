@@ -13,32 +13,44 @@ const Footer: React.FC<{}> = () => {
           <div>
             <div className="bg-white w-16 h-16 rounded-full overflow-hidden">
               <img
-                src="/materials/logo.jfif"
-                className="w-full h-full object-contain"
+                src="/materials/with bg.png"
+                className="w-full h-full object-contain scale-125"
                 alt=""
               />
             </div>
-            <div className="text-base text-shadow-md mt-4">Volunteer Link</div>
+            <div className="text-base text-shadow-md mt-4">
+              Vietnam Volunteer Link
+            </div>
           </div>
           <div className="">
             <div className="text-sm pb-1 font-medium">LIÊN KẾT</div>
             <div className="text-xs hover:opacity-80 py-2">
-              <NavLink className="text-shadow-sm" to={""}>
+              <NavLink className="text-shadow-sm" to={"/"}>
                 Trang chủ
               </NavLink>
             </div>
             <div className="text-xs hover:opacity-80 py-2">
-              <NavLink className="text-shadow-sm" to={""}>
+              <NavLink className="text-shadow-sm" to={"/organizations"}>
                 Tổ chức
               </NavLink>
             </div>
             <div className="text-xs hover:opacity-80 py-2">
-              <NavLink className="text-shadow-sm" to={""}>
+              <NavLink className="text-shadow-sm" to={"/volunteers"}>
+                Tình nguyện viên
+              </NavLink>
+            </div>
+            <div className="text-xs hover:opacity-80 py-2">
+              <NavLink className="text-shadow-sm" to={"/events"}>
                 Sự kiện
               </NavLink>
             </div>
             <div className="text-xs hover:opacity-80 py-2">
-              <NavLink className="text-shadow-sm" to={""}>
+              <NavLink className="text-shadow-sm" to={"/donative-events"}>
+                Ủng hộ
+              </NavLink>
+            </div>
+            <div className="text-xs hover:opacity-80 py-2">
+              <NavLink className="text-shadow-sm" to={"/aboutus"}>
                 Giới thiệu
               </NavLink>
             </div>
@@ -47,7 +59,7 @@ const Footer: React.FC<{}> = () => {
             <div className="text-sm pb-1 font-medium">THÔNG TIN LIÊN LẠC</div>
             <div className="text-xs py-2 text-shadow-sm flex items-center gap-2">
               <IoMailOutline className="text-base" />
-              <div>Email: abc@gmail.com</div>
+              <div>Email: vietnamvolunteerlink@gmail.com</div>
             </div>
             <div className="text-xs py-2 text-shadow-sm flex items-center gap-2">
               <GrPhone className="text-base" />
@@ -66,7 +78,7 @@ const Footer: React.FC<{}> = () => {
         <div></div>
       </div>
       <div className="text-center pt-8 pb-2">
-        Address: khu công nghệ cao Hòa Lạc – Km29, ĐCT08, Thạch Hoà, Thạch Thất,
+        Địa chỉ: khu công nghệ cao Hòa Lạc – Km29, ĐCT08, Thạch Hoà, Thạch Thất,
         Hà Nội 10000 , Hà Nội , Việt Nam
       </div>
     </div>

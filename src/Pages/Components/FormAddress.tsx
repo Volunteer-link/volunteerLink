@@ -1,19 +1,18 @@
-import { Form, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { FormInstance } from 'antd';
+import { Form, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { FormInstance } from "antd";
 const FormAddress = ({
   form,
-  province = '',
-  district = '',
-  ward = '',
+  province = "",
+  district = "",
+  ward = "",
 }: {
   form: FormInstance;
   province?: string;
   district?: string;
   ward?: string;
 }) => {
-
   const [listProvinces, setListProvinces] = useState<
     {
       id: number;
@@ -68,7 +67,7 @@ const FormAddress = ({
     const fetchProvince = async () => {
       try {
         const data = await axios.get(
-          'https://open.oapi.vn/location/provinces?page=0&size=1000'
+          "https://open.oapi.vn/location/provinces?page=0&size=1000"
         );
         setListProvinces(data.data.data);
       } catch (e: any) {
@@ -78,15 +77,13 @@ const FormAddress = ({
     fetchProvince();
   }, []);
 
-
   useEffect(() => {
     if (province) {
       form.setFieldsValue({ province: province.trim() });
     }
     form.setFieldsValue({ ward: ward.trim() });
     form.setFieldsValue({ district: district.trim() });
-  }, [province,ward,district]);
-
+  }, [province, ward, district]);
 
   return (
     <div>
@@ -96,13 +93,13 @@ const FormAddress = ({
 
       <Form.Item
         name="province"
-        rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
+        rules={[{ required: true, message: "Vui lòng chọn tỉnh/thành phố!" }]}
       >
         <Select
           style={{ width: 300 }}
           onChange={(value, option) => handleSelectProvinces(value, option)}
           options={[
-            ...listProvinces.map((item) => ({
+            ...listProvinces?.map((item) => ({
               value: item.name,
               label: item.name,
               id: item.id,
@@ -118,14 +115,14 @@ const FormAddress = ({
 
       <Form.Item
         name="district"
-        rules={[{ required: true, message: 'Vui lòng chọn quận/huyện!' }]}
+        rules={[{ required: true, message: "Vui lòng chọn quận/huyện!" }]}
       >
         <Select
           disabled={!checkLoadDistrict}
           style={{ width: 300 }}
           onChange={handleSelectDistricts}
           options={[
-            ...listDistrict.map((item) => ({
+            ...listDistrict?.map((item) => ({
               value: item.name,
               label: item.name,
               id: item.id,
@@ -140,13 +137,13 @@ const FormAddress = ({
       </div>
       <Form.Item
         name="ward"
-        rules={[{ required: true, message: 'Vui lòng chọn phường/xã!' }]}
+        rules={[{ required: true, message: "Vui lòng chọn phường/xã!" }]}
       >
         <Select
-          disabled={!checkLoadDistrict || !form.getFieldValue('district')}
+          disabled={!checkLoadDistrict || !form.getFieldValue("district")}
           style={{ width: 300 }}
           options={[
-            ...listWard.map((item) => ({
+            ...listWard?.map((item) => ({
               value: item.name,
               label: item.name,
               id: item.id,

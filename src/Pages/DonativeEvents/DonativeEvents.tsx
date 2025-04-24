@@ -62,7 +62,7 @@ const DonativeEvents = () => {
       </div>
       <LineSpacing />
       <div className="items-center gap-1 justify-center text-2xl flex mb-8 font-medium">
-        <div>Sự kiện có thể</div>
+        <div>Sự kiện có thể </div>
         <div className="text-primary-color">ủng hộ</div>
       </div>
       <div className="my-4">

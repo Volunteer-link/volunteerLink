@@ -5,7 +5,7 @@ import type { Rule, FormInstance } from 'antd/es/form';
 export const nameRules: Rule[] = [
   { required: true, message: 'Vui lòng nhập tên' },
   {
-    pattern: /^[A-Za-z0-9\s\u00C0-\u1EF9]+$/,
+    pattern: /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
     message: 'Tên không được chứa ký tự đặc biệt',
   },
 ];
@@ -61,9 +61,7 @@ export const dateRules: Rule[] = [
   },
 ];
 
-export const dateRulesEvent: Rule[] = [
- 
-];
+export const dateRulesEvent: Rule[] = [];
 
 export const timePublishedRulesEvent: Rule[] = [
   {

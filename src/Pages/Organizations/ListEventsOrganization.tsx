@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import api from '../../apiService/useFetch';
-import { Col, Empty, Pagination, Row, Spin, Tabs } from 'antd';
-import EventCard from '../Components/EventCard';
-import { TabsProps } from 'antd/lib';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import api from "../../apiService/useFetch";
+import { Col, Empty, Pagination, Row, Spin, Tabs } from "antd";
+import EventCard from "../Components/EventCard";
+import { TabsProps } from "antd/lib";
 
 const ListEventsOrganization = ({
   organizationId,
@@ -43,18 +43,18 @@ const ListEventsOrganization = ({
     setPageNumber(page);
   };
 
-  const items: TabsProps['items'] = [
+  const items: TabsProps["items"] = [
     {
-      key: '0',
-      label: 'Đang diễn ra',
+      key: "0",
+      label: "Đang diễn ra",
     },
     {
-      key: '1',
-      label: 'Đã diễn ra',
+      key: "-1",
+      label: "Sắp diễn ra",
     },
     {
-      key: '-1',
-      label: 'Sắp diễn ra',
+      key: "1",
+      label: "Đã diễn ra",
     },
   ];
 
@@ -75,8 +75,8 @@ const ListEventsOrganization = ({
         <Empty description="Không có dữ liệu sự kiện" />
       ) : (
         <div>
-          <Row gutter={16} className={` ${loading ? 'opacity-50' : ''}`}>
-            {eventList.map((item: EventCardType) => {
+          <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
+            {eventList?.map((item: EventCardType) => {
               return (
                 <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
                   <EventCard eventObject={item} showOption={false} />

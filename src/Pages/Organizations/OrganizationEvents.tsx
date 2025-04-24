@@ -30,12 +30,12 @@ const OrganizationEvents = () => {
       label: "Đang diễn ra",
     },
     {
-      key: "1",
-      label: "Đã diễn ra",
-    },
-    {
       key: "-1",
       label: "Sắp diễn ra",
+    },
+    {
+      key: "1",
+      label: "Đã diễn ra",
     },
     {
       key: "2",
@@ -130,10 +130,13 @@ const OrganizationEvents = () => {
           ) : (
             <div>
               <Row gutter={16} className={` ${loading ? "opacity-50" : ""}`}>
-                {eventList.map((item: EventCardType) => {
+                {eventList?.map((item: EventCardType) => {
                   return (
                     <Col key={item.id} xs={24} sm={12} md={8} lg={6}>
-                      <EventCard eventObject={item} showOption={true} />
+                      <EventCard
+                        eventObject={item}
+                        showOption={status === 2 ? true : false}
+                      />
                     </Col>
                   );
                 })}

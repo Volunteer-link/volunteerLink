@@ -64,6 +64,7 @@ const CreateEvent = () => {
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     setTimePublish(null);
+    form.setFieldValue('timePublish', null);
   };
 
   const [marker, setMarker] = useState<MarkerPosition | null>(null);
@@ -107,6 +108,9 @@ const CreateEvent = () => {
     if (marker) {
       location = marker.latitude + ';' + marker.longitude;
     }
+    if (!values.timePublish) {
+      values.timePublish = dayjs();
+    }
     const [startMoment, endMoment] = values.date || [];
     const { images, thumbnails } = await upLoadFileToCloud();
     const dataEvent: createEvent = {
@@ -117,9 +121,8 @@ const CreateEvent = () => {
       endTime: toISOLocal(dayjs(endMoment).add(60, 'second').toDate()),
       description: values.description,
       timePublish:
-        toISOLocal(dayjs(values.timePublish).add(60, 'second').toDate()) ||
-        toISOLocal(dayjs().add(120, 'second').toDate()),
-      hasDonate: true,
+        value === 1 ? null : toISOLocal(dayjs(values.timePublish).toDate()),
+      hasDonate: values.donate,
       imagesEvent: images,
       thumbnail: thumbnails[0],
       fieldsEvent: listSelectedField,
@@ -160,11 +163,11 @@ const CreateEvent = () => {
 
     const images = listFileUrls
       .filter((item) => item.url && item.type === 'image')
-      .map((item) => item.url);
+      ?.map((item) => item.url);
 
     const thumbnails = listFileUrls
       .filter((item) => item.url && item.type === 'thumbnail')
-      .map((item) => item.url);
+      ?.map((item) => item.url);
 
     return { images, thumbnails };
   };
@@ -196,9 +199,13 @@ const CreateEvent = () => {
     setTimePublish(value);
   };
   const disabledDate = (current: any) => {
-    if (!timePublish) return false;
-    const minDate = timePublish.add(2, 'days');
-    return current.isBefore(minDate,"day");
+    if (value === 1) {
+      return current.isBefore(dayjs().add(2, 'days'), 'day');
+    } else if (value === 2) {
+      if (!timePublish) return false;
+      const minDate = timePublish.add(2, 'days');
+      return current.isBefore(minDate, 'day');
+    }
   };
 
   return (
@@ -302,7 +309,8 @@ const CreateEvent = () => {
         </div>
         <div className="mt-6">
           <Tag className="mb-2 p-1" color="warning">
-            Ghi chú: Tình nguyện viên chỉ có thể đăng ký trước khi sự kiện diễn ra 24h
+            Ghi chú: Tình nguyện viên chỉ có thể đăng ký trước khi sự kiện diễn
+            ra 24h
           </Tag>
           <Radio.Group
             style={style}
@@ -319,7 +327,17 @@ const CreateEvent = () => {
               name="timePublish"
               className="mb-4 mt-3"
               rules={[
-                { required: true, message: 'Vui lòng chọn ngày công bố!' },
+                { required: true, message: 'Vui lòng chọn ngày xuất bản!' },
+                {
+                  validator: (_, value) => {
+                    if (value && value.isBefore(dayjs())) {
+                      return Promise.reject(
+                        new Error('Ngày xuất bản phải lớn hơn ngày hiện tại!')
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <DatePicker
@@ -360,12 +378,15 @@ const CreateEvent = () => {
                   const timePublish = form.getFieldValue('timePublish');
                   const currentDate = dayjs();
                   const minStartDate = currentDate.add(2, 'day');
-                  if (timePublish && startDate.isBefore(timePublish.add(2, 'day'))) {
+                  if (
+                    timePublish &&
+                    startDate.isBefore(timePublish.add(2, 'day'))
+                  ) {
                     return Promise.reject(
                       'Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!'
                     );
                   }
-                  if (startDate.isBefore(minStartDate, 'day')) {
+                  if (startDate.isBefore(minStartDate)) {
                     return Promise.reject(
                       'Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!'
                     );
@@ -424,7 +445,7 @@ const CreateEvent = () => {
           <div
             className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${'border-primary-color'} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
           >
-            {listFieldState.map((item, index) => (
+            {listFieldState?.map((item, index) => (
               <div
                 key={index}
                 className="px-1 py-1 flex items-center justify-between gap-1 hover:bg-stone-200 duration-150 hover:rounded-md select-none"
@@ -503,6 +524,9 @@ const CreateEvent = () => {
             </h4>
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
+          <Tag className="mb-2 p-1" color="warning">
+            Ghi chú: Sự kiện chỉ cho tối đa 5 ảnh
+          </Tag>
 
           <Form.Item
             className="mb-4 mt-3"
@@ -512,6 +536,9 @@ const CreateEvent = () => {
                 validator(_: any, value: string) {
                   if (!fileListImage?.file?.length) {
                     return Promise.reject('Bạn cần upload ảnh');
+                  }
+                  if (fileListImage?.file?.length > 5) {
+                    return Promise.reject('Sự kiện chỉ được tối đa 5 ảnh');
                   }
                   return Promise.resolve();
                 },
@@ -526,6 +553,24 @@ const CreateEvent = () => {
               }}
               maxCount={10}
             />
+          </Form.Item>
+        </div>
+
+        <div className="mt-6 ">
+          <div className="flex justify-start items-center gap-1">
+            <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
+              Kêu gọi ủng hộ
+            </h4>
+            <div className="bg-[#3BA769] w-6 h-[1px]"></div>
+          </div>
+
+          <Form.Item
+            name="donate"
+            valuePropName="checked" // Quy định checkbox khi form được submit
+            initialValue={true}
+            className="mt-2" // Giá trị mặc định của checkbox
+          >
+            <Checkbox></Checkbox>
           </Form.Item>
         </div>
 

@@ -17,15 +17,16 @@ const Profile = () => {
     try {
       setLoading(true);
       const trimmedValues = {
-        gmail: user?.gmail,
-        password: values.confirmPassword.trim(),
+        oldPassword: values.oldPassword.trim(),
+        newConfirmPassword:values.confirmPassword.trim(),
+        newPassword: values.password.trim(),
       };
-      const { data } = await api.put(`change-password`, trimmedValues);
+      const { data } = await api.put(`/profile/change-password`, trimmedValues);
       console.log(data);
       message.success("Thay đổi mật khẩu thành công!");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error("Thay đổi mật khẩu thất bại!");
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
     } finally {
       setLoading(false);
     }
@@ -89,7 +90,16 @@ const Profile = () => {
             name="name"
             className="mb-4"
           >
-            <Input placeholder="Nhập tên..." readOnly />
+            <Input placeholder="Nhập tên..." disabled readOnly />
+          </Form.Item>
+
+          <Form.Item
+            label={<span style={{ color: "#3BA769" }}> Mật khẩu cũ:</span>}
+            name="oldPassword"
+            className="mb-4"
+            rules={passwordRules}
+          >
+            <Input.Password placeholder="Mật khẩu cũ..." />
           </Form.Item>
 
           <Form.Item

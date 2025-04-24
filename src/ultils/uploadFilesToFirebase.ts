@@ -6,7 +6,7 @@ const uploadFilesToFirebase = async (listFile: UploadFile[]) => {
   if (!listFile || listFile.length === 0) return;
 
   try {
-    const promises = listFile.map((item) => {
+    const promises = listFile?.map((item) => {
       const file = item.originFileObj as File;
 
       const storageRef = ref(storage, `images/${file.name}`);
