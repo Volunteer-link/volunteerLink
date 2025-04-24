@@ -66,13 +66,13 @@ const Footer: React.FC<{}> = () => {
               <div>0973647298</div>
             </div>
           </div>
-          <div className="">
+          {/* <div className="">
             <div className="text-sm pb-1 font-medium">MẠNG XÃ HỘI</div>
             <div className="hover:opacity-80 py-2 text-shadow-sm flex items-center gap-2 text-base cursor-pointer">
               <FaFacebookSquare />
               <FaInstagram />
             </div>
-          </div>
+          </div> */}
           <div className="border-white border-[0.0625rem] absolute left-0 right-0 -bottom-5"></div>
         </div>
         <div></div>
