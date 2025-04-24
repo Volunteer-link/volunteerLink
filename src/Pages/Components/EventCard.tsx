@@ -1,16 +1,16 @@
-import { IoLocation } from 'react-icons/io5';
-import { HiUsers } from 'react-icons/hi2';
-import { FaCalendarAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { SlOptions } from 'react-icons/sl';
-import { Dropdown, MenuProps, message, Popconfirm } from 'antd';
-import { EventCardType } from '../../model/ShowEventModel/EventCardType';
-import { useState } from 'react';
-import Loading from './Loading';
-import SmallLoading from './SmallLoading';
-import { RxEnter } from 'react-icons/rx';
-import dayjs from 'dayjs';
-import api from '../../apiService/useFetch';
+import { IoLocation } from "react-icons/io5";
+import { HiUsers } from "react-icons/hi2";
+import { FaCalendarAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { SlOptions } from "react-icons/sl";
+import { Dropdown, MenuProps, message, Popconfirm } from "antd";
+import { EventCardType } from "../../model/ShowEventModel/EventCardType";
+import { useState } from "react";
+import Loading from "./Loading";
+import SmallLoading from "./SmallLoading";
+import { RxEnter } from "react-icons/rx";
+import dayjs from "dayjs";
+import api from "../../apiService/useFetch";
 
 const EventCard: React.FC<{
   eventObject: EventCardType;
@@ -41,12 +41,12 @@ const EventCard: React.FC<{
     setOpenDeleteDialog(false);
   };
 
-  const items: MenuProps['items'] = [
+  const items: MenuProps["items"] = [
     {
       label: (
         <div onClick={(e) => handleClickMenuItem(e)}>Cập nhật sự kiện</div>
       ),
-      key: '0',
+      key: "0",
     },
     {
       label: dayjs().isAfter(dayjs(eventObject.timePublish)) ? null : (
@@ -62,7 +62,7 @@ const EventCard: React.FC<{
           <div onClick={showPopconfirm}>Xoá sự kiện</div>
         </Popconfirm>
       ),
-      key: '1',
+      key: "1",
     },
   ];
 
@@ -72,7 +72,7 @@ const EventCard: React.FC<{
         `/event/remove-an-event?EventId=${eventObject.id}`
       );
       setShowRemove(true);
-      messageApi.success('Xoá sự kiện thành công');
+      messageApi.success("Xoá sự kiện thành công");
     } catch (error: any) {
       if (error.status == 400)
         messageApi.error(`${error.response.data.Message}`);
@@ -81,7 +81,7 @@ const EventCard: React.FC<{
 
   const handleClickEventCard = (id: number) => {
     // navigate(`/detail-event/${id}`);
-    window.open(`/detail-event/${id}`, '_blank');
+    window.open(`/detail-event/${id}`, "_blank");
   };
 
   const handleClickOption = (e: React.MouseEvent) => {
@@ -108,7 +108,7 @@ const EventCard: React.FC<{
         {showOption && (
           <Dropdown
             menu={{ items }}
-            trigger={['click']}
+            trigger={["click"]}
             placement="bottomRight"
             getPopupContainer={(trigger) =>
               trigger.parentElement || document.body
@@ -134,7 +134,7 @@ const EventCard: React.FC<{
             loading="lazy"
             onLoad={() => setIsLoading(false)}
             onError={(e) =>
-              (e.currentTarget.src = '/materials/placeholder-image.jpg')
+              (e.currentTarget.src = "/materials/placeholder-image.jpg")
             }
           />
 
@@ -160,10 +160,10 @@ const EventCard: React.FC<{
               <div className="flex items-center gap-1">
                 <FaCalendarAlt className="text-sm" />
                 <div className="truncate max-w-28">
-                  {new Date(eventObject.startTime).toLocaleDateString('vi-VN', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
+                  {new Date(eventObject.startTime).toLocaleDateString("vi-VN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
                   })}
                 </div>
               </div>
@@ -173,11 +173,11 @@ const EventCard: React.FC<{
                 <div className="text-xs font-medium">
                   {eventObject.numberVolunteer}
                 </div>
-                <div>thành viên</div>
+                <div>tình nguyện viên</div>
               </div>
               <div className="flex items-center gap-1">
                 <IoLocation className="text-sm" />
-                <div className="truncate max-w-32">{eventObject.address}</div>
+                <div className="truncate max-w-24">{eventObject.address}</div>
               </div>
             </div>
           </div>

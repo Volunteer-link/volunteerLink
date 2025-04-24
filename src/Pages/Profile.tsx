@@ -18,7 +18,7 @@ const Profile = () => {
       setLoading(true);
       const trimmedValues = {
         oldPassword: values.oldPassword.trim(),
-        newConfirmPassword:values.confirmPassword.trim(),
+        newConfirmPassword: values.confirmPassword.trim(),
         newPassword: values.password.trim(),
       };
       const { data } = await api.put(`/profile/change-password`, trimmedValues);
@@ -48,6 +48,7 @@ const Profile = () => {
           Id: user?.AccId,
         },
       });
+      console.log(data.data);
       setUser(data.data);
     };
 
