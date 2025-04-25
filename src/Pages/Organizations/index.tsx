@@ -182,8 +182,8 @@ const Organizations = () => {
       <LineSpacing />
       <div className="items-center gap-1 justify-center text-2xl flex mb-6 font-medium">
         <FaUsers className="text-primary-color" />
-        <div className="">Tổ chức </div>
-        <div className="text-primary-color">trong hệ thống</div>
+        <div className="">Các tổ chức </div>
+        <div className="text-primary-color">của chúng tôi</div>
       </div>
       <div className="flex justify-center items-center w-full">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">

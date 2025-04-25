@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import Header from './Layout/Header';
-import Footer from './Layout/Footer';
-import ScrollToTop from '../Common/ScrollToTop';
-import { Carousel } from 'antd';
-import { motion } from 'framer-motion';
-import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
-import LineSpacing from './Components/LineSpacing';
-import { FaArrowRight } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import Header from "./Layout/Header";
+import Footer from "./Layout/Footer";
+import ScrollToTop from "../Common/ScrollToTop";
+import { Carousel } from "antd";
+import { motion } from "framer-motion";
+import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import LineSpacing from "./Components/LineSpacing";
+import { FaArrowRight } from "react-icons/fa";
 
 interface SlideOneProps {
   isActive: boolean;
@@ -19,9 +19,9 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   return (
     <div
       style={{
-        height: '600px',
-        position: 'relative',
-        background: 'white',
+        height: "600px",
+        position: "relative",
+        background: "white",
       }}
     >
       <img
@@ -29,8 +29,8 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: 'cover',
-          objectPosition: 'center',
+          objectFit: "cover",
+          objectPosition: "center",
         }}
       />
       {isActive && (
@@ -38,13 +38,13 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
           key="slide-2-animate"
           initial={isMobile ? false : { opacity: 0, x: 0 }}
           animate={isMobile ? {} : { opacity: 1, x: -300 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute text-white right-10 top-1/4 max-w-[600px]"
         >
           <div className="scale-110 text-end">
             <div className="mb-12">
               <span className="text-2xl font-quicksand font-light text-shadow-lg">
-                Bạn không thể làm{' '}
+                Bạn không thể làm{" "}
               </span>
               <div className="bg-white opacity-80 inline-block py-2 px-4 rounded-tr-3xl">
                 <span className="text-5xl text-primary-color font-merriweather">
@@ -57,7 +57,7 @@ const SlideOne: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
             </div>
             <div>
               <span className="text-2xl font-quicksand font-light text-shadow-lg">
-                Bạn có thể làm{' '}
+                Bạn có thể làm{" "}
               </span>
               <div className="bg-white opacity-80 inline-block py-4 px-4 rounded-br-3xl">
                 <span className="text-5xl text-primary-color font-merriweather">
@@ -76,9 +76,9 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   return (
     <div
       style={{
-        height: '600px',
-        position: 'relative',
-        background: 'white',
+        height: "600px",
+        position: "relative",
+        background: "white",
       }}
     >
       <img
@@ -86,8 +86,8 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: 'cover',
-          objectPosition: 'center',
+          objectFit: "cover",
+          objectPosition: "center",
         }}
       />
       {isActive && (
@@ -97,7 +97,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
             key="slide-left"
             initial={isMobile ? false : { opacity: 0, x: -200 }}
             animate={isMobile ? {} : { opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="text-white text-right mb-20"
           >
             <div className="flex">
@@ -107,7 +107,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
                   Một hành động
                 </span>
                 <span className="text-primary-color bg-white rounded-bl-3xl opacity-90 py-3 font-thin px-6 text-7xl mt-4 inline-block font-merriweather">
-                  {' '}
+                  {" "}
                   nhỏ
                 </span>
               </div>
@@ -119,7 +119,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
             key="slide-right"
             initial={isMobile ? false : { opacity: 0, x: 200 }}
             animate={isMobile ? {} : { opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="text-white text-left mt-20"
           >
             <div className="flex">
@@ -128,7 +128,7 @@ const SlideTwo: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
                   một trái tim
                 </span>
                 <span className="text-primary-color bg-white rounded-br-3xl opacity-90 py-3 font-thin px-6 text-7xl mt-4 inline-block font-merriweather">
-                  {' '}
+                  {" "}
                   lớn
                 </span>
               </div>
@@ -145,9 +145,9 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
   return (
     <div
       style={{
-        height: '600px',
-        position: 'relative',
-        background: 'white',
+        height: "600px",
+        position: "relative",
+        background: "white",
       }}
     >
       <img
@@ -155,8 +155,8 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
         alt="Volunteer working together"
         className="absolute top-0 left-0 w-full h-full object-cover blur-[2px]"
         style={{
-          objectFit: 'cover',
-          objectPosition: 'center',
+          objectFit: "cover",
+          objectPosition: "center",
         }}
       />
       {isActive && (
@@ -164,7 +164,7 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
           key="slide-2-animate"
           initial={isMobile ? false : { opacity: 0, y: 100 }}
           animate={isMobile ? false : { opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute text-white md:right-[10%] top-1/3"
         >
           <div className="text-end">
@@ -172,13 +172,13 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
               <RiDoubleQuotesL className="text-stone-700 text-4xl" />
               <span>
                 <span className="text-3xl text-stone-700 font-quicksand font-light">
-                  Tình nguyện là{' '}
+                  Tình nguyện là{" "}
                 </span>
                 <span className="text-5xl font-merriweather text-primary-color">
-                  ngôn ngữ{' '}
+                  ngôn ngữ{" "}
                 </span>
                 <span className="text-3xl text-stone-700 font-quicksand font-light">
-                  của{' '}
+                  của{" "}
                 </span>
                 <span className="text-5xl font-merriweather text-primary-color">
                   trái tim
@@ -196,10 +196,10 @@ const SlideThree: React.FC<SlideOneProps> = ({ isActive, isMobile }) => {
 export default function RootLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const hideHeader = location.pathname.startsWith('/admin');
-  const hideFooter = location.pathname.startsWith('/admin');
+  const hideHeader = location.pathname.startsWith("/admin");
+  const hideFooter = location.pathname.startsWith("/admin");
   const shouldHideImage =
-    location.pathname === '/' || location.pathname === '/home';
+    location.pathname === "/" || location.pathname === "/home";
   const [currentSlide, setCurrentSlide] = useState(0);
   useEffect(() => {
     if (shouldHideImage) {
@@ -208,13 +208,13 @@ export default function RootLayout() {
   }, [location.pathname]);
 
   const handleClickDonate = () => {
-    navigate('/donative-events');
+    navigate("/donative-events");
   };
   const handleClickOrg = () => {
-    navigate('/organizations');
+    navigate("/organizations");
   };
   const handleClickEvent = () => {
-    navigate('/events');
+    navigate("/events");
   };
 
   const [isMobile, setIsMobile] = useState(true);
@@ -225,9 +225,9 @@ export default function RootLayout() {
     };
 
     checkMobile(); // check ban đầu
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   return (
@@ -258,8 +258,8 @@ export default function RootLayout() {
       <main
         className={
           hideFooter
-            ? ''
-            : `my-3 lg:my-8` + 'container mx-auto px-4 lg:px-0 lg:w-3/4'
+            ? ""
+            : `my-3 lg:my-8` + "container mx-auto px-4 lg:px-0 lg:w-3/4"
         }
       >
         <Outlet />
@@ -313,10 +313,10 @@ export default function RootLayout() {
             <div className=" flex-col md:flex-row md:absolute flex gap-20 md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2">
               <motion.div
                 initial={
-                  isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }
+                  isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }
                 }
                 whileInView={isMobile ? {} : { opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 viewport={{ amount: 0.6 }}
               >
                 <div className="md:w-[600px] w-full bg-white py-10 px-12 rounded-md shadow-lg">
@@ -328,7 +328,7 @@ export default function RootLayout() {
                     <span className="my-4 inline-block">
                       Trong hệ thống của chúng tôi, mỗi tổ chức là một mảnh ghép
                       quan trọng tạo nên mạng lưới kết nối mạnh mẽ giữa cộng
-                      đồng và những giá trị nhân văn.{' '}
+                      đồng và những giá trị nhân văn.{" "}
                     </span>
                     <span>
                       Từ những nhóm tình nguyện nhỏ đến các tổ chức xã hội lớn,
@@ -351,7 +351,7 @@ export default function RootLayout() {
                   isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }
                 }
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 viewport={{ amount: 0.6 }}
               >
                 <div className="md:w-[600px] w-full bg-white py-10 px-12 rounded-md shadow-lg">

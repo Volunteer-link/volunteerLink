@@ -26,6 +26,7 @@ const MyInvitation = () => {
 
   return (
     <div className="">
+      <div className="font-medium text-xl mb-2 mt-8">Quản lý lời mời</div>
       <Tabs
         defaultActiveKey={currentTab}
         items={items}
