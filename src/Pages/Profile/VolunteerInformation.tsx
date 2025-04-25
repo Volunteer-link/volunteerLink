@@ -31,7 +31,6 @@ const VolunteerInformation = ({
     <>
       {/* Bio and Skills */}
       <div className="mt-6">
-        <p className="text-gray-600">{volunteer?.skill}</p>
         <div className="mt-4">
           <h3 className="text-lg mb-2 text-[#3BA769] font-semibold">Kỹ năng</h3>
           <p className="text-gray-500"> {volunteer?.skill}</p>
@@ -59,7 +58,7 @@ const VolunteerInformation = ({
         </h3>
         <ul className="list-none space-y-2 text-gray-600">
           <li>
-            <span className="font-semibold">Phone:</span>{' '}
+            <span className="font-semibold">Số điện thoại:</span>{' '}
             {volunteer?.phoneNumber}
           </li>
           <li>
