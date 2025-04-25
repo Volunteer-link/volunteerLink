@@ -124,35 +124,7 @@ const OrganizationProfile = () => {
   }, []);
 
   const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const showPopconfirm = () => {
-    setOpen(true);
-  };
-
-  const handleOk = () => {
-    form
-      .validateFields(["name"])
-      .then(async (values) => {
-        setConfirmLoading(true);
-        const { data } = await api.post(`/profile/change-name-request`, {
-          newName: values.name,
-        });
-        message.success("Gửi yêu cầu đổi tên thành công!");
-      })
-      .catch((errorInfo) => {
-        message.success("Gửi yêu cầu đổi tên thất bại!");
-        console.log("Validate Failed:", errorInfo);
-      })
-      .finally(() => {
-        setOpen(false);
-        setConfirmLoading(false);
-      });
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
 
   useEffect(() => {
     const fetchBanks = async () => {
@@ -237,19 +209,7 @@ const OrganizationProfile = () => {
             >
               <Input readOnly={!open} />
             </Form.Item>
-            <Popconfirm
-              title="Yêu cầu"
-              description="Gửi yều cầu đổi tên tổ chức"
-              open={open}
-              onConfirm={handleOk}
-              okButtonProps={{ loading: confirmLoading }}
-              onCancel={handleCancel}
-            >
-              <FaPencilAlt
-                className="w-4 h-4 text-primary-color cursor-pointer"
-                onClick={showPopconfirm}
-              />
-            </Popconfirm>
+            
           </div>
         </div>
 

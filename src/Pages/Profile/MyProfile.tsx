@@ -369,24 +369,6 @@ const MyProfile = () => {
     setOpenModalEditName(false);
   };
 
-  const [formChangeName] = Form.useForm();
-
-  const handleSubmitChangeName = async (values: any) => {
-    const { name, password } = values;
-
-    try {
-      const response = await api.put("/profile/volunteer-edit-name", {
-        newName: name,
-        password: password,
-      });
-      form.setFieldValue("name", name);
-      setOpenModalEditName(false);
-      message.success("Đổi tên thành công!");
-    } catch (error: any) {
-      if (error.status == 400) message.error(`${error.response.data.Message}`);
-    }
-  };
-  const navigate = useNavigate();
   return (
     <div className=" py-4 relative">
       {isLoading && <Loading color="green" />}
@@ -489,7 +471,6 @@ const MyProfile = () => {
                   ]}
                 >
                   <Input
-                    disabled
                     className={`border-[0.1rem] text-base ${
                       errorName !== ""
                         ? "border-2 border-red-500"
@@ -497,66 +478,6 @@ const MyProfile = () => {
                     } outline-primary-color px-4 py-2 w-full rounded-lg duration-300`}
                   />
                 </Form.Item>
-                <FaPencilAlt
-                  className="w-4 h-4 text-primary-color cursor-pointer"
-                  onClick={ShowModalEditName}
-                />
-                <Modal
-                  maskClosable={true}
-                  footer={null}
-                  onCancel={handleCloseEditName}
-                  title="Thay đổi tên"
-                  centered
-                  open={openModalEditName}
-                >
-                  <Form
-                    form={formChangeName}
-                    onFinish={handleSubmitChangeName}
-                    layout="vertical"
-                  >
-                    <Form.Item
-                      name="name"
-                      label="Họ Và Tên"
-                      rules={[
-                        { required: true, message: "Vui lòng nhập họ và tên!" },
-                        {
-                          pattern:
-                            /^(?!.*\s{2})[A-Za-zÀ-ỹ']{1}[A-Za-zÀ-ỹ\s']{3,48}[A-Za-zÀ-ỹ']{1}$/,
-                          message:
-                            "Chỉ được nhập chữ, không có số/ký tự đặc biệt [5-50 kí tự]",
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      name="password"
-                      label="Mật khẩu"
-                      rules={[
-                        { required: true, message: "Vui lòng nhập mật khẩu!" },
-                      ]}
-                    >
-                      <Input.Password />
-                    </Form.Item>
-                    <div className="flex items-center justify-between">
-                      <Button type="primary" htmlType="submit">
-                        Đổi tên
-                      </Button>
-                      <a
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigate("/authentication/verify-email", {
-                            state: "FORGOT_PASSWORD",
-                          });
-                        }}
-                        className="block text-center text-[#3BA769] mt-2"
-                        href=""
-                      >
-                        Quên mật khẩu?
-                      </a>
-                    </div>
-                  </Form>
-                </Modal>
               </div>
             </div>
             <div className="my-4">

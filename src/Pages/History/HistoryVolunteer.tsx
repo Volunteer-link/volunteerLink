@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import api from "../../apiService/useFetch";
-import { Button, message, Table, App as AntdApp } from "antd";
+import { useEffect, useRef, useState } from 'react';
+import api from '../../apiService/useFetch';
+import { Button, message, Table, App as AntdApp, Select } from 'antd';
 
 const HistoryVolunteer = () => {
   const refSearch = useRef<HTMLInputElement>(null);
@@ -20,59 +20,61 @@ const HistoryVolunteer = () => {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [searchKey, setSearchKey] = useState<string>("");
+  const [searchKey, setSearchKey] = useState<string>('');
+  const [month, setMonth] = useState<number | null>(null);
   const { message: messageApi } = AntdApp.useApp();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await api.get(
-          `/donate/volunteer-history?TransactionId=${searchKey}&PageNumber=${currentPage}&PageSize=${pageSize}`
+          `/donate/volunteer-history?PageNumber=${currentPage}&PageSize=${pageSize}${month ? `&Month=${month}` : ''}`
         );
+        
         setTotal(data.data.transactions.totalItems);
         setStateTransaction(data.data.transactions.items);
       } catch (error: any) {
         console.log(error);
-        if (error.response.data.Message === "Input validation error") {
-          messageApi.error("Mã giao dịch phải là số!");
+        if (error.response.data.Message === 'Input validation error') {
+          messageApi.error('Mã giao dịch phải là số!');
         }
       }
     };
     fetchData();
-  }, [currentPage, searchKey]);
+  }, [currentPage, searchKey, month]);
 
   const columns = [
     {
-      title: "Mã giao dịch",
-      dataIndex: "transactionId",
-      key: "money",
+      title: 'Mã giao dịch',
+      dataIndex: 'transactionId',
+      key: 'money',
       render: (value: number) => (
         <span className="text-stone-500">#{value}</span>
       ),
     },
     {
-      title: "Số tiền quyên góp",
-      dataIndex: "money",
-      key: "money",
+      title: 'Số tiền quyên góp',
+      dataIndex: 'money',
+      key: 'money',
       render: (value: number) =>
-        `${new Intl.NumberFormat("vi-VN").format(value)} VND`,
+        `${new Intl.NumberFormat('vi-VN').format(value)} VND`,
     },
     {
-      title: "Ngày quyên góp",
-      dataIndex: "createdDate",
-      key: "createdDate",
+      title: 'Ngày quyên góp',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
       render: (value: string) =>
-        new Date(value).toLocaleString("vi-VN", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
+        new Date(value).toLocaleString('vi-VN', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         }),
     },
     {
-      title: "Sự kiện",
-      dataIndex: "eventName",
-      key: "eventName",
+      title: 'Sự kiện',
+      dataIndex: 'eventName',
+      key: 'eventName',
       render: (text: string, record: any) => (
         <a
           href={`/detail-event/${record.eventId}`}
@@ -91,34 +93,38 @@ const HistoryVolunteer = () => {
       setSearchKey(refSearch?.current!.value);
       setCurrentPage(1);
     } else {
-      messageApi.error("Mã giao dịch phải là số!");
+      messageApi.error('Mã giao dịch phải là số!');
     }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleClickSearch();
     }
   };
 
   const handleExportToExcel = async () => {
     try {
-      const { data } = await api.get("donate/export-excel-volunteer", {
-        responseType: "blob",
+      const { data } = await api.get('donate/export-excel-volunteer', {
+        responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.setAttribute("download", "data.xlsx");
+      link.setAttribute('download', 'data.xlsx');
       document.body.appendChild(link);
       link.click();
       link.remove();
 
       // Xoá URL sau khi dùng
       window.URL.revokeObjectURL(url);
-      messageApi.success("Xuất file thành công");
+      messageApi.success('Xuất file thành công');
     } catch (error) {
-      messageApi.success("Xuất file thất bại");
+      messageApi.success('Xuất file thất bại');
     }
+  };
+
+  const handleChange = (value: number) => {
+    setMonth(value);
   };
 
   return (
@@ -134,27 +140,20 @@ const HistoryVolunteer = () => {
         )}
       </div>
 
-      <div className="my-4">
-        <div className="flex items-center justify-center gap-2">
-          <div className="lg:w-[36rem] w-4/5 bg-white border-2 border-primary-color rounded-full flex items-center justify-between">
-            <input
-              ref={refSearch}
-              type="text"
-              placeholder="Tìm kiếm theo mã giao dịch..."
-              className="w-3/4 outline-none py-3 px-5 rounded-full relative text-base"
-              onKeyDown={handleKeyDown}
-            />
-            <div className="flex pr-2 items-center gap-4 select-none">
-              <div
-                onClick={handleClickSearch}
-                className="bg-primary-color text-white lg:px-4 text-nowrap px-8 py-2 lg:py-2 text-xs lg:text-sm rounded-3xl cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
-              >
-                Tìm kiếm
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Select
+        className="max-w-[200px] mb-4 cursor-pointer"
+        maxTagCount="responsive"
+        size={'middle'}
+        placeholder="Vui lòng thời gian"
+        onChange={handleChange}
+        style={{ width: '100%' }}
+        options={[
+          { label: '3 tháng gần nhất', value: 3 },
+          { label: '6 tháng gần nhất', value: 6 },
+          { label: '9 tháng gần nhất', value: 9 },
+        ]}
+      />
+
       <div>
         <Table
           rowKey={(record) =>
