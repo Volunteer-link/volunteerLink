@@ -53,23 +53,23 @@ const SignupVolunter: React.FC<SignupVolunterProps> = ({
           <Input.Password placeholder="Xác nhận mật khẩu..." />
         </Form.Item>
 
-        <Form.Item name="date" className="mb-4" rules={dateRules}>
+        <Form.Item name="date" className="mb-1" rules={dateRules}>
           <DatePicker
             style={{ width: '100%' }}
             placeholder="Ngày sinh của bạn..."
             format="DD/MM/YYYY"
           />
-          <p
+         
+        </Form.Item>
+        <p
             style={{
               fontSize: '12px',
               color: '#888',
-              marginTop: '4px',
               marginBottom: 0,
             }}
           >
             Định dạng: DD/MM/YYYY
           </p>
-        </Form.Item>
 
         <ConfigProvider
           theme={{
