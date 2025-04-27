@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
-import { Button, message, Modal, Rate } from "antd";
-import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
-import SmallLoading from "../Pages/Components/SmallLoading";
-import api from "../apiService/useFetch";
-import { useNavigate } from "react-router-dom";
-import { decodedCookie, getCookie } from "../ultils/cookie";
-import TextArea from "antd/es/input/TextArea";
+import React, { useRef, useState } from 'react';
+import { Button, message, Modal, Rate } from 'antd';
+import { volunteerProps } from '../model/ShowEventModel/volunteerProps';
+import SmallLoading from '../Pages/Components/SmallLoading';
+import api from '../apiService/useFetch';
+import { useNavigate } from 'react-router-dom';
+import { decodedCookie, getCookie } from '../ultils/cookie';
+import TextArea from 'antd/es/input/TextArea';
 
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
@@ -25,7 +25,7 @@ const Volunteer: React.FC<{
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const user = decodedCookie(getCookie("accessToken"));
+  const user = decodedCookie(getCookie('accessToken'));
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalRating, setOpenModalRating] = useState<boolean>(false);
@@ -33,7 +33,7 @@ const Volunteer: React.FC<{
   const [ratingValue, setRatingValue] = useState<number>(
     objectVolunteer.feedback?.star || 0
   );
-  const [displayName, setDisplayName] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>('');
   const textAreaRef = useRef<any>(null);
   const textAreaRefUpdate = useRef<any>(null);
 
@@ -64,13 +64,13 @@ const Volunteer: React.FC<{
 
       const { data } = await api.post(`/event/handle-request`, {
         requestId: objectVolunteer.requestId,
-        accept: type === "yes" ? true : false,
+        accept: type === 'yes' ? true : false,
       });
 
       messageApi.success(
-        type === "yes"
-          ? "Yêu cầu của tình nguyện viên đã được chấp nhận!"
-          : "Yêu cầu của tình nguyện viên đã bị từ chối!"
+        type === 'yes'
+          ? 'Yêu cầu của tình nguyện viên đã được chấp nhận!'
+          : 'Yêu cầu của tình nguyện viên đã bị từ chối!'
       );
       setTimeout(() => {
         if (setResetState) {
@@ -87,15 +87,15 @@ const Volunteer: React.FC<{
 
       if (
         e.response.data.Message ===
-        "Event has to start after 0.5 days to adding more people or this event has not been published"
+        'Event has to start after 0.5 days to adding more people or this event has not been published'
       ) {
         messageApi.error(
-          "Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+          'Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!'
         );
       }
 
-      if (e.response.data.Message === "Request is not exist") {
-        messageApi.error("Yêu cầu tham gia không tồn tại!");
+      if (e.response.data.Message === 'Request is not exist') {
+        messageApi.error('Yêu cầu tham gia không tồn tại!');
         setTimeout(() => {
           if (setResetState) {
             setIsLoading(false);
@@ -120,7 +120,7 @@ const Volunteer: React.FC<{
         volunteerId: objectVolunteer.id,
       });
 
-      messageApi.success("Lời mời của bạn đã được gửi!");
+      messageApi.success('Lời mời của bạn đã được gửi!');
       setTimeout(() => {
         if (setResetState) {
           setResetState((prev) => ++prev);
@@ -134,10 +134,10 @@ const Volunteer: React.FC<{
     } catch (e: any) {
       if (
         e.response.data.Message ===
-        "Start time has to greater than now 1 day to invite anyone or this event has not been published"
+        'Start time has to greater than now 1 day to invite anyone or this event has not been published'
       ) {
         messageApi.error(
-          "Không thể mời tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
+          'Không thể mời tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!'
         );
       }
       setIsLoading(false);
@@ -153,14 +153,14 @@ const Volunteer: React.FC<{
           idRecord: objectVolunteer.id,
         },
       });
-      messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
+      messageApi.success('Tình nguyện viên đã bị xóa khỏi sự kiện!');
     } catch (e: any) {
       if (
         e.response.data.Message ===
         "Event will start after 1 day or this event has not been published. Can't remove volunteer."
       ) {
         messageApi.error(
-          "Không thể xóa tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra!"
+          'Không thể xóa tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra!'
         );
       }
       setIsLoading(false);
@@ -207,7 +207,7 @@ const Volunteer: React.FC<{
 
   const handleRatingVolunteer = async () => {
     if (ratingValue === 0) {
-      messageApi.error("Vui lòng đánh giá số sao trước khi gửi nhận xét!");
+      messageApi.error('Vui lòng đánh giá số sao trước khi gửi nhận xét!');
     } else {
       try {
         const { data } = await api.post(
@@ -217,10 +217,10 @@ const Volunteer: React.FC<{
             eventId: eventId,
             star: ratingValue,
             feedback:
-              textAreaRef.current?.resizableTextArea?.textArea.value || "",
+              textAreaRef.current?.resizableTextArea?.textArea.value || '',
           }
         );
-        messageApi.success("Đánh giá tình nguyện viên thành công!");
+        messageApi.success('Đánh giá tình nguyện viên thành công!');
         setTimeout(() => {
           if (setResetState) {
             setResetState((prev) => ++prev);
@@ -229,8 +229,8 @@ const Volunteer: React.FC<{
           setOpenModalRating(false);
         }, 1000);
       } catch (e: any) {
-        if (e.response.data.Message === "Feedback time is over") {
-          messageApi.error("Quá hạn đánh giá tình nguyện viên!");
+        if (e.response.data.Message === 'Feedback time is over') {
+          messageApi.error('Quá hạn đánh giá tình nguyện viên!');
         }
       } finally {
       }
@@ -243,36 +243,36 @@ const Volunteer: React.FC<{
         feedbackId: objectVolunteer.feedback?.id,
         star: ratingValue,
         feedback:
-          textAreaRefUpdate.current?.resizableTextArea?.textArea.value || "",
+          textAreaRefUpdate.current?.resizableTextArea?.textArea.value || '',
       });
-      messageApi.success("Cập nhật đánh giá tình nguyện viên thành công!");
+      messageApi.success('Cập nhật đánh giá tình nguyện viên thành công!');
       setTimeout(() => {
         setIsLoading(false);
         setOpenModalViewRated(false);
       }, 1000);
     } catch (e: any) {
-      if (e.response.data.Message === "Update feedback time is over") {
-        messageApi.error("Quá hạn cập nhật đánh giá!");
+      if (e.response.data.Message === 'Update feedback time is over') {
+        messageApi.error('Quá hạn cập nhật đánh giá!');
       }
     } finally {
     }
   };
 
   return (
-    <div className="bg-white px-14 select-none hover:scale-105 transition-all w-4/5 mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
+    <div className="bg-white gap-2 sm:gap-0 flex-col sm:flex-row sm:px-14 select-none hover:scale-105 transition-all w-full  sm:w-4/5 sm:mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
       {contextHolder}
-      <div className="flex gap-8 items-center">
+      <div className="flex mx-2 sm:mx-0 sm:gap-8 gap-2 items-center">
         <div className="relative rounded-full overflow-hidden">
           {isLoading && <SmallLoading size="small" />}
           <img
             src={objectVolunteer.pictureProfile}
             // src={objectVolunteer.image || objectVolunteer.pictureProfile}
             alt=""
-            className="w-20 h-20 rounded-full object-cover bg-primary-color"
+            className="sm:w-20 sm:h-20 w-10 h-10 rounded-full object-cover bg-primary-color"
             onLoad={() => setIsLoading(false)}
             onError={(e) =>
               (e.currentTarget.src =
-                "/materials/blank-profile-picture-973460_1280.png")
+                '/materials/blank-profile-picture-973460_1280.png')
             }
           />
         </div>
@@ -283,65 +283,71 @@ const Volunteer: React.FC<{
           >
             {objectVolunteer.name}
           </span>
-          <span className="text-[14px] font-medium text-stone-700">
-            {objectVolunteer.dob
-              ? `${calculateAge(new Date(objectVolunteer.dob))} tuổi`
-              : ""}
-          </span>
-          <span className="text-[14px] font-medium text-stone-700 max-w-60 truncate">
-            {objectVolunteer.address}
-          </span>
+          {objectVolunteer.dob && (
+            <span className="text-[14px] font-medium text-stone-700">
+              {objectVolunteer.dob
+                ? `${calculateAge(new Date(objectVolunteer.dob))} tuổi`
+                : ''}
+            </span>
+          )}
+
+          {objectVolunteer.address && (
+            <span className="text-[14px] font-medium text-stone-700 max-w-60 truncate">
+              {objectVolunteer.address}
+            </span>
+          )}
         </div>
       </div>
-
-      {objectVolunteer.volunteerDisplayType === "SUGGESTION" && (
-        <Button onClick={handleClickInvite} size="large" type="primary">
-          Mời tham gia
-        </Button>
-      )}
-      {objectVolunteer.volunteerDisplayType === "REQUEST" && (
-        <div className="flex justify-center gap-2 items-start">
-          <Button
-            onClick={() => handleClickBtn("yes")}
-            size="large"
-            type="primary"
-          >
-            Chấp nhận
-          </Button>
-          <Button
-            onClick={() => handleClickBtn("no")}
-            size="large"
-            type="default"
-          >
-            Từ chối
-          </Button>
-        </div>
-      )}
-      {user?.role === "Organization" &&
-        objectVolunteer.volunteerDisplayType === "PARTICIPATED" &&
-        checkDateDelete && (
-          <Button onClick={handleOpenModal} size="large" type="primary">
-            Xóa tình nguyện viên
+      <div className="mr-2 sm:mr-0">
+        {objectVolunteer.volunteerDisplayType === 'SUGGESTION' && (
+          <Button onClick={handleClickInvite} size="large" type="primary">
+            Mời tham gia
           </Button>
         )}
-      {user?.role === "Organization" &&
-        checkDateRate &&
-        !objectVolunteer.feedback && (
-          <Button
-            onClick={() => handleOpenRating(objectVolunteer?.name)}
-            size="large"
-            type="primary"
-          >
-            Đánh giá tình nguyện viên
-          </Button>
+        {objectVolunteer.volunteerDisplayType === 'REQUEST' && (
+          <div className="flex justify-center gap-2 items-start">
+            <Button
+              onClick={() => handleClickBtn('yes')}
+              size="large"
+              type="primary"
+            >
+              Chấp nhận
+            </Button>
+            <Button
+              onClick={() => handleClickBtn('no')}
+              size="large"
+              type="default"
+            >
+              Từ chối
+            </Button>
+          </div>
         )}
-      {user?.role === "Organization" &&
-        checkDateRate &&
-        objectVolunteer.feedback && (
-          <Button onClick={handleOpenViewRated} size="large" type="primary">
-            Xem đánh giá
-          </Button>
-        )}
+        {user?.role === 'Organization' &&
+          objectVolunteer.volunteerDisplayType === 'PARTICIPATED' &&
+          checkDateDelete && (
+            <Button onClick={handleOpenModal} size="large" type="primary">
+              Xóa tình nguyện viên
+            </Button>
+          )}
+        {user?.role === 'Organization' &&
+          checkDateRate &&
+          !objectVolunteer.feedback && (
+            <Button
+              onClick={() => handleOpenRating(objectVolunteer?.name)}
+              size="large"
+              type="primary"
+            >
+              Đánh giá tình nguyện viên
+            </Button>
+          )}
+        {user?.role === 'Organization' &&
+          checkDateRate &&
+          objectVolunteer.feedback && (
+            <Button onClick={handleOpenViewRated} size="large" type="primary">
+              Xem đánh giá
+            </Button>
+          )}
+      </div>
       <Modal
         title="Thông báo"
         open={openModal}

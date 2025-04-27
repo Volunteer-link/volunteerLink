@@ -269,7 +269,7 @@ const Header: React.FC<{}> = () => {
         </div>
 
         <div className="flex flex-1 flex-wrap flex-row md:block justify-center">
-          <ul className="flex md:gap-5 gap-2 text-white flex-wrap justify-center md:flex-nowrap text-sm h-full items-center">
+          <ul className="flex md:gap-5 gap-2 text-white flex-wrap sm:justify-center justify-between md:flex-nowrap text-sm h-full items-center">
             <li className="hover:scale-110 transition-all cursor-pointer text-base">
               <NavLink
                 to="/home"
@@ -351,7 +351,7 @@ const Header: React.FC<{}> = () => {
 
         <div className="">
           {!user && (
-            <div className="flex w-full h-full justify-center items-center gap-2">
+            <div className="flex w-full h-full justify-center mt-3 sm:mt-0 items-center gap-2">
               <NavLink to={'/authentication/signin'}>
                 <div className="border-white border rounded-sm text-sm py-2 px-8 text-white font-medium text-center cursor-pointer hover:scale-105 transition-all">
                   Đăng nhập

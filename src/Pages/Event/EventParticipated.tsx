@@ -85,7 +85,7 @@ const EventParticipated = () => {
     fetchVolunteer();
   };
   return (
-    <div className="container  mx-auto px-4 py-8">
+    <div className="">
       <Breadcrumb
         items={[
           {
@@ -110,7 +110,7 @@ const EventParticipated = () => {
 
       <div className="my-6 text-[#3BA769]">
         <h2 className="text-[30px] font-semibold">{event?.name}</h2>
-        <p className="mt-3">{event.numberVolunteer} tình nguyện viên tham gia</p>
+        <p className="mt-3">{event?.numberVolunteer} tình nguyện viên tham gia</p>
       </div>
       <div className="flex mb-6 justify-center items-center">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">

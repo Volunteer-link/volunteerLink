@@ -106,9 +106,9 @@ const VerifyEmail = () => {
   return (
     <div>
       <Row className="w-full h-screen">
-        <Col span={16}>
+        <Col xs={24} sm={16} md={16} lg={16} xl={16}>
           {emailStatus == "FORGOT_PASSWORD" ? (
-            <div className="w-full mx-auto lg:max-w-80 gap-6 h-full">
+            <div className="w-full px-4 mx-auto lg:max-w-80 gap-6 h-full">
               <ForgotPassword
                 passwordRules={passwordRules}
                 confirmPasswordRules={confirmPasswordRules}
@@ -116,7 +116,7 @@ const VerifyEmail = () => {
               />
             </div>
           ) : (
-            <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-6 h-full">
+            <div className="flex px-4 w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-6 h-full">
               <h4 className="text-[#3BA769] text-[20px] text-center">
                 Xác thực email
               </h4>
@@ -139,7 +139,7 @@ const VerifyEmail = () => {
                   rules={emailRules}
                 >
                   <Input
-                    className={`max-w-[400px]`}
+                    className={``}
                     placeholder="Email......."
                   />
                 </Form.Item>
@@ -204,7 +204,7 @@ const VerifyEmail = () => {
             </div>
           )}
         </Col>
-        <Col span={8}>
+        <Col span={8} className="hidden sm:block">
           <Image
             className="w-full h-screen object-cover"
             preview={false}

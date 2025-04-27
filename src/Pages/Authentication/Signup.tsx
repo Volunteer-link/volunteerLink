@@ -139,10 +139,10 @@ const Signup = () => {
   ];
 
   return (
-    <div className="px-4 md:px-0">
+    <div className="">
       <Row className="w-full h-screen">
-        <Col span={16}>
-          <div className="flex w-full lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">
+        <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+          <div className="flex w-full px-4 lg:max-w-80 mx-auto flex-col justify-center items-center gap-8 h-full">
             <h4 className="text-[#3BA769] text-[20px] text-center">
               Xin chào! Rất vui được gặp bạn
             </h4>
@@ -187,7 +187,7 @@ const Signup = () => {
             )}
           </div>
         </Col>
-        <Col span={8}>
+        <Col span={8} className="hidden md:block">
           <Image
             className="w-full h-screen object-cover"
             preview={false}
