@@ -20,7 +20,7 @@ const ChangeRequestComponent: React.FC<{
   const [total, setTotal] = useState<number>(0);
   const [keyState, setKeyState] = useState<number>(1);
 
-  const pageSize = 1;
+  const pageSize = 5;
 
   useEffect(() => {
     const fetchData = async () => {
