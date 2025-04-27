@@ -330,7 +330,6 @@ const AccountComponent: React.FC<{}> = () => {
 
           {checkPagination !== 0 && (
             <Pagination
-              showSizeChanger={false}
               defaultCurrent={1}
               current={pageNumber}
               total={totalItems}

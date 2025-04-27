@@ -80,3 +80,6 @@ ol, ul, menu{
 .ql-editor ol,.ql-editor ul,.ql-editor menu {
   list-style: initial  !important; 
 }
+.ant-pagination-options{
+  display: none !important;
+}

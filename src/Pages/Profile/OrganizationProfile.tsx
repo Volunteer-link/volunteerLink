@@ -315,9 +315,9 @@ const OrganizationProfile = () => {
                 message: "Vui lòng nhập số điện thoại!",
               },
               {
-                pattern: /^[0-9]{9,11}$/,
+                pattern: /^[0-9]{10}$/,
                 message:
-                  "Số điện thoại không hợp lệ! (chỉ bao gồm số, từ 9 đến 11 ký tự)",
+                  "Số điện thoại không hợp lệ! (chỉ bao gồm số,10 ký tự)",
               },
             ]}
           >
