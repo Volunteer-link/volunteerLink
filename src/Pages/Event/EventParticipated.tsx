@@ -36,8 +36,6 @@ const EventParticipated = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
-        console.log(new Date(data.data.endTime) <= new Date());
-
         if (new Date(data.data.startTime) > new Date()) {
           setCheckDateDelete(true);
         }
@@ -80,14 +78,11 @@ const EventParticipated = () => {
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
-    navigate(`/participate-event/${id}?page=${page}`, { replace: true });
   };
 
   const handleClickSearch = () => {
     fetchVolunteer();
   };
-  console.log(listVolunteer);
-
   return (
     <div className="container  mx-auto px-4 py-8">
       <Breadcrumb
