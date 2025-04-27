@@ -60,6 +60,7 @@ const SignIn: React.FC = () => {
     },
     onError: () => {
       console.log("Lỗi khi đăng nhập");
+      message.error("Lỗi khi đăng nhập với Google! Vui lòng thử lại sau.");
     },
   });
 
@@ -77,6 +78,7 @@ const SignIn: React.FC = () => {
         message.error("Đăng nhập thất bại!");
       }
       const data = await response.json();
+      console.log(data);
       return data;
     } catch (err) {
       console.error(err);

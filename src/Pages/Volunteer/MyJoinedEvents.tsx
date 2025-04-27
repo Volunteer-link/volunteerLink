@@ -79,15 +79,13 @@ const MyJoinedEvents = () => {
 
   return (
     <div className="lg:mt-8 mt-16">
-      <div className="flex items-center gap-2 mb-10">
-        <div className="inline-block my-2 font-medium text-lg text-primary-color before:w-full before:h-[0.125rem] before:absolute relative before:-bottom-2 before:bg-primary-color">
-          Sự kiện bạn đã tham gia
-        </div>
-        <Tooltip title="*Lưu ý: Bạn chỉ có thể rời sự kiện trước ngày diễn ra 1 ngày">
+      <div className="flex items-center gap-2 mb-2">
+        <div className="font-medium text-xl">Sự kiện bạn đã tham gia</div>
+        {/* <Tooltip title="*Lưu ý: Bạn chỉ có thể rời sự kiện trước ngày diễn ra 1 ngày">
           <span>
             <RiInformation2Fill className="text-primary-color text-lg " />
           </span>
-        </Tooltip>
+        </Tooltip> */}
       </div>
       <div className="flex justify-between items-start">
         <Tabs defaultActiveKey="0" items={items} onChange={onChange} />

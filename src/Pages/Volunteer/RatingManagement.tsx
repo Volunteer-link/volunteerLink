@@ -24,7 +24,7 @@ const RatingManagement = () => {
 
   return (
     <div className="">
-      <div className="font-medium text-xl mb-2 mt-8">Đánh giá của các tổ chức về bạn</div>
+      <div className="font-medium text-xl mb-2 mt-8">Quản lý đánh giá</div>
       <Tabs
         defaultActiveKey={currentTab}
         items={items}
