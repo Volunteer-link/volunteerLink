@@ -90,10 +90,10 @@ const OrganizationsDetail = () => {
             />
             {organization?.numberRated! > 0? (
               <p className="text-sm">
-                {organization?.numberRated} người đánh giá
+                {organization?.numberRated} lượt đánh giá
               </p>
             ): (
-              <p className="text-sm">Chưa có đánh giá</p>
+              <p className="text-sm">Chưa có lượt đánh giá</p>
             )}
           </div>
 

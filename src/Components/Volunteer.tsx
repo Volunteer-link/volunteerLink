@@ -276,7 +276,7 @@ const Volunteer: React.FC<{
             }
           />
         </div>
-        <div className="flex text-[#3BA769] leading-none gap-2 flex-col">
+        <div className="flex text-[#3BA769] gap-2 flex-col">
           <span
             onClick={handleClickName}
             className="text-[20px] cursor-pointer transition-all max-w-60 truncate"

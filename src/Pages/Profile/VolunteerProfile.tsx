@@ -77,10 +77,10 @@ const VolunteerProfile = () => {
                 <Rate disabled allowHalf defaultValue={volunteer.star} />
                 {volunteer?.numberRated! > 0 ? (
                   <p className="text-sm">
-                    {volunteer?.numberRated} người đánh giá
+                    {volunteer?.numberRated} lượt đánh giá
                   </p>
                 ) : (
-                  <p className="text-sm">Chưa có đánh giá</p>
+                  <p className="text-sm">Chưa có lượt đánh giá</p>
                 )}
               </div>
             </div>
