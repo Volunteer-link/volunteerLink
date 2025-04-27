@@ -18,4 +18,5 @@ export interface Organization {
     phoneNumber: string,
     address: string
     star: number,
+    numberRated: number,
 }

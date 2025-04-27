@@ -92,9 +92,9 @@ const VerifyEmail = () => {
         message.success("Xác thực thành công!");
         navigate("/authentication/signup", { state: email });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error("Send failed!");
+      if (error.status == 400) message.error(`${error.response.data.Message}`);
     } finally {
       setLoading(false);
     }
