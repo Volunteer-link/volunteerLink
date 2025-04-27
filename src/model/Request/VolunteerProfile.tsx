@@ -19,4 +19,5 @@ export interface VolunteerProfilePage{
     skill: string;
     isAvailable: boolean;
     numberRated: number;
+    star: number
 }
