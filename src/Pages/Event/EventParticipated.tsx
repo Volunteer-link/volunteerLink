@@ -36,6 +36,7 @@ const EventParticipated = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
+        console.log(data.data);
         if (new Date(data.data.startTime) > new Date()) {
           setCheckDateDelete(true);
         }
@@ -109,7 +110,7 @@ const EventParticipated = () => {
 
       <div className="my-6 text-[#3BA769]">
         <h2 className="text-[30px] font-semibold">{event?.name}</h2>
-        <p className="mt-3">{totalVolunteers} tình nguyện viên tham gia</p>
+        <p className="mt-3">{event.numberVolunteer} tình nguyện viên tham gia</p>
       </div>
       <div className="flex mb-6 justify-center items-center">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">
