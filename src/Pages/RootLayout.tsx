@@ -240,8 +240,8 @@ export default function RootLayout() {
           afterChange={(current) => setCurrentSlide(current)}
           infinite
           pauseOnFocus
-          // autoplay={{ dotDuration: true }}
-          // autoplaySpeed={3000}
+          autoplay={{ dotDuration: true }}
+          autoplaySpeed={3000}
           arrows
         >
           <div>

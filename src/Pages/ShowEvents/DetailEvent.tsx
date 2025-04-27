@@ -549,7 +549,19 @@ const DetailEvent = () => {
                         value={summaryValue}
                       />
                     </Modal>
+                  </div>
+                )}
 
+              {user?.role === "Organization" &&
+                Number(user?.AccId) === dataState?.orgAccountId &&
+                new Date() >= new Date(dataState?.startTime || 0) &&
+                new Date() <=
+                  new Date(
+                    new Date(dataState?.endTime || 0).setDate(
+                      new Date(dataState?.endTime || 0).getDate() + 1
+                    )
+                  ) && (
+                  <div className="lg:flex lg:gap-2">
                     <div
                       onClick={handleClickAttendance}
                       className="cursor-pointer hover:lg:opacity-95 hover:lg:scale-105 duration-300 px-6 py-2 bg-white rounded-xl text-primary-color border-2 border-primary-color font-medium lg:w-auto w-full my-1 flex items-center justify-center"

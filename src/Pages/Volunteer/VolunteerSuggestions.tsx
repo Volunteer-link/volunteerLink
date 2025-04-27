@@ -160,6 +160,8 @@ const VolunteerSuggestions = () => {
 
   const handleClickSearch = () => {
     fetchAllVolunteer();
+    console.log("click");
+    setCurrentPageAll(1);
   };
 
   const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -297,7 +299,7 @@ const VolunteerSuggestions = () => {
           )}
           {totalAll !== 0 && (
             <Pagination
-              className="mt-4"
+              className="mt-8 mx-28"
               defaultCurrent={1}
               onChange={handlePageChangeAll}
               total={totalAll}

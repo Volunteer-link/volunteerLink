@@ -595,7 +595,7 @@ const MyProfile = () => {
                 rules={[
                   { required: true, message: "Vui lòng nhập số điện thoại!" },
                   {
-                    pattern: /^[0-9]{10,15}$/,
+                    pattern: /^[0-9]{10}$/,
                     message: "Số điện thoại không hợp lệ!",
                   },
                 ]}
