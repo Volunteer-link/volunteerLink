@@ -19,15 +19,10 @@ const AttendanceUI: React.FC = () => {
   const page = searchParams.get("page");
 
   const [listUser, setListUser] = useState<any[]>([]);
-  const [totalPage, setTotalPage] = React.useState<number>();
-  const [PageNumber, setPageNumber] = React.useState<number>(
-    parseInt(page!) || 1
-  );
   const { message, modal } = AntdApp.useApp();
 
   const [loading, setLoading] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [interact, setInteract] = useState(false);
   const navigate = useNavigate();
   const [status, setStatus] = useState<boolean>(false);
 
@@ -35,7 +30,6 @@ const AttendanceUI: React.FC = () => {
     const newList = listUser?.map((user) =>
       user.id === recordId ? { ...user, attendance: checked } : user
     );
-    setInteract(true);
     setListUser(newList);
   };
   useEffect(() => {
@@ -61,12 +55,11 @@ const AttendanceUI: React.FC = () => {
         const { data } = await api.get(`/attendance/get-attendance-of-event`, {
           params: {
             EvenId: id,
-            PageNumber: PageNumber,
-            PageSize: 5,
+            PageNumber: 1,
+            PageSize: 9999,
           },
         });
-        setTotalPage(data.data.totalItems);
-        setListUser(data.data.items);
+        setListUser(data.data);
         setLoading(false);
       } catch (e: any) {
         console.error(e);
@@ -76,7 +69,7 @@ const AttendanceUI: React.FC = () => {
     if (status) {
       fetchField();
     }
-  }, [PageNumber, status]);
+  }, [status]);
 
   const handleSave = async () => {
     const checkedUsers = listUser
@@ -100,22 +93,6 @@ const AttendanceUI: React.FC = () => {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    if (interact) {
-      modal.confirm({
-        title: "Bạn có chắc chắn muốn chuyển trang?",
-        content: "Bạn sẽ mất tất cả các thay đổi chưa lưu nếu chuyển trang.",
-        onOk: () => {
-          setPageNumber(page);
-          navigate(`/event/attendance/${id}?page=${page}`, { replace: true });
-        },
-        onCancel: () => {},
-      });
-    } else {
-      setPageNumber(page);
-      navigate(`/event/attendance/${id}?page=${page}`, { replace: true });
-    }
-  };
 
   const columns = [
     {
@@ -175,7 +152,7 @@ const AttendanceUI: React.FC = () => {
           </div>
         ) : (
           <>
-            {listUser.length === 0 ? (
+            {listUser?.length === 0 ? (
               <Empty description="Không có tình nguyện viên" />
             ) : (
               <>
@@ -191,15 +168,6 @@ const AttendanceUI: React.FC = () => {
                       navigate(`/volunteerProfile/${record.accountId}`);
                     },
                   })}
-                />
-                <Pagination
-                  className="my-8"
-                  align="center"
-                  current={PageNumber}
-                  total={totalPage}
-                  pageSize={5}
-                  onChange={handlePageChange}
-                  responsive
                 />
                 <Space>
                   <Button

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   DatePicker,
   Form,
@@ -10,22 +10,22 @@ import {
   Popconfirm,
   Spin,
   Select,
-} from "antd";
-import { nameRules } from "../../ultils/validationRules";
-import PreviewImageUpload from "../Components/PreviewImageUpload";
-import FormAddress from "../Components/FormAddress";
-import type { DatePickerProps, GetProps } from "antd";
-import api from "../../apiService/useFetch";
-import { decodedCookie, getCookie } from "../../ultils/cookie";
-import uploadFilesToFirebase from "../../ultils/uploadFilesToFirebase";
-import { PullRequestOutlined } from "@ant-design/icons";
-import { FaPencilAlt } from "react-icons/fa";
+} from 'antd';
+import { nameRules } from '../../ultils/validationRules';
+import PreviewImageUpload from '../Components/PreviewImageUpload';
+import FormAddress from '../Components/FormAddress';
+import type { DatePickerProps, GetProps } from 'antd';
+import api from '../../apiService/useFetch';
+import { decodedCookie, getCookie } from '../../ultils/cookie';
+import uploadFilesToFirebase from '../../ultils/uploadFilesToFirebase';
+import { PullRequestOutlined } from '@ant-design/icons';
+import { FaPencilAlt } from 'react-icons/fa';
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 const { TextArea } = Input;
 
 const style: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
+  display: 'flex',
+  flexDirection: 'column',
   gap: 8,
 };
 
@@ -35,7 +35,7 @@ const OrganizationProfile = () => {
   const [nameRequest, setNameRequest] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [loadingBanking, setLoadingBanking] = useState(false);
-  const [bankBin, setBankBin] = useState<string>("");
+  const [bankBin, setBankBin] = useState<string>('');
   const [listSelectedField, setListSelectedField] = useState<number[]>([]);
   const [listFieldState, setListFieldState] = useState<
     {
@@ -46,11 +46,11 @@ const OrganizationProfile = () => {
   const [bankList, setBankList] = useState([]);
   const [organization, setOrganization] = useState<any>();
   const partsAddress =
-    organization?.address?.split(",")?.map((part: string) => part.trim()) || [];
+    organization?.address?.split(',')?.map((part: string) => part.trim()) || [];
   useEffect(() => {
     const fetchOrganization = async () => {
       try {
-        const token = getCookie("accessToken");
+        const token = getCookie('accessToken');
         const user = decodedCookie(token);
         const { data } = await api.get(`/profile/organization`, {
           params: {
@@ -61,13 +61,14 @@ const OrganizationProfile = () => {
         setFileListThumbnail((prev) => {
           return [
             {
-              uid: "-1",
-              name: "imageThumbnail",
-              status: "done",
+              uid: '-1',
+              name: 'imageThumbnail',
+              status: 'done',
               url: `${data.data?.urlImage}`,
             },
           ];
         });
+        setBankBin((prev) => data.data?.bankBin);
         setOrganization(data.data);
       } catch (error) {
         console.error(error);
@@ -76,7 +77,6 @@ const OrganizationProfile = () => {
 
     fetchOrganization();
   }, []);
-
   const { message } = AntdApp.useApp();
   const onFinish = async (values: any) => {
     setLoading(true);
@@ -91,16 +91,16 @@ const OrganizationProfile = () => {
         fields: listSelectedField || organization.fields,
         imageUrl: image?.[0] || organization.urlImage,
       };
-      const { data } = await api.put("profile/organization", dataRequest);
+      const { data } = await api.put('profile/organization', dataRequest);
       if (values.bankNumber && bankBin) {
-        await api.put("profile/setup-bank-account", {
+        await api.put('profile/setup-bank-account', {
           bankNumber: values.bankNumber,
           bankBin: bankBin,
         });
       }
-      message.success("Cập nhật thông tin thành công!");
+      message.success('Cập nhật thông tin thành công!');
     } catch (e: any) {
-      message.error("Cập nhật thông tin thất bại!");
+      message.error('Cập nhật thông tin thất bại!');
       console.log(e);
     } finally {
       setLoading(false);
@@ -108,7 +108,7 @@ const OrganizationProfile = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Submit thất bại:", errorInfo);
+    console.log('Submit thất bại:', errorInfo);
   };
 
   useEffect(() => {
@@ -125,7 +125,6 @@ const OrganizationProfile = () => {
 
   const [open, setOpen] = useState(false);
 
-
   useEffect(() => {
     const fetchBanks = async () => {
       setLoadingBanking(true);
@@ -141,8 +140,6 @@ const OrganizationProfile = () => {
 
     fetchBanks();
   }, []);
-
-  if (!organization) return null;
 
   return (
     <div className="">
@@ -176,7 +173,7 @@ const OrganizationProfile = () => {
               {
                 validator(_: any, value: string) {
                   if (!fileListThumbnail?.length) {
-                    return Promise.reject("Bạn cần upload ảnh");
+                    return Promise.reject('Bạn cần upload ảnh');
                   }
                   return Promise.resolve();
                 },
@@ -209,7 +206,6 @@ const OrganizationProfile = () => {
             >
               <Input readOnly={!open} />
             </Form.Item>
-            
           </div>
         </div>
 
@@ -225,7 +221,7 @@ const OrganizationProfile = () => {
             className="mb-4 mt-3 "
             initialValue={organization?.description}
             key={organization?.description}
-            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
           >
             <TextArea className="mt-3 w-full" rows={5} />
           </Form.Item>
@@ -254,7 +250,7 @@ const OrganizationProfile = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
           <div
-            className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${"border-primary-color"} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
+            className={`bg-stone-100 border-[0.05rem] rounded-md mb-4 mt-3  ${'border-primary-color'} overflow-hidden cursor-pointer px-4 py-2 lg:w-1/2`}
           >
             {listFieldState?.map((item, index) => (
               <div
@@ -285,7 +281,7 @@ const OrganizationProfile = () => {
                 validator: (_, value) => {
                   if (listSelectedField.length === 0) {
                     return Promise.reject(
-                      new Error("Please select at least one field.")
+                      new Error('Please select at least one field.')
                     );
                   }
                   return Promise.resolve();
@@ -312,12 +308,12 @@ const OrganizationProfile = () => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập số điện thoại!",
+                message: 'Vui lòng nhập số điện thoại!',
               },
               {
                 pattern: /^[0-9]{10}$/,
                 message:
-                  "Số điện thoại không hợp lệ! (chỉ bao gồm số,10 ký tự)",
+                  'Số điện thoại không hợp lệ! (chỉ bao gồm số,10 ký tự)',
               },
             ]}
           >
@@ -340,7 +336,7 @@ const OrganizationProfile = () => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập đường dẫn mạng xã hội",
+                message: 'Vui lòng nhập đường dẫn mạng xã hội',
               },
             ]}
             className="mb-4 mt-3 max-w-80"
@@ -350,52 +346,56 @@ const OrganizationProfile = () => {
         </div>
 
         <div className="mt-6">
+          <div className="flex justify-start mb-4 items-center gap-1">
+            <h4 className="font-normal leading-none text-[18px] text-[#3BA769]">
+              Ngân hàng
+            </h4>
+            <div className="bg-[#3BA769] w-6 h-[1px]"></div>
+          </div>
           <Select
             showSearch
             placeholder="Chọn ngân hàng"
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             loading={loadingBanking}
             optionFilterProp="label"
-            onChange={(value) => setBankBin(value)}
+            onSelect={(value) => {
+              setBankBin(value);
+            }}
+            value={bankBin}
           >
-            {loadingBanking ? (
-              <Select.Option value="">
-                <Spin />
+            {bankList?.map((bank: any) => (
+              <Select.Option key={bank.id} label={bank.name} value={bank.bin}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <img
+                    src={bank.logo}
+                    alt={bank.name}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      objectFit: 'cover',
+                      borderRadius: '50%',
+                      marginRight: 8,
+                    }}
+                  />
+                  <span>{bank.name}</span>
+                </div>
               </Select.Option>
-            ) : (
-              bankList?.map((bank: any) => (
-                <Select.Option key={bank.id} label={bank.name} value={bank.bin}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <img
-                      src={bank.logo}
-                      alt={bank.name}
-                      style={{
-                        width: 24,
-                        height: 24,
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                        marginRight: 8,
-                      }}
-                    />
-                    <span>{bank.name}</span>
-                  </div>
-                </Select.Option>
-              ))
-            )}
+            ))}
           </Select>
           {bankBin && (
             <Form.Item
               label="Số tài khoản"
               name="bankNumber"
               key={organization?.urlFacebook}
+              initialValue={organization?.bankNumber}
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập số tài khoản!",
+                  message: 'Vui lòng nhập số tài khoản!',
                 },
                 {
                   pattern: /^[0-9]+$/,
-                  message: "Số tài khoản không hợp lệ! (chỉ bao gồm số)",
+                  message: 'Số tài khoản không hợp lệ! (chỉ bao gồm số)',
                 },
               ]}
               className="mb-4 mt-3 max-w-80"
