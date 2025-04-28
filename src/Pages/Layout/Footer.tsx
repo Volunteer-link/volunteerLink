@@ -3,8 +3,11 @@ import { IoMailOutline } from "react-icons/io5";
 import { GrPhone } from "react-icons/gr";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
 
 const Footer: React.FC<{}> = () => {
+  const user = decodedCookie(getCookie("accessToken"));
+
   return (
     <div className="bg-primary-color px-4 text-white pt-12">
       <div className="grid grid-cols-8">
@@ -34,11 +37,14 @@ const Footer: React.FC<{}> = () => {
                 Tổ chức
               </NavLink>
             </div>
-            <div className="text-xs hover:opacity-80 py-2">
-              <NavLink className="text-shadow-sm" to={"/volunteers"}>
-                Tình nguyện viên
-              </NavLink>
-            </div>
+            {user && user?.role !== "Admin" && (
+              <div className="text-xs hover:opacity-80 py-2">
+                <NavLink className="text-shadow-sm" to={"/volunteers"}>
+                  Tình nguyện viên
+                </NavLink>
+              </div>
+            )}
+
             <div className="text-xs hover:opacity-80 py-2">
               <NavLink className="text-shadow-sm" to={"/events"}>
                 Sự kiện

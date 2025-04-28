@@ -383,7 +383,7 @@ const DetailEvent = () => {
   };
 
   const handleOkDonation = async () => {
-    if (amount >= 10000) {
+    if (amount >= 10000 && amount <= 200000000) {
       try {
         setIsLoading(true);
         const { data } = await api.post(`/donate/create-donate-url-vnpay`, {
@@ -397,7 +397,9 @@ const DetailEvent = () => {
         setIsLoading(false);
       }
     } else {
-      messageApi.error("Số tiền phải nằm trong khoảng 5.000 - 1.000.000 VNĐ");
+      messageApi.error(
+        "Số tiền phải nằm trong khoảng 10.000 - 200.000.000 VNĐ"
+      );
     }
   };
 
@@ -1137,6 +1139,11 @@ const DetailEvent = () => {
               type="number"
               value={amount}
               onChange={handleChangeDonation}
+              onKeyDown={(e) => {
+                if (["-", ".", "e", ","].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               min={10000}
             />
             <div>
