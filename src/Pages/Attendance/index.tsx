@@ -100,6 +100,7 @@ const AttendanceUI: React.FC = () => {
       dataIndex: "id",
       key: "id",
       width: "10%",
+      render: (_: any, __: any, index: number) => index + 1,
     },
     {
       title: "Ảnh",
