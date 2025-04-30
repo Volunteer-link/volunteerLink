@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { Button, message, Modal, Rate } from 'antd';
-import { volunteerProps } from '../model/ShowEventModel/volunteerProps';
-import SmallLoading from '../Pages/Components/SmallLoading';
-import api from '../apiService/useFetch';
-import { useNavigate } from 'react-router-dom';
-import { decodedCookie, getCookie } from '../ultils/cookie';
-import TextArea from 'antd/es/input/TextArea';
+import React, { useRef, useState } from "react";
+import { Button, message, Modal, Rate } from "antd";
+import { volunteerProps } from "../model/ShowEventModel/volunteerProps";
+import SmallLoading from "../Pages/Components/SmallLoading";
+import api from "../apiService/useFetch";
+import { useNavigate } from "react-router-dom";
+import { decodedCookie, getCookie } from "../ultils/cookie";
+import TextArea from "antd/es/input/TextArea";
 
 const Volunteer: React.FC<{
   objectVolunteer: volunteerProps;
@@ -14,6 +14,7 @@ const Volunteer: React.FC<{
   eventId?: number;
   checkDateDelete?: boolean;
   checkDateRate?: boolean;
+  checkOwner?: boolean;
 }> = ({
   objectVolunteer,
   setResetState,
@@ -21,11 +22,12 @@ const Volunteer: React.FC<{
   eventId,
   checkDateDelete,
   checkDateRate,
+  checkOwner,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const user = decodedCookie(getCookie('accessToken'));
+  const user = decodedCookie(getCookie("accessToken"));
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalRating, setOpenModalRating] = useState<boolean>(false);
@@ -33,7 +35,7 @@ const Volunteer: React.FC<{
   const [ratingValue, setRatingValue] = useState<number>(
     objectVolunteer.feedback?.star || 0
   );
-  const [displayName, setDisplayName] = useState<string>('');
+  const [displayName, setDisplayName] = useState<string>("");
   const textAreaRef = useRef<any>(null);
   const textAreaRefUpdate = useRef<any>(null);
 
@@ -64,13 +66,13 @@ const Volunteer: React.FC<{
 
       const { data } = await api.post(`/event/handle-request`, {
         requestId: objectVolunteer.requestId,
-        accept: type === 'yes' ? true : false,
+        accept: type === "yes" ? true : false,
       });
 
       messageApi.success(
-        type === 'yes'
-          ? 'Yêu cầu của tình nguyện viên đã được chấp nhận!'
-          : 'Yêu cầu của tình nguyện viên đã bị từ chối!'
+        type === "yes"
+          ? "Yêu cầu của tình nguyện viên đã được chấp nhận!"
+          : "Yêu cầu của tình nguyện viên đã bị từ chối!"
       );
       setTimeout(() => {
         if (setResetState) {
@@ -87,15 +89,15 @@ const Volunteer: React.FC<{
 
       if (
         e.response.data.Message ===
-        'Event has to start after 0.5 days to adding more people or this event has not been published'
+        "Event has to start after 0.5 days to adding more people or this event has not been published"
       ) {
         messageApi.error(
-          'Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!'
+          "Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
       }
 
-      if (e.response.data.Message === 'Request is not exist') {
-        messageApi.error('Yêu cầu tham gia không tồn tại!');
+      if (e.response.data.Message === "Request is not exist") {
+        messageApi.error("Yêu cầu tham gia không tồn tại!");
         setTimeout(() => {
           if (setResetState) {
             setIsLoading(false);
@@ -120,7 +122,7 @@ const Volunteer: React.FC<{
         volunteerId: objectVolunteer.id,
       });
 
-      messageApi.success('Lời mời của bạn đã được gửi!');
+      messageApi.success("Lời mời của bạn đã được gửi!");
       setTimeout(() => {
         if (setResetState) {
           setResetState((prev) => ++prev);
@@ -134,10 +136,10 @@ const Volunteer: React.FC<{
     } catch (e: any) {
       if (
         e.response.data.Message ===
-        'Start time has to greater than now 1 day to invite anyone or this event has not been published'
+        "Start time has to greater than now 1 day to invite anyone or this event has not been published"
       ) {
         messageApi.error(
-          'Không thể mời tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!'
+          "Không thể mời tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
       }
       setIsLoading(false);
@@ -153,14 +155,14 @@ const Volunteer: React.FC<{
           idRecord: objectVolunteer.id,
         },
       });
-      messageApi.success('Tình nguyện viên đã bị xóa khỏi sự kiện!');
+      messageApi.success("Tình nguyện viên đã bị xóa khỏi sự kiện!");
     } catch (e: any) {
       if (
         e.response.data.Message ===
         "Event will start after 1 day or this event has not been published. Can't remove volunteer."
       ) {
         messageApi.error(
-          'Không thể xóa tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra!'
+          "Không thể xóa tình nguyện viên vì sự kiện còn chưa đầy 24 tiếng nữa sẽ diễn ra!"
         );
       }
       setIsLoading(false);
@@ -207,7 +209,7 @@ const Volunteer: React.FC<{
 
   const handleRatingVolunteer = async () => {
     if (ratingValue === 0) {
-      messageApi.error('Vui lòng đánh giá số sao trước khi gửi nhận xét!');
+      messageApi.error("Vui lòng đánh giá số sao trước khi gửi nhận xét!");
     } else {
       try {
         const { data } = await api.post(
@@ -217,10 +219,10 @@ const Volunteer: React.FC<{
             eventId: eventId,
             star: ratingValue,
             feedback:
-              textAreaRef.current?.resizableTextArea?.textArea.value || '',
+              textAreaRef.current?.resizableTextArea?.textArea.value || "",
           }
         );
-        messageApi.success('Đánh giá tình nguyện viên thành công!');
+        messageApi.success("Đánh giá tình nguyện viên thành công!");
         setTimeout(() => {
           if (setResetState) {
             setResetState((prev) => ++prev);
@@ -229,8 +231,8 @@ const Volunteer: React.FC<{
           setOpenModalRating(false);
         }, 1000);
       } catch (e: any) {
-        if (e.response.data.Message === 'Feedback time is over') {
-          messageApi.error('Quá hạn đánh giá tình nguyện viên!');
+        if (e.response.data.Message === "Feedback time is over") {
+          messageApi.error("Quá hạn đánh giá tình nguyện viên!");
         }
       } finally {
       }
@@ -243,16 +245,16 @@ const Volunteer: React.FC<{
         feedbackId: objectVolunteer.feedback?.id,
         star: ratingValue,
         feedback:
-          textAreaRefUpdate.current?.resizableTextArea?.textArea.value || '',
+          textAreaRefUpdate.current?.resizableTextArea?.textArea.value || "",
       });
-      messageApi.success('Cập nhật đánh giá tình nguyện viên thành công!');
+      messageApi.success("Cập nhật đánh giá tình nguyện viên thành công!");
       setTimeout(() => {
         setIsLoading(false);
         setOpenModalViewRated(false);
       }, 1000);
     } catch (e: any) {
-      if (e.response.data.Message === 'Update feedback time is over') {
-        messageApi.error('Quá hạn cập nhật đánh giá!');
+      if (e.response.data.Message === "Update feedback time is over") {
+        messageApi.error("Quá hạn cập nhật đánh giá!");
       }
     } finally {
     }
@@ -272,7 +274,7 @@ const Volunteer: React.FC<{
             onLoad={() => setIsLoading(false)}
             onError={(e) =>
               (e.currentTarget.src =
-                '/materials/blank-profile-picture-973460_1280.png')
+                "/materials/blank-profile-picture-973460_1280.png")
             }
           />
         </div>
@@ -287,7 +289,7 @@ const Volunteer: React.FC<{
             <span className="text-[14px] font-medium text-stone-700">
               {objectVolunteer.dob
                 ? `${calculateAge(new Date(objectVolunteer.dob))} tuổi`
-                : ''}
+                : ""}
             </span>
           )}
 
@@ -299,22 +301,22 @@ const Volunteer: React.FC<{
         </div>
       </div>
       <div className="mr-2 sm:mr-0">
-        {objectVolunteer.volunteerDisplayType === 'SUGGESTION' && (
+        {objectVolunteer.volunteerDisplayType === "SUGGESTION" && (
           <Button onClick={handleClickInvite} size="large" type="primary">
             Mời tham gia
           </Button>
         )}
-        {objectVolunteer.volunteerDisplayType === 'REQUEST' && (
+        {objectVolunteer.volunteerDisplayType === "REQUEST" && (
           <div className="flex justify-center gap-2 items-start">
             <Button
-              onClick={() => handleClickBtn('yes')}
+              onClick={() => handleClickBtn("yes")}
               size="large"
               type="primary"
             >
               Chấp nhận
             </Button>
             <Button
-              onClick={() => handleClickBtn('no')}
+              onClick={() => handleClickBtn("no")}
               size="large"
               type="default"
             >
@@ -322,15 +324,17 @@ const Volunteer: React.FC<{
             </Button>
           </div>
         )}
-        {user?.role === 'Organization' &&
-          objectVolunteer.volunteerDisplayType === 'PARTICIPATED' &&
+        {user?.role === "Organization" &&
+          objectVolunteer.volunteerDisplayType === "PARTICIPATED" &&
+          checkOwner &&
           checkDateDelete && (
             <Button onClick={handleOpenModal} size="large" type="primary">
               Xóa tình nguyện viên
             </Button>
           )}
-        {user?.role === 'Organization' &&
+        {user?.role === "Organization" &&
           checkDateRate &&
+          checkOwner &&
           !objectVolunteer.feedback && (
             <Button
               onClick={() => handleOpenRating(objectVolunteer?.name)}
@@ -340,8 +344,9 @@ const Volunteer: React.FC<{
               Đánh giá tình nguyện viên
             </Button>
           )}
-        {user?.role === 'Organization' &&
+        {user?.role === "Organization" &&
           checkDateRate &&
+          checkOwner &&
           objectVolunteer.feedback && (
             <Button onClick={handleOpenViewRated} size="large" type="primary">
               Xem đánh giá

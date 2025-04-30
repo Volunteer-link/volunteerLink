@@ -7,6 +7,7 @@ import { SearchProps } from "antd/es/input";
 import { useDebounce } from "../../ultils/useDebounce";
 import { NavLink } from "react-router-dom";
 import { DataRateType } from "../../model/Volunteer/DataRateType";
+import { decodedCookie, getCookie } from "../../ultils/cookie";
 
 const { Search } = Input;
 
@@ -26,6 +27,7 @@ const EventParticipated = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [checkDateDelete, setCheckDateDelete] = React.useState<boolean>(false);
   const [checkDateRate, setCheckDateRate] = React.useState<boolean>(false);
+  const [checkOwner, setCheckOwner] = React.useState<boolean>(false);
   const [checkDateViewRate, setCheckDateViewRate] =
     React.useState<boolean>(false);
   const [resetState, setResetState] = useState<number>(0);
@@ -37,6 +39,11 @@ const EventParticipated = () => {
           params: { eventId: id },
         });
         console.log(data.data);
+        const accIdToken = decodedCookie(getCookie("accessToken")).AccId;
+
+        if (Number(accIdToken) === data.data.orgAccountId) {
+          setCheckOwner(true);
+        }
         if (new Date(data.data.startTime) > new Date()) {
           setCheckDateDelete(true);
         }
@@ -84,6 +91,9 @@ const EventParticipated = () => {
   const handleClickSearch = () => {
     fetchVolunteer();
   };
+
+  console.log(checkOwner);
+
   return (
     <div className="">
       <Breadcrumb
@@ -110,7 +120,9 @@ const EventParticipated = () => {
 
       <div className="my-6 text-[#3BA769]">
         <h2 className="text-[30px] font-semibold">{event?.name}</h2>
-        <p className="mt-3">{event?.numberVolunteer} tình nguyện viên tham gia</p>
+        <p className="mt-3">
+          {event?.numberVolunteer} tình nguyện viên tham gia
+        </p>
       </div>
       <div className="flex mb-6 justify-center items-center">
         <div className="lg:w-[36rem] mb-8 w-full bg-white rounded-full border border-primary-color flex items-center justify-between mx-auto">
@@ -151,6 +163,7 @@ const EventParticipated = () => {
                   setResetState={setResetState}
                   checkDateDelete={checkDateDelete}
                   checkDateRate={checkDateRate}
+                  checkOwner={checkOwner}
                   eventId={Number(id)}
                 />
               ))
