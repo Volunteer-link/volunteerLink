@@ -4,6 +4,8 @@ import { Form, Input, Button, ConfigProvider, App as AntdApp } from 'antd';
 import api from '../../apiService/useFetch';
 import Password from 'antd/es/input/Password';
 import { useNavigate } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 interface ForgotPasswordProps {
   passwordRules?: Rule[];
   confirmPasswordRules?: (form: FormInstance) => Rule[];
@@ -61,7 +63,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
         autoComplete="off"
       >
         <h4 className="text-[#3BA769] mb-2 text-[20px] text-center">
-         Quên mật khẩu
+          Quên mật khẩu
         </h4>
         <Form.Item name="password" rules={passwordRules}>
           <Input.Password placeholder="Mật khẩu..." />
@@ -89,6 +91,20 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
           </Form.Item>
         </ConfigProvider>
       </Form>
+      <p className="text-[14px]">
+        Bạn chưa có tài khoản?
+        <a
+          onClick={() => {
+            navigate('/authentication/signup');
+          }}
+          className="text-[#3BA769] ml-1"
+        >
+          Tạo tài khoản mới
+        </a>
+        <NavLink to={'/'}>
+          <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
+        </NavLink>
+      </p>
     </div>
   );
 };
