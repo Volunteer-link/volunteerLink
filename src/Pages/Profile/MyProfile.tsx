@@ -605,10 +605,10 @@ const MyProfile = () => {
                   className={`border-[0.1rem] text-base outline-primary-color px-4 py-2 w-full rounded-lg duration-300 no-spinner ${
                     errorPhone !== "" ? "border-red-500" : "border-stone-300"
                   }`}
-                  maxLength={15}
+                  maxLength={10}
                   onInput={(e) => {
                     const target = e.target as HTMLInputElement;
-                    target.value = target.value.slice(0, 15);
+                    target.value = target.value.slice(0, 10);
                   }}
                   placeholder="Nhập số điện thoại"
                 />
