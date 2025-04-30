@@ -25,7 +25,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
       confirmPassword: values.confirmPassword.trim(),
     };
     if (!email) {
-      message.error('Something went wrong!');
+      message.error('Đã có lỗi xảy ra!');
       return;
     }
     try {
@@ -60,6 +60,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
+        <h4 className="text-[#3BA769] mb-2 text-[20px] text-center">
+         Quên mật khẩu
+        </h4>
         <Form.Item name="password" rules={passwordRules}>
           <Input.Password placeholder="Mật khẩu..." />
         </Form.Item>
