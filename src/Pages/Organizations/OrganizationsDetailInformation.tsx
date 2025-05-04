@@ -8,8 +8,6 @@ const OrganizationsDetailInformation = ({
 }: {
   organization: Organization | undefined;
 }) => {
-  console.log(organization?.urlFacebook);
-
   const isValidUrl = (url: string) => {
     try {
       const parsed = new URL(url);

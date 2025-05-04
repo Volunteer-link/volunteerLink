@@ -60,7 +60,7 @@ const DetailEvent = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalRating, setTotalRating] = useState<number>(0);
   const [resetKey, setResetKey] = useState<number>(0);
-  const pageSize = 2;
+  const pageSize = 10;
 
   const textAreaRef = useRef<any>(null);
 
@@ -97,7 +97,6 @@ const DetailEvent = () => {
   const fetchStatus = async () => {
     try {
       const { data } = await api.get(`/event/volunteer-status?eventId=${id}`);
-      console.log(data);
       setExpireRequest(data.data.isOverdue);
       setIdRequest(data.data.id);
       setStatusEvent(data.data.status);
@@ -241,7 +240,6 @@ const DetailEvent = () => {
       const { data } = await api.post(`/event/leave-event`, {
         idRecord: idRequest,
       });
-      console.log(data);
     } catch (e: any) {
       console.log(e);
       if (
@@ -332,7 +330,6 @@ const DetailEvent = () => {
         const { data } = await api.get(
           `/feedback/get-feedback-of-event?EventId=${id}&PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-
         setTotalRating(data.data.totalItems);
         setListRating(data.data.items);
       } catch (error: any) {
@@ -343,7 +340,7 @@ const DetailEvent = () => {
     if (dataState?.endTime && new Date() > new Date(dataState?.endTime)) {
       fetchRating();
     }
-  }, [dataState, resetKey]);
+  }, [dataState, resetKey, currentPage]);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
@@ -390,7 +387,6 @@ const DetailEvent = () => {
           eventId: id,
           moneyToPay: amount,
         });
-        console.log(data);
         window.location.href = data.data.url.toString();
       } catch (e: any) {
       } finally {
@@ -634,7 +630,7 @@ const DetailEvent = () => {
                     </div>
                   </div>
                 )}
-              {user?.role !== "Organization" &&
+              {/* {user?.role !== "Organization" &&
                 dataState?.endTime &&
                 new Date() > new Date(dataState?.endTime) && (
                   <div className="lg:col-span-3 select-none lg:pb-0 pb-6 flex lg:items-center justify-center lg:justify-end lg:mb-0">
@@ -642,7 +638,7 @@ const DetailEvent = () => {
                       Sự kiện đã kết thúc
                     </div>
                   </div>
-                )}
+                )} */}
               {user?.role !== "Volunteer" &&
                 dataState?.endTime &&
                 new Date() > new Date(dataState?.endTime) && (
@@ -1102,8 +1098,7 @@ const DetailEvent = () => {
           }}
         >
           <div className="grid grid-cols-8">
-            <div></div>
-            <div className="col-span-6">
+            <div className="">
               {listRating.length !== 0 && (
                 <Pagination
                   current={currentPage}
@@ -1114,7 +1109,6 @@ const DetailEvent = () => {
                 />
               )}
             </div>
-            <div></div>
           </div>
           <Modal
             title="Thông báo"

@@ -16,8 +16,6 @@ const Bill = () => {
 
   const statusTransaction = queryParams.get("vnp_TransactionStatus");
 
-  console.log(amount);
-
   useEffect(() => {
     const fetchData = async () => {
       try {

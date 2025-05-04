@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
-import Quill from 'quill';
-import { Modal } from 'antd';
-import 'quill/dist/quill.snow.css'; // Import Quill theme
+import React, { useRef, useEffect, useState } from "react";
+import Quill from "quill";
+import { Modal } from "antd";
+import "quill/dist/quill.snow.css"; // Import Quill theme
 
 interface ModalProps {
   value: string;
@@ -15,15 +15,15 @@ const MyModalWithQuill: React.FC<ModalProps> = ({ value, setSummaryValue }) => {
     // Chỉ khởi tạo Quill một lần nếu chưa khởi tạo
     if (quillRef.current && !quillInstance.current) {
       const quill = new Quill(quillRef.current, {
-        theme: 'snow',
+        theme: "snow",
         modules: {
           toolbar: [
-            [{ header: '1' }, { header: '2' }, { font: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['bold', 'italic', 'underline'],
+            [{ header: "1" }, { header: "2" }, { font: [] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["bold", "italic", "underline"],
             [{ align: [] }],
-            ['link', 'blockquote'],
-            ['image', 'video'],
+            ["link", "blockquote"],
+            ["image", "video"],
           ],
         },
       });
@@ -33,19 +33,16 @@ const MyModalWithQuill: React.FC<ModalProps> = ({ value, setSummaryValue }) => {
       const handleTextChange = () => {
         setSummaryValue((prev: any) => quill.root.innerHTML);
       };
-      quill.on('text-change', handleTextChange);
+      quill.on("text-change", handleTextChange);
     }
   }, [quillRef.current]);
 
   useEffect(() => {
     if (quillInstance.current && value) {
-      console.log("run")
-      quillInstance.current.root.innerHTML = value; 
+      quillInstance.current.root.innerHTML = value;
     }
   }, [quillInstance.current]);
-  return (
-    <div ref={quillRef} style={{ height: 250 }}></div> 
-  );
+  return <div ref={quillRef} style={{ height: 250 }}></div>;
 };
 
 export default MyModalWithQuill;

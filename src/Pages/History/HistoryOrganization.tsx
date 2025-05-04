@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import api from '../../apiService/useFetch';
+import React, { useCallback, useEffect, useState } from "react";
+import api from "../../apiService/useFetch";
 import {
   Avatar,
   Button,
@@ -8,25 +8,25 @@ import {
   Select,
   Table,
   App as AntdApp,
-} from 'antd';
-import { useSearchParams } from 'react-router-dom';
-import dayjs from 'dayjs';
-import Loading from '../Components/Loading';
-import { useDebounce } from '../../ultils/useDebounce';
+} from "antd";
+import { useSearchParams } from "react-router-dom";
+import dayjs from "dayjs";
+import Loading from "../Components/Loading";
+import { useDebounce } from "../../ultils/useDebounce";
 
 const { Option } = Select;
 
 const HistoryOrganization = () => {
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const page = searchParams.get('page');
+  const page = searchParams.get("page");
   const [totalPage, setTotalPage] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(parseInt(page!) || 1);
   const [eventId, setEventId] = useState<number | null>(null);
   const [stateEvent, setStateEvent] = useState<{ id: number; name: string }[]>(
     []
   );
-  const [searchTransaction, setTransaction] = React.useState<string>('');
+  const [searchTransaction, setTransaction] = React.useState<string>("");
   const searchDebounce = useDebounce<string>(searchTransaction, 500);
   const { message: messageApi } = AntdApp.useApp();
   const [stateTransaction, setStateTransaction] = useState<
@@ -48,7 +48,7 @@ const HistoryOrganization = () => {
       const { data } = await api.get(`/donate/organization-history`, {
         params: {
           EventId: eventId,
-          TransactionId: searchDebounce.replace('#', ''),
+          TransactionId: searchDebounce.replace("#", ""),
           PageNumber: pageNumber,
           PageSize: 5,
           ...(month && { month: month }),
@@ -69,51 +69,50 @@ const HistoryOrganization = () => {
   }, [pageNumber, eventId, searchDebounce, month]);
 
   useEffect(() => {
-    console.log(searchDebounce);
     fetchData();
   }, [pageNumber, eventId, searchDebounce, month]);
 
   const columns = [
     {
-      title: 'Ảnh',
-      dataIndex: 'volunteerImageUrl',
-      key: 'volunteerImageUrl',
+      title: "Ảnh",
+      dataIndex: "volunteerImageUrl",
+      key: "volunteerImageUrl",
       render: (volunteerImageUrl: string, record: any) => (
         <Avatar src={volunteerImageUrl} alt={record.volunteerName} />
       ),
     },
     {
-      title: 'Mã giao dịch',
-      dataIndex: 'transactionId',
-      key: 'money',
+      title: "Mã giao dịch",
+      dataIndex: "transactionId",
+      key: "money",
       render: (value: number) => (
         <span className="text-stone-500">#{value}</span>
       ),
     },
     {
-      title: 'Số tiền quyên góp',
-      dataIndex: 'money',
-      key: 'money',
+      title: "Số tiền quyên góp",
+      dataIndex: "money",
+      key: "money",
       render: (value: number) =>
-        `${new Intl.NumberFormat('vi-VN').format(value)} VND`,
+        `${new Intl.NumberFormat("vi-VN").format(value)} VND`,
     },
     {
-      title: 'Ngày quyên góp',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
+      title: "Ngày quyên góp",
+      dataIndex: "createdDate",
+      key: "createdDate",
       render: (value: string) =>
-        new Date(value).toLocaleString('vi-VN', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
+        new Date(value).toLocaleString("vi-VN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
         }),
     },
     {
-      title: 'Sự kiện',
-      dataIndex: 'eventName',
-      key: 'eventName',
+      title: "Sự kiện",
+      dataIndex: "eventName",
+      key: "eventName",
       render: (text: string, record: any) => (
         <a
           href={`/detail-event/${record.eventId}`}
@@ -138,27 +137,28 @@ const HistoryOrganization = () => {
   };
   const handleExportToExcel = async () => {
     try {
-      const { data } = await api.get('/donate/export-excel-organization', {
-        responseType: 'blob',
+      const { data } = await api.get("/donate/export-excel-organization", {
+        responseType: "blob",
       });
       const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'data.xlsx');
+      link.setAttribute("download", "data.xlsx");
       document.body.appendChild(link);
       link.click();
       link.remove();
 
       // Xoá URL sau khi dùng
       window.URL.revokeObjectURL(url);
-      messageApi.success('Xuất file thành công');
+      messageApi.success("Xuất file thành công");
     } catch (error) {
-      messageApi.success('Xuất file thất bại');
+      messageApi.success("Xuất file thất bại");
     }
   };
 
   const handleChange = (value: number) => {
     setMonth(value);
+    setPageNumber(1);
   };
 
   return (
@@ -180,7 +180,9 @@ const HistoryOrganization = () => {
             type="text"
             placeholder="Tìm kiếm theo mã giao dịch..."
             className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
-            onChange={(e) => setTransaction(e.target.value)}
+            onChange={(e) => {
+              setTransaction(e.target.value)
+            }}
           />
           <div className="flex pr-2 items-center gap-4 select-none">
             <div
@@ -198,6 +200,7 @@ const HistoryOrganization = () => {
           placeholder="Chọn sự kiện"
           style={{ width: 250 }}
           onChange={(value) => {
+            setPageNumber(1);
             if (value === 0) {
               setEventId(null);
             } else {
@@ -205,9 +208,9 @@ const HistoryOrganization = () => {
             }
           }}
         >
-           <Option key={0} value={0}>
-              Tất cả sự kiện
-            </Option>
+          <Option key={0} value={0}>
+            Tất cả sự kiện
+          </Option>
           {stateEvent?.map((event) => (
             <Option key={event.id} value={event.id}>
               {event.name}
@@ -217,14 +220,14 @@ const HistoryOrganization = () => {
         <Select
           className="max-w-[200px] cursor-pointer"
           maxTagCount="responsive"
-          size={'middle'}
+          size={"middle"}
           placeholder="Vui lòng thời gian"
           onChange={handleChange}
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           options={[
-            { label: '3 tháng gần nhất', value: 3 },
-            { label: '6 tháng gần nhất', value: 6 },
-            { label: '9 tháng gần nhất', value: 9 },
+            { label: "3 tháng gần nhất", value: 3 },
+            { label: "6 tháng gần nhất", value: 6 },
+            { label: "9 tháng gần nhất", value: 9 },
           ]}
         />
       </div>

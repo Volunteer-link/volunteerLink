@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Card, Col, Empty, Rate, Row, Tabs, Tag } from 'antd';
-import { StarOutlined } from '@ant-design/icons';
-import { TabsProps } from 'antd/lib';
-import VolunteerInformation from './VolunteerInformation';
-import api from '../../apiService/useFetch';
-import { VolunteerProfilePage } from '../../model/Request/VolunteerProfile';
-import dayjs from 'dayjs';
-import VolunteerEvents from './VolunteerEvents';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Avatar, Button, Card, Col, Empty, Rate, Row, Tabs, Tag } from "antd";
+import { StarOutlined } from "@ant-design/icons";
+import { TabsProps } from "antd/lib";
+import VolunteerInformation from "./VolunteerInformation";
+import api from "../../apiService/useFetch";
+import { VolunteerProfilePage } from "../../model/Request/VolunteerProfile";
+import dayjs from "dayjs";
+import VolunteerEvents from "./VolunteerEvents";
+import { useParams } from "react-router-dom";
 
 const VolunteerProfile = () => {
   const { id } = useParams();
@@ -23,11 +23,10 @@ const VolunteerProfile = () => {
             Id: id,
           },
         });
-        console.log(data);
 
         setVolunteer(data.data);
       } catch (e: any) {
-        if (e.response?.data.Message === 'This profile is not available') {
+        if (e.response?.data.Message === "This profile is not available") {
           setIsAvailable(true);
         }
       } finally {
@@ -37,16 +36,16 @@ const VolunteerProfile = () => {
     fetchVolunteer();
   }, []);
 
-  const items: TabsProps['items'] = [
+  const items: TabsProps["items"] = [
     {
-      key: '1',
-      label: 'Thông tin cá nhân',
+      key: "1",
+      label: "Thông tin cá nhân",
       children: <VolunteerInformation volunteer={volunteer} />,
     },
     {
-      key: '2',
-      label: 'Sự kiện đã tham gia',
-      children: <VolunteerEvents id={parseInt(id || '')} />,
+      key: "2",
+      label: "Sự kiện đã tham gia",
+      children: <VolunteerEvents id={parseInt(id || "")} />,
     },
   ];
 
@@ -63,15 +62,15 @@ const VolunteerProfile = () => {
             {/* Avatar and Name */}
             <Avatar
               size={100}
-              src={volunteer.urlImage || 'https://i.pravatar.cc/150?img=7'}
+              src={volunteer.urlImage || "https://i.pravatar.cc/150?img=7"}
               className="rounded-full"
             />
             <div>
               <h2 className="text-2xl font-semibold">{volunteer.name}</h2>
               <p className="text-gray-500 my-2 text-sm">
-                {' '}
-                {dayjs(volunteer.dateOfBirth).format('DD/MM/YYYY')} |{' '}
-                {dayjs().diff(dayjs(volunteer.dateOfBirth), 'year')} tuổi{' '}
+                {" "}
+                {dayjs(volunteer.dateOfBirth).format("DD/MM/YYYY")} |{" "}
+                {dayjs().diff(dayjs(volunteer.dateOfBirth), "year")} tuổi{" "}
               </p>
               <div className="flex items-center space-x-1">
                 <Rate disabled allowHalf defaultValue={volunteer.star} />

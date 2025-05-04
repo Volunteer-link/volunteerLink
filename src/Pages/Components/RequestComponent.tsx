@@ -21,7 +21,6 @@ const RequestComponent = () => {
         const { data } = await api.get(
           `/event/request-of-volunteer?PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-        console.log(data);
         setTotal(data.data.totalItems);
         setListRequest(data.data.items);
       } catch (e: any) {

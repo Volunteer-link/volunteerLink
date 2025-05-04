@@ -122,7 +122,6 @@ const VolunteerSuggestions = () => {
         const { data } = await api.get(
           `/ai/advanced-search-volunteer?EventId=${id}&PageNumber=${pageNumber}&PageSize=${pageSizeAll}&SearchKey=${searchKey}`
         );
-        console.log(data);
 
         setListVolunteerAll(
           data.data.items?.map((item: any) =>
@@ -160,7 +159,6 @@ const VolunteerSuggestions = () => {
 
   const handleClickSearch = () => {
     fetchAllVolunteer();
-    console.log("click");
     setCurrentPageAll(1);
   };
 

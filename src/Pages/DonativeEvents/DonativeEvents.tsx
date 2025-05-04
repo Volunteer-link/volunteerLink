@@ -23,7 +23,6 @@ const DonativeEvents = () => {
         const { data } = await api.get(
           `/common/get-event-donate?SearchName=${searchValue}&PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-        console.log(data);
 
         setListEventCard(data.data.items);
         setTotal(data.data.totalItems);

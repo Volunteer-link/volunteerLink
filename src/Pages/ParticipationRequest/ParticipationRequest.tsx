@@ -75,7 +75,6 @@ const ParticipationRequest = () => {
   const handleChangePageSearch = (page: number) => {
     setCurrentPage(page);
   };
-  console.log(dataRequest);
 
   return (
     <div className="px-32 py-8">

@@ -20,7 +20,6 @@ const InvitationComponent = () => {
         const { data } = await api.get(
           `/event/invitation-of-volunteer?PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-        console.log(data);
 
         setListInvitation(data.data.items);
         setTotal(data.data.totalItems);

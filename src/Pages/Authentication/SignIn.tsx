@@ -1,5 +1,5 @@
 // src/pages/SignIn.tsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Col,
   Row,
@@ -11,20 +11,20 @@ import {
   Image,
   Form,
   App as AntdApp,
-} from 'antd';
-import { useGoogleLogin } from '@react-oauth/google';
-import logo from '../../image/sign_banner.jpg';
-import { useNavigate } from 'react-router';
+} from "antd";
+import { useGoogleLogin } from "@react-oauth/google";
+import logo from "../../image/sign_banner.jpg";
+import { useNavigate } from "react-router";
 // Import hàm login
-import api from '../../apiService/useFetch';
-import { decodedCookie, getCookie, setCookie } from '../../ultils/cookie';
-import { FaHome } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, store } from '../../redux/store';
-import { setUser } from '../../redux/slice';
+import api from "../../apiService/useFetch";
+import { decodedCookie, getCookie, setCookie } from "../../ultils/cookie";
+import { FaHome } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "../../redux/store";
+import { setUser } from "../../redux/slice";
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 interface AccountPayload {
   gmail: string;
   password: string;
@@ -45,11 +45,11 @@ const SignIn: React.FC = () => {
       const { email, name } = await fetchUserInfo(token);
       if (!email) return;
       try {
-        const response = await api.post('/login-using-email-only', {
+        const response = await api.post("/login-using-email-only", {
           gmail: email,
           name: name,
         });
-        message.success('Đăng nhập thành công!');
+        message.success("Đăng nhập thành công!");
         const token = response.data.data.accessToken;
 
         handleAfterLogin(token);
@@ -59,15 +59,14 @@ const SignIn: React.FC = () => {
       }
     },
     onError: () => {
-      console.log('Lỗi khi đăng nhập');
-      message.error('Lỗi khi đăng nhập với Google! Vui lòng thử lại sau.');
+      message.error("Lỗi khi đăng nhập với Google! Vui lòng thử lại sau.");
     },
   });
 
   const fetchUserInfo = async (accessToken: any) => {
     try {
       const response = await fetch(
-        'https://www.googleapis.com/oauth2/v3/userinfo',
+        "https://www.googleapis.com/oauth2/v3/userinfo",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -75,10 +74,9 @@ const SignIn: React.FC = () => {
         }
       );
       if (!response.ok) {
-        message.error('Đăng nhập thất bại!');
+        message.error("Đăng nhập thất bại!");
       }
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (err) {
       console.error(err);
@@ -93,8 +91,8 @@ const SignIn: React.FC = () => {
         gmail,
         password,
       };
-      const response = await api.post('/login-using-password', dataToSend);
-      message.success('Đăng nhập thành công!');
+      const response = await api.post("/login-using-password", dataToSend);
+      message.success("Đăng nhập thành công!");
 
       const token = response.data.data.accessToken;
 
@@ -111,24 +109,24 @@ const SignIn: React.FC = () => {
 
   // Hàm xử lý khi có lỗi
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Lỗi:', errorInfo);
+    console.log("Lỗi:", errorInfo);
   };
 
   const handleAfterLogin = (token: string) => {
-    setCookie('accessToken', token);
+    setCookie("accessToken", token);
 
-    const currentUser = decodedCookie(getCookie('accessToken')!);
+    const currentUser = decodedCookie(getCookie("accessToken")!);
 
     dispatch(setUser(currentUser));
 
-    if (currentUser.role === 'Admin') {
-      navigate('/admin');
+    if (currentUser.role === "Admin") {
+      navigate("/admin");
     }
-    if (currentUser.role === 'Volunteer') {
-      navigate('/');
+    if (currentUser.role === "Volunteer") {
+      navigate("/");
     }
-    if (currentUser.role === 'Organization') {
-      navigate('/');
+    if (currentUser.role === "Organization") {
+      navigate("/");
     }
   };
 
@@ -151,8 +149,8 @@ const SignIn: React.FC = () => {
               <Form.Item
                 name="gmail"
                 rules={[
-                  { required: true, message: 'Vui lòng nhập gmail!' },
-                  { type: 'email', message: 'Email không đúng định dạng!' },
+                  { required: true, message: "Vui lòng nhập gmail!" },
+                  { type: "email", message: "Email không đúng định dạng!" },
                 ]}
               >
                 <Input className="max-w-[400px]" placeholder="Email......." />
@@ -160,7 +158,7 @@ const SignIn: React.FC = () => {
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: 'Vui lòng nhập password!' }]}
+                rules={[{ required: true, message: "Vui lòng nhập password!" }]}
               >
                 <Input.Password
                   className="max-w-[400px]"
@@ -172,7 +170,7 @@ const SignIn: React.FC = () => {
                   <ConfigProvider
                     theme={{
                       token: {
-                        colorPrimary: '#3BA769',
+                        colorPrimary: "#3BA769",
                       },
                     }}
                   >
@@ -192,13 +190,13 @@ const SignIn: React.FC = () => {
                 <ConfigProvider
                   theme={{
                     token: {
-                      colorPrimary: '#fff',
-                      colorPrimaryText: '#111',
-                      colorPrimaryTextHover: '#111',
+                      colorPrimary: "#fff",
+                      colorPrimaryText: "#111",
+                      colorPrimaryTextHover: "#111",
                     },
                     components: {
                       Button: {
-                        colorPrimaryHover: '#111',
+                        colorPrimaryHover: "#111",
                       },
                     },
                   }}
@@ -221,26 +219,26 @@ const SignIn: React.FC = () => {
               Bạn chưa có tài khoản?
               <a
                 onClick={() => {
-                  navigate('/authentication/verify-email');
+                  navigate("/authentication/verify-email");
                 }}
                 className="text-[#3BA769] ml-1"
               >
-                Tạo tài khoản mới{' '}
+                Tạo tài khoản mới{" "}
               </a>
               <a
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate('/authentication/verify-email', {
-                    state: 'FORGOT_PASSWORD',
+                  navigate("/authentication/verify-email", {
+                    state: "FORGOT_PASSWORD",
                   });
                 }}
                 className="block text-center text-[#3BA769] mt-2"
                 href=""
               >
-                {' '}
+                {" "}
                 Quên mật khẩu?
               </a>
-              <NavLink to={'/'}>
+              <NavLink to={"/"}>
                 <FaHome className="mx-auto mt-2 text-xl text-primary-color" />
               </NavLink>
             </p>
@@ -253,9 +251,9 @@ const SignIn: React.FC = () => {
             placeholder={true}
             alt="logo"
             src={
-              'https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fenvironmentalists-stacking-hands_13339-160020.jpg?alt=media&token=4f72ef27-6bdd-430d-9c64-ebe464f61b31'
+              "https://firebasestorage.googleapis.com/v0/b/mealstogo-b034d.appspot.com/o/core%2Fenvironmentalists-stacking-hands_13339-160020.jpg?alt=media&token=4f72ef27-6bdd-430d-9c64-ebe464f61b31"
             }
-            style={{ height: '100vh', width: '100%' }}
+            style={{ height: "100vh", width: "100%" }}
           />
         </Col>
       </Row>

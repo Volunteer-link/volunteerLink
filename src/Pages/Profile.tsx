@@ -31,7 +31,6 @@ const Profile = () => {
         newPassword: values.password.trim(),
       };
       const { data } = await api.put(`/profile/change-password`, trimmedValues);
-      console.log(data);
       message.success("Thay đổi mật khẩu thành công!");
       form.resetFields(["oldPassword", "password", "confirmPassword"]);
     } catch (error: any) {
@@ -66,7 +65,6 @@ const Profile = () => {
       } else {
         setHasPassword(true);
       }
-      console.log(data.data);
       setUser(data.data);
     };
 

@@ -52,7 +52,6 @@ const ListSentRequest = () => {
       const { data } = await api.get(
         `/event/participated-invites?EventId=${id}&PageNumber=${currentPage}&PageSize=${pageSize}`
       );
-      console.log(data);
       setListInvitation(data.data.items);
       setTotal(data.data.totalItems);
     } catch (e: any) {
@@ -65,7 +64,6 @@ const ListSentRequest = () => {
       fetchInvite();
     }
   }, [currentPage, status]);
-  console.log(listInvitation);
 
   const handleChangePageSearch = (page: number) => {
     setCurrentPage(page);
