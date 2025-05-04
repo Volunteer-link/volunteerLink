@@ -102,7 +102,6 @@ const UpdateEvent = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
-        console.log(data.data);
         const [latitude, longitude] = data.data.location
           .split(";")
           ?.map((part: string) => part.trim());
@@ -195,7 +194,6 @@ const UpdateEvent = () => {
     };
     try {
       const { data } = await api.put(`/event/update-an-event`, dataEvent);
-      console.log(data);
       message.success("Cập nhật sự kiện thành công!");
       navigate("/organizations/events");
     } catch (e: any) {
@@ -410,7 +408,9 @@ const UpdateEvent = () => {
                 {
                   validator: (_, value) => {
                     if (value && value.isBefore(dayjs())) {
-                      return Promise.reject(new Error('Ngày xuất bản phải lớn hơn ngày hiện tại!'));
+                      return Promise.reject(
+                        new Error("Ngày xuất bản phải lớn hơn ngày hiện tại!")
+                      );
                     }
                     return Promise.resolve();
                   },
@@ -422,7 +422,6 @@ const UpdateEvent = () => {
                 format="YYYY-MM-DD HH:mm"
                 placeholder="Chọn ngày công bố"
                 onChange={handleTimePublishChange}
-         
               />
             </Form.Item>
           )}
@@ -604,9 +603,9 @@ const UpdateEvent = () => {
             <div className="bg-[#3BA769] w-6 h-[1px]"></div>
           </div>
 
-           <Tag className="mb-2 p-1" color="warning">
-                      Ghi chú: Sự kiện chỉ cho tối đa 5 ảnh
-                    </Tag>
+          <Tag className="mb-2 p-1" color="warning">
+            Ghi chú: Sự kiện chỉ cho tối đa 5 ảnh
+          </Tag>
 
           <Form.Item
             className="mb-4 mt-3"
@@ -618,7 +617,7 @@ const UpdateEvent = () => {
                     return Promise.reject("Bạn cần upload ảnh");
                   }
                   if (fileListImage?.file?.length > 5) {
-                    return Promise.reject('Sự kiện chỉ được tối đa 5 ảnh');
+                    return Promise.reject("Sự kiện chỉ được tối đa 5 ảnh");
                   }
                   return Promise.resolve();
                 },

@@ -171,7 +171,6 @@ const ShowEvent = () => {
         }`;
 
         const { data } = await api.get(url);
-        console.log(data);
 
         setTotalSearch(data.data.totalItems);
         setListEventCardSearch(data.data.items);

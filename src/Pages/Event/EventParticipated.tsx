@@ -38,7 +38,6 @@ const EventParticipated = () => {
         const { data } = await api.get(`/common/get-event-infomation`, {
           params: { eventId: id },
         });
-        console.log(data.data);
         const accIdToken = decodedCookie(getCookie("accessToken")).AccId;
 
         if (Number(accIdToken) === data.data.orgAccountId) {
@@ -91,8 +90,6 @@ const EventParticipated = () => {
   const handleClickSearch = () => {
     fetchVolunteer();
   };
-
-  console.log(checkOwner);
 
   return (
     <div className="">

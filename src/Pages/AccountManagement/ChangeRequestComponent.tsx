@@ -16,6 +16,7 @@ const ChangeRequestComponent: React.FC<{
 }> = ({ setMode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedId, setSelectedId] = useState<number>(1);
   const [dataDisplay, setDataDisplay] = useState<ChangeRequest[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [keyState, setKeyState] = useState<number>(1);
@@ -27,7 +28,6 @@ const ChangeRequestComponent: React.FC<{
       const { data } = await api.get(
         `/admin/all-change-requests?PageNumber=${currentPage}&PageSize=${pageSize}`
       );
-      console.log(data);
 
       setDataDisplay(data.data.items);
       setTotal(data.data.totalItems);
@@ -35,7 +35,8 @@ const ChangeRequestComponent: React.FC<{
     fetchData();
   }, [currentPage, keyState]);
 
-  const showModal = () => {
+  const showModal = (item: any) => {
+    setSelectedId(item.id);
     setIsModalOpen(true);
   };
 
@@ -91,7 +92,7 @@ const ChangeRequestComponent: React.FC<{
               </div>
             </div>
             <div
-              onClick={showModal}
+              onClick={() => showModal(item)}
               className="px-6 py-2 text-white text-sm rounded-md bg-primary-color hover:scale-105 hover:opacity-95 transition-all hidden lg:block"
             >
               Xem chi tiết thay đổi
@@ -124,7 +125,7 @@ const ChangeRequestComponent: React.FC<{
               <>
                 <Modal
                   title="Yêu cầu đổi tên"
-                  open={isModalOpen}
+                  open={selectedId === item.id ? isModalOpen : false}
                   onCancel={handleHide}
                   okButtonProps={{
                     style: {

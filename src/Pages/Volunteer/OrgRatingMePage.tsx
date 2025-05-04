@@ -21,7 +21,6 @@ const OrgRatingMePage = () => {
         const { data } = await api.get(
           `/feedback/all-feedback-to-volunteer?PageNumber=${currentPage}&PageSize=${pageSize}`
         );
-        console.log(data);
         setListRating(data.data.items);
         setTotal(data.data.totalItems);
       } catch (error: any) {

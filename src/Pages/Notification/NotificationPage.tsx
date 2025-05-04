@@ -24,7 +24,6 @@ const NotificationPage = () => {
     if (socket) {
       socket.addEventListener("message", (event) => {
         const parsedData = JSON.parse(event.data);
-        console.log(parsedData);
 
         if (
           parsedData.Message === "New Notification" &&

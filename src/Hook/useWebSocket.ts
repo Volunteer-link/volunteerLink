@@ -26,7 +26,7 @@ const useWebSocket = ({
     socket.current = new WebSocket(`${url}${getCookie("accessToken")}`);
 
     socket.current.addEventListener("open", () => {
-      console.log("✅ WebSocket connected!");
+      console.log("WebSocket connected!");
       setIsConnected(true);
     });
 
@@ -36,7 +36,6 @@ const useWebSocket = ({
         socket.current &&
         socket.current.readyState === WebSocket.OPEN
       ) {
-        console.log("🔴🟠🟡🟢🔵🟣🟤⚫⚪");
         socket.current.send("pong");
       }
     });

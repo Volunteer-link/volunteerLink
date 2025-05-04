@@ -299,8 +299,6 @@ const MyProfile = () => {
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    console.log(newFileList.length);
-
     let newArray = newFileList as Array<UploadFile>;
 
     setListFile([newArray[newFileList.length === 1 ? 0 : 1]]);
@@ -311,7 +309,6 @@ const MyProfile = () => {
       const { data } = await api.put(`/profile/volunteer-publish`, {
         status: value,
       });
-      console.log(data);
     } catch (e: any) {
       console.log(e);
     }

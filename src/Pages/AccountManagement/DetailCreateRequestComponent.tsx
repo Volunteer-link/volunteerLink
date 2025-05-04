@@ -56,7 +56,6 @@ const DetailCreateRequestComponent: React.FC<{
         organizationId: idDetailRequest,
         approval: stateModal === "yes" ? true : false,
       });
-      console.log(data);
     } catch (err: any) {
     } finally {
       setIsLoading(false);

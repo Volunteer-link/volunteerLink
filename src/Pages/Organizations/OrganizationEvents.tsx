@@ -53,8 +53,6 @@ const OrganizationEvents = () => {
         },
       });
 
-      console.log(acc);
-
       const { data } = await api.get(`/common/get-events-of-organization`, {
         params: {
           SearchName: searchDebounce,
