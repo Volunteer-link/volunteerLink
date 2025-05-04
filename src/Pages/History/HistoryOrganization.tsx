@@ -158,6 +158,7 @@ const HistoryOrganization = () => {
 
   const handleChange = (value: number) => {
     setMonth(value);
+    setPageNumber(1);
   };
 
   return (
@@ -179,7 +180,9 @@ const HistoryOrganization = () => {
             type="text"
             placeholder="Tìm kiếm theo mã giao dịch..."
             className="flex-1 outline-none py-3 px-5 rounded-full relative text-base"
-            onChange={(e) => setTransaction(e.target.value)}
+            onChange={(e) => {
+              setTransaction(e.target.value)
+            }}
           />
           <div className="flex pr-2 items-center gap-4 select-none">
             <div
@@ -197,6 +200,7 @@ const HistoryOrganization = () => {
           placeholder="Chọn sự kiện"
           style={{ width: 250 }}
           onChange={(value) => {
+            setPageNumber(1);
             if (value === 0) {
               setEventId(null);
             } else {
