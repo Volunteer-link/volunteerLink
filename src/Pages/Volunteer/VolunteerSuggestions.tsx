@@ -1,21 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Breadcrumb, Empty, Pagination, Switch } from "antd";
-import Volunteer from "../../Components/Volunteer";
-import api, { setupInterceptors } from "../../apiService/useFetch";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
-import { DetailEventType } from "../../model/ShowEventModel/DetailEventType";
-import Loading from "../Components/Loading";
-import ErrorSolving from "../../Common/ErrorSolving";
-import ErrorCards from "../Components/ErrorCards";
-import LineSpacing from "../Components/LineSpacing";
-import { FaUsers } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from 'react';
+import { Breadcrumb, Empty, Pagination, Spin, Switch } from 'antd';
+import Volunteer from '../../Components/Volunteer';
+import api, { setupInterceptors } from '../../apiService/useFetch';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { DetailEventType } from '../../model/ShowEventModel/DetailEventType';
+import Loading from '../Components/Loading';
+import ErrorSolving from '../../Common/ErrorSolving';
+import ErrorCards from '../Components/ErrorCards';
+import LineSpacing from '../Components/LineSpacing';
+import { FaUsers } from 'react-icons/fa';
 const VolunteerSuggestions = () => {
   const [searchParams] = useSearchParams();
   const { id } = useParams();
   const pageSizeAI = 10;
   const pageSizeAll = 10;
-  const pageFromUrl = searchParams.get("page");
+  const pageFromUrl = searchParams.get('page');
   const [PageNumber, setPageNumber] = React.useState<number>(1);
   const [currentPageAll, setCurrentPageAll] = React.useState<number>(1);
   const [listVolunteer, setListVolunteer] = React.useState<any[]>();
@@ -30,8 +30,9 @@ const VolunteerSuggestions = () => {
   // const [errCode, setErrCode] = useState<number>(0);
   const refSearch = useRef<HTMLInputElement>(null);
   const [AISearch, setAISearch] = useState<boolean>(false);
-  const [searchKey, setSearchKey] = useState<string>("");
+  const [searchKey, setSearchKey] = useState<string>('');
   const [status, setStatus] = useState<boolean>(false);
+  const [isLoadingAI, setIsLoadingAI] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -71,7 +72,7 @@ const VolunteerSuggestions = () => {
   useEffect(() => {
     const fetchVolunteer = async () => {
       try {
-        setIsLoading(true);
+        setIsLoadingAI(true);
         const { data } = await api.get(
           `/ai/suggested-volunteer?EventId=${id}&PageNumber=${PageNumber}&PageSize=${pageSizeAI}`
         );
@@ -79,7 +80,7 @@ const VolunteerSuggestions = () => {
         setListVolunteer(
           data.data.items?.map((item: any) =>
             Object.assign(item, {
-              volunteerDisplayType: "SUGGESTION",
+              volunteerDisplayType: 'SUGGESTION',
               pictureProfile: item.urlImage,
             })
           ) || data.data
@@ -91,7 +92,7 @@ const VolunteerSuggestions = () => {
         if (resetState !== 0) {
           setPageNumber(1);
         }
-        setIsLoading(false);
+        setIsLoadingAI(false);
       }
     };
     if (status) {
@@ -111,7 +112,7 @@ const VolunteerSuggestions = () => {
         setListVolunteerAll(
           data.data.items?.map((item: any) =>
             Object.assign(item, {
-              volunteerDisplayType: "SUGGESTION",
+              volunteerDisplayType: 'SUGGESTION',
               pictureProfile: item.pictureImage,
             })
           ) || data.data
@@ -126,7 +127,7 @@ const VolunteerSuggestions = () => {
         setListVolunteerAll(
           data.data.items?.map((item: any) =>
             Object.assign(item, {
-              volunteerDisplayType: "SUGGESTION",
+              volunteerDisplayType: 'SUGGESTION',
               pictureProfile: item.urlImage,
             })
           ) || data.data
@@ -138,7 +139,7 @@ const VolunteerSuggestions = () => {
       if (resetState !== 0) {
         setPageNumber(1);
       }
-      setIsLoading(false);
+      setIsLoading(true);
     }
   };
 
@@ -163,7 +164,7 @@ const VolunteerSuggestions = () => {
   };
 
   const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleClickSearch();
     }
   };
@@ -179,31 +180,31 @@ const VolunteerSuggestions = () => {
   return (
     <div className="relative">
       <div>
-        {isLoading && <Loading color="green" />}
+        {/* {isLoading && <Loading color="green" />} */}
         {/* <ErrorCards errCode={errCode} /> */}
 
         {/* <Loading color="green" /> */}
         <Breadcrumb
           items={[
             {
-              title: <NavLink to={"/"}>Trang chủ</NavLink>,
+              title: <NavLink to={'/'}>Trang chủ</NavLink>,
             },
             {
               title: (
                 <NavLink to={`/detail-event/${id}`}>
-                  {eventInfo?.name || "Tên sự kiện"}
+                  {eventInfo?.name || 'Tên sự kiện'}
                 </NavLink>
               ),
             },
             {
-              title: "Danh sách tình nguyện viên",
+              title: 'Danh sách tình nguyện viên',
             },
           ]}
         />
         <div className="bg-white shadow-custom-green rounded-xl py-10 mt-8">
           <div className="text-xl mb-8 text-center font-medium">
             <div>
-              Tình nguyện viên{" "}
+              Tình nguyện viên{' '}
               <span className="text-primary-color">được gợi ý</span>
             </div>
             <img
@@ -213,30 +214,39 @@ const VolunteerSuggestions = () => {
             />
           </div>
           {/* <Volunteer volunteerDisplayType="SUGGESTION" /> */}
-          {listVolunteer?.map((item, index) => (
-            <Volunteer
-              objectVolunteer={item}
-              key={item.accountId + "suggestion_volunteer"}
-              eventId={Number(id)}
-              setResetState={setResetState}
-              setResetStateAll={setResetStateAll}
-            />
-          ))}
-          {listVolunteer?.length === 0 && (
-            <Empty
-              className=""
-              description="Không có tình nguyện viên được gợi ý"
-            />
-          )}
-          {total !== 0 && (
-            <Pagination
-              className="mt-4"
-              defaultCurrent={1}
-              onChange={handlePageChange}
-              total={total}
-              pageSize={pageSizeAI}
-              current={PageNumber}
-            />
+
+          {isLoadingAI ? (
+            <div className="flex  z-10  justify-center items-center min-h-[300px]">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <>
+              {listVolunteer?.map((item, index) => (
+                <Volunteer
+                  objectVolunteer={item}
+                  key={item.accountId + 'suggestion_volunteer'}
+                  eventId={Number(id)}
+                  setResetState={setResetState}
+                  setResetStateAll={setResetStateAll}
+                />
+              ))}
+              {listVolunteer?.length === 0 && (
+                <Empty
+                  className=""
+                  description="Không có tình nguyện viên được gợi ý"
+                />
+              )}
+              {total !== 0 && (
+                <Pagination
+                  className="mt-4"
+                  defaultCurrent={1}
+                  onChange={handlePageChange}
+                  total={total}
+                  pageSize={pageSizeAI}
+                  current={PageNumber}
+                />
+              )}
+            </>
           )}
         </div>
       </div>
@@ -282,7 +292,7 @@ const VolunteerSuggestions = () => {
           </div>
           {listVolunteerAll?.map((item, index) => (
             <Volunteer
-              key={item.accountId + "volunteer"}
+              key={item.accountId + 'volunteer'}
               objectVolunteer={item}
               eventId={Number(id)}
               setResetState={setResetState}
