@@ -724,7 +724,8 @@ const MyProfile = () => {
                   <p>Hành động này đang cố gắng xuất bản hồ sơ của bạn.</p>
                   <p>
                     Khi xuất bản, hồ sơ của bạn sẽ được hiển thị với các tổ chức
-                    khác, đồng thời bạn cũng có thể tương tác với các sự kiện.
+                    khác, bạn có thể tương tác với các sự kiện và đồng thời bạn
+                    sẽ nhận được các sự kiện gợi ý.
                   </p>
                   <p> Bạn có chắc chắn muốn thực hiện không?</p>
                 </>
@@ -734,8 +735,8 @@ const MyProfile = () => {
                   <p>Hành động này đang cố gắng hủy xuất bản hồ sơ của bạn.</p>
                   <p>
                     Khi hủy xuất bản, hồ sơ của bạn sẽ không được hiển thị với
-                    các tổ chức khác, đồng thời bạn cũng không thể tương tác với
-                    các sự kiện.
+                    các tổ chức khác, bạn không thể tương tác với các sự kiện và
+                    đồng thời bạn sẽ không nhận được các sự kiện gợi ý.
                   </p>
                   <p> Bạn có chắc chắn muốn thực hiện không?</p>
                 </>
