@@ -78,14 +78,17 @@ const MyRatingPageComponent: React.FC<{
       const { data } = await api.delete(`/feedback/remove-feedback-event`, {
         params: { feedbackId: idFeed },
       });
-    } catch (error: any) {
-    } finally {
       messageApi.success("Xóa đánh giá sự kiện thành công!");
       setTimeout(() => {
         setIsLoading(false);
         setOpenRemove(false);
         setResetKey((prev) => ++prev);
       }, 1000);
+    } catch (error: any) {
+      if (error.response.data.Message === "Delete feedback time is over") {
+        messageApi.error("Quá hạn xóa đánh giá!");
+      }
+    } finally {
     }
   };
 

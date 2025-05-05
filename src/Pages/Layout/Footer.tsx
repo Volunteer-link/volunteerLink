@@ -67,10 +67,10 @@ const Footer: React.FC<{}> = () => {
               <IoMailOutline className="text-base" />
               <div>Email: vietnamvolunteerlink@gmail.com</div>
             </div>
-            <div className="text-xs py-2 text-shadow-sm flex items-center gap-2">
+            {/* <div className="text-xs py-2 text-shadow-sm flex items-center gap-2">
               <GrPhone className="text-base" />
               <div>0973647298</div>
-            </div>
+            </div> */}
           </div>
           {/* <div className="">
             <div className="text-sm pb-1 font-medium">MẠNG XÃ HỘI</div>

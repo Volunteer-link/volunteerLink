@@ -442,7 +442,7 @@ const UpdateEvent = () => {
             rules={[
               {
                 required: true,
-                message: "Bạn cần chọn khoảng thời gian!",
+                message: "",
               },
               {
                 validator: async (_, value: [Dayjs, Dayjs]) => {
@@ -456,26 +456,32 @@ const UpdateEvent = () => {
                   const timePublish = form.getFieldValue("timePublish");
                   const currentDate = dayjs();
                   const minStartDate = currentDate.add(2, "day");
+
+                  if (!endDate)
+                    return Promise.reject('Vui lòng chọn ngày kết thúc!');
+                  if (!startDate)
+                    return Promise.reject('Vui lòng chọn ngày bắt đầu!');
+
                   if (
                     timePublish &&
-                    startDate.isBefore(timePublish.add(2, "day"))
+                    startDate?.isBefore(timePublish.add(2, "day"))
                   ) {
                     return Promise.reject(
                       "Ngày bắt đầu phải lớn hơn ngày xuất bản ít nhất 2 ngày!"
                     );
                   }
-                  if (startDate.isBefore(minStartDate, "day")) {
+                  if (startDate?.isBefore(minStartDate, "day")) {
                     return Promise.reject(
                       "Ngày bắt đầu phải lớn hơn ngày hiện tại ít nhất 2 ngày!"
                     );
                   }
-                  if (endDate.isBefore(currentDate, "day")) {
+                  if (endDate?.isBefore(currentDate, "day")) {
                     return Promise.reject(
                       "Ngày kết thúc phải sau ngày hiện tại!"
                     );
                   }
 
-                  if (endDate.isBefore(startDate)) {
+                  if (endDate?.isBefore(startDate)) {
                     return Promise.reject(
                       "Ngày kết thúc phải sau ngày bắt đầu!"
                     );

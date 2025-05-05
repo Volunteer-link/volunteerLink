@@ -46,7 +46,6 @@ const Organizations = () => {
   const [searchName, setSearchName] = React.useState<string>(
     searchNameFromUrl || ""
   );
-  const searchDebounce = useDebounce<string>(searchName, 500);
   const [fields, setFields] = React.useState<string>("");
   const [totalPage, setTotalPage] = React.useState<number>();
   useEffect(() => {
@@ -73,7 +72,7 @@ const Organizations = () => {
       setLoading(true);
       const { data } = await api.get(`/common/organization-list`, {
         params: {
-          SearchKey: searchDebounce,
+          SearchKey: searchName,
           Fields: fields,
           PageNumber: PageNumber,
           PageSize: 9,
@@ -86,11 +85,11 @@ const Organizations = () => {
       setLoading(false);
     } finally {
     }
-  }, [PageNumber, fields, searchDebounce]);
+  }, [PageNumber, fields, searchName]);
 
   useEffect(() => {
     fetchField();
-  }, [PageNumber, fields, searchDebounce]);
+  }, [PageNumber, fields ]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -111,17 +110,11 @@ const Organizations = () => {
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
-    navigate(`/organizations?page=${page}&name=${searchDebounce}`, {
-      replace: true,
-    });
   };
 
   const handleClickSearch = () => {
-    fetchField();
     setPageNumber(1);
-    navigate(`/organizations?page=${PageNumber}&name=${searchDebounce}`, {
-      replace: true,
-    });
+    fetchField();
   };
   return (
     <div className="flex flex-col">

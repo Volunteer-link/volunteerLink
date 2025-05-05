@@ -27,7 +27,6 @@ const HistoryOrganization = () => {
     []
   );
   const [searchTransaction, setTransaction] = React.useState<string>("");
-  const searchDebounce = useDebounce<string>(searchTransaction, 500);
   const { message: messageApi } = AntdApp.useApp();
   const [stateTransaction, setStateTransaction] = useState<
     {
@@ -48,7 +47,7 @@ const HistoryOrganization = () => {
       const { data } = await api.get(`/donate/organization-history`, {
         params: {
           EventId: eventId,
-          TransactionId: searchDebounce.replace("#", ""),
+          TransactionId: searchTransaction.replace("#", ""),
           PageNumber: pageNumber,
           PageSize: 5,
           ...(month && { month: month }),
@@ -66,11 +65,11 @@ const HistoryOrganization = () => {
       setIsLoading(false);
       console.error(error);
     }
-  }, [pageNumber, eventId, searchDebounce, month]);
+  }, [pageNumber, eventId, month, searchTransaction]);
 
   useEffect(() => {
     fetchData();
-  }, [pageNumber, eventId, searchDebounce, month]);
+  }, [pageNumber, eventId, month]);
 
   const columns = [
     {
@@ -132,8 +131,8 @@ const HistoryOrganization = () => {
   };
 
   const handleClickSearch = () => {
-    fetchData();
     setPageNumber(1);
+    fetchData();
   };
   const handleExportToExcel = async () => {
     try {
