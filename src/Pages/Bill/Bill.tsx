@@ -33,7 +33,7 @@ const Bill = () => {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen flex justify-center items-start">
       {statusTransaction === "00" && (
         <div>
           <div className="flex justify-center my-8">
