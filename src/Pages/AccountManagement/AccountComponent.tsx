@@ -315,6 +315,7 @@ const AccountComponent: React.FC<{}> = () => {
             <Table
               dataSource={dataSourceOrg}
               columns={columnsOrg}
+              loading={isLoading}
               pagination={false}
               scroll={{ x: "max-content" }}
             />
@@ -324,6 +325,7 @@ const AccountComponent: React.FC<{}> = () => {
               dataSource={dataSourceVol}
               columns={columnsVol}
               pagination={false}
+              loading={isLoading}
               scroll={{ x: "max-content" }}
             />
           )}
@@ -338,11 +340,7 @@ const AccountComponent: React.FC<{}> = () => {
               className="mt-4"
             />
           )}
-          {isLoading && (
-            <Flex>
-              <Spin size="large" fullscreen />
-            </Flex>
-          )}
+
           {/* <ErrorSolving errCode={errCode} /> */}
           <Modal
             title="Xác nhận"
