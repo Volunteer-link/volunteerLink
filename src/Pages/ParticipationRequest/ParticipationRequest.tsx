@@ -77,7 +77,7 @@ const ParticipationRequest = () => {
   };
 
   return (
-    <div className="px-32 py-8">
+    <div className="">
       {isLoading && <Loading color="green" />}
       {/* <ErrorCards errCode={errCode} /> */}
       <Breadcrumb

@@ -85,8 +85,13 @@ const Volunteer: React.FC<{
         }
       }, 1000);
     } catch (e: any) {
-      console.log(e);
+      // const message =
+      //   e?.response?.data?.Message ||
+      //   e.message ||
+      //   "Đã xảy ra lỗi không xác định!";
+      // let handled = false;
 
+      // messageApi.error(e.response.data.Message);
       if (
         e.response.data.Message ===
         "Event has to start after 0.5 days to adding more people or this event has not been published"
@@ -94,10 +99,19 @@ const Volunteer: React.FC<{
         messageApi.error(
           "Không thể xử lý yêu cầu vì sự kiện còn chưa đầy 12 tiếng nữa sẽ diễn ra hoặc sự kiện này chưa được công bố!"
         );
+        // handled = true;
+      }
+
+      if (e.response.data.Message === "This volunteer is not available") {
+        messageApi.error(
+          "Tài khoản của tình nguyện viên này đã bị vô hiệu hóa!"
+        );
+        // handled = true;
       }
 
       if (e.response.data.Message === "Request is not exist") {
         messageApi.error("Yêu cầu tham gia không tồn tại!");
+        // handled = true;
         setTimeout(() => {
           if (setResetState) {
             setIsLoading(false);
@@ -109,6 +123,11 @@ const Volunteer: React.FC<{
           }
         }, 1000);
       }
+
+      // if (!handled) {
+      //   messageApi.error(message);
+      // }
+
       setIsLoading(false);
     } finally {
     }
@@ -263,8 +282,8 @@ const Volunteer: React.FC<{
   return (
     <div className="bg-white gap-2 sm:gap-0 flex-col sm:flex-row sm:px-14 select-none hover:scale-105 transition-all w-full  sm:w-4/5 sm:mx-auto flex justify-between items-center border-2 border-[#3BA769] rounded-2xl my-4 py-4 shadow-md">
       {contextHolder}
-      <div className="flex mx-2 sm:mx-0 sm:gap-8 gap-2 items-center">
-        <div className="relative rounded-full overflow-hidden">
+      <div className="flex mx-2 sm:mx-0 sm:gap-8 gap-2 items-center justify-start w-full">
+        <div className="relative rounded-full shrink-0 overflow-hidden">
           {isLoading && <SmallLoading size="small" />}
           <img
             src={objectVolunteer.pictureProfile}
@@ -307,7 +326,7 @@ const Volunteer: React.FC<{
           </Button>
         )}
         {objectVolunteer.volunteerDisplayType === "REQUEST" && (
-          <div className="flex justify-center gap-2 items-start">
+          <div className="flex justify-center sm:flex-nowrap flex-nowrap gap-2 items-start">
             <Button
               onClick={() => handleClickBtn("yes")}
               size="large"
